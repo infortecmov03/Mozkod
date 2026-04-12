@@ -107,11 +107,40 @@ export const curriculumData: Level[] = [
     },
     {
         id: 7,
-        title: "Nível 7: Projeto Final",
-        description: "Aplique todo o seu conhecimento para construir um projeto completo e impressionante.",
+        title: "Nível 7: Projetos Guiados (freeCodeCamp)",
+        description: "Aplique seu conhecimento com projetos práticos para construir um portfólio impressionante.",
         knowledgeAreas: [
-             { id: "final-project", title: "Desenvolvimento do Projeto", description: "Planeje e execute seu projeto.", iconName: "Rocket", lessons: [] },
-             { id: "final-deploy", title: "Publicação e Manutenção", description: "Coloque seu projeto no ar.", iconName: "Server", lessons: [] },
+             { 
+                 id: "guided-projects-web", 
+                 title: "Projetos Web", 
+                 description: "Construa aplicações web do mundo real.", 
+                 iconName: "LaptopCode", 
+                 lessons: [
+                    { 
+                        id: "project-html-css", 
+                        title: "Projeto 1: Página de Tributo", 
+                        content: "<h3>Construa uma Página de Tributo</h3><p>Neste projeto, você construirá uma página da web simples para homenagear uma pessoa ou assunto de sua escolha. É um ótimo exercício para praticar suas habilidades fundamentais de HTML e CSS.</p><p>Este projeto é inspirado no currículo de 'Design Web Responsivo' do freeCodeCamp.</p><h4>O que você vai aprender:</h4><ul><li>Estruturar uma página com HTML5 semântico.</li><li>Estilizar elementos com CSS, incluindo seletores, cores e tipografia.</li><li>Tornar sua página responsiva para diferentes tamanhos de tela.</li></ul><p>Para um guia passo a passo, confira o <a href='https://www.freecodecamp.org/learn/responsive-web-design/responsive-web-design-projects/build-a-tribute-page' target='_blank' rel='noopener noreferrer' class='text-primary underline'>projeto no freeCodeCamp</a>.</p>" 
+                    },
+                    { 
+                        id: "project-javascript", 
+                        title: "Projeto 2: Gerador de Citações Aleatórias", 
+                        content: "<h3>Construa um Gerador de Citações</h3><p>Neste projeto, você criará um aplicativo que exibe uma nova citação toda vez que um botão é clicado. Você vai praticar a manipulação do DOM com JavaScript e trabalhar com arrays e objetos.</p><p>Este projeto é inspirado no currículo de 'Algoritmos e Estruturas de Dados em JavaScript' do freeCodeCamp.</p><h4>O que você vai aprender:</h4><ul><li>Manipular o DOM para atualizar o conteúdo da página.</li><li>Usar JavaScript para lidar com eventos de clique.</li><li>Trabalhar com arrays de objetos para armazenar os dados das citações.</li></ul><p>Para um guia passo a passo, confira o <a href='https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/javascript-algorithms-and-data-structures-projects/build-a-random-quote-machine' target='_blank' rel='noopener noreferrer' class='text-primary underline'>projeto no freeCodeCamp</a>.</p>" 
+                    }
+                 ] 
+             },
+             {
+                 id: "guided-projects-python",
+                 title: "Projetos Python",
+                 description: "Resolva problemas com Python.",
+                 iconName: "Code",
+                 lessons: [
+                    {
+                        id: "project-python-budget",
+                        title: "Projeto 3: App de Orçamento",
+                        content: "<h3>Construa um App de Orçamento</h3><p>Neste projeto, você criará uma classe Python para gerenciar categorias de orçamento, como comida, roupas e entretenimento. Você poderá depositar, sacar e transferir fundos entre diferentes categorias.</p><p>Este projeto é inspirado no currículo de 'Computação Científica com Python' do freeCodeCamp.</p><h4>O que você vai aprender:</h4><ul><li>Criar e usar classes e objetos em Python.</li><li>Implementar métodos para realizar cálculos e manipular dados.</li><li>Escrever código Python claro e orientado a objetos.</li></ul><p>Para um guia passo a passo, confira o <a href='https://www.freecodecamp.org/learn/scientific-computing-with-python/scientific-computing-with-python-projects/build-a-budget-app' target='_blank' rel='noopener noreferrer' class='text-primary underline'>projeto no freeCodeCamp</a>.</p>"
+                    }
+                 ]
+             }
         ]
     }
 ];
