@@ -70,8 +70,12 @@ export function Header() {
             <span className="sr-only">Mudar idioma</span>
           </Button>
           <div className="hidden sm:flex gap-2">
-            <Button variant="outline">Entrar</Button>
-            <Button>Comece a Aprender</Button>
+            <Button variant="outline" asChild>
+              <Link href="/login">Entrar</Link>
+            </Button>
+            <Button asChild>
+              <Link href="/cadastro">Comece a Aprender</Link>
+            </Button>
           </div>
         </div>
       </div>

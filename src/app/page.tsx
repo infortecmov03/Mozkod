@@ -56,7 +56,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button size="lg" asChild>
-                <Link href="#">
+                <Link href="/cadastro">
                   Comece a Aprender Gratuitamente
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
@@ -128,7 +128,7 @@ export default function Home() {
             </p>
             <div className="mt-8">
               <Button size="lg" asChild>
-                <Link href="#">
+                <Link href="/cadastro">
                   Crie sua Conta Gratuita
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
