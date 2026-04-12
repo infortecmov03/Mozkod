@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, CheckCircle, Code, PencilRuler, Target } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { curriculumData, KnowledgeArea, TheoryLesson } from '@/lib/curriculum-data';
+import { curriculumData, KnowledgeArea, TheoryLesson, PracticeExercise } from '@/lib/curriculum-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -15,6 +15,8 @@ import { useAuth } from '@/context/AuthContext';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from '@/hooks/use-toast';
 import { useProgress } from '@/context/ProgressContext';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 
 export default function LearnPage() {
@@ -27,6 +29,11 @@ export default function LearnPage() {
   const [area, setArea] = useState<KnowledgeArea | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<TheoryLesson | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+
+  // State for practice tab
+  const [selectedPracticeLanguage, setSelectedPracticeLanguage] = useState<string | null>(null);
+  const [selectedExercise, setSelectedExercise] = useState<PracticeExercise | null>(null);
+  const [code, setCode] = useState('');
 
   const areaId = Array.isArray(params.areaId) ? params.areaId[0] : params.areaId;
 
@@ -50,12 +57,42 @@ export default function LearnPage() {
 
       if (foundArea) {
         setArea(foundArea);
+        // Set default theory lesson
         if (foundArea.theory && foundArea.theory.length > 0) {
           setSelectedLesson(foundArea.theory[0]);
+        }
+        // Set default practice language and exercise
+        if (foundArea.practice) {
+          const languages = Object.keys(foundArea.practice).filter(lang => foundArea.practice[lang]?.length > 0);
+          if (languages.length > 0) {
+              const defaultLang = languages[0];
+              setSelectedPracticeLanguage(defaultLang);
+              if (foundArea.practice[defaultLang]?.length > 0) {
+                  const firstExercise = foundArea.practice[defaultLang][0];
+                  setSelectedExercise(firstExercise);
+                  setCode(firstExercise.template);
+              } else {
+                  setSelectedExercise(null);
+                  setCode('');
+              }
+          }
         }
       }
     }
   }, [areaId]);
+
+  // Effect to update code when exercise or language changes
+  useEffect(() => {
+    if (selectedExercise) {
+      setCode(selectedExercise.template);
+    } else if (area && selectedPracticeLanguage && area.practice[selectedPracticeLanguage]?.length > 0) {
+        const firstExercise = area.practice[selectedPracticeLanguage][0];
+        setSelectedExercise(firstExercise);
+        setCode(firstExercise.template);
+    } else {
+        setCode('');
+    }
+  }, [selectedExercise, selectedPracticeLanguage, area]);
   
   const lessonIndex = area?.theory?.findIndex(l => l.id === selectedLesson?.id) ?? -1;
 
@@ -186,23 +223,112 @@ export default function LearnPage() {
       </div>
   );
 
-  const renderPractice = () => (
-     <div className="mt-6">
-         <Card>
-            <CardHeader>
-                <CardTitle>Exercícios Práticos</CardTitle>
-                <CardDescription>Aplique o que você aprendeu com desafios de codificação.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                 <div className="flex h-[60vh] items-center justify-center rounded-lg border-2 border-dashed">
-                    <div className="text-center text-muted-foreground">
-                        <p>Exercícios práticos para {area.title} em breve!</p>
+  const renderPractice = () => {
+    const practiceLanguages = area?.practice ? Object.keys(area.practice).filter(lang => area.practice[lang]?.length > 0) : [];
+
+    if (practiceLanguages.length === 0) {
+      return (
+        <div className="mt-6">
+           <Card>
+              <CardHeader>
+                  <CardTitle>Exercícios Práticos</CardTitle>
+                  <CardDescription>Aplique o que você aprendeu com desafios de codificação.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                   <div className="flex h-[60vh] items-center justify-center rounded-lg border-2 border-dashed">
+                      <div className="text-center text-muted-foreground">
+                          <p>Exercícios práticos para {area.title} em breve!</p>
+                      </div>
+                  </div>
+              </CardContent>
+          </Card>
+       </div>
+      );
+    }
+
+    const exercisesForLang = selectedPracticeLanguage ? area.practice[selectedPracticeLanguage] : [];
+
+    return (
+        <div className="flex flex-col md:flex-row gap-8 mt-6">
+            <aside className="w-full md:w-1/3 lg:w-1/4">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-headline text-xl">Exercícios</CardTitle>
+                        <div className="flex gap-2 pt-2 flex-wrap">
+                            {practiceLanguages.map(lang => (
+                                <Button
+                                    key={lang}
+                                    variant={selectedPracticeLanguage === lang ? 'default' : 'outline'}
+                                    size="sm"
+                                    onClick={() => {
+                                        setSelectedPracticeLanguage(lang);
+                                        setSelectedExercise(area.practice[lang]?.[0] || null);
+                                    }}
+                                    className="capitalize"
+                                >
+                                    {lang}
+                                </Button>
+                            ))}
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <ScrollArea className="h-[50vh]">
+                            <nav className="flex flex-col gap-1 pr-4">
+                                {exercisesForLang.map((exercise, index) => (
+                                    <button
+                                        key={exercise.id}
+                                        onClick={() => setSelectedExercise(exercise)}
+                                        className={`text-left p-3 rounded-md transition-colors w-full ${
+                                            selectedExercise?.id === exercise.id
+                                            ? 'bg-accent text-accent-foreground font-semibold'
+                                            : 'hover:bg-accent/50'
+                                        }`}
+                                    >
+                                        <span className="flex-1">{index + 1}. {exercise.title}</span>
+                                    </button>
+                                ))}
+                            </nav>
+                        </ScrollArea>
+                    </CardContent>
+                </Card>
+            </aside>
+
+            <div className="w-full md:w-2/3 lg:w-3/4">
+                {selectedExercise ? (
+                    <Card className="h-full flex flex-col">
+                        <CardHeader>
+                            <CardTitle className="font-headline text-2xl">{selectedExercise.title}</CardTitle>
+                            <CardDescription>{selectedExercise.statement}</CardDescription>
+                        </CardHeader>
+                        <Separator />
+                        <CardContent className="pt-6 flex-grow flex flex-col">
+                            <div className="flex-grow">
+                                <Label htmlFor="code-editor" className="sr-only">Editor de Código</Label>
+                                <Textarea
+                                    id="code-editor"
+                                    value={code}
+                                    onChange={(e) => setCode(e.target.value)}
+                                    className="h-full min-h-[300px] font-code text-sm bg-muted/30"
+                                    placeholder="Escreva seu código aqui..."
+                                />
+                            </div>
+                            <div className="mt-4 flex justify-end gap-4">
+                                <Button variant="secondary">Executar Testes</Button>
+                                <Button>Submeter</Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <div className="flex h-[75vh] items-center justify-center rounded-lg border-2 border-dashed">
+                        <div className="text-center">
+                            <p className="text-muted-foreground">Selecione um exercício para começar.</p>
+                        </div>
                     </div>
-                </div>
-            </CardContent>
-        </Card>
-     </div>
-  );
+                )}
+            </div>
+        </div>
+    );
+  };
 
   const renderQuizzes = () => (
      <div className="mt-6">
