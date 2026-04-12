@@ -1,6 +1,6 @@
-import { kaOS } from './ka-os';
-import { kaNET } from './ka-net';
-import { kaDB } from './ka-db';
-import { kaIAS } from './ka-ias';
+import { kaOS } from './os';
+import { kaNET } from './networking';
+import { kaDB } from './databases';
+import { kaIAS } from './security';
 
 export const level3KnowledgeAreas = [kaOS, kaNET, kaDB, kaIAS];

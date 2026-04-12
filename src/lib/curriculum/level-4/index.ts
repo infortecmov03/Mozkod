@@ -1,6 +1,6 @@
-import { kaSE } from './ka-se';
-import { kaSD } from './ka-sd';
-import { kaQA } from './ka-qa';
-import { kaREQ } from './ka-req';
+import { kaSE } from './se';
+import { kaSD } from './design';
+import { kaQA } from './qa';
+import { kaREQ } from './requirements';
 
 export const level4KnowledgeAreas = [kaSE, kaSD, kaQA, kaREQ];
