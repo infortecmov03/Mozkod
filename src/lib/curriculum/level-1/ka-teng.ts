@@ -42,6 +42,19 @@ export const kaTENG: KnowledgeArea = {
         `
       }
     ],
-    practice: {},
-    quizzes: []
+    practice: {
+      exercises: [
+        { id: 'teng-ex-1', title: 'Quiz de Vocabulário', statement: 'Combine os termos técnicos com suas definições.', template: 'Parameter: ...' },
+        { id: 'teng-ex-2', title: 'Depurar Erro', statement: 'Leia a mensagem de erro a seguir e explique o que ela significa: `TypeError: Cannot read properties of undefined (reading \'map\')`', template: 'Explicação: ...' }
+      ]
+    },
+    quizzes: [
+      {
+        id: 'quiz-teng-final',
+        title: 'Quiz Final: Inglês Técnico',
+        questions: [
+          { id: 'q1', question: 'O que significa "Deprecated"?', options: ['Recomendado', 'Novo', 'Obsoleto', 'Bugado'], correctAnswer: 2 }
+        ]
+      }
+    ]
 };

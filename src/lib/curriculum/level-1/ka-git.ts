@@ -79,6 +79,26 @@ export const kaGIT: KnowledgeArea = {
         `
       }
     ],
-    practice: {},
-    quizzes: []
+    practice: {
+      simulator: [
+        { id: 'git-sim-1', title: 'Inicializar Repositório', statement: 'Use o comando `git init` para iniciar um novo repositório.', template: 'git ' },
+        { id: 'git-sim-2', title: 'Fazer o Primeiro Commit', statement: 'Adicione um arquivo `README.md` e faça o commit.', template: 'git ' },
+      ]
+    },
+    quizzes: [
+      {
+        id: 'quiz-git-basics',
+        title: 'Quiz: Git Básico',
+        questions: [
+          { id: 'q1', question: 'Qual comando move arquivos para a Staging Area?', options: ['git commit', 'git add', 'git push', 'git stage'], correctAnswer: 1 }
+        ]
+      },
+      {
+        id: 'quiz-git-intermediate',
+        title: 'Quiz: Git Intermediário',
+        questions: [
+          { id: 'q1', question: 'O que é um "branch"?', options: ['Um commit', 'Uma linha de desenvolvimento independente', 'Um repositório remoto', 'Um conflito'], correctAnswer: 1 }
+        ]
+      }
+    ]
 };

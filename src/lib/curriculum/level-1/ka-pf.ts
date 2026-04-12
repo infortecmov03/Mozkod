@@ -95,10 +95,45 @@ terceiro_numero = numeros[2]  // Retorna 30
       }
     ],
     practice: {
-      python: [],
-      javascript: [],
-      java: [],
-      cpp: []
+      python: [
+        { id: 'py-vars', title: 'Exercício de Variáveis', statement: 'Declare variáveis para nome, idade e cidade.', template: '# seu código aqui' },
+        { id: 'py-cond', title: 'Exercício de Condicionais', statement: 'Escreva um if/else que verifica se um número é par ou ímpar.', template: 'numero = 10\n# seu código aqui' },
+      ],
+      javascript: [
+        { id: 'js-vars', title: 'Exercício de Variáveis', statement: 'Declare variáveis para nome, idade e cidade.', template: '// seu código aqui' },
+        { id: 'js-cond', title: 'Exercício de Condicionais', statement: 'Escreva um if/else que verifica se um número é par ou ímpar.', template: 'const numero = 10;\n// seu código aqui' },
+      ],
+      java: [
+        { id: 'java-vars', title: 'Exercício de Variáveis', statement: 'Declare variáveis para nome, idade e cidade.', template: '// seu código aqui' },
+      ],
+      cpp: [
+        { id: 'cpp-vars', title: 'Exercício de Variáveis', statement: 'Declare variáveis para nome, idade e cidade.', template: '// seu código aqui' },
+      ]
     },
-    quizzes: []
+    quizzes: [
+      {
+        id: 'quiz-pf-1',
+        title: 'Quiz de Fundamentos 1',
+        questions: [
+          {
+            id: 'q1',
+            question: 'Qual tipo de dado é usado para texto?',
+            options: ['Integer', 'Boolean', 'String', 'Float'],
+            correctAnswer: 2
+          }
+        ]
+      },
+      {
+        id: 'quiz-pf-2',
+        title: 'Quiz de Fundamentos 2',
+        questions: [
+          {
+            id: 'q1',
+            question: 'Qual loop é melhor para iterar sobre os itens de uma lista?',
+            options: ['while', 'for', 'do-while', 'if'],
+            correctAnswer: 1
+          }
+        ]
+      }
+    ]
 };

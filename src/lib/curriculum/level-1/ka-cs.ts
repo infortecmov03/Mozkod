@@ -73,9 +73,37 @@ export const kaCS: KnowledgeArea = {
       }
     ],
     practice: {
-      python: [],
-      javascript: [],
-      typescript: []
+      python: [
+        { id: 'py-bin-converter', title: 'Conversor Binário', statement: 'Crie uma função que converte um número decimal para binário.', template: 'def decimal_para_binario(decimal):\n  # seu código aqui\n  pass' },
+        { id: 'py-bool-ops', title: 'Operações Booleanas', statement: 'Implemente as portas lógicas AND, OR e NOT usando funções.', template: 'def AND(a, b):\n  # seu código aqui\n  pass' },
+      ],
+      javascript: [
+        { id: 'js-bin-converter', title: 'Conversor Binário', statement: 'Crie uma função que converte um número decimal para binário.', template: 'function decimalToBinary(decimal) {\n  // seu código aqui\n}' },
+        { id: 'js-bool-ops', title: 'Operações Booleanas', statement: 'Implemente as portas lógicas AND, OR e NOT usando funções.', template: 'function AND(a, b) {\n  // seu código aqui\n}' },
+      ],
+      typescript: [
+        { id: 'ts-bin-converter', title: 'Conversor Binário', statement: 'Crie uma função que converte um número decimal para binário.', template: 'function decimalToBinary(decimal: number): string {\n  // seu código aqui\n}' },
+        { id: 'ts-bool-ops', title: 'Operações Booleanas', statement: 'Implemente as portas lógicas AND, OR e NOT usando funções.', template: 'function AND(a: boolean, b: boolean): boolean {\n  // seu código aqui\n}' },
+      ]
     },
-    quizzes: []
+    quizzes: [
+      {
+        id: 'quiz-cs-core-final',
+        title: 'Quiz Final: Computer Science Core',
+        questions: [
+          {
+            id: 'q1',
+            question: 'Qual é a base do sistema de numeração binário?',
+            options: ['10', '2', '8', '16'],
+            correctAnswer: 1
+          },
+          {
+            id: 'q2',
+            question: 'Qual operador lógico retorna verdadeiro apenas se ambas as entradas forem verdadeiras?',
+            options: ['OR', 'NOT', 'AND', 'XOR'],
+            correctAnswer: 2
+          }
+        ]
+      }
+    ]
 };
