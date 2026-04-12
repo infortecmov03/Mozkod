@@ -11,9 +11,9 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   
   const navLinks = [
-    { href: "#features", label: "Features" },
-    { href: "#", label: "Curriculum" },
-    { href: "#", label: "Community" },
+    { href: "#features", label: "Recursos" },
+    { href: "#", label: "Currículo" },
+    { href: "#", label: "Comunidade" },
   ];
 
   return (
@@ -25,7 +25,7 @@ export function Header() {
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
                 <Menu className="h-6 w-6" />
-                <span className="sr-only">Toggle Menu</span>
+                <span className="sr-only">Alternar Menu</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="left">
@@ -67,11 +67,11 @@ export function Header() {
         <div className="flex items-center justify-end gap-2 md:flex-1">
           <Button variant="ghost" size="icon">
             <Globe className="h-5 w-5" />
-            <span className="sr-only">Switch language</span>
+            <span className="sr-only">Mudar idioma</span>
           </Button>
           <div className="hidden sm:flex gap-2">
-            <Button variant="outline">Sign In</Button>
-            <Button>Start Learning</Button>
+            <Button variant="outline">Entrar</Button>
+            <Button>Comece a Aprender</Button>
           </div>
         </div>
       </div>

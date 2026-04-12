@@ -11,36 +11,36 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-1 mb-4 md:mb-0">
             <Logo />
-            <p className="mt-4 text-sm text-muted-foreground">Open-source coding education platform for Mozambique.</p>
+            <p className="mt-4 text-sm text-muted-foreground">Plataforma de educação em programação de código aberto para Moçambique.</p>
           </div>
           <div className="col-span-1 md:col-start-3 md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-8">
             <div>
-              <h3 className="font-semibold text-foreground">Curriculum</h3>
+              <h3 className="font-semibold text-foreground">Currículo</h3>
               <ul className="mt-4 space-y-2">
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Levels</Link></li>
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Knowledge Areas</Link></li>
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Certificates</Link></li>
+                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Níveis</Link></li>
+                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Áreas de Conhecimento</Link></li>
+                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Certificados</Link></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">Community</h3>
+              <h3 className="font-semibold text-foreground">Comunidade</h3>
               <ul className="mt-4 space-y-2">
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Forum</Link></li>
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Events</Link></li>
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Contribute</Link></li>
+                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Fórum</Link></li>
+                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Eventos</Link></li>
+                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Contribuir</Link></li>
               </ul>
             </div>
              <div>
               <h3 className="font-semibold text-foreground">Legal</h3>
               <ul className="mt-4 space-y-2">
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Privacy Policy</Link></li>
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Terms of Service</Link></li>
+                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Política de Privacidade</Link></li>
+                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Termos de Serviço</Link></li>
               </ul>
             </div>
           </div>
         </div>
         <div className="mt-12 border-t pt-8 text-center text-sm text-muted-foreground">
-          &copy; {currentYear} Mozkod. All rights reserved.
+          &copy; {currentYear} Mozkod. Todos os direitos reservados.
         </div>
       </div>
     </footer>

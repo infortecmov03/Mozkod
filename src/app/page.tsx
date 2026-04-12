@@ -18,26 +18,26 @@ export default function Home() {
   const features = [
     {
       icon: <BookOpen className="w-8 h-8 text-primary" />,
-      title: "Multi-language Curriculum",
-      description: "ACM-aligned curriculum from fundamentals to advanced topics, including Technical English and Git, available in 7 languages.",
+      title: "Currículo Multilíngue",
+      description: "Currículo alinhado à ACM, desde os fundamentos até tópicos avançados, incluindo Inglês Técnico e Git, disponível em 7 idiomas.",
       image: curriculumImage
     },
     {
       icon: <Code className="w-8 h-8 text-primary" />,
-      title: "Interactive Code Editor",
-      description: "A powerful Monaco-based editor with real-time execution, test runner, and live preview for over 15 languages.",
+      title: "Editor de Código Interativo",
+      description: "Um poderoso editor baseado no Monaco com execução em tempo real, executor de testes e visualização ao vivo para mais de 15 idiomas.",
       image: editorImage
     },
     {
       icon: <GitMerge className="w-8 h-8 text-primary" />,
-      title: "Git Version Control",
-      description: "Learn industry-standard collaboration tools with an integrated Git panel right inside your learning environment.",
+      title: "Controle de Versão com Git",
+      description: "Aprenda ferramentas de colaboração padrão da indústria com um painel Git integrado diretamente no seu ambiente de aprendizagem.",
       image: gitImage
     },
     {
       icon: <Trophy className="w-8 h-8 text-primary" />,
-      title: "Achievements & Certificates",
-      description: "Track your progress, earn badges, and receive shareable certificates to showcase your skills.",
+      title: "Conquistas e Certificados",
+      description: "Acompanhe seu progresso, ganhe emblemas e receba certificados compartilháveis para mostrar suas habilidades.",
       image: achievementsImage
     },
   ];
@@ -49,21 +49,21 @@ export default function Home() {
         <section className="relative w-full pt-20 pb-20 md:pt-32 md:pb-40 overflow-hidden">
           <div className="container mx-auto px-4 text-center">
             <h1 className="font-headline text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-4">
-              Learn to Code, <span className="text-primary">Master the Future.</span>
+              Aprenda a Programar, <span className="text-primary">Domine o Futuro.</span>
             </h1>
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground mb-8">
-              Mozkod is a free, open-source platform providing a world-class coding education for everyone in Mozambique, from beginners to professionals.
+              Mozkod é uma plataforma gratuita e de código aberto que oferece educação em programação de classe mundial para todos em Moçambique, de iniciantes a profissionais.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button size="lg" asChild>
                 <Link href="#">
-                  Start Learning for Free
+                  Comece a Aprender Gratuitamente
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <Link href="#">
-                  Explore Curriculum
+                  Explorar Currículo
                 </Link>
               </Button>
             </div>
@@ -85,9 +85,9 @@ export default function Home() {
         <section id="features" className="py-16 lg:py-24 bg-card/50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="font-headline text-3xl md:text-4xl font-bold">A Complete Learning Platform</h2>
+              <h2 className="font-headline text-3xl md:text-4xl font-bold">Uma Plataforma de Aprendizagem Completa</h2>
               <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">
-                Everything you need to go from zero to hero in software development.
+                Tudo o que você precisa para ir do zero ao herói no desenvolvimento de software.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -122,14 +122,14 @@ export default function Home() {
         
         <section className="py-20 lg:py-24">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">Ready to Start Your Journey?</h2>
+            <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">Pronto para Começar sua Jornada?</h2>
             <p className="max-w-xl mx-auto mt-4 text-muted-foreground">
-              Join thousands of learners and begin building your future today. It's free, forever.
+              Junte-se a milhares de alunos e comece a construir seu futuro hoje. É grátis, para sempre.
             </p>
             <div className="mt-8">
               <Button size="lg" asChild>
                 <Link href="#">
-                  Create Your Free Account
+                  Crie sua Conta Gratuita
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
