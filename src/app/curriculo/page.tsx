@@ -61,7 +61,7 @@ export default function CurriculoPage() {
                       </CardHeader>
                       <CardContent className="flex-grow flex items-end">
                         <Button variant="secondary" className="w-full" asChild>
-                            <Link href={`/lessons/${area.id}`}>
+                            <Link href={`/learn/${area.id}`}>
                                 Começar a aprender
                             </Link>
                         </Button>

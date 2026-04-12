@@ -70,6 +70,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const currentUser = { name: foundUser.name, email: foundUser.email };
         localStorage.setItem('mozcod-currentUser', JSON.stringify(currentUser));
         setUser(currentUser);
+
+        const redirectPath = localStorage.getItem('redirectAfterLogin');
+        if (redirectPath) {
+          localStorage.removeItem('redirectAfterLogin');
+          router.push(redirectPath);
+        } else {
+          router.push('/dashboard');
+        }
         return true;
       }
       
@@ -83,6 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     try {
       localStorage.removeItem('mozcod-currentUser');
+      localStorage.removeItem('mozcod-progress');
       setUser(null);
       router.push('/');
     } catch (error) {
