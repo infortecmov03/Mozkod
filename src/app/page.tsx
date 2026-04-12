@@ -62,7 +62,7 @@ export default function Home() {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href="#">
+                <Link href="/curriculo">
                   Explorar Currículo
                 </Link>
               </Button>

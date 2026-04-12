@@ -5,26 +5,27 @@ import { Footer } from '@/components/layout/footer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BookOpen } from 'lucide-react';
+import Link from 'next/link';
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    if (user === null) {
-      // Small delay to allow AuthProvider to load user from localStorage
-      const timer = setTimeout(() => {
-        if (!localStorage.getItem('mozcod-currentUser')) {
-          router.push('/login');
-        }
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [user, router]);
+    setIsMounted(true);
+  }, []);
 
-  if (!user) {
+  useEffect(() => {
+    // Redirect if not authenticated after component has mounted
+    if (isMounted && !user) {
+      router.push('/login');
+    }
+  }, [user, isMounted, router]);
+
+  if (!isMounted || !user) {
     return (
         <div className="flex min-h-screen items-center justify-center bg-background">
             <p className="text-muted-foreground">A carregar...</p>
@@ -55,7 +56,9 @@ export default function DashboardPage() {
                 <p className="text-muted-foreground mb-4 max-w-sm">
                     Ainda não há progresso. Explore nosso currículo e comece a aprender hoje mesmo.
                 </p>
-                <Button>Explorar Cursos</Button>
+                <Button asChild>
+                  <Link href="/curriculo">Explorar Currículo</Link>
+                </Button>
             </div>
           </CardContent>
         </Card>

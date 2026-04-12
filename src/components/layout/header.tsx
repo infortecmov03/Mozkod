@@ -30,7 +30,7 @@ export function Header() {
   
   const navLinks = [
     { href: "#features", label: "Recursos" },
-    { href: "#", label: "Currículo" },
+    { href: "/curriculo", label: "Currículo" },
     { href: "#", label: "Comunidade" },
   ];
 
