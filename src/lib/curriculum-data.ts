@@ -1,8 +1,15 @@
+export type Lesson = {
+  id: string;
+  title: string;
+  content: string;
+};
+
 export type KnowledgeArea = {
   id: string;
   title: string;
   description: string;
   iconName: string;
+  lessons: Lesson[];
 };
 
 export type Level = {
@@ -18,9 +25,36 @@ export const curriculumData: Level[] = [
         title: "Nível 1: Introdução à Programação",
         description: "Comece sua jornada aprendendo os conceitos fundamentais da programação de uma forma simples e divertida.",
         knowledgeAreas: [
-            { id: "intro-logic", title: "Lógica de Programação", description: "O pilar de toda a programação.", iconName: "BrainCircuit" },
-            { id: "intro-python", title: "Primeiros Passos com Python", description: "Aprenda uma linguagem amigável para iniciantes.", iconName: "Code" },
-            { id: "intro-git", title: "Introdução ao Git", description: "Controle de versão para seus projetos.", iconName: "GitCommit" },
+            { 
+              id: "intro-logic", 
+              title: "Lógica de Programação", 
+              description: "O pilar de toda a programação.", 
+              iconName: "BrainCircuit",
+              lessons: [
+                { id: "logic-1", title: "O que é Programação?", content: "<h3>Bem-vindo ao mundo da programação!</h3><p>Programar é como dar instruções a um computador para que ele realize uma tarefa. Pense nisso como uma receita de bolo: você segue passos específicos para chegar a um resultado delicioso. Aqui, ensinamos o computador a 'cozinhar' soluções para problemas.</p>" },
+                { id: "logic-2", title: "Variáveis e Tipos de Dados", content: "<h3>Guardando Informações</h3><p>Variáveis são como caixas onde guardamos informações. Cada caixa pode guardar um tipo diferente de coisa: números, texto, valores de verdadeiro/falso, etc. Entender isso é fundamental para manipular dados em seus programas.</p>" },
+                { id: "logic-3", title: "Operadores e Expressões", content: "<h3>Fazendo Cálculos</h3><p>Operadores nos permitem realizar operações matemáticas (+, -, *, /) e lógicas (E, OU, NÃO). Combinando variáveis e operadores, criamos expressões que o computador avalia para nós.</p>" }
+              ]
+            },
+            { 
+              id: "intro-python", 
+              title: "Primeiros Passos com Python", 
+              description: "Aprenda uma linguagem amigável para iniciantes.", 
+              iconName: "Code",
+              lessons: [
+                { id: "python-1", title: "Instalando o Ambiente", content: "<h3>Preparando o Terreno</h3><p>Para começar a programar em Python, você precisa instalá-lo no seu computador. Vamos mostrar o passo a passo para deixar tudo pronto para a sua jornada.</p>" },
+                { id: "python-2", title: "Seu Primeiro 'Olá, Mundo!'", content: "<h3>O Ritual de Passagem</h3><p>Todo programador começa com um 'Olá, Mundo!'. É um programa simples que apenas imprime essa frase na tela. Vamos criar o seu e executá-lo.</p>" }
+              ]
+            },
+            { 
+              id: "intro-git", 
+              title: "Introdução ao Git", 
+              description: "Controle de versão para seus projetos.", 
+              iconName: "GitCommit",
+              lessons: [
+                 { id: "git-1", title: "O que é Controle de Versão?", content: "<h3>Viajando no Tempo do Código</h3><p>Git é uma ferramenta que permite salvar 'fotos' (snapshots) do seu código em diferentes momentos. Se algo der errado, você pode facilmente voltar para uma versão anterior que estava funcionando. É como ter um super-poder!</p>" }
+              ]
+            },
         ]
     },
     {
@@ -28,9 +62,9 @@ export const curriculumData: Level[] = [
         title: "Nível 2: Estruturas de Dados",
         description: "Organize e armazene dados de forma eficiente para resolver problemas complexos.",
         knowledgeAreas: [
-            { id: "data-arrays", title: "Arrays e Listas", description: "Coleções de dados fundamentais.", iconName: "Database" },
-            { id: "data-stacks-queues", title: "Pilhas e Filas", description: "Estruturas de dados lineares.", iconName: "Server" },
-            { id: "data-trees", title: "Árvores e Grafos", description: "Estruturas de dados não lineares.", iconName: "GitBranch" },
+            { id: "data-arrays", title: "Arrays e Listas", description: "Coleções de dados fundamentais.", iconName: "Database", lessons: [] },
+            { id: "data-stacks-queues", title: "Pilhas e Filas", description: "Estruturas de dados lineares.", iconName: "Server", lessons: [] },
+            { id: "data-trees", title: "Árvores e Grafos", description: "Estruturas de dados não lineares.", iconName: "GitBranch", lessons: [] },
         ]
     },
     {
@@ -38,9 +72,9 @@ export const curriculumData: Level[] = [
         title: "Nível 3: Algoritmos Avançados",
         description: "Domine técnicas algorítmicas para criar soluções otimizadas e eficientes.",
         knowledgeAreas: [
-            { id: "algo-sorting", title: "Ordenação e Busca", description: "Algoritmos clássicos e essenciais.", iconName: "Code" },
-            { id: "algo-dynamic", title: "Programação Dinâmica", description: "Resolva problemas complexos dividindo-os.", iconName: "BrainCircuit" },
-            { id: "algo-complexity", title: "Análise de Complexidade", description: "Entenda a eficiência de seus algoritmos.", iconName: "Rocket" },
+            { id: "algo-sorting", title: "Ordenação e Busca", description: "Algoritmos clássicos e essenciais.", iconName: "Code", lessons: [] },
+            { id: "algo-dynamic", title: "Programação Dinâmica", description: "Resolva problemas complexos dividindo-os.", iconName: "BrainCircuit", lessons: [] },
+            { id: "algo-complexity", title: "Análise de Complexidade", description: "Entenda a eficiência de seus algoritmos.", iconName: "Rocket", lessons: [] },
         ]
     },
      {
@@ -48,9 +82,9 @@ export const curriculumData: Level[] = [
         title: "Nível 4: Desenvolvimento Web",
         description: "Construa aplicações web interativas e modernas, do frontend ao backend.",
         knowledgeAreas: [
-            { id: "web-html-css", title: "HTML & CSS", description: "A base da web.", iconName: "Palette" },
-            { id: "web-js", title: "JavaScript & React", description: "Interatividade no lado do cliente.", iconName: "Code" },
-            { id: "web-backend", title: "Backend com Node.js", description: "Crie servidores e APIs.", iconName: "Server" },
+            { id: "web-html-css", title: "HTML & CSS", description: "A base da web.", iconName: "Palette", lessons: [] },
+            { id: "web-js", title: "JavaScript & React", description: "Interatividade no lado do cliente.", iconName: "Code", lessons: [] },
+            { id: "web-backend", title: "Backend com Node.js", description: "Crie servidores e APIs.", iconName: "Server", lessons: [] },
         ]
     },
     {
@@ -58,8 +92,8 @@ export const curriculumData: Level[] = [
         title: "Nível 5: Banco de Dados",
         description: "Aprenda a modelar, consultar e gerenciar bancos de dados relacionais e não-relacionais.",
         knowledgeAreas: [
-            { id: "db-sql", title: "SQL e Bancos Relacionais", description: "A linguagem padrão para bancos de dados.", iconName: "Database" },
-            { id: "db-nosql", title: "NoSQL e Modelagem", description: "Flexibilidade para dados modernos.", iconName: "Code" },
+            { id: "db-sql", title: "SQL e Bancos Relacionais", description: "A linguagem padrão para bancos de dados.", iconName: "Database", lessons: [] },
+            { id: "db-nosql", title: "NoSQL e Modelagem", description: "Flexibilidade para dados modernos.", iconName: "Code", lessons: [] },
         ]
     },
     {
@@ -67,8 +101,8 @@ export const curriculumData: Level[] = [
         title: "Nível 6: Tópicos Especiais",
         description: "Explore áreas especializadas e prepare-se para o mercado de trabalho.",
         knowledgeAreas: [
-            { id: "special-security", title: "Segurança da Informação", description: "Proteja suas aplicações.", iconName: "ShieldCheck" },
-            { id: "special-english", title: "Inglês Técnico", description: "Comunicação no mundo da tecnologia.", iconName: "Languages" },
+            { id: "special-security", title: "Segurança da Informação", description: "Proteja suas aplicações.", iconName: "ShieldCheck", lessons: [] },
+            { id: "special-english", title: "Inglês Técnico", description: "Comunicação no mundo da tecnologia.", iconName: "Languages", lessons: [] },
         ]
     },
     {
@@ -76,8 +110,8 @@ export const curriculumData: Level[] = [
         title: "Nível 7: Projeto Final",
         description: "Aplique todo o seu conhecimento para construir um projeto completo e impressionante.",
         knowledgeAreas: [
-             { id: "final-project", title: "Desenvolvimento do Projeto", description: "Planeje e execute seu projeto.", iconName: "Rocket" },
-             { id: "final-deploy", title: "Publicação e Manutenção", description: "Coloque seu projeto no ar.", iconName: "Server" },
+             { id: "final-project", title: "Desenvolvimento do Projeto", description: "Planeje e execute seu projeto.", iconName: "Rocket", lessons: [] },
+             { id: "final-deploy", title: "Publicação e Manutenção", description: "Coloque seu projeto no ar.", iconName: "Server", lessons: [] },
         ]
     }
 ];
