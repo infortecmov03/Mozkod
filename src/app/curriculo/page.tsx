@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import * as LucideIcons from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 const Icon = ({ name, className }: { name: string; className?: string }) => {
   const LucideIcon = (LucideIcons as any)[name];
@@ -54,6 +55,7 @@ export default function CurriculoPage() {
                                 <Icon name={area.iconName} className="w-6 h-6 text-accent" />
                                 {area.title}
                             </CardTitle>
+                             <Badge variant="secondary">{area.load}</Badge>
                         </div>
                          <CardDescription>{area.description}</CardDescription>
                       </CardHeader>

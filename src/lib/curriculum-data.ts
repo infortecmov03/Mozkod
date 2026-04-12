@@ -8,6 +8,7 @@ export type KnowledgeArea = {
   id: string;
   title: string;
   description: string;
+  load: string;
   iconName: string;
   lessons: Lesson[];
 };
@@ -22,124 +23,188 @@ export type Level = {
 export const curriculumData: Level[] = [
     {
         id: 1,
-        title: "Nível 1: Introdução à Programação",
-        description: "Comece sua jornada aprendendo os conceitos fundamentais da programação de uma forma simples e divertida.",
+        title: "Nível 1: Fundamentos (Core Foundations)",
+        description: "Comece sua jornada aprendendo os conceitos fundamentais da programação e da computação.",
         knowledgeAreas: [
             { 
-              id: "intro-logic", 
-              title: "Lógica de Programação", 
-              description: "O pilar de toda a programação.", 
-              iconName: "BrainCircuit",
-              lessons: [
-                { id: "logic-1", title: "O que é Programação?", content: "<h3>Bem-vindo ao mundo da programação!</h3><p>Programar é como dar instruções a um computador para que ele realize uma tarefa. Pense nisso como uma receita de bolo: você segue passos específicos para chegar a um resultado delicioso. Aqui, ensinamos o computador a 'cozinhar' soluções para problemas.</p>" },
-                { id: "logic-2", title: "Variáveis e Tipos de Dados", content: "<h3>Guardando Informações</h3><p>Variáveis são como caixas onde guardamos informações. Cada caixa pode guardar um tipo diferente de coisa: números, texto, valores de verdadeiro/falso, etc. Entender isso é fundamental para manipular dados em seus programas.</p>" },
-                { id: "logic-3", title: "Operadores e Expressões", content: "<h3>Fazendo Cálculos</h3><p>Operadores nos permitem realizar operações matemáticas (+, -, *, /) e lógicas (E, OU, NÃO). Combinando variáveis e operadores, criamos expressões que o computador avalia para nós.</p>" }
-              ]
+              id: "ka-cs-core", 
+              title: "Computer Science Core", 
+              description: "Sistemas binários, lógica booleana, representação de dados.", 
+              load: "40h",
+              iconName: "Cpu",
+              lessons: []
             },
             { 
-              id: "intro-python", 
-              title: "Primeiros Passos com Python", 
-              description: "Aprenda uma linguagem amigável para iniciantes.", 
-              iconName: "Code",
-              lessons: [
-                { id: "python-1", title: "Instalando o Ambiente", content: "<h3>Preparando o Terreno</h3><p>Para começar a programar em Python, você precisa instalá-lo no seu computador. Vamos mostrar o passo a passo para deixar tudo pronto para a sua jornada.</p>" },
-                { id: "python-2", title: "Seu Primeiro 'Olá, Mundo!'", content: "<h3>O Ritual de Passagem</h3><p>Todo programador começa com um 'Olá, Mundo!'. É um programa simples que apenas imprime essa frase na tela. Vamos criar o seu e executá-lo.</p>" }
-              ]
+              id: "ka-programming", 
+              title: "Programming Fundamentals", 
+              description: "Variáveis, tipos, estruturas de controle, funções, arrays.", 
+              load: "80h",
+              iconName: "Terminal",
+              lessons: []
             },
             { 
-              id: "intro-git", 
-              title: "Introdução ao Git", 
-              description: "Controle de versão para seus projetos.", 
-              iconName: "GitCommit",
-              lessons: [
-                 { id: "git-1", title: "O que é Controle de Versão?", content: "<h3>Viajando no Tempo do Código</h3><p>Git é uma ferramenta que permite salvar 'fotos' (snapshots) do seu código em diferentes momentos. Se algo der errado, você pode facilmente voltar para uma versão anterior que estava funcionando. É como ter um super-poder!</p>" }
-              ]
+              id: "ka-web", 
+              title: "Web Core", 
+              description: "HTML5 semântico, CSS3 (Flexbox/Grid), padrões web.", 
+              load: "60h",
+              iconName: "Globe",
+              lessons: []
+            },
+            { 
+              id: "ka-tech-english", 
+              title: "Technical English", 
+              description: "Vocabulário de programação, leitura de documentação, mensagens de erro.", 
+              load: "30h",
+              iconName: "Languages",
+              lessons: []
+            },
+            { 
+              id: "ka-git", 
+              title: "Git & Version Control", 
+              description: "Fundamentos de controle de versão, comandos básicos, GitHub.", 
+              load: "30h",
+              iconName: "GitBranch",
+              lessons: []
+            },
+            { 
+              id: "ka-hci", 
+              title: "Human-Computer Interaction", 
+              description: "Princípios de usabilidade, acessibilidade básica, design centrado no usuário.", 
+              load: "20h",
+              iconName: "MousePointerClick",
+              lessons: []
             },
         ]
     },
     {
         id: 2,
-        title: "Nível 2: Estruturas de Dados",
-        description: "Organize e armazene dados de forma eficiente para resolver problemas complexos.",
+        title: "Nível 2: Algoritmos e Estruturas de Dados",
+        description: "Organize e manipule dados de forma eficiente para resolver problemas complexos.",
         knowledgeAreas: [
-            { id: "data-arrays", title: "Arrays e Listas", description: "Coleções de dados fundamentais.", iconName: "Database", lessons: [] },
-            { id: "data-stacks-queues", title: "Pilhas e Filas", description: "Estruturas de dados lineares.", iconName: "Server", lessons: [] },
-            { id: "data-trees", title: "Árvores e Grafos", description: "Estruturas de dados não lineares.", iconName: "GitBranch", lessons: [] },
+            { id: "ka-algorithms", title: "Algorithms", description: "Análise de algoritmos, ordenação, busca, recursão, paradigmas.", load: "70h", iconName: "BrainCircuit", lessons: [] },
+            { id: "ka-data-structures", title: "Data Structures", description: "Arrays, listas ligadas, pilhas, filas, árvores, grafos, hash tables.", load: "70h", iconName: "Database", lessons: [] },
+            { id: "ka-discrete-math", title: "Discrete Mathematics", description: "Conjuntos, relações, funções, lógica, combinatória, probabilidade.", load: "40h", iconName: "Sigma", lessons: [] },
+            { id: "ka-pl-advanced", title: "Programming Languages Advanced", description: "Programação funcional, orientação a objetos, genéricos, exceções.", load: "40h", iconName: "Code2", lessons: [] },
         ]
     },
     {
         id: 3,
-        title: "Nível 3: Algoritmos Avançados",
-        description: "Domine técnicas algorítmicas para criar soluções otimizadas e eficientes.",
+        title: "Nível 3: Sistemas e Infraestrutura",
+        description: "Entenda como os sistemas de software funcionam em um nível mais profundo.",
         knowledgeAreas: [
-            { id: "algo-sorting", title: "Ordenação e Busca", description: "Algoritmos clássicos e essenciais.", iconName: "Code", lessons: [] },
-            { id: "algo-dynamic", title: "Programação Dinâmica", description: "Resolva problemas complexos dividindo-os.", iconName: "BrainCircuit", lessons: [] },
-            { id: "algo-complexity", title: "Análise de Complexidade", description: "Entenda a eficiência de seus algoritmos.", iconName: "Rocket", lessons: [] },
+            { id: "ka-os", title: "Operating Systems", description: "Processos, threads, gerenciamento de memória, sistemas de arquivos, concorrência.", load: "50h", iconName: "HardDrive", lessons: [] },
+            { id: "ka-networking", title: "Networking & Communications", description: "Modelo OSI, TCP/IP, HTTP/HTTPS, DNS, roteamento, segurança básica.", load: "50h", iconName: "Network", lessons: [] },
+            { id: "ka-databases", title: "Database Systems", description: "Modelo relacional, SQL, design de banco de dados, normalização, índices.", load: "60h", iconName: "Database", lessons: [] },
+            { id: "ka-security", title: "Information Assurance & Security", description: "Princípios de segurança, criptografia básica, segurança web.", load: "30h", iconName: "ShieldCheck", lessons: [] },
         ]
     },
      {
         id: 4,
-        title: "Nível 4: Desenvolvimento Web",
-        description: "Construa aplicações web interativas e modernas, do frontend ao backend.",
+        title: "Nível 4: Engenharia de Software",
+        description: "Aprenda a projetar, construir e manter software de alta qualidade em equipe.",
         knowledgeAreas: [
-            { id: "web-html-css", title: "HTML & CSS", description: "A base da web.", iconName: "Palette", lessons: [] },
-            { id: "web-js", title: "JavaScript & React", description: "Interatividade no lado do cliente.", iconName: "Code", lessons: [] },
-            { id: "web-backend", title: "Backend com Node.js", description: "Crie servidores e APIs.", iconName: "Server", lessons: [] },
+            { id: "ka-se", title: "Software Engineering", description: "Ciclo de vida, metodologias ágeis, Scrum, Kanban, estimativas.", load: "40h", iconName: "Construction", lessons: [] },
+            { id: "ka-design", title: "Software Design", description: "Padrões de design, princípios SOLID, arquitetura de software, UML, refatoração.", load: "60h", iconName: "Architecture", lessons: [] },
+            { id: "ka-testing", title: "Quality Assurance & Testing", description: "Testes unitários, integração, TDD, mocking, CI/CD.", load: "40h", iconName: "ClipboardCheck", lessons: [] },
+            { id: "ka-requirements", title: "Requirements Engineering", description: "Levantamento de requisitos, histórias de usuário, casos de uso.", load: "20h", iconName: "ListChecks", lessons: [] },
         ]
     },
     {
         id: 5,
-        title: "Nível 5: Banco de Dados",
-        description: "Aprenda a modelar, consultar e gerenciar bancos de dados relacionais e não-relacionais.",
+        title: "Nível 5: Especializações",
+        description: "Aprofunde-se em áreas de alta demanda no mercado de tecnologia. (Escolha 2-3)",
         knowledgeAreas: [
-            { id: "db-sql", title: "SQL e Bancos Relacionais", description: "A linguagem padrão para bancos de dados.", iconName: "Database", lessons: [] },
-            { id: "db-nosql", title: "NoSQL e Modelagem", description: "Flexibilidade para dados modernos.", iconName: "Code", lessons: [] },
+            { id: "ka-web-advanced", title: "Advanced Web Development", description: "React/Next.js, Node.js, APIs RESTful, GraphQL, WebSockets.", load: "80h", iconName: "Rocket", lessons: [] },
+            { id: "ka-mobile", title: "Mobile Development", description: "React Native, Flutter, desenvolvimento nativo (iOS/Android).", load: "60h", iconName: "Smartphone", lessons: [] },
+            { id: "ka-ai-ml", title: "Artificial Intelligence & ML", description: "Fundamentos de ML, aprendizagem supervisionada, redes neurais, deep learning.", load: "60h", iconName: "Brain", lessons: [] },
+            { id: "ka-cloud", title: "Cloud Computing", description: "AWS/Azure/GCP, containers (Docker), Kubernetes, serverless.", load: "50h", iconName: "Cloud", lessons: [] },
+            { id: "ka-cybersecurity", title: "Cybersecurity", description: "Segurança de redes, segurança web, ethical hacking, forense digital.", load: "50h", iconName: "ShieldAlert", lessons: [] },
+            { id: "ka-data-science", title: "Data Science & Analytics", description: "Análise de dados, visualização, Big Data, ETL.", load: "40h", iconName: "BarChart", lessons: [] },
+            { id: "ka-blockchain", title: "Blockchain & Web3", description: "Fundamentos blockchain, smart contracts, DeFi, dApps.", load: "40h", iconName: "Link", lessons: [] },
+            { id: "ka-game-dev", title: "Game Development", description: "Unity, Unreal Engine, design de jogos, física de jogos.", load: "40h", iconName: "Gamepad2", lessons: [] },
+            { id: "ka-iot", title: "Internet of Things", description: "Sensores, microcontroladores, protocolos IoT, edge computing.", load: "30h", iconName: "Router", lessons: [] },
         ]
     },
     {
         id: 6,
-        title: "Nível 6: Tópicos Especiais",
-        description: "Explore áreas especializadas e prepare-se para o mercado de trabalho.",
+        title: "Nível 6: Desenvolvimento Profissional",
+        description: "Desenvolva as habilidades interpessoais e de carreira para se destacar.",
         knowledgeAreas: [
-            { id: "special-security", title: "Segurança da Informação", description: "Proteja suas aplicações.", iconName: "ShieldCheck", lessons: [] },
-            { id: "special-english", title: "Inglês Técnico", description: "Comunicação no mundo da tecnologia.", iconName: "Languages", lessons: [] },
+            { id: "ka-career", title: "Career Skills", description: "Currículo, portfólio, entrevistas técnicas, networking, freelancing.", load: "30h", iconName: "Briefcase", lessons: [] },
+            { id: "ka-soft-skills", title: "Soft Skills", description: "Comunicação, trabalho em equipe, resolução de problemas, liderança.", load: "30h", iconName: "Users", lessons: [] },
+            { id: "ka-ethics", title: "Ethics & Professionalism", description: "Ética em computação, propriedade intelectual, privacidade, sustentabilidade.", load: "20h", iconName: "Scale", lessons: [] },
+            { id: "ka-entrepreneurship", title: "Entrepreneurship", description: "Modelos de negócio, startups, pitch, captação de recursos.", load: "20h", iconName: "Lightbulb", lessons: [] },
+            { id: "ka-advanced-git", title: "Advanced Git & Collaboration", description: "Git avançado, code reviews, open source contribution, monorepos.", load: "20h", iconName: "GitMerge", lessons: [] },
         ]
     },
     {
         id: 7,
-        title: "Nível 7: Projetos Guiados (freeCodeCamp)",
-        description: "Aplique seu conhecimento com projetos práticos para construir um portfólio impressionante.",
+        title: "Nível 7: Certificações Full Stack (freeCodeCamp)",
+        description: "Valide suas habilidades com projetos práticos e certificações reconhecidas.",
         knowledgeAreas: [
              { 
-                 id: "guided-projects-web", 
-                 title: "Projetos Web", 
-                 description: "Construa aplicações web do mundo real.", 
-                 iconName: "LaptopCode", 
-                 lessons: [
-                    { 
-                        id: "project-html-css", 
-                        title: "Projeto 1: Página de Tributo", 
-                        content: "<h3>Construa uma Página de Tributo</h3><p>Neste projeto, você construirá uma página da web simples para homenagear uma pessoa ou assunto de sua escolha. É um ótimo exercício para praticar suas habilidades fundamentais de HTML e CSS.</p><p>Este projeto é inspirado no currículo de 'Design Web Responsivo' do freeCodeCamp.</p><h4>O que você vai aprender:</h4><ul><li>Estruturar uma página com HTML5 semântico.</li><li>Estilizar elementos com CSS, incluindo seletores, cores e tipografia.</li><li>Tornar sua página responsiva para diferentes tamanhos de tela.</li></ul><p>Para um guia passo a passo, confira o <a href='https://www.freecodecamp.org/learn/responsive-web-design/responsive-web-design-projects/build-a-tribute-page' target='_blank' rel='noopener noreferrer' class='text-primary underline'>projeto no freeCodeCamp</a>.</p>" 
-                    },
-                    { 
-                        id: "project-javascript", 
-                        title: "Projeto 2: Gerador de Citações Aleatórias", 
-                        content: "<h3>Construa um Gerador de Citações</h3><p>Neste projeto, você criará um aplicativo que exibe uma nova citação toda vez que um botão é clicado. Você vai praticar a manipulação do DOM com JavaScript e trabalhar com arrays e objetos.</p><p>Este projeto é inspirado no currículo de 'Algoritmos e Estruturas de Dados em JavaScript' do freeCodeCamp.</p><h4>O que você vai aprender:</h4><ul><li>Manipular o DOM para atualizar o conteúdo da página.</li><li>Usar JavaScript para lidar com eventos de clique.</li><li>Trabalhar com arrays de objetos para armazenar os dados das citações.</li></ul><p>Para um guia passo a passo, confira o <a href='https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/javascript-algorithms-and-data-structures-projects/build-a-random-quote-machine' target='_blank' rel='noopener noreferrer' class='text-primary underline'>projeto no freeCodeCamp</a>.</p>" 
-                    }
-                 ] 
+                 id: "fcc-responsive-web", 
+                 title: "Responsive Web Design", 
+                 description: "5 projetos para dominar HTML e CSS responsivo.", 
+                 load: "50h",
+                 iconName: "MonitorSmartphone", 
+                 lessons: []
              },
              {
-                 id: "guided-projects-python",
-                 title: "Projetos Python",
-                 description: "Resolva problemas com Python.",
+                 id: "fcc-javascript-algorithms",
+                 title: "JavaScript Algorithms and Data Structures",
+                 description: "5 projetos para solidificar sua lógica com JavaScript.",
+                 load: "50h",
                  iconName: "Code",
-                 lessons: [
-                    {
-                        id: "project-python-budget",
-                        title: "Projeto 3: App de Orçamento",
-                        content: "<h3>Construa um App de Orçamento</h3><p>Neste projeto, você criará uma classe Python para gerenciar categorias de orçamento, como comida, roupas e entretenimento. Você poderá depositar, sacar e transferir fundos entre diferentes categorias.</p><p>Este projeto é inspirado no currículo de 'Computação Científica com Python' do freeCodeCamp.</p><h4>O que você vai aprender:</h4><ul><li>Criar e usar classes e objetos em Python.</li><li>Implementar métodos para realizar cálculos e manipular dados.</li><li>Escrever código Python claro e orientado a objetos.</li></ul><p>Para um guia passo a passo, confira o <a href='https://www.freecodecamp.org/learn/scientific-computing-with-python/scientific-computing-with-python-projects/build-a-budget-app' target='_blank' rel='noopener noreferrer' class='text-primary underline'>projeto no freeCodeCamp</a>.</p>"
-                    }
-                 ]
+                 lessons: []
+             },
+             {
+                 id: "fcc-frontend-libraries",
+                 title: "Front End Development Libraries",
+                 description: "5 projetos com bibliotecas populares como React e Redux.",
+                 load: "50h",
+                 iconName: "Library",
+                 lessons: []
+             },
+             {
+                 id: "fcc-data-viz",
+                 title: "Data Visualization",
+                 description: "5 projetos para visualizar dados com D3.js.",
+                 load: "40h",
+                 iconName: "AreaChart",
+                 lessons: []
+             },
+             {
+                 id: "fcc-relational-db",
+                 title: "Relational Database",
+                 description: "5 projetos para aprender a gerenciar bancos de dados com SQL.",
+                 load: "40h",
+                 iconName: "Database",
+                 lessons: []
+             },
+             {
+                 id: "fcc-backend-apis",
+                 title: "Back End Development and APIs",
+                 description: "5 projetos para construir APIs e microserviços.",
+                 load: "50h",
+                 iconName: "Server",
+                 lessons: []
+             },
+             {
+                 id: "fcc-quality-assurance",
+                 title: "Quality Assurance",
+                 description: "5 projetos para garantir a qualidade do seu código.",
+                 load: "40h",
+                 iconName: "TestTube",
+                 lessons: []
+             },
+             {
+                 id: "fcc-capstone",
+                 title: "Capstone Project",
+                 description: "Projeto final integrador para demonstrar todas as suas habilidades.",
+                 load: "80h",
+                 iconName: "GraduationCap",
+                 lessons: []
              }
         ]
     }
