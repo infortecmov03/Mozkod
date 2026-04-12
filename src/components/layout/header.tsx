@@ -2,13 +2,26 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Globe, Menu } from "lucide-react";
+import { Globe, Menu, User, LogOut } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const router = useRouter();
   
   const navLinks = [
     { href: "#features", label: "Recursos" },
@@ -39,6 +52,11 @@ export function Header() {
                       {link.label}
                     </Link>
                   ))}
+                  {user && (
+                     <Link href="/dashboard" onClick={() => setIsOpen(false)} className="text-lg font-medium text-foreground/80 hover:text-foreground">
+                        Painel
+                      </Link>
+                  )}
                 </nav>
               </div>
             </SheetContent>
@@ -55,6 +73,11 @@ export function Header() {
                     {link.label}
                 </Link>
             ))}
+            {user && (
+              <Link href="/dashboard" className="font-medium transition-colors text-foreground/60 hover:text-foreground/80">
+                Painel
+              </Link>
+            )}
             </nav>
         </div>
         
@@ -69,14 +92,53 @@ export function Header() {
             <Globe className="h-5 w-5" />
             <span className="sr-only">Mudar idioma</span>
           </Button>
-          <div className="hidden sm:flex gap-2">
-            <Button variant="outline" asChild>
-              <Link href="/login">Entrar</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/cadastro">Comece a Aprender</Link>
-            </Button>
-          </div>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                     <AvatarFallback>{user.name ? user.name.charAt(0).toUpperCase() : 'U'}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user.name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push('/dashboard')}>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Painel</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={logout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Sair</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <div className="hidden sm:flex gap-2">
+                <Button variant="outline" asChild>
+                  <Link href="/login">Entrar</Link>
+                </Button>
+                <Button asChild>
+                  <Link href="/cadastro">Comece a Aprender</Link>
+                </Button>
+              </div>
+               <div className="sm:hidden">
+                 <Button variant="outline" asChild>
+                     <Link href="/login">Entrar</Link>
+                 </Button>
+             </div>
+            </>
+          )}
         </div>
       </div>
     </header>
