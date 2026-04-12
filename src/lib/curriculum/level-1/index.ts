@@ -1,4 +1,4 @@
-import { kaCS } from './ka-cs';
+import { kaCS } from './cs-core';
 import { kaPF } from './ka-pf';
 import { kaWEB } from './ka-web';
 import { kaTENG } from './ka-teng';

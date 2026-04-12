@@ -302,15 +302,23 @@ export default function LearnPage() {
                         </CardHeader>
                         <Separator />
                         <CardContent className="pt-6 flex-grow flex flex-col">
-                            <div className="flex-grow">
-                                <Label htmlFor="code-editor" className="sr-only">Editor de Código</Label>
-                                <Textarea
-                                    id="code-editor"
-                                    value={code}
-                                    onChange={(e) => setCode(e.target.value)}
-                                    className="h-full min-h-[300px] font-code text-sm bg-muted/30"
-                                    placeholder="Escreva seu código aqui..."
-                                />
+                            <div className="flex-grow flex flex-col space-y-4">
+                                <div>
+                                    <h3 className="font-semibold text-lg">Sua Solução</h3>
+                                    <p className="text-sm text-muted-foreground">
+                                        Use o editor abaixo para escrever sua solução na linguagem selecionada. Quando estiver pronto, submeta para verificar contra nossos casos de teste.
+                                    </p>
+                                </div>
+                                <div className="flex-grow">
+                                    <Label htmlFor="code-editor" className="sr-only">Editor de Código</Label>
+                                    <Textarea
+                                        id="code-editor"
+                                        value={code}
+                                        onChange={(e) => setCode(e.target.value)}
+                                        className="h-full min-h-[300px] font-code text-sm bg-muted/30"
+                                        placeholder="Escreva seu código aqui..."
+                                    />
+                                </div>
                             </div>
                             <div className="mt-4 flex justify-end gap-4">
                                 <Button variant="secondary">Executar Testes</Button>
