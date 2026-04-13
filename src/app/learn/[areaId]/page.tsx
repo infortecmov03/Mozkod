@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle, Code, PencilRuler, Target } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { curriculumData, KnowledgeArea, TheoryLesson, PracticeExercise } from '@/lib/curriculum-data';
@@ -24,7 +24,7 @@ export default function LearnPage() {
   const router = useRouter();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { progress, markAsCompleted, isCompleted } = useProgress();
+  const { markAsCompleted, isCompleted } = useProgress();
 
   const [area, setArea] = useState<KnowledgeArea | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<TheoryLesson | null>(null);
@@ -57,42 +57,30 @@ export default function LearnPage() {
 
       if (foundArea) {
         setArea(foundArea);
-        // Set default theory lesson
-        if (foundArea.theory && foundArea.theory.length > 0) {
-          setSelectedLesson(foundArea.theory[0]);
-        }
-        // Set default practice language and exercise
+        setSelectedLesson(null); // DO NOT select first lesson by default
+        setSelectedPracticeLanguage(null);
+        setSelectedExercise(null);
+        setCode('');
+
+        // Pre-select first language if available, but not first exercise
         if (foundArea.practice) {
-          const languages = Object.keys(foundArea.practice).filter(lang => foundArea.practice[lang]?.length > 0);
-          if (languages.length > 0) {
-              const defaultLang = languages[0];
-              setSelectedPracticeLanguage(defaultLang);
-              if (foundArea.practice[defaultLang]?.length > 0) {
-                  const firstExercise = foundArea.practice[defaultLang][0];
-                  setSelectedExercise(firstExercise);
-                  setCode(firstExercise.template);
-              } else {
-                  setSelectedExercise(null);
-                  setCode('');
-              }
-          }
+             const languages = Object.keys(foundArea.practice).filter(lang => foundArea.practice[lang]?.length > 0);
+             if (languages.length > 0) {
+                 setSelectedPracticeLanguage(languages[0]);
+             }
         }
       }
     }
   }, [areaId]);
 
-  // Effect to update code when exercise or language changes
+  // Effect to update code when exercise changes
   useEffect(() => {
     if (selectedExercise) {
       setCode(selectedExercise.template);
-    } else if (area && selectedPracticeLanguage && area.practice[selectedPracticeLanguage]?.length > 0) {
-        const firstExercise = area.practice[selectedPracticeLanguage][0];
-        setSelectedExercise(firstExercise);
-        setCode(firstExercise.template);
     } else {
         setCode('');
     }
-  }, [selectedExercise, selectedPracticeLanguage, area]);
+  }, [selectedExercise]);
   
   const lessonIndex = area?.theory?.findIndex(l => l.id === selectedLesson?.id) ?? -1;
 
@@ -115,6 +103,11 @@ export default function LearnPage() {
         description: `Lição "${selectedLesson.title}" marcada como concluída.`
       })
     }
+  }
+
+  const handleLanguageSelect = (lang: string) => {
+    setSelectedPracticeLanguage(lang);
+    setSelectedExercise(null); // Deselect exercise when language changes
   }
 
 
@@ -140,6 +133,17 @@ export default function LearnPage() {
       </div>
     );
   }
+  
+   const OverviewComponent = ({title, description}: {title: string, description: string}) => (
+      <div className="flex h-full min-h-[70vh] items-center justify-center rounded-lg border-2 border-dashed">
+          <div className="text-center p-8">
+              <BookOpen className="mx-auto h-12 w-12 text-muted-foreground" />
+              <h2 className="mt-6 text-2xl font-headline font-semibold">{title}</h2>
+              <p className="mt-2 text-muted-foreground max-w-lg mx-auto">{description}</p>
+              <p className="mt-6 font-semibold text-primary">Selecione uma lição ou exercício na barra lateral para começar.</p>
+          </div>
+      </div>
+  );
 
   const renderTheory = () => (
     <div className="flex flex-col md:flex-row gap-8 mt-6">
@@ -213,11 +217,7 @@ export default function LearnPage() {
               </CardContent>
             </Card>
           ) : (
-            <div className="flex h-[75vh] items-center justify-center rounded-lg border-2 border-dashed">
-              <div className="text-center">
-                  <p className="text-muted-foreground">Selecione uma lição para começar.</p>
-              </div>
-            </div>
+             <OverviewComponent title={`Visão Geral de ${area.title}`} description={area.description}/>
           )}
         </div>
       </div>
@@ -260,10 +260,7 @@ export default function LearnPage() {
                                     key={lang}
                                     variant={selectedPracticeLanguage === lang ? 'default' : 'outline'}
                                     size="sm"
-                                    onClick={() => {
-                                        setSelectedPracticeLanguage(lang);
-                                        setSelectedExercise(area.practice[lang]?.[0] || null);
-                                    }}
+                                    onClick={() => handleLanguageSelect(lang)}
                                     className="capitalize"
                                 >
                                     {lang}
@@ -327,11 +324,7 @@ export default function LearnPage() {
                         </CardContent>
                     </Card>
                 ) : (
-                    <div className="flex h-[75vh] items-center justify-center rounded-lg border-2 border-dashed">
-                        <div className="text-center">
-                            <p className="text-muted-foreground">Selecione um exercício para começar.</p>
-                        </div>
-                    </div>
+                    <OverviewComponent title={`Exercícios de ${area.title}`} description={`Escolha uma linguagem e selecione um exercício para começar a praticar.`}/>
                 )}
             </div>
         </div>
@@ -394,3 +387,5 @@ export default function LearnPage() {
     </div>
   );
 }
+
+    
