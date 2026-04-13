@@ -14,8 +14,14 @@ type ProgressContextType = {
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
 
-// Calculate total lessons once
-const totalLessons = curriculumData.flatMap(level => level.knowledgeAreas).flatMap(ka => ka.theory).length;
+// Calculate total lessons once, including theory and practice
+const totalLessons = curriculumData
+  .flatMap(level => level.knowledgeAreas)
+  .reduce((acc, area) => {
+    const theoryCount = area.theory.length;
+    const practiceCount = Object.values(area.practice).reduce((pAcc, langExercises) => pAcc + langExercises.length, 0);
+    return acc + theoryCount + practiceCount;
+  }, 0);
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
   const [progress, setProgress] = useState<string[]>([]);

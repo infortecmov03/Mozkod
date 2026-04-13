@@ -25,7 +25,7 @@ export default function LearnPage() {
   const router = useRouter();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { isCompleted } = useProgress();
+  const { isCompleted, markAsCompleted } = useProgress();
 
   const [area, setArea] = useState<KnowledgeArea | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<TheoryLesson | null>(null);
@@ -40,6 +40,7 @@ export default function LearnPage() {
   const [testResults, setTestResults] = useState<{ description: string; passed: boolean; error?: string }[]>([]);
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [htmlSrcDoc, setHtmlSrcDoc] = useState('');
+  const [allTestsPassed, setAllTestsPassed] = useState(false);
 
 
   const areaId = Array.isArray(params.areaId) ? params.areaId[0] : params.areaId;
@@ -91,6 +92,7 @@ export default function LearnPage() {
     }
     setTestResults([]);
     setConsoleOutput([]);
+    setAllTestsPassed(false);
   }, [selectedExercise]);
 
   useEffect(() => {
@@ -207,6 +209,7 @@ export default function LearnPage() {
                 });
                 setTestResults(results);
                 setConsoleOutput(capturedLogs);
+                setAllTestsPassed(false);
                 return; // Stop on first error
             }
         }
@@ -216,11 +219,12 @@ export default function LearnPage() {
     
     setTestResults(results);
     setConsoleOutput(capturedLogs);
+    setAllTestsPassed(allPassed);
 
     if (allPassed) {
         toast({
             title: "Sucesso!",
-            description: "Todos os testes passaram.",
+            description: "Todos os testes passaram. Você já pode submeter seu exercício.",
         });
     } else {
         toast({
@@ -230,6 +234,24 @@ export default function LearnPage() {
         });
     }
 };
+
+ const handleSubmitExercise = () => {
+    if (!selectedExercise) return;
+
+    if (isCompleted(selectedExercise.id)) {
+        toast({
+            title: "Já submetido!",
+            description: "Você já concluiu este exercício.",
+        });
+        return;
+    }
+
+    markAsCompleted(selectedExercise.id);
+    toast({
+        title: "Exercício submetido com sucesso!",
+        description: "Bom trabalho! Continue para o próximo desafio.",
+    });
+  };
 
 
   if (!isMounted || !user) {
@@ -441,7 +463,10 @@ export default function LearnPage() {
                                         : 'hover:bg-accent/50'
                                     }`}
                                 >
-                                    <span className="flex-1">{index + 1}. {exercise.title}</span>
+                                    <div className="flex items-center gap-3">
+                                      <CheckCircle className={`h-5 w-5 ${isCompleted(exercise.id) ? 'text-primary' : 'text-muted-foreground/50'}`} />
+                                      <span className="flex-1">{index + 1}. {exercise.title}</span>
+                                    </div>
                                 </button>
                             ))
                         ) : (
@@ -580,7 +605,17 @@ export default function LearnPage() {
 
                             <div className="pt-4 flex justify-end gap-4">
                                 <Button variant="secondary" onClick={handleRunTests}>Executar Testes</Button>
-                                <Button>Submeter</Button>
+                                <Button
+                                  onClick={handleSubmitExercise}
+                                  disabled={!allTestsPassed || isCompleted(selectedExercise.id)}
+                                >
+                                  {isCompleted(selectedExercise.id) ? (
+                                    <>
+                                      <CheckCircle className="mr-2 h-4 w-4" />
+                                      Submetido
+                                    </>
+                                  ) : "Submeter"}
+                                </Button>
                             </div>
                         </CardContent>
                     </Card>
@@ -652,5 +687,3 @@ export default function LearnPage() {
     </div>
   );
 }
-
-    
