@@ -1,7 +1,7 @@
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
-    id: "web-t2",
+    id: "web-t6",
     title: "HTML Semântico",
     content: `
         <h2>Escrevendo HTML com Significado</h2>
@@ -18,7 +18,9 @@ export const lesson: TheoryLesson = {
 &lt;main&gt;...&lt;/main&gt;      // Conteúdo principal da página
 &lt;article&gt;...&lt;/article&gt;  // Um bloco de conteúdo autônomo (ex: post de blog)
 &lt;section&gt;...&lt;/section&gt;  // Uma seção temática dentro da página
+&lt;aside&gt;...&lt;/aside&gt;    // Conteúdo lateral (ex: sidebar)
 &lt;footer&gt;...&lt;/footer&gt;  // Rodapé da página
+&lt;figure&gt;...&lt;/figure&gt;  // Para conteúdo de mídia, como imagens com legenda
         </code></pre>
     `
 };
