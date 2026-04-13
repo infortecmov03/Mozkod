@@ -39,6 +39,8 @@ export default function LearnPage() {
   const [code, setCode] = useState('');
   const [testResults, setTestResults] = useState<{ description: string; passed: boolean; error?: string }[]>([]);
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
+  const [htmlSrcDoc, setHtmlSrcDoc] = useState('');
+
 
   const areaId = Array.isArray(params.areaId) ? params.areaId[0] : params.areaId;
 
@@ -90,6 +92,43 @@ export default function LearnPage() {
     setTestResults([]);
     setConsoleOutput([]);
   }, [selectedExercise]);
+
+  useEffect(() => {
+    if (selectedPracticeLanguage === 'html') {
+      const htmlMarker = '<!-- index.html -->';
+      const cssMarker = '<!-- styles.css -->';
+      
+      let htmlContent = '';
+      let cssContent = '';
+      
+      const cssStartIndex = code.indexOf(cssMarker);
+      const htmlStartIndex = code.indexOf(htmlMarker);
+
+      if (htmlStartIndex !== -1) {
+        if (cssStartIndex !== -1) {
+          htmlContent = code.substring(htmlStartIndex + htmlMarker.length, cssStartIndex).trim();
+          cssContent = code.substring(cssStartIndex + cssMarker.length).trim();
+        } else {
+          htmlContent = code.substring(htmlStartIndex + htmlMarker.length).trim();
+        }
+      }
+
+      setHtmlSrcDoc(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <style>
+              body { margin: 8px; font-family: sans-serif; }
+              ${cssContent}
+            </style>
+          </head>
+          <body>
+            ${htmlContent}
+          </body>
+        </html>
+      `);
+    }
+  }, [code, selectedPracticeLanguage]);
   
    const lessonIndex = area?.theory?.findIndex(l => l.id === selectedLesson?.id) ?? -1;
 
@@ -441,7 +480,7 @@ export default function LearnPage() {
                             <CardDescription>{selectedExercise.statement}</CardDescription>
                         </CardHeader>
                         <Separator />
-                        <CardContent className="pt-6 flex-grow flex flex-col">
+                        <CardContent className="pt-6 flex-grow flex flex-col space-y-6">
                             {selectedExercise.youtubeVideoId && (
                                 <div className="mb-6 aspect-video">
                                 <iframe
@@ -459,32 +498,54 @@ export default function LearnPage() {
                                     <div dangerouslySetInnerHTML={{ __html: selectedExercise.detailedExplanation }} />
                                 </div>
                             )}
-                            <div className="flex-grow flex flex-col space-y-4">
-                                <div>
-                                    <h3 className="font-semibold text-lg">Sua Solução</h3>
-                                    <p className="text-sm text-muted-foreground">
-                                        Use o editor de código Monaco abaixo para escrever sua solução na linguagem selecionada.
-                                    </p>
-                                </div>
-                                <div className="flex-grow border rounded-md overflow-hidden">
-                                    <Label htmlFor="code-editor" className="sr-only">Editor de Código</Label>
-                                    <Editor
-                                        height="100%"
-                                        language={selectedPracticeLanguage || 'plaintext'}
-                                        theme="vs-dark"
-                                        value={code}
-                                        onChange={(value) => setCode(value || '')}
-                                        options={{
-                                            minimap: { enabled: false },
-                                            fontSize: 14,
-                                            scrollBeyondLastLine: false,
-                                            automaticLayout: true,
-                                        }}
-                                        className="h-full min-h-[300px]"
-                                    />
-                                </div>
-                            </div>
                             
+                            {selectedPracticeLanguage === 'html' ? (
+                                <Tabs defaultValue="editor" className="flex-grow flex flex-col min-h-[450px]">
+                                    <TabsList className="grid w-full grid-cols-2 max-w-sm">
+                                        <TabsTrigger value="editor"><PencilRuler className="mr-2 h-4 w-4" />Editor</TabsTrigger>
+                                        <TabsTrigger value="preview"><BookOpen className="mr-2 h-4 w-4" />Preview</TabsTrigger>
+                                    </TabsList>
+                                    <TabsContent value="editor" className="flex-grow mt-4 rounded-md border overflow-hidden">
+                                        <Editor
+                                            height="100%"
+                                            language='html'
+                                            theme="vs-dark"
+                                            value={code}
+                                            onChange={(value) => setCode(value || '')}
+                                            options={{ minimap: { enabled: false }, fontSize: 14, scrollBeyondLastLine: false, automaticLayout: true }}
+                                        />
+                                    </TabsContent>
+                                    <TabsContent value="preview" className="flex-grow mt-4">
+                                        <iframe
+                                            srcDoc={htmlSrcDoc}
+                                            title="Preview"
+                                            sandbox="allow-scripts"
+                                            className="w-full h-full border rounded-md bg-white"
+                                        />
+                                    </TabsContent>
+                                </Tabs>
+                            ) : (
+                                <div className="flex-grow flex flex-col space-y-4 min-h-[350px]">
+                                    <div>
+                                        <h3 className="font-semibold text-lg">Sua Solução</h3>
+                                        <p className="text-sm text-muted-foreground">
+                                            Use o editor de código Monaco abaixo para escrever sua solução na linguagem selecionada.
+                                        </p>
+                                    </div>
+                                    <div className="flex-grow border rounded-md overflow-hidden">
+                                        <Editor
+                                            height="100%"
+                                            language={selectedPracticeLanguage || 'plaintext'}
+                                            theme="vs-dark"
+                                            value={code}
+                                            onChange={(value) => setCode(value || '')}
+                                            options={{ minimap: { enabled: false }, fontSize: 14, scrollBeyondLastLine: false, automaticLayout: true }}
+                                            className="h-full"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
                             {consoleOutput.length > 0 && (
                                 <div className="mt-6">
                                     <h3 className="font-semibold text-lg mb-2">Saída do Console</h3>
@@ -517,7 +578,7 @@ export default function LearnPage() {
                               </div>
                             )}
 
-                            <div className="mt-4 flex justify-end gap-4">
+                            <div className="pt-4 flex justify-end gap-4">
                                 <Button variant="secondary" onClick={handleRunTests}>Executar Testes</Button>
                                 <Button>Submeter</Button>
                             </div>
