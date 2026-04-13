@@ -16,7 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from '@/hooks/use-toast';
 import { useProgress } from '@/context/ProgressContext';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import Editor from '@monaco-editor/react';
 
 
 export default function LearnPage() {
@@ -303,17 +303,24 @@ export default function LearnPage() {
                                 <div>
                                     <h3 className="font-semibold text-lg">Sua Solução</h3>
                                     <p className="text-sm text-muted-foreground">
-                                        Use o editor abaixo para escrever sua solução na linguagem selecionada. Quando estiver pronto, submeta para verificar contra nossos casos de teste.
+                                        Use o editor de código Monaco abaixo para escrever sua solução na linguagem selecionada. Quando estiver pronto, submeta para verificar contra nossos casos de teste.
                                     </p>
                                 </div>
-                                <div className="flex-grow">
+                                <div className="flex-grow border rounded-md overflow-hidden">
                                     <Label htmlFor="code-editor" className="sr-only">Editor de Código</Label>
-                                    <Textarea
-                                        id="code-editor"
+                                    <Editor
+                                        height="100%"
+                                        language={selectedPracticeLanguage || 'plaintext'}
+                                        theme="vs-dark"
                                         value={code}
-                                        onChange={(e) => setCode(e.target.value)}
-                                        className="h-full min-h-[300px] font-code text-sm bg-muted/30"
-                                        placeholder="Escreva seu código aqui..."
+                                        onChange={(value) => setCode(value || '')}
+                                        options={{
+                                            minimap: { enabled: false },
+                                            fontSize: 14,
+                                            scrollBeyondLastLine: false,
+                                            automaticLayout: true,
+                                        }}
+                                        className="h-full min-h-[300px]"
                                     />
                                 </div>
                             </div>
@@ -387,5 +394,3 @@ export default function LearnPage() {
     </div>
   );
 }
-
-    
