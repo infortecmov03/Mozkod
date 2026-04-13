@@ -17,24 +17,24 @@ export function Footer() {
             <div>
               <h3 className="font-semibold text-foreground">Currículo</h3>
               <ul className="mt-4 space-y-2">
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Níveis</Link></li>
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Áreas de Conhecimento</Link></li>
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Certificados</Link></li>
+                <li><Link href="/niveis" className="text-sm text-muted-foreground hover:text-foreground">Níveis</Link></li>
+                <li><Link href="/areas-de-conhecimento" className="text-sm text-muted-foreground hover:text-foreground">Áreas de Conhecimento</Link></li>
+                <li><Link href="/certificados" className="text-sm text-muted-foreground hover:text-foreground">Certificados</Link></li>
               </ul>
             </div>
             <div>
               <h3 className="font-semibold text-foreground">Comunidade</h3>
               <ul className="mt-4 space-y-2">
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Fórum</Link></li>
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Eventos</Link></li>
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Contribuir</Link></li>
+                <li><Link href="/forum" className="text-sm text-muted-foreground hover:text-foreground">Fórum</Link></li>
+                <li><Link href="/eventos" className="text-sm text-muted-foreground hover:text-foreground">Eventos</Link></li>
+                <li><Link href="/contribuir" className="text-sm text-muted-foreground hover:text-foreground">Contribuir</Link></li>
               </ul>
             </div>
              <div>
               <h3 className="font-semibold text-foreground">Legal</h3>
               <ul className="mt-4 space-y-2">
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Política de Privacidade</Link></li>
-                <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Termos de Serviço</Link></li>
+                <li><Link href="/politica-de-privacidade" className="text-sm text-muted-foreground hover:text-foreground">Política de Privacidade</Link></li>
+                <li><Link href="/termos-de-servico" className="text-sm text-muted-foreground hover:text-foreground">Termos de Serviço</Link></li>
               </ul>
             </div>
           </div>

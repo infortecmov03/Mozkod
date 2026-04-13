@@ -29,9 +29,9 @@ export function Header() {
   }, []);
   
   const navLinks = [
-    { href: "#features", label: "Recursos" },
+    { href: "/#features", label: "Recursos" },
     { href: "/curriculo", label: "Currículo" },
-    { href: "#", label: "Comunidade" },
+    { href: "/comunidade", label: "Comunidade" },
   ];
 
   return (
