@@ -6,8 +6,10 @@ import pt from '@/locales/pt.json';
 import en from '@/locales/en.json';
 import es from '@/locales/es.json';
 import fr from '@/locales/fr.json';
+import mkw from '@/locales/mkw.json';
+import ts from '@/locales/ts.json';
 
-const translations: Record<string, any> = { pt, en, es, fr };
+const translations: Record<string, any> = { pt, en, es, fr, mkw, ts };
 
 type I18nContextType = {
   locale: string;
