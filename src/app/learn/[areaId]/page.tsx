@@ -95,16 +95,6 @@ export default function LearnPage() {
       }
   }
   
-  const handleMarkAsCompleted = () => {
-    if (selectedLesson) {
-      markAsCompleted(selectedLesson.id);
-      toast({
-        title: "Progresso Salvo!",
-        description: `Lição "${selectedLesson.title}" marcada como concluída.`
-      })
-    }
-  }
-
   const handleLanguageSelect = (lang: string) => {
     setSelectedPracticeLanguage(lang);
     setSelectedExercise(null); // Deselect exercise when language changes
@@ -202,9 +192,6 @@ export default function LearnPage() {
                       disabled={lessonIndex <= 0}
                   >
                       Anterior
-                  </Button>
-                  <Button onClick={handleMarkAsCompleted} disabled={isCompleted(selectedLesson.id)}>
-                      {isCompleted(selectedLesson.id) ? 'Concluída' : 'Marcar como Concluída'}
                   </Button>
                   <Button 
                       variant="outline"
