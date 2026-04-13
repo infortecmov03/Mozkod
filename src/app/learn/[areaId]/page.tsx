@@ -17,7 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useProgress } from '@/context/ProgressContext';
 import { Label } from '@/components/ui/label';
 import Editor from '@monaco-editor/react';
-import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription, SheetHeader } from "@/components/ui/sheet";
 import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
