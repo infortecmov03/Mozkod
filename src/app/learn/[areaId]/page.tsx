@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu, XCircle, Info } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu, XCircle, Info, MessageSquareQuestion } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { curriculumData, KnowledgeArea, TheoryLesson, PracticeExercise, Quiz } from '@/lib/curriculum-data';
@@ -598,9 +598,19 @@ export default function LearnPage() {
             <div className="w-full">
                 {selectedExercise ? (
                     <Card className="h-full flex flex-col">
-                        <CardHeader>
-                            <CardTitle className="font-headline text-2xl">{selectedExercise.title}</CardTitle>
-                            <CardDescription>{selectedExercise.statement}</CardDescription>
+                         <CardHeader>
+                            <div className="flex justify-between items-start gap-4">
+                                <div>
+                                    <CardTitle className="font-headline text-2xl">{selectedExercise.title}</CardTitle>
+                                    <CardDescription>{selectedExercise.statement}</CardDescription>
+                                </div>
+                                <Button variant="outline" asChild className="shrink-0">
+                                    <Link href={`/forum?exerciseId=${selectedExercise.id}&exerciseTitle=${encodeURIComponent(selectedExercise.title)}`}>
+                                        <MessageSquareQuestion className="mr-2 h-4 w-4" />
+                                        Pedir Ajuda
+                                    </Link>
+                                </Button>
+                            </div>
                         </CardHeader>
                         <Separator />
                         <CardContent className="pt-6 flex-grow flex flex-col space-y-6">
