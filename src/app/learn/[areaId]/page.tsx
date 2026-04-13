@@ -160,7 +160,7 @@ export default function LearnPage() {
     setConsoleOutput([]);
   }
   
-  const handleRunTests = () => {
+  const handleRunTests = async () => {
     if (!selectedExercise || !selectedPracticeLanguage) {
         toast({
             variant: "destructive",
@@ -177,71 +177,109 @@ export default function LearnPage() {
         });
         return;
     }
-
-    if (selectedPracticeLanguage !== 'javascript') {
-         toast({
-            variant: "destructive",
-            title: "Executor de Teste Indisponível",
-            description: `O executor de testes para ${selectedPracticeLanguage} ainda não foi implementado.`,
-        });
-        return;
-    }
     
     setTestResults([]);
     setConsoleOutput([]);
-    const results = [];
-    const capturedLogs: string[] = [];
-    let allPassed = true;
+    setAllTestsPassed(false);
 
-    const originalConsoleLog = console.log;
-    console.log = (...args) => {
-        capturedLogs.push(args.map(arg => typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)).join(' '));
-    };
+    if (selectedPracticeLanguage === 'javascript') {
+        const results = [];
+        const capturedLogs: string[] = [];
+        let allPassed = true;
 
-    try {
-        for (const test of selectedExercise.tests) {
-            try {
-                const testFunction = new Function(`${code}\n${test.code}`);
-                const result = testFunction();
-                if (result !== true) {
+        const originalConsoleLog = console.log;
+        console.log = (...args) => {
+            capturedLogs.push(args.map(arg => typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)).join(' '));
+        };
+
+        try {
+            for (const test of selectedExercise.tests) {
+                try {
+                    const testFunction = new Function(`${code}\n${test.code}`);
+                    const result = testFunction();
+                    if (result !== true) {
+                        allPassed = false;
+                    }
+                    results.push({ description: test.description, passed: result === true });
+                } catch (error: any) {
                     allPassed = false;
+                    results.push({ description: test.description, passed: false, error: error.message });
+                    toast({
+                        variant: "destructive",
+                        title: "Erro no seu código!",
+                        description: `Ocorreu um erro ao executar seu código: ${error.message}`,
+                    });
+                    setTestResults(results);
+                    setConsoleOutput(capturedLogs);
+                    setAllTestsPassed(false);
+                    console.log = originalConsoleLog; // Restore here as well
+                    return; // Stop on first error
                 }
-                results.push({ description: test.description, passed: result === true });
-            } catch (error: any) {
-                allPassed = false;
-                results.push({ description: test.description, passed: false, error: error.message });
-                toast({
-                    variant: "destructive",
-                    title: "Erro no seu código!",
-                    description: `Ocorreu um erro ao executar seu código: ${error.message}`,
-                });
-                setTestResults(results);
-                setConsoleOutput(capturedLogs);
-                setAllTestsPassed(false);
-                return; // Stop on first error
             }
+        } finally {
+            console.log = originalConsoleLog; // Always restore original console.log
         }
-    } finally {
-        console.log = originalConsoleLog; // Always restore original console.log
-    }
-    
-    setTestResults(results);
-    setConsoleOutput(capturedLogs);
-    setAllTestsPassed(allPassed);
+        
+        setTestResults(results);
+        setConsoleOutput(capturedLogs);
+        setAllTestsPassed(allPassed);
 
-    if (allPassed) {
-        toast({
-            title: "Sucesso!",
-            description: "Todos os testes passaram. Você já pode submeter seu exercício.",
-        });
+        if (allPassed) {
+            toast({
+                title: "Sucesso!",
+                description: "Todos os testes passaram. Você já pode submeter seu exercício.",
+            });
+        } else {
+            toast({
+                variant: "destructive",
+                title: "Alguns testes falharam",
+                description: "Verifique os resultados e a saída do console abaixo.",
+            });
+        }
     } else {
-        toast({
-            variant: "destructive",
-            title: "Alguns testes falharam",
-            description: "Verifique os resultados e a saída do console abaixo.",
-        });
+      // For other languages, call the API endpoint
+      try {
+          const response = await fetch('/api/run-code', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  code: code,
+                  language: selectedPracticeLanguage,
+                  tests: selectedExercise.tests,
+              }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+              throw new Error(data.error || 'Falha ao executar o código no servidor.');
+          }
+          
+          // The API currently returns a placeholder.
+          // In the future, you would process data.results, data.output etc. from the real sandbox
+          setTestResults(data.results || []);
+          setConsoleOutput(data.output || []);
+          setAllTestsPassed(data.allPassed || false);
+          
+           toast({
+              variant: data.allPassed ? "default" : "destructive",
+              title: data.allPassed ? "Sucesso!" : "Funcionalidade Futura",
+              description: data.message || `A execução de testes para ${selectedPracticeLanguage} ainda não foi implementada no servidor.`,
+          });
+
+
+      } catch (error: any) {
+          toast({
+              variant: "destructive",
+              title: "Erro de Comunicação com o Servidor",
+              description: error.message,
+          });
+      }
     }
 };
+
 
  const handleSubmitExercise = () => {
     if (!selectedExercise) return;
@@ -253,12 +291,20 @@ export default function LearnPage() {
         });
         return;
     }
-
-    markAsCompleted(selectedExercise.id);
-    toast({
-        title: "Exercício submetido com sucesso!",
-        description: "Bom trabalho! Continue para o próximo desafio.",
-    });
+    
+    if (allTestsPassed) {
+        markAsCompleted(selectedExercise.id);
+        toast({
+            title: "Exercício submetido com sucesso!",
+            description: "Bom trabalho! Continue para o próximo desafio.",
+        });
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Testes não passaram",
+            description: "Você só pode submeter o exercício após todos os testes passarem.",
+        });
+    }
   };
 
   const handleSelectAnswer = (questionId: string, optionIndex: number) => {
@@ -293,7 +339,9 @@ export default function LearnPage() {
       
       if (area) {
         area.theory.forEach(lesson => {
-          markAsCompleted(lesson.id);
+          if (!isCompleted(lesson.id)) {
+            markAsCompleted(lesson.id);
+          }
         });
       }
 
@@ -655,7 +703,7 @@ export default function LearnPage() {
                                 <Button variant="secondary" onClick={handleRunTests}>Executar Testes</Button>
                                 <Button
                                   onClick={handleSubmitExercise}
-                                  disabled={!allTestsPassed || isCompleted(selectedExercise.id)}
+                                  disabled={!allTestsPassed && !isCompleted(selectedExercise.id)}
                                 >
                                   {isCompleted(selectedExercise.id) ? (
                                     <>
