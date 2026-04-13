@@ -1,7 +1,6 @@
 import type { TheoryLesson } from '../../types';
+import { lesson as lesson1 } from './theory/certification';
 
-export const theory: TheoryLesson[] = [{
-    id: "fcc-be-t1",
-    title: "Certificação em Desenvolvimento Back-End e APIs",
-    content: "Construa APIs e microserviços robustos usando Node.js e Express. Complete 5 projetos para demonstrar sua proficiência no back-end."
-}];
+export const theory: TheoryLesson[] = [
+    lesson1
+];

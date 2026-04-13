@@ -1,2 +1,1 @@
-// This file is deprecated. Content has been moved to src/lib/curriculum/level-1/programming-fundamentals/
-export {};
+// This file is deprecated.

@@ -1,6 +1,8 @@
 import type { PracticeExercise } from '../../../types';
+import { exercise as ex1 } from './python/binary-converter';
+import { exercise as ex2 } from './python/boolean-operations';
 
 export const pythonExercises: PracticeExercise[] = [
-    { id: 'py-bin-converter', title: 'Conversor Binário', statement: 'Crie uma função que converte um número decimal para binário.', template: 'def decimal_para_binario(decimal):\n  # seu código aqui\n  pass' },
-    { id: 'py-bool-ops', title: 'Operações Booleanas', statement: 'Implemente as portas lógicas AND, OR e NOT usando funções.', template: 'def AND(a, b):\n  # seu código aqui\n  pass' },
+    ex1,
+    ex2
 ];

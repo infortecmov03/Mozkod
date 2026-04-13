@@ -1,7 +1,6 @@
 import type { TheoryLesson } from '../../types';
+import { lesson as lesson1 } from './theory/certification';
 
-export const theory: TheoryLesson[] = [{
-    id: "fcc-rdb-t1",
-    title: "Certificação em Bancos de Dados Relacionais",
-    content: "Aprenda a usar SQL e bancos de dados relacionais para armazenar e gerenciar dados de forma eficiente, completando 5 projetos práticos."
-}];
+export const theory: TheoryLesson[] = [
+    lesson1
+];

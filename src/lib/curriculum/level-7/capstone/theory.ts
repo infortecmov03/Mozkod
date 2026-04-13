@@ -1,7 +1,6 @@
 import type { TheoryLesson } from '../../types';
+import { lesson as lesson1 } from './theory/final-project';
 
-export const theory: TheoryLesson[] = [{
-    id: "fcc-cap-t1",
-    title: "Projeto Final (Capstone)",
-    content: "Aplique todo o conhecimento adquirido nas certificações anteriores para construir um projeto full stack completo, demonstrando suas habilidades como desenvolvedor."
-}];
+export const theory: TheoryLesson[] = [
+    lesson1
+];

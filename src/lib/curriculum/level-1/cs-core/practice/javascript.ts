@@ -1,6 +1,9 @@
 import type { PracticeExercise } from '../../../types';
+import { exercise as ex1 } from './javascript/binary-converter';
+import { exercise as ex2 } from './javascript/boolean-operations';
+
 
 export const javascriptExercises: PracticeExercise[] = [
-    { id: 'js-bin-converter', title: 'Conversor Binário', statement: 'Crie uma função que converte um número decimal para binário.', template: 'function decimalToBinary(decimal) {\n  // seu código aqui\n}' },
-    { id: 'js-bool-ops', title: 'Operações Booleanas', statement: 'Implemente as portas lógicas AND, OR e NOT usando funções.', template: 'function AND(a, b) {\n  // seu código aqui\n}' },
+    ex1,
+    ex2,
 ];

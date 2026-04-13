@@ -1,2 +1,1 @@
-// This file is deprecated. Content has been moved to src/lib/curriculum/level-1/git-vc/
-export {};
+// This file is deprecated.
