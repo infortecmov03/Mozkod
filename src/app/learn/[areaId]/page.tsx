@@ -282,17 +282,28 @@ export default function LearnPage() {
     setQuizResults(results);
 
     const totalQuestions = quiz.questions.length;
-    const score = (correctCount / totalQuestions) * 100;
+    const score = totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
+    const passingScore = 70;
 
-    toast({
-        title: "Resultado do Quiz",
-        description: `Você acertou ${correctCount} de ${totalQuestions} questões (${Math.round(score)}%).`,
-    });
+    if (score >= passingScore) {
+      toast({
+        title: "Aprovado!",
+        description: `Você acertou ${correctCount} de ${totalQuestions} (${Math.round(score)}%). As lições de teoria desta área foram marcadas como concluídas!`,
+      });
+      
+      if (area) {
+        area.theory.forEach(lesson => {
+          markAsCompleted(lesson.id);
+        });
+      }
 
-    // Future step: if score > threshold, mark all theory lessons in this area as complete.
-    // if (score >= 70) {
-    //   area.theory.forEach(lesson => markAsCompleted(lesson.id));
-    // }
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Tente novamente",
+        description: `Você acertou ${correctCount} de ${totalQuestions} (${Math.round(score)}%). É necessário acertar ${passingScore}% para ser aprovado.`,
+      });
+    }
   };
 
 
@@ -341,7 +352,7 @@ export default function LearnPage() {
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-full sm:max-w-md p-0">
-            <SheetHeader className="p-6 pb-0">
+             <SheetHeader className="p-6 pb-0">
                 <SheetTitle>Lições de Teoria</SheetTitle>
                 <SheetDescription>Selecione uma lição para começar</SheetDescription>
             </SheetHeader>
