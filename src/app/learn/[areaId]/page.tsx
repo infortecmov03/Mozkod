@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { curriculumData, KnowledgeArea, TheoryLesson, PracticeExercise } from '@/lib/curriculum-data';
@@ -17,6 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useProgress } from '@/context/ProgressContext';
 import { Label } from '@/components/ui/label';
 import Editor from '@monaco-editor/react';
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 
 export default function LearnPage() {
@@ -29,6 +30,7 @@ export default function LearnPage() {
   const [area, setArea] = useState<KnowledgeArea | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<TheoryLesson | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [lessonsSheetOpen, setLessonsSheetOpen] = useState(false);
 
   // State for practice tab
   const [selectedPracticeLanguage, setSelectedPracticeLanguage] = useState<string | null>(null);
@@ -124,90 +126,108 @@ export default function LearnPage() {
     );
   }
   
-   const OverviewComponent = ({title, description}: {title: string, description: string}) => (
+   const OverviewComponent = ({title, description, cta}: {title: string, description: string, cta: string}) => (
       <div className="flex h-full min-h-[70vh] items-center justify-center rounded-lg border-2 border-dashed">
           <div className="text-center p-8">
               <BookOpen className="mx-auto h-12 w-12 text-muted-foreground" />
               <h2 className="mt-6 text-2xl font-headline font-semibold">{title}</h2>
               <p className="mt-2 text-muted-foreground max-w-lg mx-auto">{description}</p>
-              <p className="mt-6 font-semibold text-primary">Selecione uma lição ou exercício na barra lateral para começar.</p>
+              <p className="mt-6 font-semibold text-primary">{cta}</p>
           </div>
       </div>
   );
 
   const renderTheory = () => (
-    <div className="flex flex-col md:flex-row gap-8 mt-6">
-        <aside className="w-full md:w-1/3 lg:w-1/4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-headline text-xl">Lições de Teoria</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[60vh]">
-                <nav className="flex flex-col gap-1 pr-4">
-                  {area.theory?.map((lesson, index) => (
-                    <button
-                      key={lesson.id}
-                      onClick={() => setSelectedLesson(lesson)}
-                      className={`text-left p-3 rounded-md transition-colors w-full ${
-                        selectedLesson?.id === lesson.id
-                          ? 'bg-accent text-accent-foreground font-semibold'
-                          : 'hover:bg-accent/50'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                          <CheckCircle className={`h-5 w-5 ${isCompleted(lesson.id) ? 'text-primary' : 'text-muted-foreground/50'}`} />
-                          <span className="flex-1">{index + 1}. {lesson.title}</span>
-                      </div>
-                    </button>
-                  ))}
-                  {(!area.theory || area.theory.length === 0) && (
-                      <p className="p-3 text-muted-foreground text-sm">Nenhuma lição teórica disponível.</p>
-                  )}
-                </nav>
-              </ScrollArea>
-            </CardContent>
-          </Card>
-        </aside>
-
-        <div className="w-full md:w-2/3 lg:w-3/4">
-          {selectedLesson ? (
-            <Card className="h-full">
+    <div className="mt-6">
+      <div className="flex justify-end mb-4">
+        <Sheet open={lessonsSheetOpen} onOpenChange={setLessonsSheetOpen}>
+          <SheetTrigger asChild>
+            <Button variant="outline">
+              <Menu className="mr-2 h-4 w-4" />
+              Ver Lições
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-full sm:max-w-md p-0">
+            <Card className="border-none shadow-none h-full flex flex-col">
               <CardHeader>
-                <CardTitle className="font-headline text-2xl">{selectedLesson.title}</CardTitle>
+                <CardTitle className="font-headline text-xl">Lições de Teoria</CardTitle>
+                <CardDescription>Selecione uma lição para começar</CardDescription>
               </CardHeader>
-               <Separator />
-              <CardContent className="pt-6">
-                <article 
-                  className="prose dark:prose-invert max-w-none"
-                  dangerouslySetInnerHTML={{ __html: selectedLesson.content }}
-                />
-                
-                 <Separator className="my-8" />
-
-                <div className="flex justify-between items-center">
-                  <Button 
-                      variant="outline"
-                      onClick={handlePrevious}
-                      disabled={lessonIndex <= 0}
-                  >
-                      Anterior
-                  </Button>
-                  <Button 
-                      variant="outline"
-                      onClick={handleNext}
-                      disabled={!area.theory || lessonIndex >= area.theory.length - 1}
-                  >
-                      Próxima
-                  </Button>
-                </div>
+              <CardContent className="flex-grow">
+                <ScrollArea className="h-full">
+                  <nav className="flex flex-col gap-1 pr-4">
+                    {area.theory?.map((lesson, index) => (
+                      <button
+                        key={lesson.id}
+                        onClick={() => {
+                          setSelectedLesson(lesson);
+                          setLessonsSheetOpen(false);
+                        }}
+                        className={`text-left p-3 rounded-md transition-colors w-full ${
+                          selectedLesson?.id === lesson.id
+                            ? 'bg-accent text-accent-foreground font-semibold'
+                            : 'hover:bg-accent/50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                            <CheckCircle className={`h-5 w-5 ${isCompleted(lesson.id) ? 'text-primary' : 'text-muted-foreground/50'}`} />
+                            <span className="flex-1">{index + 1}. {lesson.title}</span>
+                        </div>
+                      </button>
+                    ))}
+                    {(!area.theory || area.theory.length === 0) && (
+                        <p className="p-3 text-muted-foreground text-sm">Nenhuma lição teórica disponível.</p>
+                    )}
+                  </nav>
+                </ScrollArea>
               </CardContent>
             </Card>
-          ) : (
-             <OverviewComponent title={`Visão Geral de ${area.title}`} description={area.description}/>
-          )}
-        </div>
+          </SheetContent>
+        </Sheet>
       </div>
+
+      <div className="w-full">
+        {selectedLesson ? (
+          <Card className="h-full">
+            <CardHeader>
+              <CardTitle className="font-headline text-2xl">{selectedLesson.title}</CardTitle>
+            </CardHeader>
+             <Separator />
+            <CardContent className="pt-6">
+              <article 
+                className="prose dark:prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: selectedLesson.content }}
+              />
+              
+               <Separator className="my-8" />
+
+              <div className="flex justify-between items-center">
+                <Button 
+                    variant="outline"
+                    onClick={handlePrevious}
+                    disabled={lessonIndex <= 0}
+                >
+                    Anterior
+                </Button>
+                <Button 
+                    variant="outline"
+                    onClick={handleNext}
+                    disabled={!area.theory || lessonIndex >= area.theory.length - 1}
+                >
+                    Próxima
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+           <OverviewComponent 
+            title={`Visão Geral de ${area.title}`} 
+            description={area.description}
+            cta="Clique no menu 'Ver Lições' acima para escolher uma lição e começar."
+          />
+        )}
+      </div>
+    </div>
   );
 
   const renderPractice = () => {
@@ -318,7 +338,11 @@ export default function LearnPage() {
                         </CardContent>
                     </Card>
                 ) : (
-                    <OverviewComponent title={`Exercícios de ${area.title}`} description={`Escolha uma linguagem e selecione um exercício para começar a praticar.`}/>
+                    <OverviewComponent 
+                      title={`Exercícios de ${area.title}`} 
+                      description={`Escolha uma linguagem e selecione um exercício para começar a praticar.`}
+                      cta="Selecione um exercício na barra lateral para começar."
+                    />
                 )}
             </div>
         </div>
