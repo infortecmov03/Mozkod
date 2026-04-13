@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu, XCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu, XCircle, Info } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { curriculumData, KnowledgeArea, TheoryLesson, PracticeExercise, Quiz } from '@/lib/curriculum-data';
@@ -20,6 +20,7 @@ import Editor from '@monaco-editor/react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 
 export default function LearnPage() {
@@ -654,6 +655,17 @@ export default function LearnPage() {
                                             Use o editor de código Monaco abaixo para escrever sua solução na linguagem selecionada.
                                         </p>
                                     </div>
+                                    
+                                    {selectedPracticeLanguage && !['javascript', 'html', 'simulator'].includes(selectedPracticeLanguage) && (
+                                        <Alert>
+                                            <Info className="h-4 w-4" />
+                                            <AlertTitle>Dica de Aprendizado</AlertTitle>
+                                            <AlertDescription>
+                                                Para um melhor aproveitamento e uma experiência de desenvolvimento completa, recomendamos que você copie este exercício e o resolva em uma IDE (Ambiente de Desenvolvimento Integrado) local, como VS Code, antes de colar e submeter a solução aqui.
+                                            </AlertDescription>
+                                        </Alert>
+                                    )}
+
                                     <div className="flex-grow border rounded-md overflow-hidden min-h-0">
                                         <Editor
                                             height="100%"
