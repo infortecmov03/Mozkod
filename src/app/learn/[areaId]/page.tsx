@@ -17,7 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useProgress } from '@/context/ProgressContext';
 import { Label } from '@/components/ui/label';
 import Editor from '@monaco-editor/react';
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
@@ -341,14 +341,12 @@ export default function LearnPage() {
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-full sm:max-w-md p-0">
-            <SheetTitle className="sr-only">Lições de Teoria</SheetTitle>
-            <Card className="border-none shadow-none h-full flex flex-col">
-              <CardHeader>
-                <CardTitle className="font-headline text-xl">Lições de Teoria</CardTitle>
-                <CardDescription>Selecione uma lição para começar</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <ScrollArea className="h-full">
+            <SheetHeader className="p-6 pb-0">
+                <SheetTitle>Lições de Teoria</SheetTitle>
+                <SheetDescription>Selecione uma lição para começar</SheetDescription>
+            </SheetHeader>
+            <div className="p-6">
+                <ScrollArea className="h-[calc(100vh-10rem)]">
                   <nav className="flex flex-col gap-1 pr-4">
                     {area.theory?.map((lesson, index) => (
                       <button
@@ -374,8 +372,7 @@ export default function LearnPage() {
                     )}
                   </nav>
                 </ScrollArea>
-              </CardContent>
-            </Card>
+            </div>
           </SheetContent>
         </Sheet>
       </div>
@@ -470,10 +467,10 @@ export default function LearnPage() {
     const exercisesForLang = selectedPracticeLanguage ? area.practice[selectedPracticeLanguage] : [];
 
     const practiceSidebar = (
-        <Card className="border-none shadow-none h-full flex flex-col">
-            <CardHeader>
-                <CardTitle className="font-headline text-xl">Exercícios</CardTitle>
-                 <CardDescription>Escolha uma linguagem e um exercício</CardDescription>
+        <>
+            <SheetHeader className="p-6 pb-0">
+                <SheetTitle>Exercícios Práticos</SheetTitle>
+                <SheetDescription>Escolha uma linguagem e um exercício</SheetDescription>
                 <div className="flex gap-2 pt-2 flex-wrap">
                     {practiceLanguages.map(lang => (
                         <Button
@@ -487,9 +484,9 @@ export default function LearnPage() {
                         </Button>
                     ))}
                 </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-                <ScrollArea className="h-full">
+            </SheetHeader>
+            <div className="p-6">
+                <ScrollArea className="h-[calc(100vh-12rem)]">
                     <nav className="flex flex-col gap-1 pr-4">
                         {exercisesForLang && exercisesForLang.length > 0 ? (
                             exercisesForLang.map((exercise, index) => (
@@ -518,8 +515,8 @@ export default function LearnPage() {
                         )}
                     </nav>
                 </ScrollArea>
-            </CardContent>
-        </Card>
+            </div>
+        </>
     );
 
     return (
@@ -533,7 +530,6 @@ export default function LearnPage() {
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="right" className="w-full sm:max-w-md p-0">
-                        <SheetTitle className="sr-only">Exercícios Práticos</SheetTitle>
                         {practiceSidebar}
                     </SheetContent>
                 </Sheet>
@@ -572,7 +568,7 @@ export default function LearnPage() {
                                         <TabsTrigger value="editor"><PencilRuler className="mr-2 h-4 w-4" />Editor</TabsTrigger>
                                         <TabsTrigger value="preview"><BookOpen className="mr-2 h-4 w-4" />Preview</TabsTrigger>
                                     </TabsList>
-                                    <TabsContent value="editor" className="flex-grow mt-4 rounded-md border overflow-hidden">
+                                    <TabsContent value="editor" className="flex-grow mt-4 rounded-md border overflow-hidden min-h-0">
                                         <Editor
                                             height="100%"
                                             language='html'
@@ -599,7 +595,7 @@ export default function LearnPage() {
                                             Use o editor de código Monaco abaixo para escrever sua solução na linguagem selecionada.
                                         </p>
                                     </div>
-                                    <div className="flex-grow border rounded-md overflow-hidden">
+                                    <div className="flex-grow border rounded-md overflow-hidden min-h-0">
                                         <Editor
                                             height="100%"
                                             language={selectedPracticeLanguage || 'plaintext'}
@@ -607,7 +603,6 @@ export default function LearnPage() {
                                             value={code}
                                             onChange={(value) => setCode(value || '')}
                                             options={{ minimap: { enabled: false }, fontSize: 14, scrollBeyondLastLine: false, automaticLayout: true }}
-                                            className="h-full"
                                         />
                                     </div>
                                 </div>
