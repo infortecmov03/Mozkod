@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Globe, Menu, User, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -47,6 +47,7 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left">
+              <SheetTitle className="sr-only">Menu</SheetTitle>
               <div className="p-4">
                 <Link href="/" onClick={() => setIsOpen(false)}>
                     <Logo />
