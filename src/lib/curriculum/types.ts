@@ -2,6 +2,7 @@ export type TheoryLesson = {
   id: string;
   title: string;
   content: string;
+  youtubeVideoId?: string;
 };
 
 export type PracticeExercise = {
@@ -9,6 +10,8 @@ export type PracticeExercise = {
   title: string;
   statement: string;
   template: string;
+  detailedExplanation?: string;
+  youtubeVideoId?: string;
 };
 
 export type QuizQuestion = {

@@ -17,5 +17,6 @@ idade = 30      // 'idade' é a variável, 30 é o valor
         <li><strong>Boolean (booleano):</strong> Representa verdadeiro (True) ou falso (False).</li>
         <li><strong>Array/Lista:</strong> Uma coleção ordenada de valores. Ex: <code>[1, 2, 3, "maçã"]</code>.</li>
       </ul>
-    `
+    `,
+    youtubeVideoId: '_B6K2G_Q4e4'
 };

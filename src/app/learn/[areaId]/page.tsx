@@ -196,6 +196,18 @@ export default function LearnPage() {
             </CardHeader>
              <Separator />
             <CardContent className="pt-6">
+              {selectedLesson.youtubeVideoId && (
+                <div className="my-6 aspect-video">
+                  <iframe
+                    className="w-full h-full rounded-lg"
+                    src={`https://www.youtube.com/embed/${selectedLesson.youtubeVideoId}`}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              )}
               <article 
                 className="prose dark:prose-invert max-w-none"
                 dangerouslySetInnerHTML={{ __html: selectedLesson.content }}
@@ -333,11 +345,28 @@ export default function LearnPage() {
                         </CardHeader>
                         <Separator />
                         <CardContent className="pt-6 flex-grow flex flex-col">
+                            {selectedExercise.youtubeVideoId && (
+                                <div className="mb-6 aspect-video">
+                                <iframe
+                                    className="w-full h-full rounded-lg"
+                                    src={`https://www.youtube.com/embed/${selectedExercise.youtubeVideoId}`}
+                                    title="YouTube video player"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                                </div>
+                            )}
+                            {selectedExercise.detailedExplanation && (
+                                <div className="prose dark:prose-invert max-w-none mb-6 p-4 border rounded-lg bg-card/50">
+                                    <div dangerouslySetInnerHTML={{ __html: selectedExercise.detailedExplanation }} />
+                                </div>
+                            )}
                             <div className="flex-grow flex flex-col space-y-4">
                                 <div>
                                     <h3 className="font-semibold text-lg">Sua Solução</h3>
                                     <p className="text-sm text-muted-foreground">
-                                        Use o editor de código Monaco abaixo para escrever sua solução na linguagem selecionada. Quando estiver pronto, submeta para verificar contra nossos casos de teste.
+                                        Use o editor de código Monaco abaixo para escrever sua solução na linguagem selecionada.
                                     </p>
                                 </div>
                                 <div className="flex-grow border rounded-md overflow-hidden">
