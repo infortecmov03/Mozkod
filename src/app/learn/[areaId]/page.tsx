@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu, XCircle, Info, MessageSquareQuestion } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu, XCircle, Info, MessageCircleQuestion } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { curriculumData, KnowledgeArea, TheoryLesson, PracticeExercise, Quiz } from '@/lib/curriculum-data';
@@ -606,7 +606,7 @@ export default function LearnPage() {
                                 </div>
                                 <Button variant="outline" asChild className="shrink-0">
                                     <Link href={`/forum?exerciseId=${selectedExercise.id}&exerciseTitle=${encodeURIComponent(selectedExercise.title)}`}>
-                                        <MessageSquareQuestion className="mr-2 h-4 w-4" />
+                                        <MessageCircleQuestion className="mr-2 h-4 w-4" />
                                         Pedir Ajuda
                                     </Link>
                                 </Button>
