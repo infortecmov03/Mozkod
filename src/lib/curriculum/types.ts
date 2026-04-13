@@ -3,6 +3,12 @@ export type TheoryLesson = {
   title: string;
   content: string;
   youtubeVideoId?: string;
+  detailedExplanation?: string;
+};
+
+export type PracticeExerciseTest = {
+  description: string;
+  code: string;
 };
 
 export type PracticeExercise = {
@@ -12,6 +18,7 @@ export type PracticeExercise = {
   template: string;
   detailedExplanation?: string;
   youtubeVideoId?: string;
+  tests?: PracticeExerciseTest[];
 };
 
 export type QuizQuestion = {

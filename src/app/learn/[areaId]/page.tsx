@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu, XCircle } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { curriculumData, KnowledgeArea, TheoryLesson, PracticeExercise } from '@/lib/curriculum-data';
+import { curriculumData, KnowledgeArea, TheoryLesson, PracticeExercise, PracticeExerciseTest } from '@/lib/curriculum-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -25,7 +25,7 @@ export default function LearnPage() {
   const router = useRouter();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { markAsCompleted, isCompleted } = useProgress();
+  const { isCompleted } = useProgress();
 
   const [area, setArea] = useState<KnowledgeArea | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<TheoryLesson | null>(null);
@@ -37,6 +37,7 @@ export default function LearnPage() {
   const [selectedPracticeLanguage, setSelectedPracticeLanguage] = useState<string | null>(null);
   const [selectedExercise, setSelectedExercise] = useState<PracticeExercise | null>(null);
   const [code, setCode] = useState('');
+  const [testResults, setTestResults] = useState<{ description: string; passed: boolean; error?: string }[]>([]);
 
   const areaId = Array.isArray(params.areaId) ? params.areaId[0] : params.areaId;
 
@@ -64,6 +65,7 @@ export default function LearnPage() {
         setSelectedPracticeLanguage(null);
         setSelectedExercise(null);
         setCode('');
+        setTestResults([]);
 
         // Pre-select first language if available, but not first exercise
         if (foundArea.practice) {
@@ -83,6 +85,7 @@ export default function LearnPage() {
     } else {
         setCode('');
     }
+    setTestResults([]);
   }, [selectedExercise]);
   
    const lessonIndex = area?.theory?.findIndex(l => l.id === selectedLesson?.id) ?? -1;
@@ -101,7 +104,68 @@ export default function LearnPage() {
   const handleLanguageSelect = (lang: string) => {
     setSelectedPracticeLanguage(lang);
     setSelectedExercise(null); // Deselect exercise when language changes
+    setTestResults([]);
   }
+  
+  const handleRunTests = () => {
+    if (!selectedExercise || !selectedExercise.tests || !selectedPracticeLanguage) {
+        toast({
+            variant: "destructive",
+            title: "Nenhum teste encontrado",
+            description: "Não há testes automatizados para este exercício.",
+        });
+        return;
+    }
+
+    if (selectedPracticeLanguage !== 'javascript') {
+         toast({
+            variant: "destructive",
+            title: "Executor de Teste Indisponível",
+            description: `O executor de testes para ${selectedPracticeLanguage} ainda não foi implementado.`,
+        });
+        return;
+    }
+    
+    setTestResults([]); // Clear previous results
+    const results = [];
+    let allPassed = true;
+
+    for (const test of selectedExercise.tests) {
+        try {
+            const testFunction = new Function(`${code}\n${test.code}`);
+            const result = testFunction();
+            if (result !== true) {
+                allPassed = false;
+            }
+            results.push({ description: test.description, passed: result === true });
+        } catch (error: any) {
+            allPassed = false;
+            results.push({ description: test.description, passed: false, error: error.message });
+            toast({
+                variant: "destructive",
+                title: "Erro no seu código!",
+                description: `Ocorreu um erro ao executar seu código: ${error.message}`,
+            });
+            setTestResults(results);
+            return; // Stop on first error
+        }
+    }
+    
+    setTestResults(results);
+
+    if (allPassed) {
+        toast({
+            title: "Sucesso!",
+            description: "Todos os testes passaram.",
+        });
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Alguns testes falharam",
+            description: "Verifique os resultados abaixo e tente novamente.",
+        });
+    }
+};
 
 
   if (!isMounted || !user) {
@@ -149,7 +213,7 @@ export default function LearnPage() {
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-full sm:max-w-md p-0">
-            <SheetTitle className="sr-only">Lições de Teoria</SheetTitle>
+            <SheetTitle>Lições de Teoria</SheetTitle>
             <Card className="border-none shadow-none h-full flex flex-col">
               <CardHeader>
                 <CardTitle className="font-headline text-xl">Lições de Teoria</CardTitle>
@@ -208,6 +272,14 @@ export default function LearnPage() {
                   ></iframe>
                 </div>
               )}
+
+              {selectedLesson.detailedExplanation && (
+                <article 
+                    className="prose dark:prose-invert max-w-none mb-6 p-4 border rounded-lg bg-card/50"
+                    dangerouslySetInnerHTML={{ __html: selectedLesson.detailedExplanation }}
+                />
+               )}
+              
               <article 
                 className="prose dark:prose-invert max-w-none"
                 dangerouslySetInnerHTML={{ __html: selectedLesson.content }}
@@ -330,7 +402,7 @@ export default function LearnPage() {
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="right" className="w-full sm:max-w-md p-0">
-                        <SheetTitle className="sr-only">Exercícios Práticos</SheetTitle>
+                        <SheetTitle>Exercícios Práticos</SheetTitle>
                         {practiceSidebar}
                     </SheetContent>
                 </Sheet>
@@ -387,8 +459,30 @@ export default function LearnPage() {
                                     />
                                 </div>
                             </div>
+                            
+                            {testResults.length > 0 && (
+                              <div className="mt-6">
+                                  <h3 className="font-semibold text-lg mb-2">Resultados dos Testes</h3>
+                                  <div className="space-y-2">
+                                      {testResults.map((result, index) => (
+                                          <div key={index} className={`flex items-center p-3 rounded-md text-sm ${result.passed ? 'bg-green-100 dark:bg-green-900/50' : 'bg-red-100 dark:bg-red-900/50'}`}>
+                                              {result.passed ? (
+                                                  <CheckCircle className="w-5 h-5 mr-3 text-green-600 dark:text-green-400 shrink-0" />
+                                              ) : (
+                                                  <XCircle className="w-5 h-5 mr-3 text-red-600 dark:text-red-400 shrink-0" />
+                                              )}
+                                              <div className="flex-1">
+                                                <p className="font-medium">{result.description}</p>
+                                                {result.error && <p className="text-xs mt-1 text-red-700 dark:text-red-300">Erro: {result.error}</p>}
+                                              </div>
+                                          </div>
+                                      ))}
+                                  </div>
+                              </div>
+                            )}
+
                             <div className="mt-4 flex justify-end gap-4">
-                                <Button variant="secondary">Executar Testes</Button>
+                                <Button variant="secondary" onClick={handleRunTests}>Executar Testes</Button>
                                 <Button>Submeter</Button>
                             </div>
                         </CardContent>

@@ -41,5 +41,19 @@ const pi = 3.14;
             <li><strong>Passo 3:</strong> Declare uma variável chamada <code>cidade</code> usando <code>let</code> e atribua a ela o nome da sua cidade (como uma string).</li>
         </ol>
         <p>Quando você clicar em "Executar Testes", nosso sistema verificará se você criou as três variáveis corretamente.</p>
-    ` 
+    `,
+    tests: [
+        {
+            description: "A variável 'nome' deve existir e ser uma string.",
+            code: "return typeof nome === 'string';"
+        },
+        {
+            description: "A variável 'idade' deve existir e ser um número.",
+            code: "return typeof idade === 'number';"
+        },
+        {
+            description: "A variável 'cidade' deve existir e ser uma string.",
+            code: "return typeof cidade === 'string';"
+        }
+    ]
 };
