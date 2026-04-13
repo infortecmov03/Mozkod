@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu, XCircle } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { curriculumData, KnowledgeArea, TheoryLesson, PracticeExercise, PracticeExerciseTest } from '@/lib/curriculum-data';
+import { curriculumData, KnowledgeArea, TheoryLesson, PracticeExercise, Quiz } from '@/lib/curriculum-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -18,6 +18,8 @@ import { useProgress } from '@/context/ProgressContext';
 import { Label } from '@/components/ui/label';
 import Editor from '@monaco-editor/react';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import { cn } from '@/lib/utils';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 
 export default function LearnPage() {
@@ -41,6 +43,10 @@ export default function LearnPage() {
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [htmlSrcDoc, setHtmlSrcDoc] = useState('');
   const [allTestsPassed, setAllTestsPassed] = useState(false);
+
+  // State for quiz tab
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
+  const [quizResults, setQuizResults] = useState<Record<string, boolean> | null>(null);
 
 
   const areaId = Array.isArray(params.areaId) ? params.areaId[0] : params.areaId;
@@ -71,6 +77,8 @@ export default function LearnPage() {
         setCode('');
         setTestResults([]);
         setConsoleOutput([]);
+        setSelectedAnswers({});
+        setQuizResults(null);
 
         // Pre-select first language if available, but not first exercise
         if (foundArea.practice) {
@@ -251,6 +259,40 @@ export default function LearnPage() {
         title: "Exercício submetido com sucesso!",
         description: "Bom trabalho! Continue para o próximo desafio.",
     });
+  };
+
+  const handleSelectAnswer = (questionId: string, optionIndex: number) => {
+    setSelectedAnswers(prev => ({
+        ...prev,
+        [questionId]: optionIndex
+    }));
+    setQuizResults(null); // Reset results when a new answer is selected
+  };
+
+  const handleCheckQuiz = (quiz: Quiz) => {
+    const results: Record<string, boolean> = {};
+    let correctCount = 0;
+    quiz.questions.forEach(q => {
+        const isCorrect = selectedAnswers[q.id] === q.correctAnswer;
+        results[q.id] = isCorrect;
+        if (isCorrect) {
+            correctCount++;
+        }
+    });
+    setQuizResults(results);
+
+    const totalQuestions = quiz.questions.length;
+    const score = (correctCount / totalQuestions) * 100;
+
+    toast({
+        title: "Resultado do Quiz",
+        description: `Você acertou ${correctCount} de ${totalQuestions} questões (${Math.round(score)}%).`,
+    });
+
+    // Future step: if score > threshold, mark all theory lessons in this area as complete.
+    // if (score >= 70) {
+    //   area.theory.forEach(lesson => markAsCompleted(lesson.id));
+    // }
   };
 
 
@@ -631,23 +673,83 @@ export default function LearnPage() {
     );
   };
 
-  const renderQuizzes = () => (
+  const renderQuizzes = () => {
+    if (!area?.quizzes || area.quizzes.length === 0) {
+      return (
+        <div className="mt-6">
+           <Card>
+              <CardHeader>
+                  <CardTitle>Quizzes</CardTitle>
+                  <CardDescription>Teste seu conhecimento e prepare-se para os certificados.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                   <div className="flex h-[60vh] items-center justify-center rounded-lg border-2 border-dashed">
+                      <div className="text-center text-muted-foreground">
+                          <p>Quizzes para {area.title} em breve!</p>
+                      </div>
+                  </div>
+              </CardContent>
+          </Card>
+       </div>
+      );
+    }
+
+    const quiz = area.quizzes[0]; // For now, let's just handle the first quiz of the area.
+
+    return (
      <div className="mt-6">
         <Card>
             <CardHeader>
-                <CardTitle>Quizzes</CardTitle>
-                <CardDescription>Teste seu conhecimento e prepare-se para os certificados.</CardDescription>
+                <CardTitle>{quiz.title}</CardTitle>
+                <CardDescription>Selecione a resposta correta para cada questão.</CardDescription>
             </CardHeader>
-            <CardContent>
-                <div className="flex h-[60vh] items-center justify-center rounded-lg border-2 border-dashed">
-                    <div className="text-center text-muted-foreground">
-                        <p>Quizzes para {area.title} em breve!</p>
+            <CardContent className="space-y-8">
+              {quiz.questions.map((question, qIndex) => (
+                <div key={question.id} className="p-4 border rounded-lg">
+                  <p className="font-semibold mb-4">{qIndex + 1}. {question.question}</p>
+                  <RadioGroup 
+                    value={selectedAnswers[question.id]?.toString()}
+                    onValueChange={(value) => handleSelectAnswer(question.id, parseInt(value))}
+                  >
+                    <div className="space-y-2">
+                      {question.options.map((option, oIndex) => {
+                        const isSelected = selectedAnswers[question.id] === oIndex;
+                        const isCorrect = question.correctAnswer === oIndex;
+                        let itemClass = '';
+                        if (quizResults) {
+                            if (isCorrect) {
+                                itemClass = 'bg-green-100 dark:bg-green-900/50 border-green-300 dark:border-green-700';
+                            } else if (isSelected && !isCorrect) {
+                                itemClass = 'bg-red-100 dark:bg-red-900/50 border-red-300 dark:border-red-700';
+                            }
+                        }
+
+                        return (
+                          <Label 
+                            key={oIndex} 
+                            className={cn("flex items-center space-x-3 p-3 rounded-md border transition-colors cursor-pointer", itemClass, {
+                              'border-primary bg-accent/50': !quizResults && isSelected
+                            })}
+                          >
+                            <RadioGroupItem value={oIndex.toString()} id={`${question.id}-${oIndex}`} />
+                            <span>{option}</span>
+                          </Label>
+                        );
+                      })}
                     </div>
+                  </RadioGroup>
                 </div>
+              ))}
+              <div className="flex justify-end mt-8">
+                <Button onClick={() => handleCheckQuiz(quiz)} disabled={Object.keys(selectedAnswers).length !== quiz.questions.length}>
+                  Verificar Respostas
+                </Button>
+              </div>
             </CardContent>
         </Card>
     </div>
-  );
+    );
+  };
 
 
   return (
