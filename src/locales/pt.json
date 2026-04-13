@@ -8,8 +8,9 @@
     "getStarted": "Comece a Aprender",
     "changeLanguage": "Mudar idioma",
     "portuguese": "Português",
-    "english": "English",
-    "spanish": "Español",
+    "english": "Inglês",
+    "spanish": "Espanhol",
+    "french": "Francês",
     "userMenu": {
       "label": "Abrir menu do usuário",
       "panel": "Painel",

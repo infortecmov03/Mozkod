@@ -107,6 +107,7 @@ export function Header() {
               <DropdownMenuItem onClick={() => setLocale('pt')}>{t('Header.portuguese')}</DropdownMenuItem>
               <DropdownMenuItem onClick={() => setLocale('en')}>{t('Header.english')}</DropdownMenuItem>
               <DropdownMenuItem onClick={() => setLocale('es')}>{t('Header.spanish')}</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLocale('fr')}>{t('Header.french')}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           {isMounted && (<>

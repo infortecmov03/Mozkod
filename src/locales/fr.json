@@ -1,0 +1,35 @@
+{
+  "Header": {
+    "features": "Fonctionnalités",
+    "curriculum": "Programme",
+    "community": "Communauté",
+    "dashboard": "Tableau de bord",
+    "login": "Connexion",
+    "getStarted": "Commencer",
+    "changeLanguage": "Changer de langue",
+    "portuguese": "Portugais",
+    "english": "Anglais",
+    "spanish": "Espagnol",
+    "french": "Français",
+    "userMenu": {
+      "label": "Ouvrir le menu utilisateur",
+      "panel": "Tableau de bord",
+      "logout": "Déconnexion"
+    }
+  },
+  "Footer": {
+    "description": "Plateforme open-source d'éducation à la programmation pour le Mozambique.",
+    "curriculum": "Programme",
+    "levels": "Niveaux",
+    "knowledgeAreas": "Domaines de connaissance",
+    "certificates": "Certificats",
+    "community": "Communauté",
+    "forum": "Forum",
+    "events": "Événements",
+    "contribute": "Contribuer",
+    "legal": "Légal",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsOfService": "Conditions d'utilisation",
+    "copyright": "© {year} Mozkod. Tous droits réservés."
+  }
+}

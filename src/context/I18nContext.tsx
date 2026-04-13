@@ -5,8 +5,9 @@ import { createContext, useContext, useState, useEffect, ReactNode, useCallback 
 import pt from '@/locales/pt.json';
 import en from '@/locales/en.json';
 import es from '@/locales/es.json';
+import fr from '@/locales/fr.json';
 
-const translations: Record<string, any> = { pt, en, es };
+const translations: Record<string, any> = { pt, en, es, fr };
 
 type I18nContextType = {
   locale: string;
