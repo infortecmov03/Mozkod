@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "db-t1",
     title: "Bancos de Dados Relacionais e SQL",
+    youtubeVideoId: "z2k2eALe-iE",
     content: `
         <h2>Armazenando Dados de Forma Estruturada</h2>
         <p>Bancos de dados são coleções organizadas de dados. O tipo mais comum é o <strong>banco de dados relacional</strong>, que organiza os dados em tabelas com linhas e colunas.</p>

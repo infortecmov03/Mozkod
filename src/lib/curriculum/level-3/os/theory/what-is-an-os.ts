@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "os-t1",
     title: "O que é um Sistema Operacional?",
+    youtubeVideoId: "26QPDBe-NB8",
     content: `
         <h2>O Gerente do Computador</h2>
         <p>Um Sistema Operacional (SO) é o software mais importante que roda em um computador. Ele gerencia o hardware do computador, os recursos de software e fornece serviços comuns para programas de computador.</p>

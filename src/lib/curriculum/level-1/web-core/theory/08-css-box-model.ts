@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "web-t8",
     title: "O Modelo de Caixa (Box Model)",
+    youtubeVideoId: "rIO532_iZ9w",
     content: `
         <h2>Tudo é uma Caixa</h2>
         <p>No CSS, todo elemento HTML é tratado como uma caixa retangular. O "Box Model" é um conceito fundamental que descreve como essa caixa é composta:</p>

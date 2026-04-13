@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "data-t1",
     title: "Extraindo Insights de Dados",
+    youtubeVideoId: "XUwbZ8a2gPg",
     content: `
         <h2>O que é Ciência de Dados?</h2>
         <p>Ciência de Dados é um campo interdisciplinar que usa métodos científicos, processos, algoritmos e sistemas para extrair conhecimento e insights de dados estruturados e não estruturados.</p>

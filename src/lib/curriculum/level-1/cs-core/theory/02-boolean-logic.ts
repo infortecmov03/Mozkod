@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "cs-t2",
     title: "Lógica Booleana",
+    youtubeVideoId: "gI-qXk7XojA",
     content: `
         <h2>O que é Lógica Booleana?</h2>
         <p>A lógica booleana, desenvolvida por George Boole, é a base da computação digital. Ela lida com valores verdadeiros (True) e falsos (False), frequentemente representados por 1 e 0.</p>

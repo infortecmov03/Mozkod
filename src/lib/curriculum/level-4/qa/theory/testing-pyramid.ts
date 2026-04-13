@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "qa-t1",
     title: "A Pirâmide de Testes",
+    youtubeVideoId: "l_p_l2TfLqY",
     content: `
         <h2>Garantindo a Qualidade do Software</h2>
         <p>Testar é o processo de verificar se o software faz o que deveria fazer e se não tem bugs. A pirâmide de testes é um modelo para pensar sobre os diferentes níveis de teste:</p>

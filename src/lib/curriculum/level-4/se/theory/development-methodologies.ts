@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "se-t1",
     title: "Metodologias de Desenvolvimento",
+    youtubeVideoId: "h-rYjI-kYk0",
     content: `
         <h2>Como Construir Software de Forma Organizada</h2>
         <p>Engenharia de Software é a aplicação de princípios de engenharia ao desenvolvimento de software. Metodologias de desenvolvimento são abordagens estruturadas para guiar esse processo.</p>

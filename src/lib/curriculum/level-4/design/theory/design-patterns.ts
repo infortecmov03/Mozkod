@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "sd-t1",
     title: "Padrões de Design (Design Patterns)",
+    youtubeVideoId: "tv-_1er1mWI",
     content: `
         <h2>Soluções Reutilizáveis para Problemas Comuns</h2>
         <p>Padrões de Design são soluções testadas e comprovadas para problemas recorrentes no design de software. Eles não são código pronto, mas sim um guia ou modelo de como resolver um problema.</p>

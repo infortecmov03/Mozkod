@@ -2,7 +2,8 @@ import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = { 
     id: 'hci-t1', 
-    title: 'Princípios de Usabilidade', 
+    title: 'Princípios de Usabilidade',
+    youtubeVideoId: 'hWc0Fd2AS3s',
     content: `
       <h2>O que é Usabilidade?</h2>
       <p>Usabilidade é a medida da facilidade com que as pessoas podem usar um produto (como um site ou aplicativo) para atingir seus objetivos de forma eficaz, eficiente e satisfatória.</p>

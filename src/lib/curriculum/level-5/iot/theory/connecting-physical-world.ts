@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "iot-t1",
     title: "Conectando o Mundo Físico",
+    youtubeVideoId: "6mboj8CvoaA",
     content: `
         <h2>O que é IoT?</h2>
         <p>A Internet das Coisas (IoT) descreve a rede de objetos físicos — "coisas" — que são incorporados com sensores, software e outras tecnologias com o propósito de conectar e trocar dados com outros dispositivos e sistemas pela Internet.</p>

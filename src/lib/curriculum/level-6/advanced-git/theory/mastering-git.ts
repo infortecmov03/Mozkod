@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "advgit-t1",
     title: "Dominando o Git para Colaboração",
+    youtubeVideoId: "a_a_LuS-8yY",
     content: `
         <h2>Além do Básico</h2>
         <p>Comandos e fluxos de trabalho avançados para equipes profissionais.</p>

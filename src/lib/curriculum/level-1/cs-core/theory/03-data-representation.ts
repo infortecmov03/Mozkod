@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "cs-t3",
     title: "Representação de Dados",
+    youtubeVideoId: "USr1-k_5s-E",
     content: `
         <h2>Como os computadores armazenam dados?</h2>
         <p>Tudo em um computador é armazenado como uma sequência de 0s e 1s. A forma como essa sequência é interpretada depende do tipo de dado.</p>

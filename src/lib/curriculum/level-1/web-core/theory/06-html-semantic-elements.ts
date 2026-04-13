@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "web-t6",
     title: "HTML Semântico",
+    youtubeVideoId: "l-45QFLS3dE",
     content: `
         <h2>Escrevendo HTML com Significado</h2>
         <p>HTML semântico significa usar as tags HTML para seu propósito correto. Em vez de usar <code>&lt;div&gt;</code> para tudo, usamos tags que descrevem o conteúdo.</p>

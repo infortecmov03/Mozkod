@@ -2,7 +2,8 @@ import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = { 
     id: "web-t3", 
-    title: "Links e Imagens", 
+    title: "Links e Imagens",
+    youtubeVideoId: "c-A3aDfa0d0",
     content: `
         <h2>Navegando com Links</h2>
         <p>A tag âncora <code>&lt;a&gt;</code> é usada para criar hyperlinks para outras páginas ou para partes da mesma página. O atributo <code>href</code> especifica o destino do link.</p>

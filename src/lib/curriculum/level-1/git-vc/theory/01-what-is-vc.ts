@@ -2,7 +2,8 @@ import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = { 
     id: 'git-t1', 
-    title: 'O que é Controle de Versão?', 
+    title: 'O que é Controle de Versão?',
+    youtubeVideoId: "24g_TG5k6w0",
     content: `
       <h2>Por que controlar versões?</h2>
       <p>Imagine que você está escrevendo um livro. Você salva versões como <code>livro_v1.doc</code>, <code>livro_v2.doc</code>, <code>livro_final.doc</code>, <code>livro_final_agora_vai.doc</code>. Fica uma bagunça, certo?</p>

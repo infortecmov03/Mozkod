@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "ds-t1",
     title: "Introdução a Estruturas de Dados",
+    youtubeVideoId: "RBSGKlAcrPw",
     content: `
         <h2>Organizando a Informação</h2>
         <p>Estruturas de Dados são formas de organizar, gerenciar e armazenar dados em um computador para que possam ser acessados e modificados de forma eficiente. A escolha da estrutura de dados correta pode ter um impacto enorme no desempenho de um algoritmo.</p>

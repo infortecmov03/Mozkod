@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "mobile-t1",
     title: "Construindo para a Palma da Mão",
+    youtubeVideoId: "0-S5a0eXPoc",
     content: `
         <h2>Nativo vs. Híbrido</h2>
         <p>O desenvolvimento mobile pode ser abordado de duas formas principais:</p>

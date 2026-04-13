@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "eth-t1",
     title: "Construindo Tecnologia com Responsabilidade",
+    youtubeVideoId: "s3-HAE8q-hI",
     content: `
         <h2>O Impacto do Nosso Trabalho</h2>
         <p>Como desenvolvedores, as decisões que tomamos podem ter um grande impacto na sociedade. É crucial agir de forma ética e profissional.</p>

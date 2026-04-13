@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "ent-t1",
     title: "Do Código à Empresa",
+    youtubeVideoId: "zXv_eN8mkgo",
     content: `
         <h2>Transformando uma Ideia em Negócio</h2>
         <p>Empreendedorismo em tecnologia é o processo de criar e escalar uma empresa de base tecnológica.</p>

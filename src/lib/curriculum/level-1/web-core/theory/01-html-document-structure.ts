@@ -2,7 +2,8 @@ import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = { 
     id: "web-t1", 
-    title: "Estrutura de um Documento HTML", 
+    title: "Estrutura de um Documento HTML",
+    youtubeVideoId: "bWPMSSsVdPk",
     content: `
         <h2>A Estrutura Básica</h2>
         <p>Todo documento HTML segue uma estrutura fundamental. Pense nela como o esqueleto da sua página.</p>

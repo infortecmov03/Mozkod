@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: 'hci-t2',
     title: 'Acessibilidade na Web (a11y)',
+    youtubeVideoId: '3f31oufqFSM',
     content: `
       <h2>Construindo uma Web para Todos</h2>
       <p>Acessibilidade (muitas vezes abreviada como <strong>a11y</strong>) é a prática de garantir que seus sites e aplicativos possam ser usados por todas as pessoas, independentemente de suas deficiências.</p>

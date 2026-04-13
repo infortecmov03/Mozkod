@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "pla-t1",
     title: "Programação Orientada a Objetos (POO)",
+    youtubeVideoId: "SiBw7os-_zI",
     content: `
         <h2>Modelando o Mundo Real</h2>
         <p>POO é um paradigma de programação baseado no conceito de "objetos", que podem conter dados (na forma de campos, também conhecidos como atributos ou propriedades) e código (na forma de procedimentos, também conhecidos como métodos).</p>

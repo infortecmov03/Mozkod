@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "career-t1",
     title: "Construindo sua Marca Profissional",
+    youtubeVideoId: "C5f-HUGAnJ8",
     content: `
         <h2>Currículo, Portfólio e Entrevistas</h2>
         <p>Conseguir um emprego em tecnologia vai além de saber codificar.</p>

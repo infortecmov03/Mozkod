@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "pf-t5",
     title: "Arrays e Coleções",
+    youtubeVideoId: "tVRbu1gJgo4",
     content: `
       <h2>Organizando Múltiplos Dados</h2>
       <p>Arrays (ou listas em linguagens como Python) são estruturas de dados que armazenam uma coleção de itens em uma única variável.</p>

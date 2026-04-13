@@ -2,7 +2,8 @@ import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = { 
     id: "web-t5", 
-    title: "Formulários e Entradas de Usuário", 
+    title: "Formulários e Entradas de Usuário",
+    youtubeVideoId: "fNcIitL32bY",
     content: `
         <h2>Coletando Dados do Usuário</h2>
         <p>Formulários são um dos principais pontos de interação em um site. A tag <code>&lt;form&gt;</code> é o container para diferentes tipos de entrada (inputs).</p>

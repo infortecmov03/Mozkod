@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "net-t1",
     title: "Introdução a Redes de Computadores",
+    youtubeVideoId: "01-6pkvyA-c",
     content: `
         <h2>Conectando o Mundo</h2>
         <p>Redes de computadores são conjuntos de dois ou mais computadores interligados que podem compartilhar recursos (como impressoras), arquivos e permitir a comunicação eletrônica.</p>

@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "webadv-t1",
     title: "Desenvolvimento Web Moderno",
+    youtubeVideoId: "SqcY0GlETPk",
     content: `
         <h2>Componentes, Servidores e APIs</h2>
         <p>O desenvolvimento web avançado foca em criar aplicações ricas, interativas e escaláveis.</p>

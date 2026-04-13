@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: 'git-t3',
     title: 'Branching e Merging',
+    youtubeVideoId: "4EYpPUIYauE",
     content: `
       <h2>Trabalhando em Paralelo com Branches</h2>
       <p>Um <strong>branch</strong> (ramo) é como uma linha do tempo independente de desenvolvimento. Por padrão, você começa no branch principal, geralmente chamado de <code>main</code> ou <code>master</code>.</p>

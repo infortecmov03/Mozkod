@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "ias-t1",
     title: "Princípios de Segurança da Informação",
+    youtubeVideoId: "inWWhr5tnEA",
     content: `
         <h2>Protegendo os Dados</h2>
         <p>Segurança da Informação é a prática de proteger informações, prevenindo ou reduzindo a probabilidade de acesso, uso, divulgação, alteração ou destruição não autorizada.</p>

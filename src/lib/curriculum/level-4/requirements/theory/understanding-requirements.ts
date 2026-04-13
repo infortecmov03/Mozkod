@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "req-t1",
     title: "Entendendo o que Construir",
+    youtubeVideoId: "E-I9g32f-aQ",
     content: `
         <h2>Definindo o Problema</h2>
         <p>Engenharia de Requisitos é o processo de definir, documentar e manter os requisitos de um sistema. É sobre entender o que o cliente quer e o que o sistema precisa fazer.</p>

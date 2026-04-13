@@ -2,7 +2,8 @@ import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = { 
     id: "web-t7", 
-    title: "Seletores CSS", 
+    title: "Seletores CSS",
+    youtubeVideoId: "iV4g9c6I39s",
     content: `
         <h2>Como o CSS Encontra os Elementos</h2>
         <p>CSS (Cascading Style Sheets) usa seletores para "encontrar" os elementos HTML que você quer estilizar.</p>

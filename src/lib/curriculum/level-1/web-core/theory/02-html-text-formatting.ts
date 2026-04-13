@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "web-t2",
     title: "Formatação de Texto com HTML",
+    youtubeVideoId: "h3h6_8k0zLo",
     content: `
         <h2>Títulos e Parágrafos</h2>
         <p>HTML fornece tags para estruturar o texto de forma hierárquica e semântica.</p>

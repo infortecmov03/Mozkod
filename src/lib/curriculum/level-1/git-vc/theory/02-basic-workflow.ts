@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: 'git-t2',
     title: 'O Fluxo de Trabalho Básico do Git',
+    youtubeVideoId: "OFK5rE42k0c",
     content: `
       <h2>As Três Áreas do Git</h2>
       <p>O Git gerencia arquivos em três áreas principais:</p>

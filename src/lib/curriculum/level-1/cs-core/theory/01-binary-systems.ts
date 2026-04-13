@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "cs-t1",
     title: "Sistemas Binários e de Numeração",
+    youtubeVideoId: "10_yY-sLzJo",
     content: `
         <h2>O que são Sistemas de Numeração?</h2>
         <p>Um sistema de numeração é um conjunto de regras e símbolos que nos permite representar números. O sistema que usamos no dia-a-dia é o <strong>decimal (base 10)</strong>, que usa dez dígitos (0-9).</p>

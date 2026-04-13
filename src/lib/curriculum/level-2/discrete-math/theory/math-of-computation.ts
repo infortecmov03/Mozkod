@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "dm-t1",
     title: "A Matemática da Computação",
+    youtubeVideoId: "DBugA823sQc",
     content: `
         <h2>O que é Matemática Discreta?</h2>
         <p>Matemática Discreta é o ramo da matemática que lida com objetos que só podem assumir valores distintos e separados (discretos). É a base matemática para a ciência da computação.</p>

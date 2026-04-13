@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "cs-t4",
     title: "Arquitetura de Computadores (Von Neumann)",
+    youtubeVideoId: "Qqug2Uncy_A",
     content: `
         <h2>Como um computador funciona?</h2>
         <p>A maioria dos computadores modernos segue a arquitetura de Von Neumann, que consiste em quatro componentes principais:</p>

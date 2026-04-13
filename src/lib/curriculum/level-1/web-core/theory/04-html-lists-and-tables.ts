@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "web-t4",
     title: "Listas e Tabelas",
+    youtubeVideoId: "bS7cCoesCVs",
     content: `
         <h2>Organizando em Listas</h2>
         <p>HTML oferece três tipos de listas:</p>

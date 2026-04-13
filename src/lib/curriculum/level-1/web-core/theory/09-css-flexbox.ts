@@ -2,7 +2,8 @@ import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = { 
     id: "web-t9", 
-    title: "Layout com Flexbox", 
+    title: "Layout com Flexbox",
+    youtubeVideoId: "K74l26pE4YA",
     content: `
         <h2>Layout em Uma Dimensão</h2>
         <p>O Módulo de Layout de Caixa Flexível, comumente chamado de Flexbox, é um modelo de layout CSS projetado para criar layouts em uma única dimensão (uma linha ou uma coluna).</p>

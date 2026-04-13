@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "cloud-t1",
     title: "Computação na Nuvem",
+    youtubeVideoId: "M988_fsOSWo",
     content: `
         <h2>Infraestrutura como Serviço</h2>
         <p>Cloud Computing é a entrega de serviços de computação — incluindo servidores, armazenamento, bancos de dados, redes, software, análise e inteligência — pela Internet ("a nuvem").</p>

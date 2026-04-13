@@ -3,5 +3,6 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "fcc-rdb-t1",
     title: "Certificação em Bancos de Dados Relacionais",
+    youtubeVideoId: "v_1zB1rV-bQ",
     content: "Aprenda a usar SQL e bancos de dados relacionais para armazenar e gerenciar dados de forma eficiente, completando 5 projetos práticos."
 };

@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "web-t11",
     title: "Design Responsivo",
+    youtubeVideoId: "H5G_9jpzghc",
     content: `
         <h2>Adaptando-se a Qualquer Tela</h2>
         <p>Design Responsivo é a abordagem que sugere que o design e o desenvolvimento devem responder ao comportamento e ambiente do usuário com base no tamanho da tela, plataforma e orientação.</p>

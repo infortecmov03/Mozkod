@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "cyber-t1",
     title: "Defesa Digital",
+    youtubeVideoId: "ooJ9sE3h-pM",
     content: `
         <h2>Protegendo Sistemas e Redes</h2>
         <p>Cybersecurity é a prática de defender computadores, servidores, dispositivos móveis, sistemas eletrônicos, redes e dados de ataques maliciosos.</p>

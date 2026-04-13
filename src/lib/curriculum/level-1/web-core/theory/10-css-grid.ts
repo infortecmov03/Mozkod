@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "web-t10",
     title: "Layout com Grid",
+    youtubeVideoId: "0-DY8J_skZ0",
     content: `
         <h2>Layout em Duas Dimensões</h2>
         <p>O CSS Grid é um sistema de layout poderoso que permite criar layouts complexos em duas dimensões (linhas e colunas), como um tabuleiro.</p>

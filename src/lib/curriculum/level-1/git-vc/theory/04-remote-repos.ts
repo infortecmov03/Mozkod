@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: 'git-t4',
     title: 'Repositórios Remotos (GitHub)',
+    youtubeVideoId: "usFk-1jAL-M",
     content: `
       <h2>Colaborando com Outros</h2>
       <p>Até agora, tudo o que fizemos foi local, na sua máquina. Para colaborar, usamos repositórios remotos, hospedados em serviços como <strong>GitHub</strong>, GitLab ou Bitbucket.</p>

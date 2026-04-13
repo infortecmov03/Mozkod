@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "ai-t1",
     title: "Ensinando Máquinas a Aprender",
+    youtubeVideoId: "i_LwzRVP7bg",
     content: `
         <h2>O que é Machine Learning?</h2>
         <p>Machine Learning (ML) é um subcampo da Inteligência Artificial (IA) que foca em construir sistemas que podem aprender com dados, identificar padrões e tomar decisões com mínima intervenção humana.</p>

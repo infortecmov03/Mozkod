@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "pf-t3",
     title: "Estruturas de Controle (Loops)",
+    youtubeVideoId: "n0p_cQc_i-A",
     content: `
       <h2>Repetindo Tarefas</h2>
       <p>Loops são usados para executar o mesmo bloco de código várias vezes.</p>

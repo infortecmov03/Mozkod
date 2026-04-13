@@ -3,6 +3,7 @@ import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
     id: "block-t1",
     title: "A Próxima Geração da Web",
+    youtubeVideoId: "YdFky-2pP0s",
     content: `
         <h2>O que é Blockchain?</h2>
         <p>Blockchain é um livro-razão digital distribuído, imutável e descentralizado. Cada "bloco" na "corrente" contém um número de transações, e cada novo bloco é criptograficamente ligado ao anterior.</p>
