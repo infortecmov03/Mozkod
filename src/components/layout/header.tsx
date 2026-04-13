@@ -94,10 +94,19 @@ export function Header() {
         </div>
 
         <div className="flex items-center justify-end gap-2 md:flex-1">
-          <Button variant="ghost" size="icon">
-            <Globe className="h-5 w-5" />
-            <span className="sr-only">Mudar idioma</span>
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Globe className="h-5 w-5" />
+                <span className="sr-only">Mudar idioma</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>Português</DropdownMenuItem>
+              <DropdownMenuItem>English</DropdownMenuItem>
+              <DropdownMenuItem>Español</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           {isMounted && (<>
             {user ? (
               <DropdownMenu>
