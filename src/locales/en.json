@@ -1,0 +1,34 @@
+{
+  "Header": {
+    "features": "Features",
+    "curriculum": "Curriculum",
+    "community": "Community",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "getStarted": "Get Started",
+    "changeLanguage": "Change language",
+    "portuguese": "Portuguese",
+    "english": "English",
+    "spanish": "Spanish",
+    "userMenu": {
+      "label": "Open user menu",
+      "panel": "Dashboard",
+      "logout": "Logout"
+    }
+  },
+  "Footer": {
+    "description": "Open source programming education platform for Mozambique.",
+    "curriculum": "Curriculum",
+    "levels": "Levels",
+    "knowledgeAreas": "Knowledge Areas",
+    "certificates": "Certificates",
+    "community": "Community",
+    "forum": "Forum",
+    "events": "Events",
+    "contribute": "Contribute",
+    "legal": "Legal",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "copyright": "© {year} Mozkod. All rights reserved."
+  }
+}

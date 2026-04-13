@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Globe, Menu, User, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useI18n } from "@/context/I18nContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,15 +24,16 @@ export function Header() {
   const { user, logout } = useAuth();
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
+  const { t, setLocale } = useI18n();
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
   
   const navLinks = [
-    { href: "/#features", label: "Recursos" },
-    { href: "/curriculo", label: "Currículo" },
-    { href: "/comunidade", label: "Comunidade" },
+    { href: "/#features", label: t('Header.features') },
+    { href: "/curriculo", label: t('Header.curriculum') },
+    { href: "/comunidade", label: t('Header.community') },
   ];
 
   return (
@@ -60,7 +62,7 @@ export function Header() {
                   ))}
                   {isMounted && user && (
                      <Link href="/dashboard" onClick={() => setIsOpen(false)} className="text-lg font-medium text-foreground/80 hover:text-foreground">
-                        Painel
+                        {t('Header.dashboard')}
                       </Link>
                   )}
                 </nav>
@@ -81,7 +83,7 @@ export function Header() {
             ))}
             {isMounted && user && (
               <Link href="/dashboard" className="font-medium transition-colors text-foreground/60 hover:text-foreground/80">
-                Painel
+                {t('Header.dashboard')}
               </Link>
             )}
             </nav>
@@ -98,13 +100,13 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
                 <Globe className="h-5 w-5" />
-                <span className="sr-only">Mudar idioma</span>
+                <span className="sr-only">{t('Header.changeLanguage')}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>Português</DropdownMenuItem>
-              <DropdownMenuItem>English</DropdownMenuItem>
-              <DropdownMenuItem>Español</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLocale('pt')}>{t('Header.portuguese')}</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLocale('en')}>{t('Header.english')}</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLocale('es')}>{t('Header.spanish')}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           {isMounted && (<>
@@ -129,12 +131,12 @@ export function Header() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => router.push('/dashboard')}>
                     <User className="mr-2 h-4 w-4" />
-                    <span>Painel</span>
+                    <span>{t('Header.userMenu.panel')}</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={logout}>
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>Sair</span>
+                    <span>{t('Header.userMenu.logout')}</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -142,15 +144,15 @@ export function Header() {
               <>
                 <div className="hidden sm:flex gap-2">
                   <Button variant="outline" asChild>
-                    <Link href="/login">Entrar</Link>
+                    <Link href="/login">{t('Header.login')}</Link>
                   </Button>
                   <Button asChild>
-                    <Link href="/cadastro">Comece a Aprender</Link>
+                    <Link href="/cadastro">{t('Header.getStarted')}</Link>
                   </Button>
                 </div>
                  <div className="sm:hidden">
                    <Button variant="outline" asChild>
-                       <Link href="/login">Entrar</Link>
+                       <Link href="/login">{t('Header.login')}</Link>
                    </Button>
                </div>
               </>
