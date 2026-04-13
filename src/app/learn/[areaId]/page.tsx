@@ -31,6 +31,7 @@ export default function LearnPage() {
   const [selectedLesson, setSelectedLesson] = useState<TheoryLesson | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [lessonsSheetOpen, setLessonsSheetOpen] = useState(false);
+  const [practiceSheetOpen, setPracticeSheetOpen] = useState(false);
 
   // State for practice tab
   const [selectedPracticeLanguage, setSelectedPracticeLanguage] = useState<string | null>(null);
@@ -255,49 +256,73 @@ export default function LearnPage() {
 
     const exercisesForLang = selectedPracticeLanguage ? area.practice[selectedPracticeLanguage] : [];
 
-    return (
-        <div className="flex flex-col md:flex-row gap-8 mt-6">
-            <aside className="w-full md:w-1/3 lg:w-1/4">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="font-headline text-xl">Exercícios</CardTitle>
-                        <div className="flex gap-2 pt-2 flex-wrap">
-                            {practiceLanguages.map(lang => (
-                                <Button
-                                    key={lang}
-                                    variant={selectedPracticeLanguage === lang ? 'default' : 'outline'}
-                                    size="sm"
-                                    onClick={() => handleLanguageSelect(lang)}
-                                    className="capitalize"
+    const practiceSidebar = (
+        <Card className="border-none shadow-none h-full flex flex-col">
+            <CardHeader>
+                <CardTitle className="font-headline text-xl">Exercícios</CardTitle>
+                 <CardDescription>Escolha uma linguagem e um exercício</CardDescription>
+                <div className="flex gap-2 pt-2 flex-wrap">
+                    {practiceLanguages.map(lang => (
+                        <Button
+                            key={lang}
+                            variant={selectedPracticeLanguage === lang ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => handleLanguageSelect(lang)}
+                            className="capitalize"
+                        >
+                            {lang}
+                        </Button>
+                    ))}
+                </div>
+            </CardHeader>
+            <CardContent className="flex-grow">
+                <ScrollArea className="h-full">
+                    <nav className="flex flex-col gap-1 pr-4">
+                        {exercisesForLang && exercisesForLang.length > 0 ? (
+                            exercisesForLang.map((exercise, index) => (
+                                <button
+                                    key={exercise.id}
+                                    onClick={() => {
+                                        setSelectedExercise(exercise);
+                                        setPracticeSheetOpen(false);
+                                    }}
+                                    className={`text-left p-3 rounded-md transition-colors w-full ${
+                                        selectedExercise?.id === exercise.id
+                                        ? 'bg-accent text-accent-foreground font-semibold'
+                                        : 'hover:bg-accent/50'
+                                    }`}
                                 >
-                                    {lang}
-                                </Button>
-                            ))}
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <ScrollArea className="h-[50vh]">
-                            <nav className="flex flex-col gap-1 pr-4">
-                                {exercisesForLang.map((exercise, index) => (
-                                    <button
-                                        key={exercise.id}
-                                        onClick={() => setSelectedExercise(exercise)}
-                                        className={`text-left p-3 rounded-md transition-colors w-full ${
-                                            selectedExercise?.id === exercise.id
-                                            ? 'bg-accent text-accent-foreground font-semibold'
-                                            : 'hover:bg-accent/50'
-                                        }`}
-                                    >
-                                        <span className="flex-1">{index + 1}. {exercise.title}</span>
-                                    </button>
-                                ))}
-                            </nav>
-                        </ScrollArea>
-                    </CardContent>
-                </Card>
-            </aside>
+                                    <span className="flex-1">{index + 1}. {exercise.title}</span>
+                                </button>
+                            ))
+                        ) : (
+                            <p className="p-3 text-muted-foreground text-sm">
+                                {selectedPracticeLanguage ? 'Nenhum exercício para esta linguagem.' : 'Selecione uma linguagem.'}
+                            </p>
+                        )}
+                    </nav>
+                </ScrollArea>
+            </CardContent>
+        </Card>
+    );
 
-            <div className="w-full md:w-2/3 lg:w-3/4">
+    return (
+        <div className="mt-6">
+            <div className="flex justify-end mb-4">
+                <Sheet open={practiceSheetOpen} onOpenChange={setPracticeSheetOpen}>
+                    <SheetTrigger asChild>
+                        <Button variant="outline">
+                            <Menu className="mr-2 h-4 w-4" />
+                            Ver Exercícios
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="right" className="w-full sm:max-w-md p-0">
+                        {practiceSidebar}
+                    </SheetContent>
+                </Sheet>
+            </div>
+            
+            <div className="w-full">
                 {selectedExercise ? (
                     <Card className="h-full flex flex-col">
                         <CardHeader>
@@ -341,7 +366,7 @@ export default function LearnPage() {
                     <OverviewComponent 
                       title={`Exercícios de ${area.title}`} 
                       description={`Escolha uma linguagem e selecione um exercício para começar a praticar.`}
-                      cta="Selecione um exercício na barra lateral para começar."
+                      cta="Clique no menu 'Ver Exercícios' acima para começar."
                     />
                 )}
             </div>
