@@ -15,10 +15,11 @@ O Firebase resolve todos esses problemas, oferecendo autenticação segura e um 
 
 ## Arquivos a serem modificados
 
-A migração se concentrará em dois arquivos principais, que atualmente gerenciam toda a lógica de estado e persistência:
+A migração se concentrará em três arquivos principais, que atualmente gerenciam toda a lógica de estado e persistência:
 
 1.  `src/context/AuthContext.tsx`
 2.  `src/context/ProgressContext.tsx`
+3.  `src/app/forum/page.tsx`
 
 ---
 
@@ -248,9 +249,118 @@ const markAsCompleted = useCallback(async (lessonId: string) => {
 
 ---
 
-## Passo 4: Proteger seus Dados (Regras de Segurança)
+## Passo 4: Migrar o Fórum (`forum/page.tsx`)
 
-Para garantir que os usuários só possam ler e escrever seu próprio progresso, adicione as seguintes regras no seu console do Firebase em `Firestore Database > Rules`:
+A página do fórum atualmente usa dados de exemplo (`mockComments`) e `useState` para simular a postagem de novas mensagens. Vamos migrar isso para o Firestore para criar uma comunidade persistente e em tempo real.
+
+**Modelo de Dados no Firestore:**
+Para cada exercício, teremos um tópico de fórum. Dentro de cada tópico, teremos uma subcoleção de comentários.
+
+```
+/forum_topics/{exerciseId}/comments/{commentId}
+```
+
+Cada documento `comment` terá a seguinte estrutura: `{ content: string, user: { uid: string, name: string }, timestamp: Timestamp }`
+
+### Código Atual (Simulado com `useState`)
+
+```tsx
+// src/app/forum/page.tsx - Lógica atual
+
+const mockComments = [ ... ]; // Dados de exemplo
+const [comments, setComments] = useState<Comment[]>(mockComments);
+
+const handlePostComment = (e: React.FormEvent) => {
+  // Lógica para adicionar novo comentário ao array local 'comments'
+  setComments([...comments, newCommentObject]);
+  setNewComment('');
+};
+```
+
+### Novo Código (Firestore)
+
+Substituiremos o estado local por um listener do Firestore (`onSnapshot`) para buscar comentários em tempo real e `addDoc` para criar novos comentários.
+
+```tsx
+// src/app/forum/page.tsx - Nova Lógica com Firebase
+
+import { 
+    getFirestore, 
+    collection, 
+    query,
+    orderBy,
+    onSnapshot, 
+    addDoc,
+    serverTimestamp,
+    type Timestamp
+} from 'firebase/firestore';
+import { app } from '@/firebase/config';
+
+// Defina o tipo de comentário para corresponder à estrutura do Firestore
+type Comment = {
+  id: string;
+  user: { name: string; avatarFallback: string; uid: string; };
+  timestamp: Timestamp; // Usaremos o Timestamp do Firestore
+  content: string;
+}
+
+// ... no componente ForumContent
+
+const db = getFirestore(app);
+const { user } = useAuth(); // Assumindo que useAuth fornece o usuário do Firebase
+const [comments, setComments] = useState<Comment[]>([]);
+const [newComment, setNewComment] = useState('');
+const exerciseId = searchParams.get('exerciseId');
+
+// Ouve as atualizações de comentários em tempo real
+useEffect(() => {
+    if (!exerciseId) return;
+    
+    const commentsColRef = collection(db, 'forum_topics', exerciseId, 'comments');
+    const q = query(commentsColRef, orderBy('timestamp', 'asc'));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+        const fetchedComments = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        })) as Comment[]; // Pode ser necessário um tratamento de tipo mais seguro
+        setComments(fetchedComments);
+    });
+
+    return () => unsubscribe(); // Limpa o listener ao desmontar
+}, [db, exerciseId]);
+
+
+const handlePostComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newComment.trim() || !user || !exerciseId) return;
+
+    const commentsColRef = collection(db, 'forum_topics', exerciseId, 'comments');
+
+    try {
+        await addDoc(commentsColRef, {
+            content: newComment,
+            user: {
+                uid: user.uid,
+                name: user.name,
+                avatarFallback: user.name?.split(' ').map(n => n[0]).join('').substring(0, 2) || 'U'
+            },
+            timestamp: serverTimestamp() // Usa o timestamp do servidor
+        });
+        setNewComment(''); // Limpa o campo após o envio
+    } catch (error) {
+        console.error("Erro ao postar comentário:", error);
+    }
+};
+
+// Ao renderizar, você pode precisar formatar o `timestamp` do Firestore para um formato legível
+// Ex: comment.timestamp.toDate().toLocaleString()
+```
+---
+
+## Passo 5: Proteger seus Dados (Regras de Segurança)
+
+Para garantir que os usuários só possam ler e escrever seu próprio progresso e interagir de forma segura com o fórum, adicione as seguintes regras no seu console do Firebase em `Firestore Database > Rules`:
 
 ```
 rules_version = '2';
@@ -266,8 +376,21 @@ service cloud.firestore {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
     }
+
+    // Regras para os tópicos do fórum
+    match /forum_topics/{exerciseId} {
+      // Permite que qualquer usuário autenticado leia ou crie um tópico (implícito)
+      
+      match /comments/{commentId} {
+        // Qualquer usuário autenticado pode ler todos os comentários
+        allow read: if request.auth != null;
+
+        // Apenas usuários autenticados podem criar comentários
+        allow create: if request.auth != null && request.resource.data.user.uid == request.auth.uid;
+      }
+    }
   }
 }
 ```
 
-Ao seguir estes passos, sua aplicação terá um sistema de autenticação e persistência de dados seguro, escalável e pronto para produção.
+Ao seguir estes passos, sua aplicação terá um sistema de autenticação, persistência de dados e fórum de comunidade seguros, escaláveis e prontos para produção.
