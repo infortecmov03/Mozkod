@@ -17,7 +17,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useProgress } from '@/context/ProgressContext';
 import { Label } from '@/components/ui/label';
 import Editor from '@monaco-editor/react';
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 
 export default function LearnPage() {
@@ -85,7 +85,7 @@ export default function LearnPage() {
     }
   }, [selectedExercise]);
   
-  const lessonIndex = area?.theory?.findIndex(l => l.id === selectedLesson?.id) ?? -1;
+   const lessonIndex = area?.theory?.findIndex(l => l.id === selectedLesson?.id) ?? -1;
 
   const handlePrevious = () => {
       if (area?.theory && lessonIndex > 0) {
@@ -149,6 +149,7 @@ export default function LearnPage() {
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-full sm:max-w-md p-0">
+            <SheetTitle className="sr-only">Lições de Teoria</SheetTitle>
             <Card className="border-none shadow-none h-full flex flex-col">
               <CardHeader>
                 <CardTitle className="font-headline text-xl">Lições de Teoria</CardTitle>
@@ -317,6 +318,7 @@ export default function LearnPage() {
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="right" className="w-full sm:max-w-md p-0">
+                        <SheetTitle className="sr-only">Exercícios Práticos</SheetTitle>
                         {practiceSidebar}
                     </SheetContent>
                 </Sheet>
