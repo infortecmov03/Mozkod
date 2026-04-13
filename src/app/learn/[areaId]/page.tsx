@@ -38,6 +38,7 @@ export default function LearnPage() {
   const [selectedExercise, setSelectedExercise] = useState<PracticeExercise | null>(null);
   const [code, setCode] = useState('');
   const [testResults, setTestResults] = useState<{ description: string; passed: boolean; error?: string }[]>([]);
+  const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
 
   const areaId = Array.isArray(params.areaId) ? params.areaId[0] : params.areaId;
 
@@ -66,6 +67,7 @@ export default function LearnPage() {
         setSelectedExercise(null);
         setCode('');
         setTestResults([]);
+        setConsoleOutput([]);
 
         // Pre-select first language if available, but not first exercise
         if (foundArea.practice) {
@@ -86,6 +88,7 @@ export default function LearnPage() {
         setCode('');
     }
     setTestResults([]);
+    setConsoleOutput([]);
   }, [selectedExercise]);
   
    const lessonIndex = area?.theory?.findIndex(l => l.id === selectedLesson?.id) ?? -1;
@@ -105,11 +108,20 @@ export default function LearnPage() {
     setSelectedPracticeLanguage(lang);
     setSelectedExercise(null); // Deselect exercise when language changes
     setTestResults([]);
+    setConsoleOutput([]);
   }
   
   const handleRunTests = () => {
-    if (!selectedExercise || !selectedExercise.tests || !selectedPracticeLanguage) {
+    if (!selectedExercise || !selectedPracticeLanguage) {
         toast({
+            variant: "destructive",
+            title: "Nenhum exercício selecionado",
+            description: "Por favor, selecione um exercício para começar.",
+        });
+        return;
+    }
+    if (!selectedExercise.tests) {
+         toast({
             variant: "destructive",
             title: "Nenhum teste encontrado",
             description: "Não há testes automatizados para este exercício.",
@@ -126,32 +138,45 @@ export default function LearnPage() {
         return;
     }
     
-    setTestResults([]); // Clear previous results
+    setTestResults([]);
+    setConsoleOutput([]);
     const results = [];
+    const capturedLogs: string[] = [];
     let allPassed = true;
 
-    for (const test of selectedExercise.tests) {
-        try {
-            const testFunction = new Function(`${code}\n${test.code}`);
-            const result = testFunction();
-            if (result !== true) {
+    const originalConsoleLog = console.log;
+    console.log = (...args) => {
+        capturedLogs.push(args.map(arg => typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)).join(' '));
+    };
+
+    try {
+        for (const test of selectedExercise.tests) {
+            try {
+                const testFunction = new Function(`${code}\n${test.code}`);
+                const result = testFunction();
+                if (result !== true) {
+                    allPassed = false;
+                }
+                results.push({ description: test.description, passed: result === true });
+            } catch (error: any) {
                 allPassed = false;
+                results.push({ description: test.description, passed: false, error: error.message });
+                toast({
+                    variant: "destructive",
+                    title: "Erro no seu código!",
+                    description: `Ocorreu um erro ao executar seu código: ${error.message}`,
+                });
+                setTestResults(results);
+                setConsoleOutput(capturedLogs);
+                return; // Stop on first error
             }
-            results.push({ description: test.description, passed: result === true });
-        } catch (error: any) {
-            allPassed = false;
-            results.push({ description: test.description, passed: false, error: error.message });
-            toast({
-                variant: "destructive",
-                title: "Erro no seu código!",
-                description: `Ocorreu um erro ao executar seu código: ${error.message}`,
-            });
-            setTestResults(results);
-            return; // Stop on first error
         }
+    } finally {
+        console.log = originalConsoleLog; // Always restore original console.log
     }
     
     setTestResults(results);
+    setConsoleOutput(capturedLogs);
 
     if (allPassed) {
         toast({
@@ -162,7 +187,7 @@ export default function LearnPage() {
         toast({
             variant: "destructive",
             title: "Alguns testes falharam",
-            description: "Verifique os resultados abaixo e tente novamente.",
+            description: "Verifique os resultados e a saída do console abaixo.",
         });
     }
 };
@@ -213,7 +238,7 @@ export default function LearnPage() {
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-full sm:max-w-md p-0">
-            <SheetTitle>Lições de Teoria</SheetTitle>
+            <SheetTitle className="sr-only">Lições de Teoria</SheetTitle>
             <Card className="border-none shadow-none h-full flex flex-col">
               <CardHeader>
                 <CardTitle className="font-headline text-xl">Lições de Teoria</CardTitle>
@@ -402,7 +427,7 @@ export default function LearnPage() {
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="right" className="w-full sm:max-w-md p-0">
-                        <SheetTitle>Exercícios Práticos</SheetTitle>
+                        <SheetTitle className="sr-only">Exercícios Práticos</SheetTitle>
                         {practiceSidebar}
                     </SheetContent>
                 </Sheet>
@@ -460,6 +485,17 @@ export default function LearnPage() {
                                 </div>
                             </div>
                             
+                            {consoleOutput.length > 0 && (
+                                <div className="mt-6">
+                                    <h3 className="font-semibold text-lg mb-2">Saída do Console</h3>
+                                    <pre className="bg-muted rounded-md p-4 text-sm text-foreground overflow-x-auto">
+                                        <code>
+                                            {consoleOutput.join('\n')}
+                                        </code>
+                                    </pre>
+                                </div>
+                            )}
+
                             {testResults.length > 0 && (
                               <div className="mt-6">
                                   <h3 className="font-semibold text-lg mb-2">Resultados dos Testes</h3>
@@ -555,3 +591,5 @@ export default function LearnPage() {
     </div>
   );
 }
+
+    
