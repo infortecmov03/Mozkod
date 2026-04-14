@@ -497,8 +497,15 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      increment_xp: {
+        Args: {
+          user_id_param: string
+          xp_to_add: number
+        }
+        Returns: undefined
+      }
       update_updated_at_column: {
-        Args: {}
+        Args: Record<string, unknown>
         Returns: unknown
       }
     }

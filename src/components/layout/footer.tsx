@@ -28,6 +28,7 @@ export function Footer() {
               <h3 className="font-semibold text-foreground">{t('Footer.community')}</h3>
               <ul className="mt-4 space-y-2">
                 <li><Link href="/forum" className="text-sm text-muted-foreground hover:text-foreground">{t('Footer.forum')}</Link></li>
+                <li><Link href="/leaderboard" className="text-sm text-muted-foreground hover:text-foreground">{t('Footer.leaderboard')}</Link></li>
                 <li><Link href="/eventos" className="text-sm text-muted-foreground hover:text-foreground">{t('Footer.events')}</Link></li>
                 <li><Link href="/contribuir" className="text-sm text-muted-foreground hover:text-foreground">{t('Footer.contribute')}</Link></li>
               </ul>

@@ -27,6 +27,7 @@ export function Header() {
     { href: "/#features", label: t('Header.features') },
     { href: "/curriculo", label: t('Header.curriculum') },
     { href: "/comunidade", label: t('Header.community') },
+    { href: "/leaderboard", label: t('Header.leaderboard') },
   ];
 
   const handleLogout = async () => {

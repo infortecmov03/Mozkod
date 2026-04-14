@@ -14,7 +14,6 @@ type ProgressContextType = {
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
 
-// Calculate total lessons once, including theory and practice
 const totalItems = curriculumData
   .flatMap(level => level.knowledgeAreas)
   .reduce((acc, area) => {
@@ -59,8 +58,10 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   const markAsCompleted = useCallback(async (itemId: string, itemType: 'lesson' | 'exercise') => {
     if (user && supabase && !completedItems.has(itemId)) {
       let error = null;
+      let xpToAdd = 0;
 
       if (itemType === 'lesson') {
+        xpToAdd = 10;
         ({ error } = await supabase.from('user_progress').insert({
           user_id: user.id,
           lesson_id: itemId,
@@ -68,6 +69,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           completed_at: new Date().toISOString()
         }));
       } else if (itemType === 'exercise') {
+        xpToAdd = 25;
         ({ error } = await supabase.from('user_exercise_submissions').insert({
           user_id: user.id,
           exercise_id: itemId,
@@ -81,6 +83,12 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         console.error(`Error saving ${itemType} progress:`, error);
       } else {
         setCompletedItems(prev => new Set(prev).add(itemId));
+         if (xpToAdd > 0) {
+          const { error: rpcError } = await supabase.rpc('increment_xp', { user_id_param: user.id, xp_to_add: xpToAdd });
+          if (rpcError) {
+            console.error('Error updating XP:', rpcError);
+          }
+        }
       }
     }
   }, [completedItems, user, supabase]);
@@ -90,7 +98,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   }, [completedItems]);
 
   const value = {
-    progress: Array.from(completedItems), // For legacy compatibility if needed
+    progress: Array.from(completedItems),
     completedItems,
     markAsCompleted,
     isCompleted,

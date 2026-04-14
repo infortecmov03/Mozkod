@@ -78,6 +78,8 @@ CREATE TABLE user_progress (
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
     lesson_id TEXT NOT NULL,
     status TEXT DEFAULT 'not_started',
+    progress_percentage INTEGER DEFAULT 0,
+    last_accessed_at TIMESTAMPTZ DEFAULT NOW(),
     completed_at TIMESTAMPTZ,
     UNIQUE(user_id, lesson_id)
 );
@@ -91,8 +93,7 @@ CREATE TABLE user_exercise_submissions (
     test_results JSONB,
     status TEXT DEFAULT 'pending',
     attempts INTEGER DEFAULT 1,
-    submitted_at TIMESTAMPTZ DEFAULT NOW(),
-    UNIQUE(user_id, exercise_id)
+    submitted_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Tabela: user_quiz_attempts
@@ -131,14 +132,13 @@ CREATE TABLE fcc_sync (
 -- Tabela: forum_comments
 CREATE TABLE forum_comments (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    exercise_id TEXT NOT NULL,
+    exercise_id TEXT,
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
     user_name TEXT,
     user_avatar_url TEXT,
-    content TEXT NOT NULL,
+    content TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
-
 
 -- Função para updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -162,7 +162,7 @@ BEGIN
     INSERT INTO profiles (id, username, full_name, avatar_url)
     VALUES (
         NEW.id,
-        COALESCE(NEW.raw_user_meta_data->>'username', NEW.email),
+        COALESCE(NEW.raw_user_meta_data->>'user_name', NEW.raw_user_meta_data->>'email', NEW.id::text),
         NEW.raw_user_meta_data->>'full_name',
         NEW.raw_user_meta_data->>'avatar_url'
     );
@@ -174,10 +174,7 @@ CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW
     EXECUTE FUNCTION handle_new_user();
-
-
--- POLÍTICAS DE RLS (Row Level Security)
-
+    
 -- Habilitar RLS em todas as tabelas
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_progress ENABLE ROW LEVEL SECURITY;
@@ -192,7 +189,7 @@ CREATE POLICY "Usuários podem ver todos os perfis"
     ON profiles FOR SELECT USING (true);
 
 CREATE POLICY "Usuários podem editar seu próprio perfil"
-    ON profiles FOR UPDATE USING (auth.uid() = id);
+    ON profiles FOR UPDATE USING (auth.uid() = id) WITH CHECK (auth.uid() = id);
 
 -- Políticas: acm_curriculum (público para leitura)
 ALTER TABLE acm_curriculum ENABLE ROW LEVEL SECURITY;
@@ -239,13 +236,23 @@ CREATE POLICY "Certificados visíveis para todos"
 
 CREATE POLICY "Sistema pode gerar certificados"
     ON certificates FOR INSERT WITH CHECK (true);
-
+    
 -- Políticas: forum_comments
-CREATE POLICY "Comentários são visíveis para todos"
+CREATE POLICY "Comentários do fórum são visíveis para todos"
     ON forum_comments FOR SELECT USING (true);
 
-CREATE POLICY "Usuários podem criar comentários"
+CREATE POLICY "Usuários podem inserir seus próprios comentários"
     ON forum_comments FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Usuários podem deletar seus próprios comentários"
     ON forum_comments FOR DELETE USING (auth.uid() = user_id);
+
+-- Função para incrementar XP de forma segura
+CREATE OR REPLACE FUNCTION increment_xp(user_id_param UUID, xp_to_add INT)
+RETURNS void AS $$
+BEGIN
+    UPDATE profiles
+    SET total_xp = total_xp + xp_to_add
+    WHERE id = user_id_param;
+END;
+$$ LANGUAGE plpgsql;
