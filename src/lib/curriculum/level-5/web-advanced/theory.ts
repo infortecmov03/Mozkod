@@ -9,6 +9,13 @@ import { lesson as lesson7 } from './theory/07-state-management';
 import { lesson as lesson8 } from './theory/08-nextjs-fundamentals';
 import { lesson as lesson9 } from './theory/09-nextjs-advanced';
 import { lesson as lesson10 } from './theory/10-vue-nuxt-overview';
+import { lesson as lesson11 } from './theory/11-nodejs-advanced';
+import { lesson as lesson12 } from './theory/12-express-advanced';
+import { lesson as lesson13 } from './theory/13-restful-api-design';
+import { lesson as lesson14 } from './theory/14-graphql-fundamentals';
+import { lesson as lesson15 } from './theory/15-graphql-advanced';
+import { lesson as lesson16 } from './theory/16-websockets-realtime';
+import { lesson as lesson17 } from './theory/17-serverless-functions';
 
 export const theory: TheoryLesson[] = [
     lesson1,
@@ -21,4 +28,11 @@ export const theory: TheoryLesson[] = [
     lesson8,
     lesson9,
     lesson10,
+    lesson11,
+    lesson12,
+    lesson13,
+    lesson14,
+    lesson15,
+    lesson16,
+    lesson17,
 ];
