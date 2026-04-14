@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu, XCircle, Info, MessageCircleQuestion } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu, XCircle, Info, MessageCircleQuestion, Loader2 } from 'lucide-react';
 import { KnowledgeArea, TheoryLesson, PracticeExercise, Quiz } from '@/lib/curriculum-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -341,6 +341,14 @@ export function LearnPageClient({ area }: { area: KnowledgeArea }) {
       });
     }
   };
+
+  if (authLoading) {
+    return (
+        <div className="flex min-h-screen items-center justify-center bg-background">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+    );
+  }
 
   const OverviewComponent = ({title, description, cta}: {title: string, description: string, cta: string}) => (
       <div className="flex h-full min-h-[70vh] items-center justify-center rounded-lg border-2 border-dashed">
