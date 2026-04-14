@@ -22,6 +22,13 @@ import { lesson as lesson20 } from './theory/04-design-patterns-behavioral/05-te
 import { lesson as lesson21 } from './theory/04-design-patterns-behavioral/06-iterator';
 import { lesson as lesson22 } from './theory/04-design-patterns-behavioral/07-mediator';
 import { lesson as lesson23 } from './theory/04-design-patterns-behavioral/08-chain-of-responsibility';
+import { lesson as lesson24 } from './theory/05-architectural-patterns/01-mvc-mvp-mvvm';
+import { lesson as lesson25 } from './theory/05-architectural-patterns/02-layered-architecture';
+import { lesson as lesson26 } from './theory/05-architectural-patterns/03-microservices';
+import { lesson as lesson27 } from './theory/05-architectural-patterns/04-event-driven';
+import { lesson as lesson28 } from './theory/05-architectural-patterns/05-hexagonal-architecture';
+import { lesson as lesson29 } from './theory/05-architectural-patterns/06-cqrs-event-sourcing';
+import { lesson as lesson30 } from './theory/05-architectural-patterns/07-serverless-architecture';
 
 
 export const theory: TheoryLesson[] = [
@@ -48,4 +55,11 @@ export const theory: TheoryLesson[] = [
     lesson21,
     lesson22,
     lesson23,
+    lesson24,
+    lesson25,
+    lesson26,
+    lesson27,
+    lesson28,
+    lesson29,
+    lesson30,
 ];
