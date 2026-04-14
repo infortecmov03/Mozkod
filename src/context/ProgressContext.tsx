@@ -5,9 +5,9 @@ import { useAuth } from './AuthContext';
 import { curriculumData } from '@/lib/curriculum-data';
 
 type ProgressContextType = {
-  progress: string[];
-  markAsCompleted: (lessonId: string) => void;
-  isCompleted: (lessonId: string) => boolean;
+  completedItems: Set<string>;
+  markAsCompleted: (itemId: string, itemType: 'lesson' | 'exercise') => Promise<void>;
+  isCompleted: (itemId: string) => boolean;
   totalLessons: number;
   completedLessons: number;
 };
@@ -15,7 +15,7 @@ type ProgressContextType = {
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
 
 // Calculate total lessons once, including theory and practice
-const totalLessons = curriculumData
+const totalItems = curriculumData
   .flatMap(level => level.knowledgeAreas)
   .reduce((acc, area) => {
     const theoryCount = area.theory.length;
@@ -24,49 +24,78 @@ const totalLessons = curriculumData
   }, 0);
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
-  const [progress, setProgress] = useState<string[]>([]);
-  const { user, loading } = useAuth();
+  const [completedItems, setCompletedItems] = useState<Set<string>>(new Set());
+  const { user, supabase } = useAuth();
 
   useEffect(() => {
-    if (!loading && user) {
-      try {
-        const storedProgress = localStorage.getItem(`mozcod-progress-${user.id}`);
-        if (storedProgress) {
-          setProgress(JSON.parse(storedProgress));
-        } else {
-          setProgress([]);
+    const fetchProgress = async () => {
+      if (user && supabase) {
+        try {
+          const [lessonsRes, exercisesRes] = await Promise.all([
+            supabase.from('user_progress').select('lesson_id').eq('user_id', user.id).eq('status', 'completed'),
+            supabase.from('user_exercise_submissions').select('exercise_id').eq('user_id', user.id).eq('status', 'passed')
+          ]);
+
+          if (lessonsRes.error) console.error("Error fetching lesson progress:", lessonsRes.error.message);
+          if (exercisesRes.error) console.error("Error fetching exercise progress:", exercisesRes.error.message);
+
+          const lessonIds = lessonsRes.data?.map(item => item.lesson_id) || [];
+          const exerciseIds = exercisesRes.data?.map(item => item.exercise_id) || [];
+
+          setCompletedItems(new Set([...lessonIds, ...exerciseIds]));
+
+        } catch (error) {
+          console.error("Failed to fetch progress from Supabase", error);
+          setCompletedItems(new Set());
         }
-      } catch (error) {
-        console.error("Failed to parse progress from localStorage", error);
-        setProgress([]);
+      } else {
+        setCompletedItems(new Set());
       }
-    } else if (!loading && !user) {
-        setProgress([]);
-    }
-  }, [loading, user]);
+    };
 
-  const markAsCompleted = useCallback((lessonId: string) => {
-    if (user && !progress.includes(lessonId)) {
-      const newProgress = [...progress, lessonId];
-      setProgress(newProgress);
-      try {
-        localStorage.setItem(`mozcod-progress-${user.id}`, JSON.stringify(newProgress));
-      } catch (error) {
-        console.error("Failed to save progress to localStorage", error);
+    fetchProgress();
+  }, [user, supabase]);
+
+  const markAsCompleted = useCallback(async (itemId: string, itemType: 'lesson' | 'exercise') => {
+    if (user && supabase && !completedItems.has(itemId)) {
+      let error = null;
+
+      if (itemType === 'lesson') {
+        ({ error } = await supabase.from('user_progress').insert({
+          user_id: user.id,
+          lesson_id: itemId,
+          status: 'completed',
+          completed_at: new Date().toISOString()
+        }));
+      } else if (itemType === 'exercise') {
+        ({ error } = await supabase.from('user_exercise_submissions').insert({
+          user_id: user.id,
+          exercise_id: itemId,
+          status: 'passed',
+          code_submitted: 'N/A',
+          test_results: { allPassed: true }
+        }));
+      }
+
+      if (error) {
+        console.error(`Error saving ${itemType} progress:`, error);
+      } else {
+        setCompletedItems(prev => new Set(prev).add(itemId));
       }
     }
-  }, [progress, user]);
+  }, [completedItems, user, supabase]);
 
-  const isCompleted = useCallback((lessonId: string) => {
-    return progress.includes(lessonId);
-  }, [progress]);
+  const isCompleted = useCallback((itemId: string) => {
+    return completedItems.has(itemId);
+  }, [completedItems]);
 
   const value = {
-    progress,
+    progress: Array.from(completedItems), // For legacy compatibility if needed
+    completedItems,
     markAsCompleted,
     isCompleted,
-    totalLessons,
-    completedLessons: progress.length,
+    totalLessons: totalItems,
+    completedLessons: completedItems.size,
   };
 
   return (

@@ -76,7 +76,7 @@ CREATE TABLE quizzes (
 CREATE TABLE user_progress (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    lesson_id UUID REFERENCES lessons(id) ON DELETE CASCADE,
+    lesson_id TEXT NOT NULL,
     status TEXT DEFAULT 'not_started',
     progress_percentage INTEGER DEFAULT 0,
     last_accessed_at TIMESTAMPTZ DEFAULT NOW(),
@@ -88,7 +88,7 @@ CREATE TABLE user_progress (
 CREATE TABLE user_exercise_submissions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    exercise_id UUID REFERENCES exercises(id) ON DELETE CASCADE,
+    exercise_id TEXT NOT NULL,
     code_submitted TEXT,
     test_results JSONB,
     status TEXT DEFAULT 'pending',
@@ -100,7 +100,7 @@ CREATE TABLE user_exercise_submissions (
 CREATE TABLE user_quiz_attempts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    quiz_id UUID REFERENCES quizzes(id) ON DELETE CASCADE,
+    quiz_id TEXT NOT NULL,
     score INTEGER,
     passed BOOLEAN DEFAULT FALSE,
     answers JSONB,
@@ -164,6 +164,8 @@ CREATE TRIGGER on_auth_user_created
     FOR EACH ROW
     EXECUTE FUNCTION handle_new_user();
 
+-- Políticas RLS (Row Level Security)
+
 -- Habilitar RLS em todas as tabelas
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_progress ENABLE ROW LEVEL SECURITY;
@@ -193,6 +195,11 @@ CREATE POLICY "Lições visíveis para todos"
 ALTER TABLE exercises ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Exercícios visíveis para todos"
     ON exercises FOR SELECT USING (true);
+
+-- Políticas: quizzes (público para leitura)
+ALTER TABLE quizzes ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Quizzes visíveis para todos"
+    ON quizzes FOR SELECT USING (true);
 
 -- Políticas: user_progress
 CREATE POLICY "Usuários veem seu próprio progresso"

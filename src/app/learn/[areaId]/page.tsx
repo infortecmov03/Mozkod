@@ -56,13 +56,9 @@ export default function LearnPage() {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      const currentPath = `/learn/${areaId}?${searchParams.toString()}`;
-      // In a real Supabase app, we'd use server-side redirects or middleware
-      // but for now, this client-side redirect with localStorage is fine.
-      localStorage.setItem('redirectAfterLogin', currentPath);
-      router.push('/login');
+      router.push(`/login?redirect=/learn/${areaId}`);
     }
-  }, [authLoading, user, router, areaId, searchParams]);
+  }, [authLoading, user, router, areaId]);
 
   useEffect(() => {
     if (areaId) {
@@ -288,7 +284,7 @@ export default function LearnPage() {
 };
 
 
- const handleSubmitExercise = () => {
+ const handleSubmitExercise = async () => {
     if (!selectedExercise) return;
 
     if (isCompleted(selectedExercise.id)) {
@@ -300,7 +296,7 @@ export default function LearnPage() {
     }
     
     if (allTestsPassed) {
-        markAsCompleted(selectedExercise.id);
+        await markAsCompleted(selectedExercise.id, 'exercise');
         toast({
             title: "Exercício submetido com sucesso!",
             description: "Bom trabalho! Continue para o próximo desafio.",
@@ -322,7 +318,7 @@ export default function LearnPage() {
     setQuizResults(null); // Reset results when a new answer is selected
   };
 
-  const handleCheckQuiz = (quiz: Quiz) => {
+  const handleCheckQuiz = async (quiz: Quiz) => {
     const results: Record<string, boolean> = {};
     let correctCount = 0;
     quiz.questions.forEach(q => {
@@ -345,11 +341,11 @@ export default function LearnPage() {
       });
       
       if (area) {
-        area.theory.forEach(lesson => {
+        for (const lesson of area.theory) {
           if (!isCompleted(lesson.id)) {
-            markAsCompleted(lesson.id);
+            await markAsCompleted(lesson.id, 'lesson');
           }
-        });
+        }
       }
 
     } else {
