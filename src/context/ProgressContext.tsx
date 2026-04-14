@@ -25,17 +25,12 @@ const totalLessons = curriculumData
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
   const [progress, setProgress] = useState<string[]>([]);
-  const { user } = useAuth();
-  const [isMounted, setIsMounted] = useState(false);
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (isMounted && user) {
+    if (!loading && user) {
       try {
-        const storedProgress = localStorage.getItem(`mozcod-progress-${user.email}`);
+        const storedProgress = localStorage.getItem(`mozcod-progress-${user.id}`);
         if (storedProgress) {
           setProgress(JSON.parse(storedProgress));
         } else {
@@ -45,17 +40,17 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         console.error("Failed to parse progress from localStorage", error);
         setProgress([]);
       }
-    } else if (isMounted && !user) {
+    } else if (!loading && !user) {
         setProgress([]);
     }
-  }, [isMounted, user]);
+  }, [loading, user]);
 
   const markAsCompleted = useCallback((lessonId: string) => {
     if (user && !progress.includes(lessonId)) {
       const newProgress = [...progress, lessonId];
       setProgress(newProgress);
       try {
-        localStorage.setItem(`mozcod-progress-${user.email}`, JSON.stringify(newProgress));
+        localStorage.setItem(`mozcod-progress-${user.id}`, JSON.stringify(newProgress));
       } catch (error) {
         console.error("Failed to save progress to localStorage", error);
       }

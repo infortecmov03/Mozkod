@@ -1,13 +1,12 @@
 'use client';
 
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Github } from "lucide-react";
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/logo";
@@ -16,33 +15,44 @@ import { useToast } from "@/hooks/use-toast";
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const { signInWithPassword, signInWithGithub } = useAuth();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     if (!email || !password) {
       toast({
         variant: "destructive",
         title: "Campos obrigatórios",
         description: "Por favor, preencha seu e-mail e senha.",
       });
+      setLoading(false);
       return;
     }
-    const success = login(email, password);
-    if (success) {
-      toast({
-        title: "Login bem-sucedido!",
-        description: "Bem-vindo de volta!",
-      });
-    } else {
+    
+    const { error } = await signInWithPassword(email, password);
+    
+    if (error) {
       toast({
         variant: "destructive",
         title: "Falha no login.",
-        description: "E-mail ou senha incorretos.",
+        description: error.message || "E-mail ou senha incorretos.",
+      });
+    } else {
+       toast({
+        title: "Login bem-sucedido!",
+        description: "Bem-vindo de volta!",
       });
     }
+    setLoading(false);
+  };
+  
+  const handleGithubLogin = async () => {
+    setLoading(true);
+    await signInWithGithub();
+    // No need to set loading to false here as the page will redirect
   };
 
   return (
@@ -69,23 +79,39 @@ export default function LoginPage() {
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="nome@exemplo.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input id="email" type="email" placeholder="nome@exemplo.com" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={loading} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Senha</Label>
-              <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+              <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} />
             </div>
-            <Button type="submit" className="w-full">
-              Entrar
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Aguarde...' : 'Entrar'}
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm">
-            Não tem uma conta?{" "}
-            <Link href="/cadastro" className="underline">
-              Cadastre-se
-            </Link>
+           <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">
+                Ou continue com
+              </span>
+            </div>
           </div>
+           <Button variant="outline" className="w-full" onClick={handleGithubLogin} disabled={loading}>
+              <Github className="mr-2 h-4 w-4" />
+              GitHub
+            </Button>
         </CardContent>
+         <CardFooter className="justify-center">
+            <p className="mt-4 text-center text-sm">
+                 Não tem uma conta?{" "}
+                <Link href="/cadastro" className="underline">
+                Cadastre-se
+                </Link>
+            </p>
+        </CardFooter>
       </Card>
     </div>
   );

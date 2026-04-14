@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu, XCircle, Info, MessageCircleQuestion } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu, XCircle, Info, MessageCircleQuestion, Loader2 } from 'lucide-react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { curriculumData, KnowledgeArea, TheoryLesson, PracticeExercise, Quiz } from '@/lib/curriculum-data';
@@ -26,13 +26,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 export default function LearnPage() {
   const params = useParams();
   const router = useRouter();
-  const { user } = useAuth();
+  const searchParams = useSearchParams();
+  const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const { isCompleted, markAsCompleted } = useProgress();
 
   const [area, setArea] = useState<KnowledgeArea | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<TheoryLesson | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
   const [lessonsSheetOpen, setLessonsSheetOpen] = useState(false);
   const [practiceSheetOpen, setPracticeSheetOpen] = useState(false);
 
@@ -55,16 +55,14 @@ export default function LearnPage() {
   const areaId = Array.isArray(params.areaId) ? params.areaId[0] : params.areaId;
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (isMounted && !user) {
-      const currentPath = `/learn/${areaId}`;
+    if (!authLoading && !user) {
+      const currentPath = `/learn/${areaId}?${searchParams.toString()}`;
+      // In a real Supabase app, we'd use server-side redirects or middleware
+      // but for now, this client-side redirect with localStorage is fine.
       localStorage.setItem('redirectAfterLogin', currentPath);
       router.push('/login');
     }
-  }, [isMounted, user, router, areaId]);
+  }, [authLoading, user, router, areaId, searchParams]);
 
   useEffect(() => {
     if (areaId) {
@@ -364,10 +362,10 @@ export default function LearnPage() {
   };
 
 
-  if (!isMounted || !user) {
+  if (authLoading || !user) {
     return (
         <div className="flex min-h-screen items-center justify-center bg-background">
-            <p className="text-muted-foreground">A carregar...</p>
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
     );
   }

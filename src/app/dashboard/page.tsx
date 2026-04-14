@@ -5,34 +5,29 @@ import { Footer } from '@/components/layout/footer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { BookOpen, Percent } from 'lucide-react';
+import { useEffect } from 'react';
+import { BookOpen, Percent, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useProgress } from '@/context/ProgressContext';
 import { Progress } from '@/components/ui/progress';
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
   const { totalLessons, completedLessons } = useProgress();
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (isMounted && !user) {
+    if (!loading && !user) {
       router.push('/login');
     }
-  }, [user, isMounted, router]);
+  }, [user, loading, router]);
 
   const progressPercentage = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
 
-  if (!isMounted || !user) {
+  if (loading || !user) {
     return (
         <div className="flex min-h-screen items-center justify-center bg-background">
-            <p className="text-muted-foreground">A carregar...</p>
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
     )
   }

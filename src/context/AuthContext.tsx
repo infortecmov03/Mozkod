@@ -1,119 +1,103 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+import type { SupabaseClient, User as SupabaseUser, AuthError } from '@supabase/supabase-js';
 
 type User = {
+  id: string;
   name: string;
-  email: string;
+  email: string | undefined;
 };
 
 type AuthContextType = {
+  supabase: SupabaseClient;
   user: User | null;
-  login: (email: string, password: string) => boolean;
-  logout: () => void;
-  register: (name: string, email: string, password: string) => boolean;
+  loading: boolean;
+  signInWithPassword: (email: string, password: string) => Promise<{ error: AuthError | null }>;
+  signInWithGithub: () => Promise<void>;
+  signUp: (name: string, email: string, password: string) => Promise<{ error: AuthError | null }>;
+  signOut: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// This is a mock implementation and should be replaced with a real database
-const USERS_STORAGE_KEY = 'mozcod-users';
-const CURRENT_USER_STORAGE_KEY = 'mozcod-currentUser';
-
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const supabase = createClient();
   const [user, setUser] = useState<User | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    setIsMounted(true);
-    try {
-      const storedUser = localStorage.getItem(CURRENT_USER_STORAGE_KEY);
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setUser({
+          id: session.user.id,
+          email: session.user.email,
+          name: session.user.user_metadata.full_name || session.user.user_metadata.name || session.user.email?.split('@')[0] || 'Usuário',
+        });
+      } else {
+        setUser(null);
       }
-    } catch (e) {
-      console.error("Failed to parse user from localStorage", e);
-      localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
+      setLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase]);
+
+  const signInWithPassword = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (!error) {
+      const redirectPath = searchParams.get('redirect');
+      router.push(redirectPath || '/dashboard');
     }
-  }, []);
+    return { error };
+  };
+
+  const signInWithGithub = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${location.origin}/auth/callback`,
+      },
+    });
+  };
   
-  const register = (name: string, email: string, password: string): boolean => {
-    if (!isMounted) return false;
-    try {
-      const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
-      const users = storedUsers ? JSON.parse(storedUsers) : [];
-      
-      const userExists = users.some((u: any) => u.email === email);
-      if (userExists) {
-        return false;
-      }
-      
-      // WARNING: Storing passwords in localStorage is very insecure.
-      const newUser = { name, email, password };
-      users.push(newUser);
-      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
-      
-      const userToStore = { name, email };
-      localStorage.setItem(CURRENT_USER_STORAGE_KEY, JSON.stringify(userToStore));
-      setUser(userToStore);
-      router.push('/dashboard');
-      return true;
-
-    } catch(e) {
-      console.error(e);
-      return false;
-    }
+  const signUp = async (name: string, email: string, password: string) => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name,
+        },
+        emailRedirectTo: `${location.origin}/auth/callback`,
+      },
+    });
+    return { error };
   };
 
-  const login = (email: string, password: string): boolean => {
-    if (!isMounted) return false;
-    try {
-        const storedUsers = localStorage.getItem(USERS_STORAGE_KEY);
-        const users = storedUsers ? JSON.parse(storedUsers) : [];
-        const foundUser = users.find((u: any) => u.email === email && u.password === password);
-        
-        if (foundUser) {
-            const userToStore = { name: foundUser.name, email: foundUser.email };
-            localStorage.setItem(CURRENT_USER_STORAGE_KEY, JSON.stringify(userToStore));
-            setUser(userToStore);
-            const redirectPath = localStorage.getItem('redirectAfterLogin');
-            if (redirectPath) {
-              localStorage.removeItem('redirectAfterLogin');
-              router.push(redirectPath);
-            } else {
-              router.push('/dashboard');
-            }
-            return true;
-        }
-        return false;
-    } catch(e) {
-        console.error(e);
-        return false;
-    }
-  };
-
-  const logout = () => {
-    if (!isMounted) return;
-    localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
+  const signOut = async () => {
+    await supabase.auth.signOut();
     setUser(null);
     router.push('/');
   };
 
-  if (!isMounted) {
-    return (
-        <div className="flex min-h-screen items-center justify-center bg-background">
-            <p className="text-muted-foreground">A carregar autenticação...</p>
-        </div>
-    );
-  }
+  const value = useMemo(() => ({
+    supabase,
+    user,
+    loading,
+    signInWithPassword,
+    signInWithGithub,
+    signUp,
+    signOut,
+  }), [user, loading, supabase]);
 
-  return (
-    <AuthContext.Provider value={{ user, login, logout, register }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
