@@ -34,6 +34,21 @@ import { lesson as lesson32 } from './theory/06-uml-modeling/02-sequence-diagram
 import { lesson as lesson33 } from './theory/06-uml-modeling/03-use-case-diagrams';
 import { lesson as lesson34 } from './theory/06-uml-modeling/04-activity-diagrams';
 import { lesson as lesson35 } from './theory/06-uml-modeling/05-deployment-diagrams';
+import { lesson as lesson36 } from './theory/07-domain-driven-design/01-ubiquitous-language';
+import { lesson as lesson37 } from './theory/07-domain-driven-design/02-entities-value-objects';
+import { lesson as lesson38 } from './theory/07-domain-driven-design/03-aggregates';
+import { lesson as lesson39 } from './theory/07-domain-driven-design/04-repositories';
+import { lesson as lesson40 } from './theory/07-domain-driven-design/05-domain-services';
+import { lesson as lesson41 } from './theory/07-domain-driven-design/06-domain-events';
+import { lesson as lesson42 } from './theory/07-domain-driven-design/07-bounded-contexts';
+import { lesson as lesson43 } from './theory/08-refactoring/01-code-smells';
+import { lesson as lesson44 } from './theory/08-refactoring/02-refactoring-techniques';
+import { lesson as lesson45 } from './theory/08-refactoring/03-refactoring-catalog';
+import { lesson as lesson46 } from './theory/08-refactoring/04-safe-refactoring';
+import { lesson as lesson47 } from './theory/09-api-design/01-restful-best-practices';
+import { lesson as lesson48 } from './theory/09-api-design/02-graphql-schema-design';
+import { lesson as lesson49 } from './theory/09-api-design/03-api-versioning';
+import { lesson as lesson50 } from './theory/09-api-design/04-api-documentation';
 
 
 export const theory: TheoryLesson[] = [
@@ -72,4 +87,19 @@ export const theory: TheoryLesson[] = [
     lesson33,
     lesson34,
     lesson35,
+    lesson36,
+    lesson37,
+    lesson38,
+    lesson39,
+    lesson40,
+    lesson41,
+    lesson42,
+    lesson43,
+    lesson44,
+    lesson45,
+    lesson46,
+    lesson47,
+    lesson48,
+    lesson49,
+    lesson50,
 ];
