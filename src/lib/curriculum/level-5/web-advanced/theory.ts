@@ -10,10 +10,6 @@ import { lesson as lesson8 } from './theory/08-nextjs-fundamentals';
 import { lesson as lesson9 } from './theory/09-nextjs-advanced';
 import { lesson as lesson10 } from './theory/10-vue-nuxt-overview';
 
-// We are replacing the old lessons with a more detailed structure.
-// The old files (modern-web-development.ts, modern-web-development-promises.ts)
-// are no longer imported and can be removed in the future.
-
 export const theory: TheoryLesson[] = [
     lesson1,
     lesson2,
