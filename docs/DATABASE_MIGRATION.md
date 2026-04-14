@@ -1,396 +1,77 @@
-# Guia de Migração: De LocalStorage para Firebase
+# Guia de Configuração e Migração: Supabase
 
-Este documento fornece um guia passo a passo para migrar a persistência de dados da sua aplicação do `localStorage` do navegador para uma solução robusta e escalável usando o Firebase (Firestore e Authentication).
+Este documento fornece um guia passo a passo para conectar sua aplicação a uma instância do Supabase, incluindo a configuração de autenticação e banco de dados.
 
-## Por que migrar?
+## Por que Supabase?
 
-O `localStorage` é excelente para prototipagem rápida, mas possui limitações críticas para uma aplicação em produção:
-- **Não é persistente entre navegadores/dispositivos:** O progresso e a conta de um usuário ficam presos a um único navegador.
-- **Inseguro:** Os dados são armazenados em texto simples no cliente, tornando-os vulneráveis.
-- **Não escalável:** Não permite funcionalidades colaborativas, painéis de administrador ou análise de dados no servidor.
-
-O Firebase resolve todos esses problemas, oferecendo autenticação segura e um banco de dados NoSQL em tempo real.
+O `localStorage` é excelente para prototipagem, mas o Supabase oferece uma solução robusta e escalável, resolvendo problemas críticos para uma aplicação em produção:
+- **Persistência de Dados:** O progresso e a conta de um usuário funcionam em qualquer navegador ou dispositivo.
+- **Segurança:** A autenticação é gerenciada de forma segura, e os dados são protegidos por políticas de segurança a nível de linha (RLS).
+- **Escalabilidade:** Permite funcionalidades avançadas como fóruns em tempo real, leaderboards e análise de dados no servidor.
 
 ---
 
-## Arquivos a serem modificados
+## Passo a Passo para a Configuração
 
-A migração se concentrará em três arquivos principais, que atualmente gerenciam toda a lógica de estado e persistência:
+### 1. Crie seu Projeto no Supabase
 
-1.  `src/context/AuthContext.tsx`
-2.  `src/context/ProgressContext.tsx`
-3.  `src/app/forum/page.tsx`
+Se ainda não o fez, vá para [supabase.com](https://supabase.com), crie uma conta e um novo projeto. Escolha o plano gratuito ("Free tier"), que é mais que suficiente para começar.
 
----
+### 2. Configure as Variáveis de Ambiente
 
-## Passo 1: Configurar o Firebase
+Para que a sua aplicação possa se comunicar com o Supabase, você precisa das chaves da API.
 
-Antes de começar, certifique-se de que você tem:
-1.  Um projeto Firebase criado no [console do Firebase](https://console.firebase.google.com/).
-2.  O **Firebase Authentication** ativado (com o provedor "E-mail/senha").
-3.  O **Firestore** ativado.
-4.  As configurações do seu projeto Firebase (`firebaseConfig`) em um arquivo, como `src/firebase/config.ts`.
-5.  O SDK do Firebase instalado no seu projeto (`npm install firebase`).
+1.  No painel do seu projeto Supabase, vá para **Project Settings** (ícone de engrenagem) > **API**.
+2.  Encontre as seguintes chaves:
+    *   **Project URL**
+    *   **Project API Keys** > `anon` `public`
+3.  Abra o arquivo `.env` na raiz do seu projeto e substitua os valores de placeholder pelos seus:
 
----
+    ```bash
+    # Substitua pelos valores do seu projeto Supabase
+    NEXT_PUBLIC_SUPABASE_URL="SUA_URL_AQUI"
+    NEXT_PUBLIC_SUPABASE_ANON_KEY="SUA_CHAVE_ANON_AQUI"
+    ```
 
-## Passo 2: Migrar a Autenticação (`AuthContext.tsx`)
+### 3. Aplique o Schema do Banco de Dados
 
-Vamos substituir a lógica de manipulação de arrays de usuários no `localStorage` pelas funções do Firebase Authentication.
+A estrutura do banco de dados (tabelas, funções, políticas de segurança) está definida em `docs/supabase_schema.sql`.
 
-### Código Atual (LocalStorage)
+1.  No painel do Supabase, vá para o **SQL Editor** (ícone de `</>`).
+2.  Clique em **+ New query**.
+3.  Copie **todo** o conteúdo do arquivo `docs/supabase_schema.sql` e cole no editor.
+4.  Clique em **RUN**. Isso criará todas as tabelas e políticas necessárias para a aplicação funcionar.
 
-```tsx
-// src/context/AuthContext.tsx - Lógica atual
+### 4. Popule o Banco de Dados (Opcional, mas Recomendado)
 
-// ... registro, login, logout ...
-useEffect(() => {
-    const storedUser = localStorage.getItem('mozcod-currentUser');
-    if (storedUser) {
-        setUser(JSON.parse(storedUser));
-    }
-}, []);
+Para que o currículo apareça nas páginas, você precisa popular as tabelas.
 
-const register = (name, email, password) => {
-    // Lógica com localStorage.setItem('mozcod-users', ...)
-};
+1.  Ainda no **SQL Editor**, crie uma nova query.
+2.  Copie todo o conteúdo do arquivo `docs/supabase_seed.sql` e cole no editor.
+3.  Clique em **RUN**. Isso irá inserir todos os níveis, áreas de conhecimento, lições e exercícios no banco de dados.
 
-const login = (email, password) => {
-    // Lógica com localStorage.getItem('mozcod-users', ...)
-};
+### 5. Configure a Autenticação com GitHub
 
-const logout = () => {
-    // Lógica com localStorage.removeItem(...)
-};
-```
+Para permitir que os usuários façam login com o GitHub, você precisa configurar o provedor de OAuth.
 
-### Novo Código (Firebase)
+1.  **No Supabase:**
+    *   Vá para **Authentication** > **Providers**.
+    *   Clique em **GitHub** e ative-o. Você verá um **Callback URL**. Copie este URL.
 
-Você precisará importar as funções do SDK do Firebase. A lógica será alterada para ser assíncrona, pois agora envolve chamadas de rede.
+2.  **No GitHub:**
+    *   Vá para o seu perfil > **Settings** > **Developer settings** > **OAuth Apps** > **New OAuth App**.
+    *   Preencha o formulário:
+        *   **Application name:** Mozkod (ou o nome que preferir).
+        *   **Homepage URL:** `http://localhost:9002` (para desenvolvimento local).
+        *   **Authorization callback URL:** Cole o Callback URL que você copiou do Supabase.
+    *   Clique em **Register application**.
 
-```tsx
-// src/context/AuthContext.tsx - Nova Lógica com Firebase
-
-import { 
-    getAuth, 
-    onAuthStateChanged, 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword, 
-    signOut,
-    updateProfile,
-    type User as FirebaseUser
-} from 'firebase/auth';
-import { app } from '@/firebase/config'; // Assumindo que você exporta seu app inicializado
-
-// ...
-
-type User = {
-  uid: string;
-  name: string | null;
-  email: string | null;
-};
-
-// ...
-
-const [user, setUser] = useState<User | null>(null);
-const [loading, setLoading] = useState(true);
-const auth = getAuth(app);
-
-// Ouve mudanças no estado de autenticação
-useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
-        if (firebaseUser) {
-            setUser({
-                uid: firebaseUser.uid,
-                name: firebaseUser.displayName,
-                email: firebaseUser.email
-            });
-        } else {
-            setUser(null);
-        }
-        setLoading(false);
-    });
-    return () => unsubscribe(); // Limpa o listener ao desmontar
-}, [auth]);
-
-const register = async (name: string, email: string, password: string): Promise<boolean> => {
-    try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        // Atualiza o perfil do usuário para incluir o nome
-        if (userCredential.user) {
-            await updateProfile(userCredential.user, { displayName: name });
-            // Atualiza o estado local do usuário
-            setUser({ 
-                uid: userCredential.user.uid, 
-                name: name, 
-                email: email 
-            });
-        }
-        return true;
-    } catch (error) {
-        console.error("Erro no registro:", error);
-        return false;
-    }
-};
-
-const login = async (email: string, password: string): Promise<boolean> => {
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-        return true;
-    } catch (error) {
-        console.error("Erro no login:", error);
-        return false;
-    }
-};
-
-const logout = async () => {
-    try {
-        await signOut(auth);
-        router.push('/');
-    } catch (error) {
-        console.error("Erro no logout:", error);
-    }
-};
-
-// Não esqueça de ajustar o valor do provider e o children para lidar com o estado de 'loading'
-// if (loading) { return <p>Carregando...</p>; }
-```
+3.  **Finalize a Configuração:**
+    *   Na página da sua OAuth App no GitHub, clique em **Generate a new client secret**.
+    *   Copie o **Client ID** e o **Client secret** gerado.
+    *   Volte para o painel do Supabase (onde você ativou o GitHub) e cole o **Client ID** e o **Client Secret** nos campos correspondentes.
+    *   Clique em **Save**.
 
 ---
 
-## Passo 3: Migrar o Progresso (`ProgressContext.tsx`)
-
-Agora, vamos mover o progresso do `localStorage` para uma coleção no Firestore, onde cada usuário terá seus próprios documentos de progresso.
-
-**Modelo de Dados no Firestore:**
-Vamos usar uma coleção principal `users`. Cada usuário autenticado terá um documento com seu `uid`. Dentro desse documento, teremos uma subcoleção `progress` que armazenará os IDs das lições/exercícios concluídos.
-
-```
-/users/{userId}/progress/{lessonId}
-```
-
-### Código Atual (LocalStorage)
-
-```tsx
-// src/context/ProgressContext.tsx - Lógica atual
-
-useEffect(() => {
-    if (isMounted && user) {
-        const storedProgress = localStorage.getItem(`mozcod-progress-${user.email}`);
-        if (storedProgress) {
-            setProgress(JSON.parse(storedProgress));
-        }
-    }
-}, [isMounted, user]);
-
-const markAsCompleted = useCallback((lessonId: string) => {
-    if (user && !progress.includes(lessonId)) {
-        const newProgress = [...progress, lessonId];
-        setProgress(newProgress);
-        localStorage.setItem(`mozcod-progress-${user.email}`, JSON.stringify(newProgress));
-    }
-}, [progress, user]);
-```
-
-### Novo Código (Firestore)
-
-Esta parte requer uma mudança de mentalidade para o tempo real. Em vez de "buscar" os dados uma vez, vamos "escutar" por mudanças.
-
-```tsx
-// src/context/ProgressContext.tsx - Nova Lógica com Firebase
-
-import { 
-    getFirestore, 
-    collection, 
-    onSnapshot, 
-    doc, 
-    setDoc 
-} from 'firebase/firestore';
-import { app } from '@/firebase/config';
-
-// ...
-
-const [progress, setProgress] = useState<string[]>([]);
-const { user } = useAuth();
-const db = getFirestore(app);
-
-// Escuta as mudanças no progresso do usuário em tempo real
-useEffect(() => {
-    if (user) {
-        const progressColRef = collection(db, 'users', user.uid, 'progress');
-        
-        const unsubscribe = onSnapshot(progressColRef, (snapshot) => {
-            const completedIds = snapshot.docs.map(doc => doc.id);
-            setProgress(completedIds);
-        }, (error) => {
-            console.error("Erro ao buscar progresso:", error);
-        });
-
-        return () => unsubscribe(); // Limpa o listener
-    } else {
-        setProgress([]); // Limpa o progresso se o usuário fizer logout
-    }
-}, [user, db]);
-
-const markAsCompleted = useCallback(async (lessonId: string) => {
-    if (user && !progress.includes(lessonId)) {
-        try {
-            // Cria um documento com o ID da lição na subcoleção de progresso do usuário.
-            // O conteúdo do documento pode ser um timestamp ou apenas um objeto vazio.
-            const lessonRef = doc(db, 'users', user.uid, 'progress', lessonId);
-            await setDoc(lessonRef, { completedAt: new Date() });
-            // O estado local será atualizado automaticamente pelo listener 'onSnapshot'.
-        } catch (error) {
-            console.error("Erro ao salvar progresso:", error);
-        }
-    }
-}, [progress, user, db]);
-```
-
----
-
-## Passo 4: Migrar o Fórum (`forum/page.tsx`)
-
-A página do fórum atualmente usa dados de exemplo (`mockComments`) e `useState` para simular a postagem de novas mensagens. Vamos migrar isso para o Firestore para criar uma comunidade persistente e em tempo real.
-
-**Modelo de Dados no Firestore:**
-Para cada exercício, teremos um tópico de fórum. Dentro de cada tópico, teremos uma subcoleção de comentários.
-
-```
-/forum_topics/{exerciseId}/comments/{commentId}
-```
-
-Cada documento `comment` terá a seguinte estrutura: `{ content: string, user: { uid: string, name: string }, timestamp: Timestamp }`
-
-### Código Atual (Simulado com `useState`)
-
-```tsx
-// src/app/forum/page.tsx - Lógica atual
-
-const mockComments = [ ... ]; // Dados de exemplo
-const [comments, setComments] = useState<Comment[]>(mockComments);
-
-const handlePostComment = (e: React.FormEvent) => {
-  // Lógica para adicionar novo comentário ao array local 'comments'
-  setComments([...comments, newCommentObject]);
-  setNewComment('');
-};
-```
-
-### Novo Código (Firestore)
-
-Substituiremos o estado local por um listener do Firestore (`onSnapshot`) para buscar comentários em tempo real e `addDoc` para criar novos comentários.
-
-```tsx
-// src/app/forum/page.tsx - Nova Lógica com Firebase
-
-import { 
-    getFirestore, 
-    collection, 
-    query,
-    orderBy,
-    onSnapshot, 
-    addDoc,
-    serverTimestamp,
-    type Timestamp
-} from 'firebase/firestore';
-import { app } from '@/firebase/config';
-
-// Defina o tipo de comentário para corresponder à estrutura do Firestore
-type Comment = {
-  id: string;
-  user: { name: string; avatarFallback: string; uid: string; };
-  timestamp: Timestamp; // Usaremos o Timestamp do Firestore
-  content: string;
-}
-
-// ... no componente ForumContent
-
-const db = getFirestore(app);
-const { user } = useAuth(); // Assumindo que useAuth fornece o usuário do Firebase
-const [comments, setComments] = useState<Comment[]>([]);
-const [newComment, setNewComment] = useState('');
-const exerciseId = searchParams.get('exerciseId');
-
-// Ouve as atualizações de comentários em tempo real
-useEffect(() => {
-    if (!exerciseId) return;
-    
-    const commentsColRef = collection(db, 'forum_topics', exerciseId, 'comments');
-    const q = query(commentsColRef, orderBy('timestamp', 'asc'));
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-        const fetchedComments = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        })) as Comment[]; // Pode ser necessário um tratamento de tipo mais seguro
-        setComments(fetchedComments);
-    });
-
-    return () => unsubscribe(); // Limpa o listener ao desmontar
-}, [db, exerciseId]);
-
-
-const handlePostComment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newComment.trim() || !user || !exerciseId) return;
-
-    const commentsColRef = collection(db, 'forum_topics', exerciseId, 'comments');
-
-    try {
-        await addDoc(commentsColRef, {
-            content: newComment,
-            user: {
-                uid: user.uid,
-                name: user.name,
-                avatarFallback: user.name?.split(' ').map(n => n[0]).join('').substring(0, 2) || 'U'
-            },
-            timestamp: serverTimestamp() // Usa o timestamp do servidor
-        });
-        setNewComment(''); // Limpa o campo após o envio
-    } catch (error) {
-        console.error("Erro ao postar comentário:", error);
-    }
-};
-
-// Ao renderizar, você pode precisar formatar o `timestamp` do Firestore para um formato legível
-// Ex: comment.timestamp.toDate().toLocaleString()
-```
----
-
-## Passo 5: Proteger seus Dados (Regras de Segurança)
-
-Para garantir que os usuários só possam ler e escrever seu próprio progresso e interagir de forma segura com o fórum, adicione as seguintes regras no seu console do Firebase em `Firestore Database > Rules`:
-
-```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    
-    // Permite que qualquer usuário autenticado leia seu próprio perfil
-    match /users/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
-      
-      // Permite que um usuário leia e escreva na sua própria subcoleção de progresso
-      match /progress/{lessonId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
-      }
-    }
-
-    // Regras para os tópicos do fórum
-    match /forum_topics/{exerciseId} {
-      // Permite que qualquer usuário autenticado leia ou crie um tópico (implícito)
-      
-      match /comments/{commentId} {
-        // Qualquer usuário autenticado pode ler todos os comentários
-        allow read: if request.auth != null;
-
-        // Apenas usuários autenticados podem criar comentários
-        allow create: if request.auth != null && request.resource.data.user.uid == request.auth.uid;
-      }
-    }
-  }
-}
-```
-
-Ao seguir estes passos, sua aplicação terá um sistema de autenticação, persistência de dados e fórum de comunidade seguros, escaláveis e prontos para produção.
+Após seguir estes passos, sua aplicação estará totalmente configurada para rodar localmente, conectada à sua própria instância do Supabase. Basta executar `npm run dev` e começar a usar!
