@@ -7,8 +7,11 @@ import type { SupabaseClient, User as SupabaseUser, AuthError } from '@supabase/
 
 type User = {
   id: string;
-  name: string;
+  full_name: string | null;
   email: string | undefined;
+  avatar_url: string | null;
+  bio: string | null;
+  username: string | null;
 };
 
 type AuthContextType = {
@@ -31,13 +34,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+
         setUser({
-          id: session.user.id,
-          email: session.user.email,
-          name: session.user.user_metadata.full_name || session.user.user_metadata.name || session.user.email?.split('@')[0] || 'Usuário',
+            id: session.user.id,
+            email: session.user.email,
+            full_name: profile?.full_name ?? session.user.user_metadata.full_name ?? session.user.email?.split('@')[0],
+            avatar_url: profile?.avatar_url ?? session.user.user_metadata.avatar_url,
+            bio: profile?.bio,
+            username: profile?.username,
         });
+
       } else {
         setUser(null);
       }
@@ -54,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!error) {
       const redirectPath = searchParams.get('redirect');
       router.push(redirectPath || '/dashboard');
+      router.refresh();
     }
     return { error };
   };
@@ -85,6 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
     setUser(null);
     router.push('/');
+    router.refresh();
   };
 
   const value = useMemo(() => ({

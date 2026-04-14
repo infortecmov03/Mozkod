@@ -88,7 +88,7 @@ function ForumContent() {
     const { error } = await supabase.from('forum_comments').insert({
       exercise_id: exerciseId,
       user_id: user.id,
-      user_name: user.name,
+      user_name: user.full_name,
       content: newComment,
       // user_avatar_url can be added here if available in user profile
     });
@@ -174,7 +174,7 @@ function ForumContent() {
               <form onSubmit={handlePostComment} className="space-y-4">
                 <div className="flex gap-4 items-start">
                     <Avatar>
-                        <AvatarFallback>{user.name?.split(' ').map(n => n[0]).join('').substring(0, 2) || 'U'}</AvatarFallback>
+                        <AvatarFallback>{user.full_name?.split(' ').map(n => n[0]).join('').substring(0, 2) || 'U'}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
                         <Label htmlFor="comment">Deixe sua dúvida ou contribuição</Label>

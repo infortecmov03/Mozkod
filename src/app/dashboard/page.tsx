@@ -38,7 +38,7 @@ export default function DashboardPage() {
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="mb-8">
             <h1 className="font-headline text-3xl md:text-4xl font-bold">
-            Bem-vindo de volta, <span className="text-primary">{user.name.split(' ')[0]}!</span>
+            Bem-vindo de volta, <span className="text-primary">{user.full_name?.split(' ')[0]}!</span>
             </h1>
             <p className="text-muted-foreground mt-2">Continue de onde parou e explore novos desafios.</p>
         </div>
