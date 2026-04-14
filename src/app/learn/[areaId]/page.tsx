@@ -27,7 +27,7 @@ export default function LearnPage() {
   const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, supabase } = useAuth();
   const { toast } = useToast();
   const { isCompleted, markAsCompleted } = useProgress();
 
@@ -319,6 +319,8 @@ export default function LearnPage() {
   };
 
   const handleCheckQuiz = async (quiz: Quiz) => {
+    if (!user) return;
+    
     const results: Record<string, boolean> = {};
     let correctCount = 0;
     quiz.questions.forEach(q => {
@@ -331,13 +333,33 @@ export default function LearnPage() {
     setQuizResults(results);
 
     const totalQuestions = quiz.questions.length;
-    const score = totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
+    const score = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
     const passingScore = 70;
+    const passed = score >= passingScore;
 
-    if (score >= passingScore) {
+    // Save attempt to Supabase
+    const { error } = await supabase.from('user_quiz_attempts').insert({
+        user_id: user.id,
+        quiz_id: quiz.id,
+        score,
+        passed,
+        answers: selectedAnswers
+    });
+
+    if (error) {
+        console.error("Erro ao salvar tentativa do quiz:", error);
+        toast({
+            variant: "destructive",
+            title: "Erro ao salvar seu progresso",
+            description: "Não foi possível registrar sua tentativa. Tente novamente."
+        });
+        return;
+    }
+
+    if (passed) {
       toast({
         title: "Aprovado!",
-        description: `Você acertou ${correctCount} de ${totalQuestions} (${Math.round(score)}%). As lições de teoria desta área foram marcadas como concluídas!`,
+        description: `Você acertou ${correctCount} de ${totalQuestions} (${score}%). As lições de teoria desta área foram marcadas como concluídas!`,
       });
       
       if (area) {
@@ -352,7 +374,7 @@ export default function LearnPage() {
       toast({
         variant: "destructive",
         title: "Tente novamente",
-        description: `Você acertou ${correctCount} de ${totalQuestions} (${Math.round(score)}%). É necessário acertar ${passingScore}% para ser aprovado.`,
+        description: `Você acertou ${correctCount} de ${totalQuestions} (${score}%). É necessário acertar ${passingScore}% para ser aprovado.`,
       });
     }
   };
