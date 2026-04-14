@@ -1,5 +1,4 @@
-// This file is now obsolete.
-// The curriculum data is fetched dynamically from the Supabase database
-// via the functions in `src/lib/curriculum-data.ts`.
-// This file can be safely deleted.
+// This file is obsolete and can be safely deleted.
+// The curriculum data is now managed dynamically from local files 
+// via `src/lib/curriculum-data.ts`.
 export {};

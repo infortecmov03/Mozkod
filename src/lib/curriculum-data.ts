@@ -1,128 +1,86 @@
 import 'server-only';
-import { createClient } from '@/lib/supabase/server';
-import type { Level, KnowledgeArea, TheoryLesson, PracticeExercise, Quiz } from './curriculum/types';
 
-// Cache for curriculum data to avoid multiple DB calls in one request
-let cachedCurriculumData: Level[] | null = null;
+import type { Level, KnowledgeArea } from './curriculum/types';
 
-export * from './curriculum/types';
+// Nível 1
+import { level1KnowledgeAreas } from './curriculum/level-1';
 
-/**
- * Fetches and assembles the entire curriculum data from Supabase.
- * Caches the result for the duration of a single server request.
- */
+// Nível 2
+import { level2KnowledgeAreas } from './curriculum/level-2';
+
+// Nível 3
+import { level3KnowledgeAreas } from './curriculum/level-3';
+
+// Nível 4
+import { level4KnowledgeAreas } from './curriculum/level-4';
+
+// Nível 5
+import { level5KnowledgeAreas } from './curriculum/level-5';
+
+// Nível 6
+import { level6KnowledgeAreas } from './curriculum/level-6';
+
+// Nível 7
+import { level7KnowledgeAreas } from './curriculum/level-7';
+
+
+const curriculumData: Level[] = [
+  {
+    id: 1,
+    title: "Nível 1: Fundamentos (Core Foundations)",
+    description: "A base para qualquer desenvolvedor, cobrindo os conceitos essenciais da ciência da computação, programação e da web.",
+    knowledgeAreas: level1KnowledgeAreas
+  },
+  {
+    id: 2,
+    title: "Nível 2: Algoritmos e Estruturas de Dados",
+    description: "O núcleo teórico da ciência da computação, focando em como resolver problemas de forma eficiente.",
+    knowledgeAreas: level2KnowledgeAreas
+  },
+  {
+    id: 3,
+    title: "Nível 3: Sistemas e Infraestrutura",
+    description: "Como os computadores e a internet funcionam por baixo dos panos, de sistemas operacionais a bancos de dados.",
+    knowledgeAreas: level3KnowledgeAreas
+  },
+  {
+    id: 4,
+    title: "Nível 4: Engenharia de Software",
+    description: "As práticas, processos e princípios para construir software de alta qualidade em equipe.",
+    knowledgeAreas: level4KnowledgeAreas
+  },
+  {
+    id: 5,
+    title: "Nível 5: Especializações",
+    description: "Mergulhe em áreas específicas do desenvolvimento de software, do desenvolvimento web avançado à inteligência artificial.",
+    knowledgeAreas: level5KnowledgeAreas
+  },
+  {
+    id: 6,
+    title: "Nível 6: Desenvolvimento Profissional",
+    description: "Habilidades essenciais para o sucesso na carreira, incluindo soft skills, ética e preparação para o mercado.",
+    knowledgeAreas: level6KnowledgeAreas
+  },
+  {
+    id: 7,
+    title: "Nível 7: Certificações Full Stack (freeCodeCamp)",
+    description: "Coloque suas habilidades em prática construindo 5 projetos para cada uma das principais certificações do freeCodeCamp.",
+    knowledgeAreas: level7KnowledgeAreas
+  }
+];
+
 export async function getCurriculumData(): Promise<Level[]> {
-  if (cachedCurriculumData) {
-    return cachedCurriculumData;
-  }
-
-  const supabase = createClient();
-
-  const [
-    { data: kas, error: kasError },
-    { data: lessons, error: lessonsError },
-    { data: exercises, error: exercisesError },
-    { data: quizzes, error: quizzesError }
-  ] = await Promise.all([
-    supabase.from('acm_curriculum').select('*').order('level').order('order_index'),
-    supabase.from('lessons').select('*').order('order_index'),
-    supabase.from('exercises').select('*').order('order_index'),
-    supabase.from('quizzes').select('*')
-  ]);
-
-  if (kasError || lessonsError || exercisesError || quizzesError) {
-    console.error('Error fetching curriculum data:', kasError || lessonsError || exercisesError || quizzesError);
-    return [];
-  }
-
-  const levelsMap: Map<number, Level> = new Map();
-
-  // Populate knowledge areas and levels
-  for (const ka of kas) {
-    if (!levelsMap.has(ka.level)) {
-      levelsMap.set(ka.level, {
-        id: ka.level,
-        title: `Nível ${ka.level}`, // This should be improved later
-        description: `Descrição para o Nível ${ka.level}`,
-        knowledgeAreas: []
-      });
-    }
-    
-    const knowledgeArea: KnowledgeArea = {
-      id: ka.id,
-      title: ka.ka_name,
-      description: ka.description || '',
-      load: ka.required_hours ? `${ka.required_hours}h` : 'N/A',
-      iconName: ka.iconName || 'Code',
-      theory: [],
-      practice: {},
-      quizzes: []
-    };
-    
-    levelsMap.get(ka.level)!.knowledgeAreas.push(knowledgeArea);
-  }
-
-  // Group items by ka_id
-  const lessonsByKaId = groupBy(lessons, 'ka_id');
-  const exercisesByKaId = groupBy(exercises, 'ka_id');
-  const quizzesByKaId = groupBy(quizzes, 'ka_id');
-
-  // Populate lessons, exercises, and quizzes into knowledge areas
-  for (const level of levelsMap.values()) {
-    for (const ka of level.knowledgeAreas) {
-      ka.theory = (lessonsByKaId[ka.id] || []).map(lesson => ({
-          id: lesson.id,
-          title: lesson.title,
-          content: lesson.content_mdx || '',
-          youtubeVideoId: lesson.video_url || undefined,
-          detailedExplanation: '', // Needs to be added to db schema if required
-      }));
-      
-      ka.quizzes = (quizzesByKaId[ka.id] || []).map(quiz => ({
-          id: quiz.id,
-          title: quiz.title,
-          questions: (quiz.questions as any[] || []),
-      }));
-      
-      const exercisesForKa = exercisesByKaId[ka.id] || [];
-      ka.practice = {};
-      for (const exercise of exercisesForKa) {
-        if (!ka.practice[exercise.language]) {
-          ka.practice[exercise.language] = [];
-        }
-        ka.practice[exercise.language].push({
-            id: exercise.id,
-            title: exercise.title,
-            statement: exercise.description || '',
-            template: exercise.template_code || '',
-            detailedExplanation: '', // Needs to be added to db schema if required
-            youtubeVideoId: '', // Needs to be added to db schema if required
-            tests: (exercise.test_cases as any[] || []),
-        });
-      }
-    }
-  }
-
-  const curriculumData = Array.from(levelsMap.values());
-  cachedCurriculumData = curriculumData;
-  return curriculumData;
+  // Simulate async operation if needed in the future, for now returns static data.
+  return Promise.resolve(curriculumData);
 }
 
 export async function getKnowledgeAreaById(id: string): Promise<KnowledgeArea | null> {
-  const curriculum = await getCurriculumData();
-  for (const level of curriculum) {
+  const data = await getCurriculumData();
+  for (const level of data) {
     const found = level.knowledgeAreas.find(ka => ka.id === id);
     if (found) {
       return found;
     }
   }
   return null;
-}
-
-// Helper function to group an array of objects by a key
-function groupBy<T extends Record<string, any>>(array: T[], key: keyof T): Record<string, T[]> {
-  return array.reduce((result, currentValue) => {
-    (result[currentValue[key]] = result[currentValue[key]] || []).push(currentValue);
-    return result;
-  }, {} as Record<string, T[]>);
 }
