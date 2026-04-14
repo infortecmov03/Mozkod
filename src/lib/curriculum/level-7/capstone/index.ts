@@ -5,7 +5,7 @@ import { quizzes } from './quizzes';
 
 export const fccCAP: KnowledgeArea = {
     id: "fcc-capstone",
-    title: "Capstone Project",
+    title: "Full Stack Capstone Project",
     description: "Projeto final integrador.",
     load: "80h",
     iconName: "GraduationCap",

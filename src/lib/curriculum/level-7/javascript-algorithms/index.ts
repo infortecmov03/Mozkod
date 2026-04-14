@@ -5,7 +5,7 @@ import { quizzes } from './quizzes';
 
 export const fccJS: KnowledgeArea = {
     id: "fcc-javascript-algorithms",
-    title: "JavaScript Algorithms",
+    title: "JavaScript Algorithms & Data Structures",
     description: "5 projetos para solidificar sua lógica.",
     load: "50h",
     iconName: "Code",

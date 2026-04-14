@@ -6,7 +6,7 @@ import { quizzes } from './quizzes';
 export const fccRDB: KnowledgeArea = {
     id: "fcc-relational-db",
     title: "Relational Database",
-    description: "5 projetos com SQL.",
+    description: "Projetos práticos com PostgreSQL e SQL.",
     load: "40h",
     iconName: "Database",
     theory,

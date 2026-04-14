@@ -5,7 +5,7 @@ import { quizzes } from './quizzes';
 
 export const fccFEL: KnowledgeArea = {
     id: "fcc-frontend-libraries",
-    title: "Front End Libraries",
+    title: "Front End Development Libraries",
     description: "5 projetos com React e Redux.",
     load: "50h",
     iconName: "Library",

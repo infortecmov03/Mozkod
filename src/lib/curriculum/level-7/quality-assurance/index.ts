@@ -6,7 +6,7 @@ import { quizzes } from './quizzes';
 export const fccQA: KnowledgeArea = {
     id: "fcc-quality-assurance",
     title: "Quality Assurance",
-    description: "5 projetos para garantir a qualidade.",
+    description: "5 projetos para garantir a qualidade com testes.",
     load: "40h",
     iconName: "TestTube",
     theory,
