@@ -114,5 +114,14 @@
     "password_label": "New Password",
     "submit_button": "Save new password",
     "loading_button": "Saving..."
+  },
+  "LearnPage": {
+    "guest_alert_title": "You are learning as a guest",
+    "guest_alert_description_1": "Your progress is being saved only in this browser. ",
+    "guest_alert_signup": "Sign up",
+    "guest_alert_description_2": " or ",
+    "guest_alert_login": "log in",
+    "guest_alert_description_3": " to save your progress permanently and earn XP.",
+    "quiz_login_required": "You must be logged in to submit a quiz."
   }
 }

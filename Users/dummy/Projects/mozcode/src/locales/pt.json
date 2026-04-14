@@ -114,5 +114,14 @@
     "password_label": "Nova Senha",
     "submit_button": "Salvar nova senha",
     "loading_button": "Salvando..."
+  },
+  "LearnPage": {
+    "guest_alert_title": "Você está aprendendo como convidado",
+    "guest_alert_description_1": "Seu progresso está sendo salvo apenas neste navegador. ",
+    "guest_alert_signup": "Cadastre-se",
+    "guest_alert_description_2": " ou ",
+    "guest_alert_login": "faça login",
+    "guest_alert_description_3": " para salvar seu progresso permanentemente e ganhar XP.",
+    "quiz_login_required": "Você precisa estar logado para submeter um quiz."
   }
 }
