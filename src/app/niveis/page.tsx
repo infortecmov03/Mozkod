@@ -1,19 +1,22 @@
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
+'use client';
 
-export default function NiveisPage() {
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
+
+export default function NiveisRedirectPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/curriculo');
+  }, [router]);
+
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <Header />
-      <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="text-center py-20">
-          <h1 className="font-headline text-4xl md:text-5xl font-bold">Nossos Níveis de Aprendizagem</h1>
-          <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-            Conteúdo para esta página será adicionado em breve. Volte mais tarde para ver as novidades!
-          </p>
-        </div>
-      </main>
-      <Footer />
+    <div className="flex min-h-screen w-full items-center justify-center bg-background">
+      <div className="text-center">
+        <Loader2 className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
+        <p className="mt-4 text-muted-foreground">Redirecionando para o Currículo...</p>
+      </div>
     </div>
   );
 }
