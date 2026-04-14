@@ -761,9 +761,9 @@ export function LearnPageClient({ area }: { area: KnowledgeArea }) {
             <AlertTitle className="text-accent">{t('LearnPage.guest_alert_title')}</AlertTitle>
             <AlertDescription>
                 {t('LearnPage.guest_alert_description_1')}
-                <Link href="/cadastro" className="font-bold underline">{t('LearnPage.guest_alert_signup')}</Link>
+                <Link href={`/cadastro?redirect=/learn/${area.id}`} className="font-bold underline">{t('LearnPage.guest_alert_signup')}</Link>
                 {t('LearnPage.guest_alert_description_2')}
-                <Link href="/login" className="font-bold underline">{t('LearnPage.guest_alert_login')}</Link>
+                <Link href={`/login?redirect=/learn/${area.id}`} className="font-bold underline">{t('LearnPage.guest_alert_login')}</Link>
                 {t('LearnPage.guest_alert_description_3')}
             </AlertDescription>
         </Alert>
