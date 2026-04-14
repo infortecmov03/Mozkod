@@ -1,17 +1,17 @@
-'use client'; // Add this
+'use client';
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { useState } from 'react'; // Add this
-import { useRouter } from 'next/navigation'; // Add this
-import { useAuth } from '@/context/AuthContext'; // Add this
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/logo";
-import { useToast } from "@/hooks/use-toast"; // Add this
+import { useToast } from "@/hooks/use-toast";
 
 export default function CadastroPage() {
   const [name, setName] = useState('');
@@ -21,7 +21,7 @@ export default function CadastroPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !password) {
       toast({
@@ -31,18 +31,17 @@ export default function CadastroPage() {
       });
       return;
     }
-    const success = register(name, email, password);
+    const success = await register(name, email, password);
     if (success) {
       toast({
         title: "Conta criada com sucesso!",
         description: "Você foi redirecionado para o seu painel.",
       });
-      router.push('/dashboard');
     } else {
       toast({
         variant: "destructive",
         title: "Erro ao criar conta.",
-        description: "Um usuário com este e-mail já existe.",
+        description: "Verifique os dados ou o email pode já estar em uso.",
       });
     }
   };

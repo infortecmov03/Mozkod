@@ -20,7 +20,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       toast({
@@ -30,13 +30,12 @@ export default function LoginPage() {
       });
       return;
     }
-    const success = login(email, password);
+    const success = await login(email, password);
     if (success) {
       toast({
         title: "Login bem-sucedido!",
         description: "Bem-vindo de volta!",
       });
-      router.push('/dashboard');
     } else {
       toast({
         variant: "destructive",

@@ -53,8 +53,8 @@ function ForumContent() {
     const newCommentObject: Comment = {
       id: Date.now(), // Use a more unique ID
       user: {
-        name: user.name,
-        avatarFallback: user.name.split(' ').map(n => n[0]).join('').substring(0, 2),
+        name: user.name || "Anônimo",
+        avatarFallback: user.name?.split(' ').map(n => n[0]).join('').substring(0, 2) || 'A',
       },
       timestamp: 'agora mesmo',
       content: newComment,
@@ -131,7 +131,7 @@ function ForumContent() {
               <form onSubmit={handlePostComment} className="space-y-4">
                 <div className="flex gap-4 items-start">
                     <Avatar>
-                        <AvatarFallback>{user.name.split(' ').map(n => n[0]).join('').substring(0, 2)}</AvatarFallback>
+                        <AvatarFallback>{user.name?.split(' ').map(n => n[0]).join('').substring(0, 2) || 'A'}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
                         <Label htmlFor="comment">Deixe sua dúvida ou contribuição</Label>

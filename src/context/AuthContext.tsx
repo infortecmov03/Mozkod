@@ -2,75 +2,83 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
+import { 
+    getAuth, 
+    onAuthStateChanged, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    signOut,
+    updateProfile,
+    type User as FirebaseUser
+} from 'firebase/auth';
+import { app } from '@/firebase/config';
 
-// Define the user type
 type User = {
-  name: string;
-  email: string;
+  uid: string;
+  name: string | null;
+  email: string | null;
 };
 
-// Define the context type
 type AuthContextType = {
   user: User | null;
-  login: (email: string, password: string) => boolean;
-  logout: () => void;
-  register: (name: string, email: string, password: string) => boolean;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<boolean>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const auth = getAuth(app);
 
   useEffect(() => {
-    // This code runs only on the client
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
+        if (firebaseUser) {
+            setUser({
+                uid: firebaseUser.uid,
+                name: firebaseUser.displayName,
+                email: firebaseUser.email
+            });
+        } else {
+            setUser(null);
+        }
+        setLoading(false);
+    });
+    return () => unsubscribe();
+  }, [auth]);
+
+  const register = async (name: string, email: string, password: string): Promise<boolean> => {
     try {
-      const storedUser = localStorage.getItem('mozcod-currentUser');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        if (userCredential.user) {
+            await updateProfile(userCredential.user, { displayName: name });
+            setUser({ 
+                uid: userCredential.user.uid, 
+                name: name, 
+                email: email 
+            });
+            const redirectPath = localStorage.getItem('redirectAfterLogin');
+            if (redirectPath) {
+                localStorage.removeItem('redirectAfterLogin');
+                router.push(redirectPath);
+            } else {
+                router.push('/dashboard');
+            }
+        }
+        return true;
     } catch (error) {
-      console.error("Failed to parse user from localStorage", error);
-    }
-  }, []);
-
-  const register = (name: string, email: string, password: string): boolean => {
-    try {
-      const storedUsers = localStorage.getItem('mozcod-users');
-      const users = storedUsers ? JSON.parse(storedUsers) : [];
-
-      if (users.find((u: any) => u.email === email)) {
-        console.error("User already exists");
-        return false; // User already exists
-      }
-
-      // In a real app, you should NEVER store passwords in plain text.
-      users.push({ name, email, password }); 
-      localStorage.setItem('mozcod-users', JSON.stringify(users));
-      
-      const newUser = { name, email };
-      localStorage.setItem('mozcod-currentUser', JSON.stringify(newUser));
-      setUser(newUser);
-      return true;
-    } catch (error) {
-      console.error("Failed to register user", error);
-      return false;
+        console.error("Erro no registro:", error);
+        return false;
     }
   };
 
-  const login = (email: string, password: string): boolean => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const storedUsers = localStorage.getItem('mozcod-users');
-      const users = storedUsers ? JSON.parse(storedUsers) : [];
-
-      const foundUser = users.find((u: any) => u.email === email && u.password === password);
-
-      if (foundUser) {
-        const currentUser = { name: foundUser.name, email: foundUser.email };
-        localStorage.setItem('mozcod-currentUser', JSON.stringify(currentUser));
-        setUser(currentUser);
-
+        await signInWithEmailAndPassword(auth, email, password);
         const redirectPath = localStorage.getItem('redirectAfterLogin');
         if (redirectPath) {
           localStorage.removeItem('redirectAfterLogin');
@@ -79,28 +87,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           router.push('/dashboard');
         }
         return true;
-      }
-      
-      return false;
     } catch (error) {
-      console.error("Failed to login user", error);
-      return false;
+        console.error("Erro no login:", error);
+        return false;
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     try {
-      localStorage.removeItem('mozcod-currentUser');
-      localStorage.removeItem('mozcod-progress');
-      setUser(null);
-      router.push('/');
+        await signOut(auth);
+        router.push('/');
     } catch (error) {
-       console.error("Failed to logout user", error);
+        console.error("Erro no logout:", error);
     }
   };
+  
+  if (loading) {
+    // This can be replaced with a beautiful loading spinner component
+    return (
+        <div className="flex min-h-screen items-center justify-center bg-background">
+            <p className="text-muted-foreground">A carregar autenticação...</p>
+        </div>
+    )
+  }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, register }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );
