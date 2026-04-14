@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, CheckCircle, Code, PencilRuler, Target, BookOpen, Menu, XCircle, Info, MessageCircleQuestion } from 'lucide-react';
@@ -48,6 +48,8 @@ export default function LearnPage() {
   // State for quiz tab
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
   const [quizResults, setQuizResults] = useState<Record<string, boolean> | null>(null);
+
+  const theoryContainerRef = useRef<HTMLDivElement>(null);
 
 
   const areaId = Array.isArray(params.areaId) ? params.areaId[0] : params.areaId;
@@ -140,6 +142,12 @@ export default function LearnPage() {
       `);
     }
   }, [code, selectedPracticeLanguage]);
+
+    useEffect(() => {
+        if (selectedLesson && theoryContainerRef.current) {
+            theoryContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, [selectedLesson]);
   
    const lessonIndex = area?.theory?.findIndex(l => l.id === selectedLesson?.id) ?? -1;
 
@@ -437,7 +445,7 @@ export default function LearnPage() {
         </Sheet>
       </div>
 
-      <div className="w-full">
+      <div className="w-full" ref={theoryContainerRef}>
         {selectedLesson ? (
           <Card className="h-full">
             <CardHeader>
