@@ -29,6 +29,11 @@ import { lesson as lesson27 } from './theory/05-architectural-patterns/04-event-
 import { lesson as lesson28 } from './theory/05-architectural-patterns/05-hexagonal-architecture';
 import { lesson as lesson29 } from './theory/05-architectural-patterns/06-cqrs-event-sourcing';
 import { lesson as lesson30 } from './theory/05-architectural-patterns/07-serverless-architecture';
+import { lesson as lesson31 } from './theory/06-uml-modeling/01-class-diagrams';
+import { lesson as lesson32 } from './theory/06-uml-modeling/02-sequence-diagrams';
+import { lesson as lesson33 } from './theory/06-uml-modeling/03-use-case-diagrams';
+import { lesson as lesson34 } from './theory/06-uml-modeling/04-activity-diagrams';
+import { lesson as lesson35 } from './theory/06-uml-modeling/05-deployment-diagrams';
 
 
 export const theory: TheoryLesson[] = [
@@ -62,4 +67,9 @@ export const theory: TheoryLesson[] = [
     lesson28,
     lesson29,
     lesson30,
+    lesson31,
+    lesson32,
+    lesson33,
+    lesson34,
+    lesson35,
 ];
