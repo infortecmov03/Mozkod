@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft, Github } from "lucide-react";
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useI18n } from "@/context/I18nContext";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -13,6 +14,7 @@ import { Logo } from "@/components/logo";
 import { useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
+  const { t } = useI18n();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -61,7 +63,7 @@ export default function LoginPage() {
         <Button variant="ghost" asChild>
           <Link href="/">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Voltar para Home
+            {t('Login.back_to_home')}
           </Link>
         </Button>
       </div>
@@ -70,23 +72,23 @@ export default function LoginPage() {
           <div className="mb-4 flex justify-center">
              <Logo />
           </div>
-          <CardTitle className="text-2xl font-headline">Entrar na sua conta</CardTitle>
+          <CardTitle className="text-2xl font-headline">{t('Login.title')}</CardTitle>
           <CardDescription>
-            Bem-vindo de volta! Por favor, insira seus dados.
+            {t('Login.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('Login.email_label')}</Label>
               <Input id="email" type="email" placeholder="nome@exemplo.com" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={loading} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password">{t('Login.password_label')}</Label>
               <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Aguarde...' : 'Entrar'}
+              {loading ? t('Login.loading_button') : t('Login.submit_button')}
             </Button>
           </form>
            <div className="relative my-4">
@@ -95,7 +97,7 @@ export default function LoginPage() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
-                Ou continue com
+                {t('Login.or_continue_with')}
               </span>
             </div>
           </div>
@@ -106,9 +108,9 @@ export default function LoginPage() {
         </CardContent>
          <CardFooter className="justify-center">
             <p className="mt-4 text-center text-sm">
-                 Não tem uma conta?{" "}
+                 {t('Login.no_account')}{" "}
                 <Link href="/cadastro" className="underline">
-                Cadastre-se
+                {t('Login.signup_link')}
                 </Link>
             </p>
         </CardFooter>

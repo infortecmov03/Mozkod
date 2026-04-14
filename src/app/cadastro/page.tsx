@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft, Github } from "lucide-react";
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useI18n } from "@/context/I18nContext";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -13,6 +14,7 @@ import { Logo } from "@/components/logo";
 import { useToast } from "@/hooks/use-toast";
 
 export default function CadastroPage() {
+  const { t } = useI18n();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -58,7 +60,7 @@ export default function CadastroPage() {
         <Button variant="ghost" asChild>
           <Link href="/">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Voltar para Home
+            {t('Signup.back_to_home')}
           </Link>
         </Button>
       </div>
@@ -67,27 +69,27 @@ export default function CadastroPage() {
             <div className="mb-4 flex justify-center">
              <Logo />
           </div>
-          <CardTitle className="text-2xl font-headline">Crie sua conta</CardTitle>
+          <CardTitle className="text-2xl font-headline">{t('Signup.title')}</CardTitle>
           <CardDescription>
-            Comece sua jornada de aprendizado em programação hoje.
+            {t('Signup.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
-              <Label htmlFor="name">Nome completo</Label>
+              <Label htmlFor="name">{t('Signup.name_label')}</Label>
               <Input id="name" placeholder="Seu nome completo" required value={name} onChange={(e) => setName(e.target.value)} disabled={loading} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('Signup.email_label')}</Label>
               <Input id="email" type="email" placeholder="nome@exemplo.com" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={loading} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password">{t('Signup.password_label')}</Label>
               <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={loading} />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Aguarde...' : 'Criar conta gratuita'}
+              {loading ? t('Signup.loading_button') : t('Signup.submit_button')}
             </Button>
           </form>
           <div className="relative my-4">
@@ -96,7 +98,7 @@ export default function CadastroPage() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-background px-2 text-muted-foreground">
-                Ou cadastre-se com
+                {t('Signup.or_signup_with')}
               </span>
             </div>
           </div>
@@ -107,9 +109,9 @@ export default function CadastroPage() {
         </CardContent>
          <CardFooter className="justify-center">
             <p className="mt-4 text-center text-sm">
-                Já tem uma conta?{" "}
+                {t('Signup.has_account')}{" "}
                 <Link href="/login" className="underline">
-                Entrar
+                {t('Signup.login_link')}
                 </Link>
             </p>
         </CardFooter>

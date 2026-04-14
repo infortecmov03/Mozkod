@@ -1,3 +1,4 @@
+'use client';
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Code, GitMerge, Trophy } from "lucide-react";
@@ -7,8 +8,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { useI18n } from "@/context/I18nContext";
 
 export default function Home() {
+  const { t } = useI18n();
   const heroImage = PlaceHolderImages.find(p => p.id === 'hero');
   const curriculumImage = PlaceHolderImages.find(p => p.id === 'curriculum');
   const editorImage = PlaceHolderImages.find(p => p.id === 'editor');
@@ -18,26 +21,26 @@ export default function Home() {
   const features = [
     {
       icon: <BookOpen className="w-8 h-8 text-primary" />,
-      title: "Currículo Multilíngue",
-      description: "Currículo alinhado à ACM, desde os fundamentos até tópicos avançados, incluindo Inglês Técnico e Git, disponível em 7 idiomas.",
+      title: t('Home.feature1_title'),
+      description: t('Home.feature1_desc'),
       image: curriculumImage
     },
     {
       icon: <Code className="w-8 h-8 text-primary" />,
-      title: "Editor de Código Interativo",
-      description: "Um poderoso editor baseado no Monaco com execução em tempo real, executor de testes e visualização ao vivo para mais de 15 idiomas.",
+      title: t('Home.feature2_title'),
+      description: t('Home.feature2_desc'),
       image: editorImage
     },
     {
       icon: <GitMerge className="w-8 h-8 text-primary" />,
-      title: "Controle de Versão com Git",
-      description: "Aprenda ferramentas de colaboração padrão da indústria com um painel Git integrado diretamente no seu ambiente de aprendizagem.",
+      title: t('Home.feature3_title'),
+      description: t('Home.feature3_desc'),
       image: gitImage
     },
     {
       icon: <Trophy className="w-8 h-8 text-primary" />,
-      title: "Conquistas e Certificados",
-      description: "Acompanhe seu progresso, ganhe emblemas e receba certificados compartilháveis para mostrar suas habilidades.",
+      title: t('Home.feature4_title'),
+      description: t('Home.feature4_desc'),
       image: achievementsImage
     },
   ];
@@ -48,22 +51,23 @@ export default function Home() {
       <main className="flex-1">
         <section className="relative w-full pt-20 pb-20 md:pt-32 md:pb-40 overflow-hidden">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="font-headline text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-4">
-              Aprenda a Programar, <span className="text-primary">Domine o Futuro.</span>
-            </h1>
+            <h1 
+              className="font-headline text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-4"
+              dangerouslySetInnerHTML={{ __html: t('Home.title') }}
+            />
             <p className="max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground mb-8">
-              Mozkod é uma plataforma gratuita e de código aberto que oferece educação em programação de classe mundial para todos em Moçambique, de iniciantes a profissionais.
+              {t('Home.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button size="lg" asChild>
                 <Link href="/cadastro">
-                  Comece a Aprender Gratuitamente
+                  {t('Home.cta_free')}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <Link href="/curriculo">
-                  Explorar Currículo
+                  {t('Home.cta_explore')}
                 </Link>
               </Button>
             </div>
@@ -85,9 +89,9 @@ export default function Home() {
         <section id="features" className="py-16 lg:py-24 bg-card/50">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="font-headline text-3xl md:text-4xl font-bold">Uma Plataforma de Aprendizagem Completa</h2>
+              <h2 className="font-headline text-3xl md:text-4xl font-bold">{t('Home.features_title')}</h2>
               <p className="max-w-2xl mx-auto mt-4 text-muted-foreground">
-                Tudo o que você precisa para ir do zero ao herói no desenvolvimento de software.
+                {t('Home.features_subtitle')}
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -122,14 +126,14 @@ export default function Home() {
         
         <section className="py-20 lg:py-24">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">Pronto para Começar sua Jornada?</h2>
+            <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">{t('Home.final_cta_title')}</h2>
             <p className="max-w-xl mx-auto mt-4 text-muted-foreground">
-              Junte-se a milhares de alunos e comece a construir seu futuro hoje. É grátis, para sempre.
+              {t('Home.final_cta_subtitle')}
             </p>
             <div className="mt-8">
               <Button size="lg" asChild>
                 <Link href="/cadastro">
-                  Crie sua Conta Gratuita
+                  {t('Home.final_cta_button')}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
