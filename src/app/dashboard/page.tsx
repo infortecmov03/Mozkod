@@ -5,7 +5,7 @@ import { Footer } from '@/components/layout/footer';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BookOpen, Percent, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useProgress } from '@/context/ProgressContext';
@@ -16,13 +16,19 @@ export default function DashboardPage() {
   const { t } = useI18n();
   const { user, loading } = useAuth();
   const router = useRouter();
-  const { totalLessons, completedLessons } = useProgress();
+  const { completedLessons } = useProgress();
+  const [totalLessons, setTotalLessons] = useState(0);
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
+  
+  // Fake total lessons for now. In a real app this would come from an API.
+  useEffect(() => {
+    setTotalLessons(258);
+  }, []);
 
   const progressPercentage = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
 

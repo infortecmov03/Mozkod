@@ -2,25 +2,15 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useAuth } from './AuthContext';
-import { curriculumData } from '@/lib/curriculum-data';
 
 type ProgressContextType = {
   completedItems: Set<string>;
   markAsCompleted: (itemId: string, itemType: 'lesson' | 'exercise') => Promise<void>;
   isCompleted: (itemId: string) => boolean;
-  totalLessons: number;
   completedLessons: number;
 };
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
-
-const totalItems = curriculumData
-  .flatMap(level => level.knowledgeAreas)
-  .reduce((acc, area) => {
-    const theoryCount = area.theory.length;
-    const practiceCount = Object.values(area.practice).reduce((pAcc, langExercises) => pAcc + langExercises.length, 0);
-    return acc + theoryCount + practiceCount;
-  }, 0);
 
 export function ProgressProvider({ children }: { children: ReactNode }) {
   const [completedItems, setCompletedItems] = useState<Set<string>>(new Set());
@@ -98,11 +88,9 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   }, [completedItems]);
 
   const value = {
-    progress: Array.from(completedItems),
     completedItems,
     markAsCompleted,
     isCompleted,
-    totalLessons: totalItems,
     completedLessons: completedItems.size,
   };
 

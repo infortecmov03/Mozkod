@@ -1,7 +1,7 @@
 'use client';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { curriculumData } from '@/lib/curriculum-data';
+import { curriculumData } from '@/lib/curriculum-data-static';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

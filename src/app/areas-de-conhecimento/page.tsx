@@ -1,6 +1,6 @@
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { curriculumData } from '@/lib/curriculum-data';
+import { getCurriculumData } from '@/lib/curriculum-data';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -18,7 +18,8 @@ const Icon = ({ name, className }: { name: string; className?: string }) => {
 };
 
 
-export default function AreasDeConhecimentoPage() {
+export default async function AreasDeConhecimentoPage() {
+  const curriculumData = await getCurriculumData();
   const allKnowledgeAreas = curriculumData.flatMap(level => 
     level.knowledgeAreas.map(area => ({ ...area, levelTitle: level.title }))
   );
