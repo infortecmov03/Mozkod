@@ -1,4 +1,5 @@
-# Mozkod - Plataforma de Educação em Programação
+# Mozkogit commit -m "Initial commit: Setup Mozkod platform"
+d - Plataforma de Educação em Programação
 
 Bem-vindo ao Mozkod! Esta é uma plataforma de educação em programação de código aberto, construída com Next.js, TypeScript e Tailwind CSS, projetada para oferecer um currículo abrangente e interativo, do básico ao avançado.
 
