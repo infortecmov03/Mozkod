@@ -12,7 +12,7 @@ import { useProgress } from '@/context/ProgressContext';
 import { Progress } from '@/components/ui/progress';
 
 export default function DashboardPage() {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const { totalLessons, completedLessons } = useProgress();
   const [isMounted, setIsMounted] = useState(false);
@@ -22,14 +22,14 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    if (isMounted && !loading && !user) {
+    if (isMounted && !user) {
       router.push('/login');
     }
-  }, [user, loading, isMounted, router]);
+  }, [user, isMounted, router]);
 
   const progressPercentage = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
 
-  if (!isMounted || loading || !user) {
+  if (!isMounted || !user) {
     return (
         <div className="flex min-h-screen items-center justify-center bg-background">
             <p className="text-muted-foreground">A carregar...</p>
@@ -43,7 +43,7 @@ export default function DashboardPage() {
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="mb-8">
             <h1 className="font-headline text-3xl md:text-4xl font-bold">
-            Bem-vindo de volta, <span className="text-primary">{(user.name || '').split(' ')[0] || 'Usuário'}!</span>
+            Bem-vindo de volta, <span className="text-primary">{user.name.split(' ')[0]}!</span>
             </h1>
             <p className="text-muted-foreground mt-2">Continue de onde parou e explore novos desafios.</p>
         </div>

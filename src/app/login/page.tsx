@@ -20,7 +20,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       toast({
@@ -30,7 +30,7 @@ export default function LoginPage() {
       });
       return;
     }
-    const success = await login(email, password);
+    const success = login(email, password);
     if (success) {
       toast({
         title: "Login bem-sucedido!",

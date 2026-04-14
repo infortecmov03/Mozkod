@@ -21,7 +21,7 @@ export default function CadastroPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !password) {
       toast({
@@ -31,7 +31,7 @@ export default function CadastroPage() {
       });
       return;
     }
-    const success = await register(name, email, password);
+    const success = register(name, email, password);
     if (success) {
       toast({
         title: "Conta criada com sucesso!",
