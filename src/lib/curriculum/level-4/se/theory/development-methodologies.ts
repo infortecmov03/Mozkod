@@ -1,3 +1,5 @@
+// This file is obsolete and will be replaced by more specific lessons.
+// The new lessons are imported in 'src/lib/curriculum/level-4/se/theory.ts'.
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
