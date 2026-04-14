@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Header } from '@/components/layout/header';
@@ -11,57 +11,98 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ArrowLeft, Send } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { useState } from 'react';
 import { Label } from '@/components/ui/label';
-
-// Mock data for demonstration purposes
-const mockComments = [
-  {
-    id: 1,
-    user: { name: 'Carlos Ferreira', avatarFallback: 'CF' },
-    timestamp: '2 horas atrás',
-    content: 'Estou com dificuldades em entender como usar o operador de módulo (%) para verificar se o número é par. Alguém pode me dar um exemplo mais simples?',
-  },
-  {
-    id: 2,
-    user: { name: 'Ana Silva', avatarFallback: 'AS' },
-    timestamp: '1 hora atrás',
-    content: 'Claro, Carlos! Pense assim: `10 % 2` é 0, porque 10 dividido por 2 não tem resto. Já `11 % 2` é 1, porque sobra 1. Se o resultado for 0, o número é par.',
-  },
-];
+import { createClient } from '@/lib/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 type Comment = {
-  id: number;
-  user: { name: string; avatarFallback: string; };
-  timestamp: string;
+  id: string;
+  created_at: string;
   content: string;
-}
+  user_id: string;
+  user_name: string | null;
+  user_avatar_url: string | null;
+};
 
 function ForumContent() {
   const searchParams = useSearchParams();
   const { user } = useAuth();
-  const [comments, setComments] = useState<Comment[]>(mockComments);
+  const { toast } = useToast();
+  const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
-
+  const supabase = createClient();
+  
   const exerciseId = searchParams.get('exerciseId');
   const exerciseTitle = searchParams.get('exerciseTitle');
 
-  const handlePostComment = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newComment.trim() || !user) return;
+  useEffect(() => {
+    if (!exerciseId) return;
 
-    const newCommentObject: Comment = {
-      id: Date.now(), // Use a more unique ID
-      user: {
-        name: user.name || "Anônimo",
-        avatarFallback: user.name?.split(' ').map(n => n[0]).join('').substring(0, 2) || 'A',
-      },
-      timestamp: 'agora mesmo',
-      content: newComment,
+    // Fetch initial comments
+    const fetchComments = async () => {
+      const { data, error } = await supabase
+        .from('forum_comments')
+        .select('*')
+        .eq('exercise_id', exerciseId)
+        .order('created_at', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching comments:', error.message);
+        toast({
+          variant: 'destructive',
+          title: 'Erro ao carregar comentários',
+          description: 'Não foi possível buscar as discussões. Tente novamente mais tarde.',
+        });
+      } else {
+        setComments(data || []);
+      }
     };
 
-    setComments([...comments, newCommentObject]);
-    setNewComment('');
+    fetchComments();
+
+    // Set up realtime subscription
+    const channel = supabase
+      .channel(`forum-comments-${exerciseId}`)
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'forum_comments', filter: `exercise_id=eq.${exerciseId}` },
+        (payload) => {
+          setComments((prevComments) => [...prevComments, payload.new as Comment]);
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [exerciseId, supabase, toast]);
+
+
+  const handlePostComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newComment.trim() || !user || !exerciseId) return;
+
+    const { error } = await supabase.from('forum_comments').insert({
+      exercise_id: exerciseId,
+      user_id: user.id,
+      user_name: user.name,
+      content: newComment,
+      // user_avatar_url can be added here if available in user profile
+    });
+
+    if (error) {
+      console.error('Error posting comment:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Erro ao publicar comentário',
+        description: 'Não foi possível publicar seu comentário. Tente novamente.',
+      });
+    } else {
+      setNewComment('');
+    }
   };
 
   if (!exerciseId || !exerciseTitle) {
@@ -113,12 +154,14 @@ function ForumContent() {
             {comments.map((comment) => (
               <div key={comment.id} className="flex gap-4">
                 <Avatar>
-                  <AvatarFallback>{comment.user.avatarFallback}</AvatarFallback>
+                  <AvatarFallback>{comment.user_name?.split(' ').map(n => n[0]).join('').substring(0, 2) || 'U'}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="font-semibold">{comment.user.name}</p>
-                    <p className="text-xs text-muted-foreground">{comment.timestamp}</p>
+                    <p className="font-semibold">{comment.user_name || 'Usuário Anônimo'}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true, locale: ptBR })}
+                    </p>
                   </div>
                   <p className="mt-1 text-muted-foreground">{comment.content}</p>
                 </div>
@@ -131,7 +174,7 @@ function ForumContent() {
               <form onSubmit={handlePostComment} className="space-y-4">
                 <div className="flex gap-4 items-start">
                     <Avatar>
-                        <AvatarFallback>{user.name?.split(' ').map(n => n[0]).join('').substring(0, 2) || 'A'}</AvatarFallback>
+                        <AvatarFallback>{user.name?.split(' ').map(n => n[0]).join('').substring(0, 2) || 'U'}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
                         <Label htmlFor="comment">Deixe sua dúvida ou contribuição</Label>

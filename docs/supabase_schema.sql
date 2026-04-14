@@ -78,8 +78,6 @@ CREATE TABLE user_progress (
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
     lesson_id TEXT NOT NULL,
     status TEXT DEFAULT 'not_started',
-    progress_percentage INTEGER DEFAULT 0,
-    last_accessed_at TIMESTAMPTZ DEFAULT NOW(),
     completed_at TIMESTAMPTZ,
     UNIQUE(user_id, lesson_id)
 );
@@ -93,7 +91,8 @@ CREATE TABLE user_exercise_submissions (
     test_results JSONB,
     status TEXT DEFAULT 'pending',
     attempts INTEGER DEFAULT 1,
-    submitted_at TIMESTAMPTZ DEFAULT NOW()
+    submitted_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, exercise_id)
 );
 
 -- Tabela: user_quiz_attempts
@@ -128,6 +127,18 @@ CREATE TABLE fcc_sync (
     last_synced_at TIMESTAMPTZ,
     certifications_earned JSONB DEFAULT '[]'
 );
+
+-- Tabela: forum_comments
+CREATE TABLE forum_comments (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    exercise_id TEXT NOT NULL,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    user_name TEXT,
+    user_avatar_url TEXT,
+    content TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 
 -- Função para updated_at
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -164,7 +175,8 @@ CREATE TRIGGER on_auth_user_created
     FOR EACH ROW
     EXECUTE FUNCTION handle_new_user();
 
--- Políticas RLS (Row Level Security)
+
+-- POLÍTICAS DE RLS (Row Level Security)
 
 -- Habilitar RLS em todas as tabelas
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
@@ -173,6 +185,7 @@ ALTER TABLE user_exercise_submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_quiz_attempts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE certificates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE fcc_sync ENABLE ROW LEVEL SECURITY;
+ALTER TABLE forum_comments ENABLE ROW LEVEL SECURITY;
 
 -- Políticas: profiles
 CREATE POLICY "Usuários podem ver todos os perfis"
@@ -195,11 +208,6 @@ CREATE POLICY "Lições visíveis para todos"
 ALTER TABLE exercises ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Exercícios visíveis para todos"
     ON exercises FOR SELECT USING (true);
-
--- Políticas: quizzes (público para leitura)
-ALTER TABLE quizzes ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Quizzes visíveis para todos"
-    ON quizzes FOR SELECT USING (true);
 
 -- Políticas: user_progress
 CREATE POLICY "Usuários veem seu próprio progresso"
@@ -231,3 +239,13 @@ CREATE POLICY "Certificados visíveis para todos"
 
 CREATE POLICY "Sistema pode gerar certificados"
     ON certificates FOR INSERT WITH CHECK (true);
+
+-- Políticas: forum_comments
+CREATE POLICY "Comentários são visíveis para todos"
+    ON forum_comments FOR SELECT USING (true);
+
+CREATE POLICY "Usuários podem criar comentários"
+    ON forum_comments FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Usuários podem deletar seus próprios comentários"
+    ON forum_comments FOR DELETE USING (auth.uid() = user_id);
