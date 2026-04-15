@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { SupabaseClient, User as SupabaseUser, AuthError } from '@supabase/supabase-js';
 
@@ -18,7 +18,7 @@ type AuthContextType = {
   supabase: SupabaseClient;
   user: User | null;
   loading: boolean;
-  signInWithPassword: (email: string, password: string) => Promise<{ error: AuthError | null }>;
+  signInWithPassword: (email: string, password: string, redirectPath: string | null) => Promise<{ error: AuthError | null }>;
   signInWithGithub: () => Promise<void>;
   signUp: (name: string, email: string, password: string) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
@@ -31,7 +31,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
@@ -62,10 +61,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [supabase]);
 
-  const signInWithPassword = async (email: string, password: string) => {
+  const signInWithPassword = async (email: string, password: string, redirectPath: string | null) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (!error) {
-      const redirectPath = searchParams.get('redirect');
       router.push(redirectPath || '/dashboard');
       router.refresh();
     }
