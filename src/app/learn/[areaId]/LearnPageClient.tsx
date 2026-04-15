@@ -418,7 +418,7 @@ export function LearnPageClient({ area }: { area: KnowledgeArea }) {
 
       <div className="w-full" ref={theoryContainerRef}>
         {selectedLesson ? (
-          <Card className="h-full">
+          <Card >
             <CardHeader>
               <CardTitle className="font-headline text-2xl">{selectedLesson.title}</CardTitle>
             </CardHeader>
@@ -569,7 +569,7 @@ export function LearnPageClient({ area }: { area: KnowledgeArea }) {
             
             <div className="w-full">
                 {selectedExercise ? (
-                    <Card className="h-full flex flex-col">
+                    <Card className="flex flex-col">
                          <CardHeader>
                             <div className="flex justify-between items-start gap-4">
                                 <div>
