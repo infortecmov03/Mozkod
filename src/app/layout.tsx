@@ -8,10 +8,10 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Mozkod',
   description: 'Plataforma de educação em programação de código aberto para Moçambique.',
-  icones: {
+  icons: {
     icon: {
-      url= "/icon.svg"
-      type= "imge/svg+xml"
+      url: "/icon.svg"
+      type: "imge/svg+xml"
     }
   }
 };
