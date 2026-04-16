@@ -198,12 +198,12 @@ export function LearnPageClient({ area }: { area: KnowledgeArea }) {
                     setTestResults(results);
                     setConsoleOutput(capturedLogs);
                     setAllTestsPassed(false);
-                    console.log = originalConsoleLog; // Restore here as well
-                    return; // Stop on first error
+                    console.log = originalConsoleLog;
+                    return;
                 }
             }
         } finally {
-            console.log = originalConsoleLog; // Always restore original console.log
+            console.log = originalConsoleLog;
         }
         
         setTestResults(results);
@@ -223,7 +223,6 @@ export function LearnPageClient({ area }: { area: KnowledgeArea }) {
             });
         }
     } else {
-      // For other languages, call the API endpoint
       try {
           const response = await fetch('/api/run-code', {
               method: 'POST',
@@ -296,7 +295,7 @@ export function LearnPageClient({ area }: { area: KnowledgeArea }) {
         ...prev,
         [questionId]: optionIndex
     }));
-    setQuizResults(null); // Reset results when a new answer is selected
+    setQuizResults(null);
   };
 
   const handleCheckQuiz = async (quiz: Quiz) => {
@@ -595,66 +594,89 @@ export function LearnPageClient({ area }: { area: KnowledgeArea }) {
                                         <TabsTrigger value="explanation">Explicação</TabsTrigger>
                                         {selectedPracticeLanguage === 'html' && <TabsTrigger value="preview">Preview</TabsTrigger>}
                                     </TabsList>
+                                    
                                     <TabsContent 
-    value="editor" 
-    className="flex-grow mt-4 rounded-md border overflow-hidden"
-    style={{ height: '450px' }}
->
-    <Editor
-        height="100%"
-        width="100%"
-        language={selectedPracticeLanguage || 'plaintext'}
-        theme="vs-dark"
-        value={code}
-        onChange={(value) => setCode(value || '')}
-        options={{
-            minimap: { enabled: false },
-            fontSize: 14,
-            scrollBeyondLastLine: false,
-            automaticLayout: true,
-            lineNumbers: 'on',
-            glyphMargin: false,
-            folding: true,
-        }}
-    />
-</TabsContent>
+                                        value="editor" 
+                                        className="flex-grow mt-4 rounded-md border overflow-hidden"
+                                        style={{ height: '450px' }}
+                                    >
+                                        <Editor
+                                            height="100%"
+                                            width="100%"
+                                            language={selectedPracticeLanguage || 'plaintext'}
+                                            theme="vs-dark"
+                                            value={code}
+                                            onChange={(value) => setCode(value || '')}
+                                            options={{
+                                                minimap: { enabled: false },
+                                                fontSize: 14,
+                                                scrollBeyondLastLine: false,
+                                                automaticLayout: true,
+                                                lineNumbers: 'on',
+                                                glyphMargin: false,
+                                                folding: true,
+                                            }}
+                                        />
+                                    </TabsContent>
+                                    
                                     <TabsContent 
-    value="explanation" 
-    className="prose dark:prose-invert max-w-none p-4 border rounded-md"
-    style={{ height: '450px', overflowY: 'auto' }}
->
-    <div dangerouslySetInnerHTML={{ __html: selectedExercise.detailedExplanation || '<p>Nenhuma explicação detalhada disponível.</p>' }} />
-</TabsContent>
-                                     {selectedPracticeLanguage === 'html' && (
-    <TabsContent 
-        value="preview" 
-        className="flex-grow mt-4"
-        style={{ height: '450px' }}
-    >
-        <iframe
-            srcDoc={htmlSrcDoc}
-            title="Preview"
-            sandbox="allow-scripts"
-            className="w-full h-full border rounded-md bg-white"
-        />
-    </TabsContent>
-)}
+                                        value="explanation" 
+                                        className="prose dark:prose-invert max-w-none p-4 border rounded-md"
+                                        style={{ height: '450px', overflowY: 'auto' }}
+                                    >
+                                        <div dangerouslySetInnerHTML={{ __html: selectedExercise.detailedExplanation || '<p>Nenhuma explicação detalhada disponível.</p>' }} />
+                                    </TabsContent>
+                                    
+                                    {selectedPracticeLanguage === 'html' && (
+                                        <TabsContent 
+                                            value="preview" 
+                                            className="flex-grow mt-4"
+                                            style={{ height: '450px' }}
+                                        >
+                                            <iframe
+                                                srcDoc={htmlSrcDoc}
+                                                title="Preview"
+                                                sandbox="allow-scripts"
+                                                className="w-full h-full border rounded-md bg-white"
+                                            />
+                                        </TabsContent>
+                                    )}
                                 </Tabs>
-
-                               
                             </div>
 
                             {consoleOutput.length > 0 && (
-    <div className="mt-6">
-        <h3 className="font-semibold text-lg mb-2">Saída do Console</h3>
-        <pre className="bg-muted rounded-md p-4 text-sm text-foreground overflow-x-auto max-h-[200px] overflow-y-auto">
-            <code>
-                {consoleOutput.join('\n')}
-            </code>
-        </pre>
-    </div>
-)}
+                                <div className="mt-6">
+                                    <h3 className="font-semibold text-lg mb-2">Saída do Console</h3>
+                                    <pre className="bg-muted rounded-md p-4 text-sm text-foreground overflow-x-auto max-h-[200px] overflow-y-auto">
+                                        <code>
+                                            {consoleOutput.join('\n')}
+                                        </code>
+                                    </pre>
+                                </div>
+                            )}
 
+                            {testResults.length > 0 && (
+                                <div className="mt-6">
+                                    <h3 className="font-semibold text-lg mb-2">Resultados dos Testes</h3>
+                                    <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
+                                        {testResults.map((result, index) => (
+                                            <div key={index} className={cn('flex items-center p-3 rounded-md text-sm',
+                                                result.passed ? 'bg-green-100 dark:bg-green-900/50' : 'bg-red-100 dark:bg-red-900/50'
+                                            )}>
+                                                {result.passed ? (
+                                                    <CheckCircle className="w-5 h-5 mr-3 text-green-600 dark:text-green-400 shrink-0" />
+                                                ) : (
+                                                    <XCircle className="w-5 h-5 mr-3 text-red-600 dark:text-red-400 shrink-0" />
+                                                )}
+                                                <div className="flex-1">
+                                                    <p className="font-medium">{result.description}</p>
+                                                    {result.error && <p className="text-xs mt-1 text-red-700 dark:text-red-300">Erro: {result.error}</p>}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                             
                             <div className="pt-4 flex justify-end gap-4">
                                 <Button variant="secondary" onClick={handleRunTests}>Executar Testes</Button>
@@ -677,30 +699,7 @@ export function LearnPageClient({ area }: { area: KnowledgeArea }) {
                       title={`Exercícios de ${area.title}`} 
                       description={`Escolha uma linguagem e selecione um exercício para começar a praticar.`}
                       cta="Clique no menu 'Ver Exercícios' acima para começar."
-                   
-                     />
-           {testResults.length > 0 && (
-    <div className="mt-6">
-        <h3 className="font-semibold text-lg mb-2">Resultados dos Testes</h3>
-        <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
-            {testResults.map((result, index) => (
-                <div key={index} className={cn('flex items-center p-3 rounded-md text-sm',
-                    result.passed ? 'bg-green-100 dark:bg-green-900/50' : 'bg-red-100 dark:bg-red-900/50'
-                )}>
-                    {result.passed ? (
-                        <CheckCircle className="w-5 h-5 mr-3 text-green-600 dark:text-green-400 shrink-0" />
-                    ) : (
-                        <XCircle className="w-5 h-5 mr-3 text-red-600 dark:text-red-400 shrink-0" />
-                    )}
-                    <div className="flex-1">
-                        <p className="font-medium">{result.description}</p>
-                        {result.error && <p className="text-xs mt-1 text-red-700 dark:text-red-300">Erro: {result.error}</p>}
-                    </div>
-                </div>
-            ))}
-        </div>
-    </div>
-)}
+                    />
                 )}
             </div>
         </div>
