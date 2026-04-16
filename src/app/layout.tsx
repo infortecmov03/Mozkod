@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: 'Plataforma de educação em programação de código aberto para Moçambique.',
   icons: {
     icon: {
-      url: "/icon.svg"
+      url: "/icon.svg",
       type: "imge/svg+xml"
     }
   }
