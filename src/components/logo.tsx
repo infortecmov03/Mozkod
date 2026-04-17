@@ -30,7 +30,12 @@ export function Logo({ className }: { className?: string }) {
         <line x1="38" y1="52" x2="50" y2="54" stroke="#FFD000" strokeWidth="2" opacity="0.5"/>
         <line x1="38" y1="59" x2="52" y2="60" stroke="#FFD000" strokeWidth="2" opacity="0.3"/>
       </svg>
-      <span>Mozkod</span>
+      <div className="flex items-baseline gap-1">
+  <span>CodWorks</span>
+  <span className="text-xs font-mono px-1.5 py-0.5 rounded-md bg-primary/10 text-[#FF6B00]">
+    MOZ
+  </span>
+</div>
     </div>
   );
 }
