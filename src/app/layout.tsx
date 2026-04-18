@@ -6,7 +6,7 @@ import { I18nProvider } from '@/context/I18nContext';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Mozkod',
+  title: 'CodWorks Moz',
   description: 'Plataforma de educação em programação de código aberto para Moçambique.',
   icons: {
     icon: {
