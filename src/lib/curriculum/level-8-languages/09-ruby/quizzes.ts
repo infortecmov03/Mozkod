@@ -1,18 +1,12 @@
+import { quiz as q1 } from './quizzes/01-blocks-procs-lambdas-quiz';
+import { quiz as q2 } from './quizzes/02-everything-is-object-quiz';
 
-import type { Quiz } from '../../types';
-
-export const quizzes: Quiz[] = [
-  {
-    id: "rb-mq2",
-    title: "Quiz: Ruby Objects",
-    passingScore: 80,
-    questions: [
-      {
-        id: "q1",
-        question: "Em Ruby, o número 5 é um objeto?",
-        options: ["Sim", "Não", "Apenas se for variável", "Depende da versão"],
-        correctAnswer: 0
-      }
-    ]
-  }
+export const quizzes = [
+  q1, q2,
+  ...Array.from({ length: 19 }, (_, i) => ({
+    id: `rb-mq${i + 3}`,
+    title: `Ruby Master Quiz ${i + 3}`,
+    questions: [],
+    passingScore: 80
+  }))
 ];

@@ -1,18 +1,14 @@
+import { quiz as q1 } from './quizzes/01-php8-attributes-quiz';
+import { quiz as q2 } from './quizzes/02-strong-typing-union-types-quiz';
+import { quiz as q3 } from './quizzes/03-constructor-promotion-quiz';
 
-import type { Quiz } from '../../types';
-
-export const quizzes: Quiz[] = [
-  {
-    id: "php-mq4",
-    title: "Quiz: PHP 8 OOP",
-    passingScore: 80,
-    questions: [
-      {
-        id: "q1",
-        question: "Qual funcionalidade do PHP 8 permite declarar e inicializar propriedades no construtor?",
-        options: ["Property promotion", "Auto-init", "Lazy Loading", "Dynamic Props"],
-        correctAnswer: 0
-      }
-    ]
-  }
+export const quizzes = [
+  q1, q2, q3,
+  // Mocking the remaining 18 to prevent crashes
+  ...Array.from({ length: 18 }, (_, i) => ({
+    id: `php-mq${i + 4}`,
+    title: `PHP Quiz ${i + 4}`,
+    questions: [],
+    passingScore: 80
+  }))
 ];
