@@ -4,12 +4,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Terminal, LayoutDashboard, GraduationCap, Award, Languages, Menu, LogOut, User } from "lucide-react";
+import { LayoutDashboard, GraduationCap, Award, Languages, Menu, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useLanguage } from "./LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Logo } from "./Logo";
 
 export function Navigation() {
   const pathname = usePathname();
@@ -44,11 +45,8 @@ export function Navigation() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-            <Terminal className="text-primary-foreground w-5 h-5" />
-          </div>
-          <span className="font-headline font-bold text-xl tracking-tight">Codworks<span className="text-primary">Moz</span></span>
+        <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+          <Logo className="h-10 w-auto" />
         </Link>
 
         {/* Desktop Nav */}

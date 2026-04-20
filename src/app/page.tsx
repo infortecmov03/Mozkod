@@ -3,10 +3,11 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Terminal, ArrowRight, Code2, Cpu, Globe, Zap } from "lucide-react";
+import { ArrowRight, Code2, Cpu, Globe, Zap } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useLanguage } from "@/components/LanguageContext";
+import { Logo } from "@/components/Logo";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -68,7 +69,7 @@ export default function Home() {
               </div>
               <h3 className="font-headline text-xl font-bold mb-3">{t.practice}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Practice coding directly in your browser with support for Python, JavaScript, Java, and C++.
+                Pratique codificação diretamente no seu navegador com suporte para Python, JavaScript, Java e C++.
               </p>
             </div>
             
@@ -78,7 +79,7 @@ export default function Home() {
               </div>
               <h3 className="font-headline text-xl font-bold mb-3">{t.languages}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Switch between English and Portuguese seamlessly. Content tailored for local African contexts.
+                Alterne entre Inglês e Português sem problemas. Conteúdo adaptado para o contexto local.
               </p>
             </div>
             
@@ -88,7 +89,7 @@ export default function Home() {
               </div>
               <h3 className="font-headline text-xl font-bold mb-3">{t.theory}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Deep dive into Data Structures, Algorithms, and System Architecture with expert-led paths.
+                Mergulhe profundamente em Estruturas de Dados, Algoritmos e Arquitetura de Sistemas com caminhos guiados.
               </p>
             </div>
           </div>
@@ -97,14 +98,13 @@ export default function Home() {
       
       <footer className="mt-auto py-12 border-t">
         <div className="container px-4 mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2">
-            <Terminal className="text-primary w-5 h-5" />
-            <span className="font-headline font-bold">CodworksMoz</span>
-          </div>
+          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <Logo className="h-8 w-auto" />
+          </Link>
           <p className="text-sm text-muted-foreground">© 2024 Codworks Moz. Empowering the next tech hub.</p>
           <div className="flex gap-6">
-            <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy</Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms</Link>
+            <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacidade</Link>
+            <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Termos</Link>
           </div>
         </div>
       </footer>
