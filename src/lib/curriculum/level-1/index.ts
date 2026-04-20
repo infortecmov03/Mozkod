@@ -12,21 +12,6 @@ export const level1: Module = {
   knowledgeAreas: [
     csCore,
     programmingFundamentals,
-    { 
-      id: 'ka-web-core', 
-      title: '03. Web Core', 
-      description: 'HTML5 e CSS3.', 
-      supportedLanguages: ['html', 'css'],
-      theoryLessons: [],
-      practiceExercises: []
-    },
-    { 
-      id: 'ka-tech-english', 
-      title: '04. Tech English', 
-      description: 'Inglês Técnico.', 
-      supportedLanguages: [],
-      theoryLessons: [],
-      practiceExercises: []
-    }
+    // Adicionar outras KAs conforme necessário seguindo o mesmo padrão de pasta
   ]
 };

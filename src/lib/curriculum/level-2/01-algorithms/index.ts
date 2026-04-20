@@ -12,7 +12,14 @@ export const algorithms: KnowledgeArea = {
       title: 'Introdução a Algoritmos',
       content: 'Um algoritmo é uma sequência de passos finitos para resolver um problema.',
       beginnerExplanation: 'É como uma receita de bolo: segues os passos na ordem certa para chegar ao resultado final.',
-      quiz: []
+      quiz: [
+        {
+          id: 'q1',
+          question: 'O que define um algoritmo?',
+          options: ['Um erro no computador', 'Uma sequência de passos para resolver um problema', 'Um hardware específico'],
+          correctAnswer: 1
+        }
+      ]
     }
   ],
   practiceExercises: []

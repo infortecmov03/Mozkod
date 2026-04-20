@@ -10,7 +10,7 @@ export const programmingFundamentals: KnowledgeArea = {
     {
       id: 'pf-t1',
       title: 'Variáveis e Tipos de Dados',
-      content: 'Uma variável é um contentor nomeado que guarda um valor na memória do computador.\n\nExistem diferentes tipos de dados como String (texto), Number (número) e Boolean (verdadeiro/falso).',
+      content: 'Uma variável é um contentor nomeado que guarda um valor na memória do computador.',
       beginnerExplanation: 'Pensa numa variável como uma caixa com uma etiqueta. A etiqueta é o "nome" e o que está dentro é o "valor".',
       quiz: [
         {

@@ -11,8 +11,8 @@ export type QuizQuestion = {
 export type TheoryLesson = {
   id: string;
   title: string;
-  content: string; // Conteúdo rico em Markdown ou texto formatado
-  beginnerExplanation: string; // Explicação simplificada para quem nunca viu o tema
+  content: string;
+  beginnerExplanation: string;
   videoUrl?: string;
   quiz: QuizQuestion[];
 };
@@ -21,7 +21,7 @@ export type PracticeObjective = {
   id: string;
   title: string;
   description: string;
-  explanation: string; // Explicação detalhada do "porquê" e "como" fazer este passo
+  explanation: string;
   hint: string;
   validationRegex: string;
 };
@@ -30,7 +30,7 @@ export type PracticeExercise = {
   id: string;
   title: string;
   description: string;
-  beginnerGuide: string; // Guia de introdução ao laboratório
+  beginnerGuide: string;
   objectives: PracticeObjective[];
   starterCode: Record<string, string>;
 };

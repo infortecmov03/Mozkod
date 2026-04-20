@@ -10,13 +10,5 @@ export const level2: Module = {
   image: 'web-dev',
   knowledgeAreas: [
     algorithms,
-    { 
-      id: 'ka-data-structures', 
-      title: '02. Data Structures', 
-      description: 'Arrays, Listas e Pilhas.', 
-      supportedLanguages: ['javascript', 'python'],
-      theoryLessons: [],
-      practiceExercises: []
-    }
   ]
 };
