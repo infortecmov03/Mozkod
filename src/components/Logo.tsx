@@ -31,10 +31,10 @@ export function Logo({ className = "h-10 w-auto" }: { className?: string }) {
           
           <style>
             {`
-              .logo-bg-outer { fill: hsl(var(--logo-bg-outer)); transition: fill 0.3s ease; }
-              .logo-bg-inner { fill: hsl(var(--logo-bg-inner)); transition: fill 0.3s ease; }
-              .logo-text-dynamic { fill: hsl(var(--logo-text)); transition: fill 0.3s ease; }
-              .logo-text-white { fill: #ffffff; }
+              .logo-bg-outer { fill: #f0f0f0; transition: fill 0.3s ease; }
+              .logo-bg-inner { fill: #ffffff; transition: fill 0.3s ease; }
+              .logo-text-dynamic { fill: #1A2230; transition: fill 0.3s ease; }
+              .dark .logo-text-dynamic { fill: #ffffff; }
               .logo-accent { fill: #FF6B00; }
             `}
           </style>
@@ -52,15 +52,15 @@ export function Logo({ className = "h-10 w-auto" }: { className?: string }) {
         <g clipPath="url(#circ)">
           {/* LAPTOP - Cores Acesas */}
           <rect x="182" y="92" width="160" height="100" rx="7" fill="#1A2230" stroke="url(#gradS)" strokeWidth="2.5"/>
-          <rect x="188" y="98" width="148" height="92" rx="3" fill="#060B12"/>
+          <rect x="188" y="98" width="148" height="92" rx="3" fill="#ffffff"/>
           <g clipPath="url(#lScreen)" fontFamily="'Courier New', Courier, monospace" fontSize="7.8">
             <text x="194" y="110" fill="#FF6B00" fontWeight="bold">&lt;html&gt;</text>
             <text x="194" y="121"><tspan fill="#FFD000">  &lt;head&gt;</tspan></text>
-            <text x="194" y="131"><tspan fill="#FF8C00">    &lt;title&gt;</tspan><tspan fill="#ffffff">CW MOZ</tspan><tspan fill="#FF8C00">&lt;/title&gt;</tspan></text>
+            <text x="194" y="131"><tspan fill="#FF8C00">    &lt;title&gt;</tspan><tspan fill="#1A2230">CW MOZ</tspan><tspan fill="#FF8C00">&lt;/title&gt;</tspan></text>
             <text x="194" y="141"><tspan fill="#FFD000">  &lt;/head&gt;</tspan></text>
             <text x="194" y="151"><tspan fill="#FFD000">  &lt;body&gt;</tspan></text>
-            <text x="194" y="161"><tspan fill="#FF6B00">    &lt;h1&gt;</tspan><tspan fill="#ffffff">Codeworks</tspan><tspan fill="#FF6B00">&lt;/h1&gt;</tspan></text>
-            <text x="194" y="171"><tspan fill="#FFB800">    &lt;p&gt;</tspan><tspan fill="#cccccc">Full-Stack</tspan><tspan fill="#FFB800">&lt;/p&gt;</tspan></text>
+            <text x="194" y="161"><tspan fill="#FF6B00">    &lt;h1&gt;</tspan><tspan fill="#1A2230">Codeworks</tspan><tspan fill="#FF6B00">&lt;/h1&gt;</tspan></text>
+            <text x="194" y="171"><tspan fill="#FFB800">    &lt;p&gt;</tspan><tspan fill="#444444">Full-Stack</tspan><tspan fill="#FFB800">&lt;/p&gt;</tspan></text>
             <text x="194" y="181"><tspan fill="#FFD000">  &lt;/body&gt;</tspan></text>
             <rect x="194" y="183" width="5" height="8" rx="1" fill="#FFD000">
               <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
@@ -70,15 +70,15 @@ export function Logo({ className = "h-10 w-auto" }: { className?: string }) {
 
           {/* TELEMÓVEL */}
           <rect x="390" y="88" width="68" height="120" rx="10" fill="#1A2230" stroke="url(#gradS)" strokeWidth="2.5"/>
-          <rect x="396" y="98" width="56" height="94" rx="5" fill="#060B12"/>
+          <rect x="396" y="98" width="56" height="94" rx="5" fill="#ffffff"/>
           <g clipPath="url(#pScreen)" fontFamily="'Courier New', Courier, monospace" fontSize="6.2">
             <text x="399" y="109" fill="#FF6B00">const app = () =&gt; {"{"}</text>
-            <text x="399" y="119"><tspan fill="#FFD000">  let </tspan><tspan fill="#ffffff">name =</tspan></text>
-            <text x="399" y="128"><tspan fill="#FFB800">    "Codeworks"</tspan><tspan fill="#aaaaaa">;</tspan></text>
+            <text x="399" y="119"><tspan fill="#FFD000">  let </tspan><tspan fill="#1A2230">name =</tspan></text>
+            <text x="399" y="128"><tspan fill="#FFB800">    "Codeworks"</tspan><tspan fill="#444444">;</tspan></text>
             <text x="399" y="138"><tspan fill="#FF8C00">  return (</tspan></text>
             <text x="399" y="147"><tspan fill="#FFD000">    &lt;View&gt;</tspan></text>
             <text x="399" y="156"><tspan fill="#FF6B00">      &lt;Text&gt;</tspan></text>
-            <text x="399" y="165"><tspan fill="#ffffff">        MOZ</tspan></text>
+            <text x="399" y="165"><tspan fill="#1A2230">        MOZ</tspan></text>
             <text x="399" y="174"><tspan fill="#FF6B00">      &lt;/Text&gt;</tspan></text>
             <text x="399" y="183"><tspan fill="#FFD000">    &lt;/View&gt;</tspan></text>
           </g>

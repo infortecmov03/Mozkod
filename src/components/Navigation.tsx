@@ -4,18 +4,24 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, GraduationCap, Award, Languages, Menu, LogOut, User } from "lucide-react";
+import { LayoutDashboard, GraduationCap, Award, Languages, Menu, LogOut, User, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useLanguage } from "./LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Logo } from "./Logo";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export function Navigation() {
   const pathname = usePathname();
   const { lang, setLang, t } = useLanguage();
   const { user, profile, signOut } = useAuth();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const navItems = [
     { href: "/dashboard", label: t.dashboard, icon: LayoutDashboard },
@@ -54,6 +60,17 @@ export function Navigation() {
           <NavLinks />
           <div className="h-6 w-px bg-border" />
           <div className="flex items-center gap-4">
+            {mounted && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="rounded-full"
+              >
+                {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </Button>
+            )}
+            
             <Button
               variant="ghost"
               size="sm"
@@ -90,13 +107,15 @@ export function Navigation() {
 
         {/* Mobile Nav */}
         <div className="md:hidden flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setLang(lang === 'en' ? 'pt' : 'en')}
-          >
-            {lang.toUpperCase()}
-          </Button>
+          {mounted && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </Button>
+          )}
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
