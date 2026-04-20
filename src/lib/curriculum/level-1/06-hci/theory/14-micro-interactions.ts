@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "hci-t14", title: "Micro-interações", content: "<p>Feedback visual imediato.</p>", quizId: "hci-q14" };

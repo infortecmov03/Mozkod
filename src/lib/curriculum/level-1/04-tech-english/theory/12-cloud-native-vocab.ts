@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "eng-t12", title: "Cloud Native Vocabulary", content: "<p>Microservices, Serverless, Scalability.</p>", quizId: "eng-q12" };

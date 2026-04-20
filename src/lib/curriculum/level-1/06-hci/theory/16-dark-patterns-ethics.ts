@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "hci-t16", title: "Dark Patterns e Ética", content: "<p>Interfaces manipulativas vs Design honesto.</p>", quizId: "hci-q16" };

@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "eng-t19", title: "Legal & Privacy Terms", content: "<p>GDPR, Compliance, Terms of Service.</p>", quizId: "eng-q19" };

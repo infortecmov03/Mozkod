@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "eng-t17", title: "AI & Data Science Terms", content: "<p>Training, Bias, Inference, Model.</p>", quizId: "eng-q17" };

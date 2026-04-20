@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "eng-t14", title: "System Design Discussion", content: "<p>Load Balancing, Latency, Bandwidth.</p>", quizId: "eng-q14" };

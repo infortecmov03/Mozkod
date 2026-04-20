@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "dt-t15", title: "Lighthouse: Auditorias de Qualidade", content: "<p>SEO, PWA e Melhores Práticas.</p>", quizId: "dt-q15" };

@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "eng-t20", title: "Effective Remote Communication", content: "<p>Async, Sync, Timezone, Sync-up.</p>", quizId: "eng-q20" };

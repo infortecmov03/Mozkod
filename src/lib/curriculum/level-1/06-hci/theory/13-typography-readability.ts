@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "hci-t13", title: "Tipografia e Legibilidade", content: "<p>Serif vs Sans Serif na web.</p>", quizId: "hci-q13" };

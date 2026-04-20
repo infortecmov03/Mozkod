@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "hci-t15", title: "Padrões Mobile UX", content: "<p>Gestos, menus hambúrguer e zona do polegar.</p>", quizId: "hci-q15" };
