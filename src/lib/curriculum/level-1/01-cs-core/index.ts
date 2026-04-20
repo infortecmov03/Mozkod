@@ -10,7 +10,9 @@ export const csCore: KnowledgeArea = {
   load: '20h',
   iconName: 'Cpu',
   theory: lessons,
-  quizzes: [quiz1],
+  quizzes: [
+    quiz1,
+  ],
   practice: {
     concept: [exercise1]
   }

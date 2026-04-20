@@ -13,9 +13,15 @@ export const quiz: Quiz = {
     },
     {
       id: "q2",
-      question: "O que representa o número 0 num circuito digital?",
-      options: ["Ligado", "Desligado", "Erro", "Memória Cheia"],
+      question: "O que representa o número 1 num circuito digital?",
+      options: ["Desligado", "Ligado", "Erro", "Aguardando"],
       correctAnswer: 1
+    },
+    {
+      id: "q3",
+      question: "Quantos bits são necessários para representar o número 5?",
+      options: ["1 bit", "2 bits", "3 bits", "4 bits"],
+      correctAnswer: 2
     }
   ]
 };

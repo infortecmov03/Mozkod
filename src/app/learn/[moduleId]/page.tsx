@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -117,7 +116,6 @@ export default function LearnPage() {
     <div className="flex flex-col h-screen bg-background overflow-hidden">
       <Navigation />
       
-      {/* Header Contextual */}
       <div className="bg-card/50 border-b px-6 py-3 flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.push('/modules')} className="rounded-full">
@@ -136,7 +134,7 @@ export default function LearnPage() {
              <SheetTrigger asChild>
                <Button variant="outline" size="sm" className="gap-2 rounded-full border-primary/20 bg-primary/5">
                  <Menu className="w-4 h-4 text-primary" />
-                 <span className="hidden sm:inline">Trilha de Aprendizagem</span>
+                 <span className="hidden sm:inline">Trilha</span>
                </Button>
              </SheetTrigger>
              <SheetContent side="left" className="w-80 overflow-y-auto">
@@ -165,7 +163,7 @@ export default function LearnPage() {
                  
                  <div>
                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
-                     <Terminal className="w-3 h-3" /> Práticas & Labs
+                     <Terminal className="w-3 h-3" /> Laboratórios
                    </h4>
                    {Object.entries(ka.practice).map(([lang, exercises]) => (
                      <div key={lang} className="mt-4 first:mt-0">
@@ -200,7 +198,7 @@ export default function LearnPage() {
                   <h1 className="font-headline text-3xl md:text-5xl font-bold">{theory.title}</h1>
                   
                   {theory.youtubeVideoId && (
-                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-muted border shadow-2xl">
+                    <div className="aspect-video w-full rounded-3xl overflow-hidden bg-muted border shadow-2xl">
                        <iframe 
                         className="w-full h-full"
                         src={`https://www.youtube.com/embed/${theory.youtubeVideoId}`}
@@ -212,36 +210,53 @@ export default function LearnPage() {
                   )}
 
                   <div 
-                    className="prose prose-invert max-w-none text-muted-foreground leading-relaxed text-lg"
+                    className="prose prose-neutral dark:prose-invert max-w-none text-muted-foreground leading-relaxed text-lg"
                     dangerouslySetInnerHTML={{ __html: theory.content }}
                   />
                </div>
 
                {quiz && (
-                 <div className="bg-card/30 border border-white/5 rounded-3xl p-8 md:p-12 space-y-8">
-                    <div className="flex items-center gap-3">
-                      <HelpCircle className="w-6 h-6 text-accent" />
-                      <h3 className="font-headline font-bold text-xl">{quiz.title}</h3>
-                    </div>
-                    {quiz.questions.map((q) => (
-                      <div key={q.id} className="space-y-4">
-                        <p className="font-medium">{q.question}</p>
-                        <RadioGroup 
-                          onValueChange={(val) => setQuizAnswers(prev => ({...prev, [q.id]: parseInt(val)}))}
-                          className="grid gap-3"
-                        >
-                          {q.options.map((opt, i) => (
-                            <div key={i} className="flex items-center space-x-2 p-4 rounded-xl border bg-background/50 hover:bg-primary/5 transition-all cursor-pointer">
-                              <RadioGroupItem value={i.toString()} id={`${q.id}-${i}`} />
-                              <Label htmlFor={`${q.id}-${i}`} className="flex-1 cursor-pointer font-normal">{opt}</Label>
-                            </div>
-                          ))}
-                        </RadioGroup>
+                 <div className="bg-card border-2 border-primary/10 rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-2xl relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl group-hover:bg-primary/10 transition-all" />
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                        <HelpCircle className="w-6 h-6 text-primary" />
                       </div>
-                    ))}
-                    <Button onClick={handleQuizSubmit} className="w-full h-14 rounded-2xl font-bold text-lg" disabled={isSaving}>
-                      {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <ShieldCheck className="w-5 h-5 mr-2" />}
-                      Validar e Avançar
+                      <div>
+                        <h3 className="font-headline font-bold text-2xl">{quiz.title}</h3>
+                        <p className="text-sm text-muted-foreground">Conclua o quiz para marcar a lição como finalizada.</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-10">
+                      {quiz.questions.map((q, qIndex) => (
+                        <div key={q.id} className="space-y-6">
+                          <div className="flex gap-4">
+                            <span className="text-2xl font-headline font-bold text-primary opacity-20">{String(qIndex + 1).padStart(2, '0')}</span>
+                            <p className="text-lg font-medium pt-1">{q.question}</p>
+                          </div>
+                          <RadioGroup 
+                            onValueChange={(val) => setQuizAnswers(prev => ({...prev, [q.id]: parseInt(val)}))}
+                            className="grid gap-4 ml-10"
+                          >
+                            {q.options.map((opt, i) => (
+                              <div key={i} className="flex items-center space-x-2 p-5 rounded-2xl border bg-background/50 hover:bg-primary/5 hover:border-primary/20 transition-all cursor-pointer">
+                                <RadioGroupItem value={i.toString()} id={`${q.id}-${i}`} className="text-primary" />
+                                <Label htmlFor={`${q.id}-${i}`} className="flex-1 cursor-pointer font-normal text-base">{opt}</Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                        </div>
+                      ))}
+                    </div>
+
+                    <Button 
+                      onClick={handleQuizSubmit} 
+                      className="w-full h-16 rounded-2xl font-bold text-xl bg-primary shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all" 
+                      disabled={isSaving || Object.keys(quizAnswers).length < quiz.questions.length}
+                    >
+                      {isSaving ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : <ShieldCheck className="w-6 h-6 mr-2" />}
+                      Validar Respostas e Finalizar
                     </Button>
                  </div>
                )}
@@ -271,10 +286,10 @@ export default function LearnPage() {
 
                <div className="h-40 border-t border-white/5 bg-black/40 p-4 font-code text-xs">
                   <div className="text-muted-foreground mb-2 flex items-center gap-2 uppercase tracking-widest font-bold text-[10px]">
-                    <Terminal className="w-3 h-3" /> Consola de Saída
+                    <Terminal className="w-3 h-3" /> Consola
                   </div>
                   <div className={cn("whitespace-pre overflow-y-auto h-24", output.includes('✅') ? 'text-green-400' : 'text-blue-300')}>
-                    {output || "> Pronto para o laboratório. Escreve o teu código e clica em EXECUTAR."}
+                    {output || "> Pronto para o laboratório."}
                   </div>
                </div>
             </div>
@@ -341,11 +356,11 @@ export default function LearnPage() {
               {completedObjectives.length === practice.objectives.length && (
                 <Button 
                   onClick={() => handleComplete(100)} 
-                  className="w-full mt-6 h-14 rounded-2xl font-bold text-lg bg-primary shadow-xl shadow-primary/20 animate-in fade-in slide-in-from-bottom-2"
+                  className="w-full mt-6 h-14 rounded-2xl font-bold text-lg bg-primary shadow-xl shadow-primary/20"
                   disabled={isSaving}
                 >
                   {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Trophy className="w-5 h-5 mr-2" />}
-                  Finalizar Exercício
+                  Finalizar Laboratório
                 </Button>
               )}
             </div>
