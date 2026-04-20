@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "math-t19", title: "Generating Functions", content: "<p>Counting through power series.</p>", quizId: "math-q19" };

@@ -5,8 +5,8 @@ export const quizzes = Array.from({ length: 21 }, (_, i) => ({
   questions: [
     {
       id: "q_auto",
-      question: "Pergunta de validação para o tópico " + (i + 1),
-      options: ["Opção Correta", "Incorreta", "Errada"],
+      question: "Pergunta de validação técnica para o tópico " + (i + 1),
+      options: ["Opção A (Correta)", "Opção B", "Opção C"],
       correctAnswer: 0
     }
   ],

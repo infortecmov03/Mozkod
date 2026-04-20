@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "math-t20", title: "Circuit Minimization", content: "<p>Boolean algebra in hardware design.</p>", quizId: "math-q20" };

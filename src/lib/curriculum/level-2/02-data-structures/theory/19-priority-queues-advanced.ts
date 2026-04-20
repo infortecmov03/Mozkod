@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "ds-t19", title: "Priority Queues", content: "<p>Advanced heap variants.</p>", quizId: "ds-q19" };

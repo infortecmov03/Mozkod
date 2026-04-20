@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "alg-t16", title: "Randomized Algorithms", content: "<p>Probabilistic approaches to performance.</p>", quizId: "alg-q16" };

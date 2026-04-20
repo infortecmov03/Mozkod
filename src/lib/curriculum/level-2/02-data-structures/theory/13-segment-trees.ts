@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "ds-t13", title: "Segment Trees", content: "<p>Range queries optimization.</p>", quizId: "ds-q13" };

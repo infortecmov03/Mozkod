@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "alg-t21", title: "Complexidade P vs NP", content: "<div class='space-y-4'><h2 class='text-2xl font-bold'>⚖️ O Grande Mistério</h2><p>Exploração dos problemas que podemos resolver eficientemente versus aqueles que apenas podemos verificar rapidamente.</p></div>", quizId: "alg-q21" };

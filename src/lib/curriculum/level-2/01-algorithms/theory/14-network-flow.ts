@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "alg-t14", title: "Network Flow", content: "<p>Capacity optimization in graphs.</p>", quizId: "alg-q14" };

@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "math-t21", title: "Structural Induction", content: "<div class='space-y-4'><h2 class='text-2xl font-bold'>🌳 Provando Estruturas Recursivas</h2><p>Como usar a indução para garantir a validade de árvores e listas de forma matemática rigorosa.</p></div>", quizId: "math-q21" };

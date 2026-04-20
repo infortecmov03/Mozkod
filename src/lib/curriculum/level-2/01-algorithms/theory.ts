@@ -7,18 +7,21 @@ import { lesson as l5 } from './theory/05-recursao';
 import { lesson as l6 } from './theory/06-greedy';
 import { lesson as l7 } from './theory/07-dp';
 import { lesson as l8 } from './theory/08-grafos';
+import { lesson as l9 } from './theory/09-divide-conquer';
+import { lesson as l10 } from './theory/10-backtracking';
+import { lesson as l11 } from './theory/11-bit-manipulation';
+import { lesson as l12 } from './theory/12-string-matching-kmp';
+import { lesson as l13 } from './theory/13-heuristics';
+import { lesson as l14 } from './theory/14-network-flow';
+import { lesson as l15 } from './theory/15-computational-geometry';
+import { lesson as l16 } from './theory/16-randomized-algorithms';
+import { lesson as l17 } from './theory/17-a-star-search';
+import { lesson as l18 } from './theory/18-dijkstra-shortest-path';
+import { lesson as l19 } from './theory/19-kruskal-prim-mst';
+import { lesson as l20 } from './theory/20-topological-sort';
+import { lesson as l21 } from './theory/21-p-vs-np-complexity';
 
 export const lessons = [
-  l1, l2, l3, l4, l5, l6, l7, l8,
-  ...Array.from({ length: 13 }, (_, i) => ({
-    id: `alg-t${i + 9}`,
-    title: [
-      "Divide & Conquer", "Backtracking", "Bit Manipulation", "String Matching (KMP)",
-      "Heurísticas", "Algoritmos de Fluxo", "Geometria Computacional", "Randomized Algorithms",
-      "A* Search", "Dijkstra & Shortest Path", "Min Spanning Tree (Kruskal)",
-      "Topological Sort", "Complexidade P vs NP"
-    ][i],
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>⚡ Lógica de Algoritmos</h2><p>Resolução de problemas complexos com eficiência e elegância matemática.</p></div>`,
-    quizId: `alg-q${i + 9}`
-  }))
+  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10,
+  l11, l12, l13, l14, l15, l16, l17, l18, l19, l20, l21
 ];

@@ -1,7 +1,7 @@
 
 export const quizzes = Array.from({ length: 21 }, (_, i) => ({
-  id: `ds-q${i + 1}`,
-  title: `Data Structure Quiz ${i + 1}`,
+  id: `math-q${i + 1}`,
+  title: `Math Quiz ${i + 1}`,
   questions: [
     {
       id: "q_auto",

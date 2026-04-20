@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "ds-t14", title: "Disjoint Set (Union Find)", content: "<p>Managing partitioned groups efficiently.</p>", quizId: "ds-q14" };

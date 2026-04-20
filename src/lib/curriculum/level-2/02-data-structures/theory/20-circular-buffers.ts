@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "ds-t20", title: "Circular Buffers", content: "<p>Streaming and IO memory management.</p>", quizId: "ds-q20" };

@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "ds-t10", title: "Red-Black Trees", content: "<p>Balanced binary search trees internals.</p>", quizId: "ds-q10" };

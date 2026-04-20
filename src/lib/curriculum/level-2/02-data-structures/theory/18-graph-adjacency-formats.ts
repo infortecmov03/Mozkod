@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "ds-t18", title: "Graph: Matrix vs List", content: "<p>Spatial vs Temporal efficiency.</p>", quizId: "ds-q18" };

@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "ds-t15", title: "Skip Lists", content: "<p>Probabilistic data structures.</p>", quizId: "ds-q15" };

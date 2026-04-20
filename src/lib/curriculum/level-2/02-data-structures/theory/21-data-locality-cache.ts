@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "ds-t21", title: "Data Locality & Cache Friendliness", content: "<div class='space-y-4'><h2 class='text-2xl font-bold'>🏎️ Performance de Silício</h2><p>Por que arrays são mais rápidos que listas ligadas? O impacto do cache L1/L2 na escolha das estruturas.</p></div>", quizId: "ds-q21" };

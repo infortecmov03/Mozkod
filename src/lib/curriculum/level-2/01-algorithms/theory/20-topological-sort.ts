@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "alg-t20", title: "Topological Sort", content: "<p>Ordering dependent tasks.</p>", quizId: "alg-q20" };

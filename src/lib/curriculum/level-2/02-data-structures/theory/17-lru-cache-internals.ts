@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "ds-t17", title: "LRU Cache Internals", content: "<p>Caching policies and structures.</p>", quizId: "ds-q17" };

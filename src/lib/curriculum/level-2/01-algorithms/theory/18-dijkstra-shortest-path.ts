@@ -1,0 +1,1 @@
+import type { TheoryLesson } from '../../../types'; export const lesson: TheoryLesson = { id: "alg-t18", title: "Dijkstra & Shortest Path", content: "<p>Graph traversals.</p>", quizId: "alg-q18" };
