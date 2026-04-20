@@ -5,8 +5,17 @@ export const exercise: PracticeExercise = {
   language: "java",
   title: "Lab Java: Tipagem Estática",
   description: "Declare variáveis em Java.",
-  statement: "Crie uma variável String 'nome' com valor 'Dev'.",
-  template: "String nome = \"\";",
-  detailedExplanation: "<p>Java exige que declares o tipo (ex: String) antes do nome.</p>",
-  objectives: [{ id: "obj1", description: "Definir nome como Dev", test: "String nome = \"Dev\"" }]
+  statement: "Crie uma variável String chamada 'linguagem' com o valor 'Java'.",
+  template: "String linguagem = \"\";",
+  detailedExplanation: `
+    <h3>☕ Java: Tipos Fortes</h3>
+    <p>Em Java, deves sempre declarar o tipo da variável antes do nome. No final, todas as linhas de comando devem terminar com ponto e vírgula <code>;</code>.</p>
+  `,
+  objectives: [
+    {
+      id: "obj1",
+      description: "Variável linguagem deve ser Java",
+      test: "linguagem = \"Java\""
+    }
+  ]
 };
