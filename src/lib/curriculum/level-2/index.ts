@@ -1,5 +1,6 @@
 
 import { Module } from '../types';
+import { algorithms } from './01-algorithms';
 
 export const level2: Module = {
   id: '2',
@@ -8,10 +9,14 @@ export const level2: Module = {
   description: 'Organização eficiente de dados e algoritmos complexos.',
   image: 'web-dev',
   knowledgeAreas: [
-    { id: 'ka-algorithms', title: '01. Algorithms', description: 'Busca e ordenação.', supportedLanguages: ['javascript', 'python', 'java', 'cpp'], theoryLessons: [], practiceExercises: [] },
-    { id: 'ka-data-structures', title: '02. Data Structures', description: 'Arrays, Listas, Pilhas.', supportedLanguages: ['javascript', 'python', 'java', 'cpp'], theoryLessons: [], practiceExercises: [] },
-    { id: 'ka-discrete-math', title: '03. Discrete Math', description: 'Lógica Proposicional.', supportedLanguages: [], theoryLessons: [], practiceExercises: [] },
-    { id: 'ka-mathematics', title: '04. Mathematics', description: 'Álgebra e Cálculo.', supportedLanguages: [], theoryLessons: [], practiceExercises: [] },
-    { id: 'ka-pl-advanced', title: '05. PL Advanced', description: 'Paradigmas de Programação.', supportedLanguages: [], theoryLessons: [], practiceExercises: [] }
+    algorithms,
+    { 
+      id: 'ka-data-structures', 
+      title: '02. Data Structures', 
+      description: 'Arrays, Listas e Pilhas.', 
+      supportedLanguages: ['javascript', 'python'],
+      theoryLessons: [],
+      practiceExercises: []
+    }
   ]
 };
