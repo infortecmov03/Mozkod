@@ -19,33 +19,36 @@ export default function DashboardPage() {
   const { progress, loading: progressLoading, isCompleted } = useProgress();
 
   const getModuleProgress = (module: typeof modules[0]) => {
-    if (!progress) return 0;
+    if (!module || !module.knowledgeAreas) return 0;
+    
     let total = 0;
     let completedCount = 0;
     
     module.knowledgeAreas.forEach(ka => {
-      // Cálculo resiliente para evitar erros de undefined
-      const theories = ka.theory || [];
-      const practices = ka.practice || {};
+      const theoryCount = ka.theory?.length || 0;
+      total += theoryCount;
       
-      total += theories.length;
-      Object.values(practices).forEach(exercises => {
-        total += (exercises as any[]).length;
-      });
-      
-      completedCount += theories.filter(l => isCompleted(l.id)).length;
-      Object.values(practices).forEach(exercises => {
-        completedCount += (exercises as any[]).filter(p => isCompleted(p.id)).length;
-      });
+      if (ka.theory) {
+        completedCount += ka.theory.filter(l => isCompleted(l.id)).length;
+      }
+
+      if (ka.practice) {
+        Object.values(ka.practice).forEach(exercises => {
+          if (Array.isArray(exercises)) {
+            total += exercises.length;
+            completedCount += exercises.filter(p => isCompleted(p.id)).length;
+          }
+        });
+      }
     });
     
     return total > 0 ? Math.round((completedCount / total) * 100) : 0;
   };
 
   const getImg = (id: string) => {
-    if (!id) return null;
+    if (!id) return "/placeholder.svg";
     const found = PlaceHolderImages.find(img => img.id === id);
-    return found?.imageUrl || null;
+    return found?.imageUrl || "/placeholder.svg";
   };
 
   if (authLoading || progressLoading) {
@@ -133,7 +136,6 @@ export default function DashboardPage() {
           <div className="grid gap-6">
             {modules.map((module) => {
               const moduleProgress = getModuleProgress(module);
-              // Mapeamento de imagem padrão baseado no nível
               const imgKey = module.id === 1 ? 'cs-core' : 
                             module.id === 2 ? 'web-dev' : 
                             module.id === 5 ? 'ai-ml' : 'hero-bg';
@@ -143,17 +145,12 @@ export default function DashboardPage() {
                 <Card key={module.id} className="overflow-hidden bg-card/40 hover:bg-card/60 transition-all border-none group shadow-2xl">
                   <div className="flex flex-col sm:flex-row">
                     <div className="sm:w-64 h-48 sm:h-auto relative bg-muted">
-                      {imgUrl ? (
-                        <img 
-                          src={imgUrl} 
-                          alt={module.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-secondary/20">
-                          <Zap className="w-8 h-8 text-muted-foreground opacity-20" />
-                        </div>
-                      )}
+                      <img 
+                        src={imgUrl} 
+                        alt={module.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        loading="lazy"
+                      />
                       <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent" />
                       <div className="absolute bottom-4 left-4">
                          <span className="px-2 py-1 rounded-md bg-primary text-[10px] text-white font-bold uppercase tracking-widest">Nível {module.id}</span>
