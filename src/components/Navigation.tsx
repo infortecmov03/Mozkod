@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, GraduationCap, Award, Languages, Menu, LogOut, User, Sun, Moon, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { useLanguage } from "./LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -124,7 +124,11 @@ export function Navigation() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[280px] bg-background p-6">
-              <div className="flex flex-col gap-6 mt-10">
+              <SheetHeader className="mb-6">
+                <SheetTitle className="text-left font-headline font-bold">Codworks Moz</SheetTitle>
+                <SheetDescription className="sr-only">Menu de navegação móvel</SheetDescription>
+              </SheetHeader>
+              <div className="flex flex-col gap-6 mt-4">
                 <NavLinks className="flex-col items-start gap-4" mobile />
                 <div className="border-t pt-6 mt-2">
                    {user ? (
