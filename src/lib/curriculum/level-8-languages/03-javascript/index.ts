@@ -18,7 +18,29 @@ const jsLessons: TheoryLesson[] = [
   { id: "js-m7", title: "DOM Performance", content: "<p>Batching de updates e uso de DocumentFragment para evitar Reflows.</p>", quizId: "js-mq7" },
   { id: "js-m8", title: "Web APIs Avançadas", content: "<p>Intersection Observer, Resize Observer e File System API.</p>", quizId: "js-mq8" },
   { id: "js-m9", title: "TypeScript Master", content: "<p>Tipagem condicional, genéricos avançados e inferência rigorosa.</p>", quizId: "js-mq9" },
-  { id: "js-m10", title: "Segurança Client-Side", content: "<p>Prevenção de Prototype Pollution e gestão segura de tokens JWT.</p>", quizId: "js-mq10" }
+  { 
+    id: "js-m10", 
+    title: "Projeto Final: Web App Moderna e Deploy", 
+    youtubeVideoId: "sX7S7O5Y9QA",
+    content: `
+      <div class="space-y-6">
+        <h2 class="text-2xl font-bold">⚡ Aplicação React-Native na Web</h2>
+        <p>Constrói uma aplicação de gestão de tarefas assíncrona que consome uma API externa e publica-a na <strong>Vercel</strong> ou <strong>Netlify</strong>.</p>
+        
+        <div class="bg-card p-6 rounded-2xl border space-y-4">
+          <h3 class="font-bold text-yellow-500">Passo 1: Setup do Projeto</h3>
+          <p class="text-sm text-muted-foreground">Usa <code>Vite</code> ou <code>Next.js</code> para inicializar o projeto. Versiona no GitHub imediatamente.</p>
+          
+          <h3 class="font-bold text-yellow-500">Passo 2: Lógica de Mestria</h3>
+          <p class="text-sm text-muted-foreground">Implementa gestão de estado com Hooks avançados e garante que não existem memory leaks usando o profiler do browser.</p>
+          
+          <h3 class="font-bold text-yellow-500">Passo 3: Deploy Automático</h3>
+          <p class="text-sm text-muted-foreground">Liga o teu repositório à Vercel. Configura o CI/CD para que cada push para a main gere uma nova versão do site automaticamente.</p>
+        </div>
+      </div>
+    `, 
+    quizId: "js-mq10" 
+  }
 ];
 
 const jsQuizzes: Quiz[] = [

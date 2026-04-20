@@ -17,7 +17,29 @@ const htmlLessons: TheoryLesson[] = [
   { id: "html-m7", title: "Web Components: Shadow DOM", content: "<p>Encapsulamento de estilos e comportamento em componentes reutilizáveis nativos.</p>", quizId: "html-mq7" },
   { id: "html-m8", title: "Performance: Resource Hints", content: "<p>DNS-prefetch, Preconnect, Preload e Prefetch para carregamento ultra-rápido.</p>", quizId: "html-mq8" },
   { id: "html-m9", title: "Segurança no HTML (CSP)", content: "<p>Configuração de Content Security Policy para prevenir XSS e injeções.</p>", quizId: "html-mq9" },
-  { id: "html-m10", title: "O Futuro: Web Standards", content: "<p>Novas propostas como WebGPU e a evolução do ecossistema W3C.</p>", quizId: "html-mq10" }
+  { 
+    id: "html-m10", 
+    title: "Projeto Final: Landing Page Profissional e Deploy", 
+    youtubeVideoId: "2O93X_fXk-Q",
+    content: `
+      <div class="space-y-6">
+        <h2 class="text-2xl font-bold">🚀 Do Código ao Mundo</h2>
+        <p>Neste projeto, vais construir o teu portfólio profissional usando apenas HTML5 semântico e publicá-lo gratuitamente no <strong>GitHub Pages</strong>.</p>
+        
+        <div class="bg-card p-6 rounded-2xl border space-y-4">
+          <h3 class="font-bold text-primary">Passo 1: Repositório no GitHub</h3>
+          <p class="text-sm text-muted-foreground">Cria um novo repositório chamado <code>meu-portfolio</code>. Inicializa com um ficheiro <code>index.html</code>.</p>
+          
+          <h3 class="font-bold text-primary">Passo 2: Estrutura Master</h3>
+          <p class="text-sm text-muted-foreground">Usa as tags <code>header</code>, <code>nav</code>, <code>main</code>, <code>section</code> e <code>footer</code>. Adiciona metadados OpenGraph para partilha em redes sociais.</p>
+          
+          <h3 class="font-bold text-primary">Passo 3: Deploy via GitHub Pages</h3>
+          <p class="text-sm text-muted-foreground">Vai a <em>Settings > Pages</em> no teu repositório e ativa o deploy a partir do branch <code>main</code>. Em 2 minutos, o teu site estará online!</p>
+        </div>
+      </div>
+    `, 
+    quizId: "html-mq10" 
+  }
 ];
 
 const htmlQuizzes: Quiz[] = [
@@ -45,7 +67,6 @@ const htmlQuizzes: Quiz[] = [
       }
     ]
   }
-  // Os outros quizzes seriam preenchidos seguindo este padrão ACM
 ];
 
 export const htmlKA: KnowledgeArea = {

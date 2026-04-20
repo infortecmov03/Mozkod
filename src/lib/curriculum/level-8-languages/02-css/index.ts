@@ -10,7 +10,29 @@ const cssLessons: TheoryLesson[] = [
   { id: "css-m7", title: "Acessibilidade Visual", content: "<p>Esquemas de cores adaptáveis (prefers-color-scheme) e contraste WCAG.</p>", quizId: "css-mq7" },
   { id: "css-m8", title: "Filtros e Efeitos Modernos", content: "<p>Backdrop-filter, clip-path e máscaras para UIs cinematográficas.</p>", quizId: "css-mq8" },
   { id: "css-m9", title: "Container Queries", content: "<p>O fim da dependência absoluta das Media Queries para componentes modulares.</p>", quizId: "css-mq9" },
-  { id: "css-m10", title: "Otimização e Rendering Path", content: "<p>Entendendo como o browser desenha a página para otimizar o LCP.</p>", quizId: "css-mq10" }
+  { 
+    id: "css-m10", 
+    title: "Projeto Final: Design System e Deploy", 
+    youtubeVideoId: "D-YmS-fA6Qo",
+    content: `
+      <div class="space-y-6">
+        <h2 class="text-2xl font-bold">🎨 De Pixels a Protótipo Online</h2>
+        <p>Vais criar uma landing page "Dark Mode" de alta fidelidade com animações complexas e publicá-la via <strong>GitHub Pages</strong>.</p>
+        
+        <div class="bg-card p-6 rounded-2xl border space-y-4">
+          <h3 class="font-bold text-accent">Passo 1: Setup do Repositório</h3>
+          <p class="text-sm text-muted-foreground">Cria uma pasta com <code>style.css</code> e <code>index.html</code>. Inicializa o Git e envia para o GitHub.</p>
+          
+          <h3 class="font-bold text-accent">Passo 2: Implementação Master</h3>
+          <p class="text-sm text-muted-foreground">Usa Variáveis CSS para o sistema de cores. Implementa um Layout de 12 colunas com CSS Grid e garante que é fluido.</p>
+          
+          <h3 class="font-bold text-accent">Passo 3: Publicação</h3>
+          <p class="text-sm text-muted-foreground">Usa o GitHub Pages para hospedar o teu trabalho. Partilha o link para validação de design.</p>
+        </div>
+      </div>
+    `, 
+    quizId: "css-mq10" 
+  }
 ];
 
 const cssQuizzes: Quiz[] = [
