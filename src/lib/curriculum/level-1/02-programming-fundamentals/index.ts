@@ -1,3 +1,4 @@
+
 import type { KnowledgeArea } from '../../types';
 import { lessons } from './theory';
 
@@ -30,10 +31,8 @@ import { exercise as py3 } from './laboratory/python/03-condicionais';
 import { exercise as py4 } from './laboratory/python/04-loops';
 import { exercise as py5 } from './laboratory/python/05-funcoes';
 
-// Import Labs - Java
+// Import Labs - Java & C++
 import { exercise as jv1 } from './laboratory/java/01-variaveis';
-
-// Import Labs - C++
 import { exercise as cp1 } from './laboratory/cpp/01-variaveis';
 
 export const programmingFundamentals: KnowledgeArea = {

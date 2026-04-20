@@ -1,5 +1,14 @@
 
 import type { KnowledgeArea } from '../../types';
+import { lessons } from './theory';
+
+// Import Quizzes
+import { quiz as q1 } from './quizzes/01-vscode-quiz';
+import { quiz as q2 } from './quizzes/02-terminal-quiz';
+
+// Import Labs
+import { exercise as ex1 } from './laboratory/01-vscode-shortcuts';
+import { exercise as ex2 } from './laboratory/02-terminal-basico';
 
 export const devTools: KnowledgeArea = {
   id: 'ka-dev-tools',
@@ -7,33 +16,9 @@ export const devTools: KnowledgeArea = {
   description: 'Domine as ferramentas que aceleram o desenvolvimento.',
   load: '15h',
   iconName: 'Wrench',
-  theory: [
-    {
-      id: "dt-t1",
-      title: "VS Code: O Editor Moderno",
-      content: `
-        <div class="space-y-6">
-          <h2 class="text-2xl font-bold">Visual Studio Code</h2>
-          <p>O editor de eleição dos programadores. Leve, extensível e poderoso.</p>
-        </div>
-      `,
-      quizId: "dt-t1-quiz"
-    }
-  ],
-  quizzes: [
-    {
-      id: "dt-t1-quiz",
-      title: "Quiz: Ferramentas de Dev",
-      passingScore: 70,
-      questions: [
-        {
-          id: "q1",
-          question: "O VS Code é um exemplo de?",
-          options: ["Linguagem", "IDE/Editor de Código", "Sistema Operativo", "Browser"],
-          correctAnswer: 1
-        }
-      ]
-    }
-  ],
-  practice: {}
+  theory: lessons,
+  quizzes: [q1, q2],
+  practice: {
+    tool: [ex1, ex2]
+  }
 };
