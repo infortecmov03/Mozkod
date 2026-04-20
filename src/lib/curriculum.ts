@@ -20,7 +20,7 @@ export type PracticeObjective = {
   id: string;
   description: string;
   hint: string;
-  validationRegex: string; // Regex simples para validar o código (simulação)
+  validationRegex: string;
 };
 
 export type PracticeExercise = {
@@ -28,7 +28,7 @@ export type PracticeExercise = {
   title: string;
   description: string;
   objectives: PracticeObjective[];
-  starterCode: Record<string, string>; // language -> code
+  starterCode: Record<string, string>;
 };
 
 export type KnowledgeArea = {
@@ -37,14 +37,15 @@ export type KnowledgeArea = {
   description: string;
   theoryLessons: TheoryLesson[];
   practiceExercises: PracticeExercise[];
-  supportedLanguages: string[]; // ['js', 'python', 'java', 'cpp']
+  supportedLanguages: string[];
 };
 
 export type Module = {
-  id: string; // levelId
+  id: string;
   title: string;
   level: string;
   description: string;
+  image: string;
   knowledgeAreas: KnowledgeArea[];
 };
 
@@ -54,6 +55,7 @@ export const modules: Module[] = [
     title: 'Nível 1: Fundamentos (Core Foundations)',
     level: 'Beginner',
     description: 'A base essencial de CS e Programação.',
+    image: 'cs-core',
     knowledgeAreas: [
       {
         id: 'ka-programming',
@@ -69,8 +71,7 @@ export const modules: Module[] = [
               { id: 'q1', question: 'O que é uma variável?', options: ['Um motor', 'Um espaço na memória', 'Um erro'], correctAnswer: 1 }
             ]
           },
-          { id: 'pf-t2', title: 'Operadores Aritméticos', content: 'Cálculos básicos...', quiz: [] },
-          { id: 'pf-t3', title: 'Estruturas Condicionais', content: 'Decisões...', quiz: [] }
+          { id: 'pf-t2', title: 'Operadores Aritméticos', content: 'Cálculos básicos...', quiz: [] }
         ],
         practiceExercises: [
           {
@@ -89,16 +90,6 @@ export const modules: Module[] = [
             }
           }
         ]
-      },
-      {
-        id: 'ka-cs',
-        title: 'CS Core',
-        description: 'Sistemas numéricos e lógica.',
-        supportedLanguages: [],
-        theoryLessons: [
-          { id: 'cs-t1', title: 'Sistemas Numéricos', content: 'Binário e Hexa...', quiz: [] }
-        ],
-        practiceExercises: []
       }
     ]
   },
@@ -107,6 +98,7 @@ export const modules: Module[] = [
     title: 'Nível 2: Algoritmos e ED',
     level: 'Intermediate',
     description: 'Organização de dados e lógica complexa.',
+    image: 'web-dev',
     knowledgeAreas: [
       {
         id: 'ka-algorithms',
