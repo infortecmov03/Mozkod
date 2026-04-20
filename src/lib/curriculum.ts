@@ -1,4 +1,3 @@
-
 export type LessonType = 'theory' | 'exercise';
 
 export type QuizQuestion = {
