@@ -52,9 +52,11 @@ export default function Home() {
                 <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Button variant="outline" size="lg" className="w-full sm:w-auto h-14 px-8 text-lg rounded-full border-2 hover:bg-secondary">
-              {t.modules}
-            </Button>
+            <Link href="/modules" className="w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto h-14 px-8 text-lg rounded-full border-2 hover:bg-secondary">
+                {t.modules}
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

@@ -5,11 +5,10 @@ import { Navigation } from "@/components/Navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { modules } from "@/lib/curriculum";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Star, Layers, Trophy } from "lucide-react";
+import { ArrowRight, Layers, GraduationCap } from "lucide-react";
 import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useLanguage } from "@/components/LanguageContext";
-import { Progress } from "@/components/ui/progress";
 import { useProgress } from "@/contexts/ProgressContext";
 
 export default function ModulesPage() {
@@ -87,5 +86,3 @@ export default function ModulesPage() {
     </div>
   );
 }
-
-import { GraduationCap } from "lucide-react";
