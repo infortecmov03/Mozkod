@@ -5,7 +5,7 @@ export function Logo({ className = "h-10 w-auto" }: { className?: string }) {
   return (
     <div className={className}>
       <svg width="100%" height="100%" viewBox="0 0 680 420" role="img" xmlns="http://www.w3.org/2000/svg">
-        <title>Codworks Moçambique logo</title>
+        <title>Codeworks Moçambique logo</title>
         <desc>Logo com nome a seguir exactamente a curvatura do círculo</desc>
         <defs>
           <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
