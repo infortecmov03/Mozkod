@@ -1,3 +1,4 @@
+
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
@@ -72,7 +73,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       }, { onConflict: 'user_id,lesson_id' });
 
     if (!error) {
-      // Chamar a RPC para recalcular pontos (opcional, pode ser via trigger no banco)
+      // Tentar atualizar pontos via RPC se disponível, ou atualizar perfil manualmente
       await supabase.rpc('calculate_total_points', { p_user_id: user.id });
       await fetchProgress();
       await refreshProfile();
