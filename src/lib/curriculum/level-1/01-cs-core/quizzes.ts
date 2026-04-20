@@ -7,16 +7,18 @@ import { quiz as q6 } from './quizzes/06-algoritmos-quiz';
 import { quiz as q7 } from './quizzes/07-complexidade-quiz';
 import { quiz as q8 } from './quizzes/08-paradigmas-quiz';
 import { quiz as q9 } from './quizzes/09-floating-point-quiz';
+import { quiz as q10 } from './quizzes/10-cache-hierarchy-quiz';
+import { quiz as q11 } from './quizzes/11-isa-architecture-quiz';
 
 export const quizzes = [
-  q1, q2, q3, q4, q5, q6, q7, q8, q9,
-  ...Array.from({ length: 12 }, (_, i) => ({
-    id: `cs-q${i + 10}`,
-    title: `CS Core Quiz ${i + 10}`,
+  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11,
+  ...Array.from({ length: 10 }, (_, i) => ({
+    id: `cs-q${i + 12}`,
+    title: `Quiz: Tópico ${i + 12}`,
     questions: [
       {
         id: "q_auto",
-        question: "Pergunta de validação técnica para o tópico " + (i + 10),
+        question: "Validação técnica para o tópico " + (i + 12),
         options: ["Opção A (Correta)", "Opção B", "Opção C"],
         correctAnswer: 0
       }
