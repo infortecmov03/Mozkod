@@ -23,6 +23,7 @@ import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useProgress } from "@/contexts/ProgressContext";
 import { cn } from "@/lib/utils";
+import Editor from "@monaco-editor/react";
 
 export default function LearnPage() {
   const params = useParams();
@@ -80,7 +81,6 @@ export default function LearnPage() {
   };
 
   const handleOpenVSCode = () => {
-    // Tenta abrir o VS Code com um ficheiro virtual baseado no ID da lição
     const vscodeUri = `vscode://file/codworks-moz/lessons/${lessonId}.${selectedLang === 'python' ? 'py' : selectedLang === 'cpp' ? 'cpp' : selectedLang === 'java' ? 'java' : 'js'}`;
     window.location.href = vscodeUri;
     toast({ 
@@ -125,6 +125,22 @@ export default function LearnPage() {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const getMonacoLanguage = (lang: string) => {
+    const map: Record<string, string> = {
+      javascript: "javascript",
+      typescript: "typescript",
+      python: "python",
+      java: "java",
+      cpp: "cpp",
+      html: "html",
+      css: "css",
+      sql: "sql",
+      bash: "shell",
+      concept: "markdown"
+    };
+    return map[lang] || "plaintext";
   };
 
   return (
@@ -292,13 +308,13 @@ export default function LearnPage() {
                )}
             </div>
           ) : practice ? (
-            <div className="h-full flex flex-col bg-[#0d1117]">
+            <div className="h-full flex flex-col bg-[#1e1e1e]">
                {isCompiledLanguage && (
                  <Alert className="m-4 bg-amber-500/10 border-amber-500/20 text-amber-500 rounded-xl">
                     <AlertCircle className="h-4 w-4 stroke-amber-500" />
                     <AlertTitle className="font-bold text-xs">Simulador de Linguagem Compilada</AlertTitle>
                     <AlertDescription className="text-[10px] opacity-80">
-                      Esta é uma simulação fiel do ambiente {selectedLang.toUpperCase()}. Para melhor experiência, recomendamos usar o VS Code instalado localmente.
+                      Esta é uma simulação fiel do ambiente {selectedLang.toUpperCase()}. Para melhor experiência, recomendamos usar o VS Code instalado localmente através do botão no cabeçalho.
                     </AlertDescription>
                  </Alert>
                )}
@@ -315,11 +331,20 @@ export default function LearnPage() {
                </div>
                
                <div className="flex-1 relative">
-                 <textarea
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  className="w-full h-full bg-transparent p-6 font-code text-sm resize-none outline-none text-blue-300 leading-relaxed"
-                  spellCheck={false}
+                 <Editor
+                   height="100%"
+                   language={getMonacoLanguage(selectedLang)}
+                   theme="vs-dark"
+                   value={code}
+                   onChange={(value) => setCode(value || "")}
+                   options={{
+                     minimap: { enabled: false },
+                     fontSize: 14,
+                     lineNumbers: 'on',
+                     scrollBeyondLastLine: false,
+                     automaticLayout: true,
+                     padding: { top: 20 }
+                   }}
                  />
                </div>
 
