@@ -1,8 +1,6 @@
-
 import type { KnowledgeArea } from '../../types';
-import { lessons } from './theory';
-import { quizzes } from './quizzes';
-import { practice } from './laboratory';
+import { lesson as l1 } from './theory/01-philosophy';
+import { quiz as q1 } from './quizzes/01-philosophy-quiz';
 
 export const kotlinMaster: KnowledgeArea = {
   id: 'lang-kotlin-master',
@@ -10,7 +8,9 @@ export const kotlinMaster: KnowledgeArea = {
   description: 'Desenvolvimento moderno para Android e Backend robusto com Coroutines.',
   load: '45h',
   iconName: 'Smartphone',
-  theory: lessons,
-  practice: practice,
-  quizzes: quizzes
+  theory: [l1],
+  practice: {
+    kotlin: []
+  },
+  quizzes: [q1]
 };
