@@ -1,18 +1,6 @@
+import { quiz as q1 } from './quizzes/01-jvm-architecture-quiz';
+import { quiz as q2 } from './quizzes/02-garbage-collection-quiz';
+import { quiz as q3 } from './quizzes/03-virtual-threads-quiz';
+// Placeholder para os quizzes restantes 4-10
 
-import type { Quiz } from '../../types';
-
-export const quizzes: Quiz[] = [
-  {
-    id: "jv-mq1",
-    title: "Quiz: JVM Internals",
-    passingScore: 80,
-    questions: [
-      {
-        id: "q1",
-        question: "Qual área da memória JVM é usada para armazenar variáveis locais?",
-        options: ["Heap", "Method Area", "Stack", "Native Stack"],
-        correctAnswer: 2
-      }
-    ]
-  }
-];
+export const quizzes = [q1, q2, q3];
