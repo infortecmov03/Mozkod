@@ -1,34 +1,30 @@
-
 import type { TheoryLesson } from '../../types';
 
 export const lessons: TheoryLesson[] = [
-  { id: "kt-m1", title: "Kotlin Philosophy & Interop", content: "<p>Interoperabilidade total com Java e design moderno.</p>", quizId: "kt-mq1" },
-  { id: "kt-m2", title: "Null Safety & Type System", content: "<p>O fim do NullPointerException via tipos anláveis.</p>", quizId: "kt-mq2" },
-  { id: "kt-m3", title: "Extension Functions", content: "<p>Expandindo classes sem herança.</p>", quizId: "kt-mq3" },
-  { id: "kt-m4", title: "Coroutines Fundamentos", content: "<p>Programação assíncrona não-bloqueante.</p>", quizId: "kt-mq4" },
-  { id: "kt-m5", title: "Flows & Reactive Streams", content: "<p>Streams assíncronos frios e quentes em Kotlin.</p>", quizId: "kt-mq5" },
-  { id: "kt-m6", title: "Kotlin Multiplatform (KMP)", content: "<p>Partilha de código entre Android, iOS e Web.</p>", quizId: "kt-mq6" },
-  { id: "kt-m7", title: "DSL Construction", content: "<p>Criando linguagens de domínio específico seguras.</p>", quizId: "kt-mq7" },
-  { id: "kt-m8", title: "Jetpack Compose Internals", content: "<p>Arquitetura de UI declarativa moderna.</p>", quizId: "kt-mq8" },
-  { id: "kt-m9", title: "Backend com Ktor", content: "<p>Microserviços ultra-leves baseados em coroutines.</p>", quizId: "kt-mq9" },
-  { 
-    id: "kt-m10", 
-    title: "Projeto Final: Ktor App & Deploy", 
-    youtubeVideoId: "gI-qXk7XojA",
-    content: `
-      <div class="space-y-6">
-        <h2 class="text-2xl font-bold">📱 Kotlin Master Project</h2>
-        <p>Cria um servidor de chat em tempo real com Ktor e publica-o.</p>
-        <div class="bg-card p-6 rounded-2xl border space-y-4">
-          <h3 class="font-bold text-primary">1. Repo & Gradle</h3>
-          <p class="text-sm">Configura o build.gradle.kts e versiona no GitHub.</p>
-          <h3 class="font-bold text-primary">2. WebSockets</h3>
-          <p class="text-sm">Implementa comunicação bi-direcional.</p>
-          <h3 class="font-bold text-primary">3. Deploy Railway</h3>
-          <p class="text-sm">Publica o servidor Ktor usando o Railway.</p>
-        </div>
-      </div>
-    `, 
-    quizId: "kt-mq10" 
-  }
+  // PILAR 1: Paradigma e Expressividade
+  { id: "kt-m1", title: "Kotlin Philosophy & Interop", content: "Design pragmático e convivência perfeita com o ecossistema Java.", quizId: "kt-mq1" },
+  { id: "kt-m2", title: "Type System & Null Safety", content: "Como o Kotlin eliminou o erro de um bilião de dólares.", quizId: "kt-mq2" },
+  { id: "kt-m3", title: "Extension Functions & Properties", content: "Expandindo APIs de terceiros sem herança.", quizId: "kt-mq3" },
+  { id: "kt-m4", title: "Sealed Classes & Data Objects", content: "Modelagem de dados moderna e exaustiva.", quizId: "kt-mq4" },
+  { id: "kt-m5", title: "DSL Construction & Lambdas with Receiver", content: "Criando linguagens de domínio específico poderosas.", quizId: "kt-mq5" },
+  { id: "kt-m6", title: "Delegated Properties", content: "Reutilização de lógica de getters e setters.", quizId: "kt-mq6" },
+  { id: "kt-m7", title: "Inline Classes & Performance", content: "Abstrações de tipos com custo de runtime zero.", quizId: "kt-mq7" },
+
+  // PILAR 2: Concorrência e Performance
+  { id: "kt-m8", title: "Coroutines: Suspending Functions", content: "Fundamentos da programação não-bloqueante.", quizId: "kt-mq8" },
+  { id: "kt-m9", title: "Coroutine Scopes & Structured Concurrency", content: "Gestão segura do ciclo de vida de tarefas assíncronas.", quizId: "kt-mq9" },
+  { id: "kt-m10", title: "Channels & Select Expression", content: "Comunicação entre coroutines baseada no modelo CSP.", quizId: "kt-mq10" },
+  { id: "kt-m11", title: "Flows: Cold & Hot Streams", content: "Processamento de fluxos de dados assíncronos (StateFlow/SharedFlow).", quizId: "kt-mq11" },
+  { id: "kt-m12", title: "Concurrency Debugging", content: "Identificando deadlocks e vazamentos em coroutines.", quizId: "kt-mq12" },
+  { id: "kt-m13", title: "Memory Management on Android/JVM", content: "Otimização de heap para apps móveis de alta performance.", quizId: "kt-mq13" },
+  { id: "kt-m14", title: "Multiplatform (KMP) Architecture", content: "Partilhando lógica de negócio entre iOS e Android.", quizId: "kt-mq14" },
+
+  // PILAR 3: Internals e Metaprogramação
+  { id: "kt-m15", title: "Kotlin Compiler (K2) Architecture", content: "Como o novo frontend do compilador acelera a build.", quizId: "kt-mq15" },
+  { id: "kt-m16", title: "Symbol Processing (KSP)", content: "A evolução das anotações: geração de código eficiente.", quizId: "kt-mq16" },
+  { id: "kt-m17", title: "Reflection vs Introspection", content: "Manipulando metadados no JVM e Native.", quizId: "kt-mq17" },
+  { id: "kt-m18", title: "Kotlin/Native & Memory Model", content: "Como o Kotlin corre sem JVM em sistemas nativos.", quizId: "kt-mq18" },
+  { id: "kt-m19", title: "Bytecode Generation & Inlining", content: "Análise do código gerado para otimização extrema.", quizId: "kt-mq19" },
+  { id: "kt-m20", title: "GraalVM & Ahead-of-Time (AOT)", content: "Compilando Kotlin para binários nativos de arranque instantâneo.", quizId: "kt-mq20" },
+  { id: "kt-m21", title: "Projeto Final: Multiplatform App", content: "Construção de uma app KMP com deploy master.", quizId: "kt-mq21" }
 ];

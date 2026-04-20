@@ -1,34 +1,30 @@
-
 import type { TheoryLesson } from '../../types';
 
 export const lessons: TheoryLesson[] = [
-  { id: "php-m1", title: "Modern PHP 8 Revolution", content: "<p>Novas funcionalidades e motor Zend.</p>", quizId: "php-mq1" },
-  { id: "php-m2", title: "Strict Typing", content: "<p>Segurança de tipos robusta.</p>", quizId: "php-mq2" },
-  { id: "php-m3", title: "Composer & PSR-4", content: "<p>Gestão profissional de dependências.</p>", quizId: "php-mq3" },
-  { id: "php-m4", title: "OOP PHP Avançado", content: "<p>Attributes e Constructor promotion.</p>", quizId: "php-mq4" },
-  { id: "php-m5", title: "Laravel Internals", content: "<p>Service Container e Injeção de Dependência.</p>", quizId: "php-mq5" },
-  { id: "php-m6", title: "Async PHP", content: "<p>Swoole e alta performance.</p>", quizId: "php-mq6" },
-  { id: "php-m7", title: "PHP Security Best Practices", content: "<p>Proteção real contra ataques.</p>", quizId: "php-mq7" },
-  { id: "php-m8", title: "Pest & PHPUnit", content: "<p>Testes de elite.</p>", quizId: "php-mq8" },
-  { id: "php-m9", title: "Caching com Redis", content: "<p>Escalando para milhões.</p>", quizId: "php-mq9" },
-  { 
-    id: "php-m10", 
-    title: "Projeto Final: Laravel Portal & Deploy", 
-    youtubeVideoId: "95v88Oit0H8",
-    content: `
-      <div class="space-y-6">
-        <h2 class="text-2xl font-bold">🐘 PHP Master Project</h2>
-        <p>Cria um portal de gestão com Laravel e publica no <strong>Render</strong>.</p>
-        <div class="bg-card p-6 rounded-2xl border space-y-4">
-          <h3 class="font-bold text-indigo-500">1. Laravel Install</h3>
-          <p class="text-sm">Inicia o projeto via Composer.</p>
-          <h3 class="font-bold text-indigo-500">2. DB Migrations</h3>
-          <p class="text-sm">Configura o MySQL remoto e executa migrations.</p>
-          <h3 class="font-bold text-indigo-500">3. Live Deploy</h3>
-          <p class="text-sm">Configura segredos (.env) na cloud.</p>
-        </div>
-      </div>
-    `, 
-    quizId: "php-mq10" 
-  }
+  // PILAR 1: Paradigma e Expressividade
+  { id: "php-m1", title: "PHP 8.x Revolution: Attributes", content: "Anotações nativas e metadados estruturados.", quizId: "php-mq1" },
+  { id: "php-m2", title: "Strong Typing & Union Types", content: "Segurança de tipos profissional no motor dinâmico.", quizId: "php-mq2" },
+  { id: "php-m3", title: "Constructor Property Promotion", content: "Código limpo e redução de boilerplate massiva.", quizId: "php-mq3" },
+  { id: "php-m4", title: "Enums & Readonly Classes", content: "Modelagem de domínio robusta e imutável.", quizId: "php-mq4" },
+  { id: "php-m5", title: "Advanced Fibers", content: "Primitivas de concorrência cooperativa nativas.", quizId: "php-mq5" },
+  { id: "php-m6", title: "Generics via Static Analysis", content: "Como PHPStan/Psalm emulam genéricos de alta performance.", quizId: "php-mq6" },
+  { id: "php-m7", title: "Closure Binding & Scopes", content: "Manipulação avançada de funções anónimas.", quizId: "php-mq7" },
+
+  // PILAR 2: Concorrência e Performance
+  { id: "php-m8", title: "Swoole & OpenSwoole", content: "PHP como servidor persistente de alta performance.", quizId: "php-mq8" },
+  { id: "php-m9", title: "OpCache & Preloading", content: "Otimização do motor Zend para execução instantânea.", quizId: "php-mq9" },
+  { id: "php-m10", title: "Parallel Extension", content: "Execução multi-thread real em PHP CLI.", quizId: "php-mq10" },
+  { id: "php-m11", title: "Redis as Primary Cache", content: "Escalando sessões e dados para milhões de acessos.", quizId: "php-mq11" },
+  { id: "php-m12", title: "I/O Multiplexing with Amp/ReactPHP", content: "Ecossistemas assíncronos orientados a eventos.", quizId: "php-mq12" },
+  { id: "php-m13", title: "Just-In-Time (JIT) Compiler", content: "Explorando a aceleração de CPU do PHP 8.", quizId: "php-mq13" },
+  { id: "php-m14", title: "Memory Profiling & GC Tuning", content: "Otimizando o ciclo de vida de objetos em larga escala.", quizId: "php-mq14" },
+
+  // PILAR 3: Internals e Metaprogramação
+  { id: "php-m15", title: "Zend Engine Architecture", content: "Como o PHP compila código em Opcodes.", quizId: "php-mq15" },
+  { id: "php-m16", title: "PHP FFI (Foreign Function Interface)", content: "Acedendo a bibliotecas C diretamente do PHP.", quizId: "php-mq16" },
+  { id: "php-m17", title: "Reflection API Master", content: "Construindo containers de injeção de dependência.", quizId: "php-mq17" },
+  { id: "php-m18", title: "Writing C Extensions for PHP", content: "Expandindo o core da linguagem para performance máxima.", quizId: "php-mq18" },
+  { id: "php-m19", title: "Laravel/Symfony Service Container", content: "Arquitetura interna de frameworks de elite.", quizId: "php-mq19" },
+  { id: "php-m20", title: "Security: Binary Safety & Taint Analysis", content: "Proteção profunda contra injeção e ataques complexos.", quizId: "php-mq20" },
+  { id: "php-m21", title: "Projeto Final: Swoole Real-time API", content: "Construção de uma API master com deploy profissional.", quizId: "php-mq21" }
 ];
