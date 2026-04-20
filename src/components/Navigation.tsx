@@ -52,7 +52,8 @@ export function Navigation() {
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
-          <Logo className="h-10 w-auto" />
+          {/* Apenas o nome no cabeçalho para maior clareza */}
+          <Logo className="h-20 w-auto mt-4" showDevices={false} />
         </Link>
 
         {/* Desktop Nav */}
@@ -74,7 +75,7 @@ export function Navigation() {
             <Button
               variant="ghost"
               size="sm"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 font-bold"
               onClick={() => setLang(lang === 'en' ? 'pt' : 'en')}
             >
               <Languages className="w-4 h-4" />
@@ -99,7 +100,7 @@ export function Navigation() {
               </DropdownMenu>
             ) : (
               <Link href="/login">
-                <Button size="sm" className="rounded-full">Entrar</Button>
+                <Button size="sm" className="rounded-full font-bold">Entrar</Button>
               </Link>
             )}
           </div>
@@ -140,7 +141,7 @@ export function Navigation() {
                      </div>
                    ) : (
                      <Link href="/login" className="w-full">
-                       <Button className="w-full">Entrar</Button>
+                       <Button className="w-full font-bold">Entrar</Button>
                      </Link>
                    )}
                 </div>

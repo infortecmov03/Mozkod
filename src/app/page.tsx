@@ -102,7 +102,8 @@ export default function Home() {
         <div className="container px-4 mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
           <div className="flex flex-col items-center md:items-start gap-4">
             <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
-              <Logo className="h-16 w-auto" />
+              {/* Logo completo no rodapé com maior destaque */}
+              <Logo className="h-32 w-auto" />
             </Link>
             <p className="text-sm text-muted-foreground text-center md:text-left">
               © 2024 Codworks Moz. <br className="md:hidden" /> Empowering the next tech hub.
