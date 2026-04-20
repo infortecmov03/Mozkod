@@ -58,7 +58,7 @@ export default function LearnPage() {
 
   const { ka, level } = data;
 
-  const isCompiledLanguage = selectedLang === "java" || selectedLang === "cpp";
+  const isCompiledLanguage = ["java", "cpp", "go", "rust", "kotlin"].includes(selectedLang);
 
   const handleRunCode = async () => {
     setIsRunning(true);
@@ -81,7 +81,12 @@ export default function LearnPage() {
   };
 
   const handleOpenVSCode = () => {
-    const vscodeUri = `vscode://file/codworks-moz/lessons/${lessonId}.${selectedLang === 'python' ? 'py' : selectedLang === 'cpp' ? 'cpp' : selectedLang === 'java' ? 'java' : 'js'}`;
+    const extMap: Record<string, string> = {
+      python: 'py', cpp: 'cpp', java: 'java', go: 'go', rust: 'rs', 
+      kotlin: 'kt', ruby: 'rb', php: 'php', javascript: 'js', typescript: 'ts'
+    };
+    const ext = extMap[selectedLang] || 'txt';
+    const vscodeUri = `vscode://file/codworks-moz/lessons/${lessonId}.${ext}`;
     window.location.href = vscodeUri;
     toast({ 
       title: "Abrindo VS Code", 
@@ -138,6 +143,11 @@ export default function LearnPage() {
       css: "css",
       sql: "sql",
       bash: "shell",
+      go: "go",
+      rust: "rust",
+      kotlin: "kotlin",
+      ruby: "ruby",
+      php: "php",
       concept: "markdown"
     };
     return map[lang] || "plaintext";
