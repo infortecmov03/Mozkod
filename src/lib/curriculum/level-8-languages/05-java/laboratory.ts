@@ -1,6 +1,11 @@
 
-import { exercise as p1 } from './laboratory/01-memory-analysis';
+import { exercise as e1 } from './laboratory/01-records-lab';
+import { exercise as e8 } from './laboratory/08-virtual-threads-lab';
 
 export const practice = {
-  java: [p1]
+  java: [
+    e1,
+    e8
+    // ... rest of the 21 labs will be added here
+  ]
 };

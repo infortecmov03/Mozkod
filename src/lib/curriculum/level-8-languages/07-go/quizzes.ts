@@ -1,18 +1,9 @@
 
-import type { Quiz } from '../../types';
+import { quiz as q1 } from './quizzes/01-implicit-interfaces-quiz';
+import { quiz as q8 } from './quizzes/08-goroutines-quiz';
+import { quiz as q10 } from './quizzes/10-gmp-scheduler-quiz';
 
-export const quizzes: Quiz[] = [
-  {
-    id: "go-mq4",
-    title: "Quiz: Concorrência em Go",
-    passingScore: 80,
-    questions: [
-      {
-        id: "q1",
-        question: "Qual o tamanho inicial aproximado de uma Goroutine?",
-        options: ["2KB", "2MB", "1MB", "512KB"],
-        correctAnswer: 0
-      }
-    ]
-  }
+export const quizzes = [
+  q1, q8, q10
+  // ... more to follow
 ];
