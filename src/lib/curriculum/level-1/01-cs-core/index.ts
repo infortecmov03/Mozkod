@@ -1,4 +1,3 @@
-
 import type { KnowledgeArea } from '../../types';
 import { lessons } from './theory';
 import { quiz as quiz1 } from './quizzes/01-sistemas-numericos-quiz';

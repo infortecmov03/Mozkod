@@ -1,5 +1,4 @@
-
-import type { Quiz } from '../../types';
+import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "cs-t1-quiz",
@@ -8,15 +7,15 @@ export const quiz: Quiz = {
   questions: [
     {
       id: "q1",
-      question: "Qual é a base do sistema binário?",
-      options: ["Base 10", "Base 2", "Base 16", "Base 8"],
+      question: "Qual é a base fundamental do sistema que os computadores usam?",
+      options: ["Base 10", "Base 2 (Binário)", "Base 16", "Base 8"],
       correctAnswer: 1
     },
     {
       id: "q2",
-      question: "O que o número 1 representa num circuito eletrónico?",
-      options: ["Desligado", "Erro", "Ligado", "Memória"],
-      correctAnswer: 2
+      question: "O que representa o número 0 num circuito digital?",
+      options: ["Ligado", "Desligado", "Erro", "Memória Cheia"],
+      correctAnswer: 1
     }
   ]
 };

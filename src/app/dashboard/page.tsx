@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Navigation } from "@/components/Navigation";
@@ -25,13 +24,14 @@ export default function DashboardPage() {
     let completedCount = 0;
     
     module.knowledgeAreas.forEach(ka => {
+      // Contagem de Teoria
       const theoryCount = ka.theory?.length || 0;
       total += theoryCount;
-      
       if (ka.theory) {
         completedCount += ka.theory.filter(l => isCompleted(l.id)).length;
       }
 
+      // Contagem de Prática
       if (ka.practice) {
         Object.values(ka.practice).forEach(exercises => {
           if (Array.isArray(exercises)) {
@@ -46,14 +46,14 @@ export default function DashboardPage() {
   };
 
   const getImg = (id: string) => {
-    if (!id) return "/placeholder.svg";
+    if (!id) return "https://picsum.photos/seed/default/400/300";
     const found = PlaceHolderImages.find(img => img.id === id);
-    return found?.imageUrl || "/placeholder.svg";
+    return found?.imageUrl || `https://picsum.photos/seed/${id}/400/300`;
   };
 
   if (authLoading || progressLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Loader2 className="w-10 h-10 animate-spin text-primary" />
       </div>
     );
@@ -150,6 +150,7 @@ export default function DashboardPage() {
                         alt={module.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                         loading="lazy"
+                        data-ai-hint="programming background"
                       />
                       <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent" />
                       <div className="absolute bottom-4 left-4">
