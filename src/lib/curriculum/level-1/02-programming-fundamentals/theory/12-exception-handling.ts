@@ -4,13 +4,13 @@ export const lesson: TheoryLesson = {
   title: "Tratamento de Exceções e Erros",
   content: `
     <div class="space-y-6">
-      <h2 class="text-2xl font-bold">🛡️ Programação Defensiva</h2>
-      <p>Aprender a antecipar que algo vai falhar (rede, ficheiros, input) é o que diferencia um amador de um profissional.</p>
-      <div class="bg-card p-4 rounded-xl border font-code">
+      <h2 class="text-2xl font-bold text-red-500">🛡️ Programação Defensiva</h2>
+      <p>Sistemas robustos não crasham; eles lidam com falhas de forma elegante usando Try/Catch/Finally.</p>
+      <div class="bg-card p-4 rounded-xl border font-code text-sm">
         try { <br/>
-        &nbsp;&nbsp;processarDados(); <br/>
+        &nbsp;&nbsp;abrirFicheiro(); <br/>
         } catch (erro) { <br/>
-        &nbsp;&nbsp;logarErro(erro); <br/>
+        &nbsp;&nbsp;avisarUtilizador(erro); <br/>
         }
       </div>
     </div>
