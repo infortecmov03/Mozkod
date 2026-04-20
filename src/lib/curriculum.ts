@@ -38,9 +38,9 @@ export type Module = {
 export const modules: Module[] = [
   {
     id: '1',
-    title: 'Programação de Fundamentos',
+    title: 'Nível 1: Fundamentos de Programação',
     category: 'CS Core',
-    description: 'Domine a lógica por trás de cada linha de código.',
+    description: 'Domine a lógica por trás de cada linha de código e os fundamentos da computação.',
     image: 'cs-core',
     level: 'Beginner',
     knowledgeAreas: [
@@ -72,6 +72,56 @@ export const modules: Module[] = [
             content: 'Complete a função para realizar a soma de dois valores.'
           }
         ]
+      },
+      {
+        id: 'ka-cs',
+        title: 'Ciência da Computação',
+        lessons: [
+          {
+            id: 'cs-t1',
+            title: 'Sistemas Numéricos (Binário)',
+            type: 'theory',
+            content: 'Computadores operam na base 2 (binário). Tudo o que vês no ecrã é, no fundo, uma sequência de 0s e 1s.',
+            quiz: [
+              {
+                id: 'q-bin1',
+                question: 'Quantos dígitos existem no sistema binário?',
+                options: ['10', '8', '2', '16'],
+                correctAnswer: 2
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: '2',
+    title: 'Nível 2: Algoritmos e Estruturas',
+    category: 'Algorithms',
+    description: 'Aprenda a organizar dados e resolver problemas complexos com eficiência.',
+    image: 'ai-ml',
+    level: 'Intermediate',
+    knowledgeAreas: [
+      {
+        id: 'ka-algorithms',
+        title: 'Algoritmos Fundamentais',
+        lessons: [
+          {
+            id: 'alg-t1',
+            title: 'Introdução a Algoritmos',
+            type: 'theory',
+            content: 'Um algoritmo é uma sequência finita de instruções bem definidas para resolver um problema.',
+            quiz: [
+              {
+                id: 'q-alg1',
+                question: 'Qual a principal característica de um algoritmo?',
+                options: ['Ser infinito', 'Ser aleatório', 'Ser uma sequência de passos finita', 'Funcionar apenas em Python'],
+                correctAnswer: 2
+              }
+            ]
+          }
+        ]
       }
     ]
   }
@@ -96,9 +146,8 @@ export function getNextLessonId(currentLessonId: string, completedLessonIds: str
 
   for (let i = currentIndex + 1; i < allLessons.length; i++) {
     const lesson = allLessons[i];
-    if (!completedLessonIds.includes(lesson.id)) {
-      return lesson.id;
-    }
+    // Retorna a próxima lição, mesmo que não concluída
+    return lesson.id;
   }
   return null;
 }
