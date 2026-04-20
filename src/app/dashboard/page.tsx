@@ -21,18 +21,25 @@ export default function DashboardPage() {
   const getModuleProgress = (module: typeof modules[0]) => {
     if (!progress) return 0;
     let total = 0;
-    let completed = 0;
+    let completedCount = 0;
+    
     module.knowledgeAreas.forEach(ka => {
-      total += ka.theory.length;
-      Object.values(ka.practice).forEach(exercises => {
-        total += exercises.length;
+      // Cálculo resiliente para evitar erros de undefined
+      const theories = ka.theory || [];
+      const practices = ka.practice || {};
+      
+      total += theories.length;
+      Object.values(practices).forEach(exercises => {
+        total += (exercises as any[]).length;
       });
-      completed += ka.theory.filter(l => isCompleted(l.id)).length;
-      Object.values(ka.practice).forEach(exercises => {
-        completed += exercises.filter(p => isCompleted(p.id)).length;
+      
+      completedCount += theories.filter(l => isCompleted(l.id)).length;
+      Object.values(practices).forEach(exercises => {
+        completedCount += (exercises as any[]).filter(p => isCompleted(p.id)).length;
       });
     });
-    return total > 0 ? Math.round((completed / total) * 100) : 0;
+    
+    return total > 0 ? Math.round((completedCount / total) * 100) : 0;
   };
 
   const getImg = (id: string) => {
