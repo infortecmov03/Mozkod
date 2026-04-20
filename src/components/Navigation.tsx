@@ -4,14 +4,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Terminal, LayoutDashboard, GraduationCap, Award, Languages, Menu } from "lucide-react";
+import { Terminal, LayoutDashboard, GraduationCap, Award, Languages, Menu, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useLanguage } from "./LanguageContext";
+import { useAuth } from "@/hooks/useAuth";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export function Navigation() {
   const pathname = usePathname();
   const { lang, setLang, t } = useLanguage();
+  const { user, profile, signOut } = useAuth();
 
   const navItems = [
     { href: "/dashboard", label: t.dashboard, icon: LayoutDashboard },
@@ -62,9 +65,28 @@ export function Navigation() {
               <Languages className="w-4 h-4" />
               <span>{lang.toUpperCase()}</span>
             </Button>
-            <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center overflow-hidden border">
-              <img src="https://picsum.photos/seed/user/32/32" alt="User avatar" />
-            </div>
+            
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative w-8 h-8 rounded-full overflow-hidden border">
+                    <img src={profile?.avatar_url || `https://picsum.photos/seed/${user.id}/32/32`} alt="Avatar" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem className="gap-2">
+                    <User className="w-4 h-4" /> Perfil
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={signOut} className="gap-2 text-destructive">
+                    <LogOut className="w-4 h-4" /> Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link href="/login">
+                <Button size="sm" className="rounded-full">Entrar</Button>
+              </Link>
+            )}
           </div>
         </div>
 
@@ -87,12 +109,23 @@ export function Navigation() {
               <div className="flex flex-col gap-6 mt-10">
                 <NavLinks className="flex-col items-start gap-4" mobile />
                 <div className="border-t pt-6 mt-2">
-                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center overflow-hidden border">
-                      <img src="https://picsum.photos/seed/user/40/40" alt="User avatar" />
-                    </div>
-                    <span className="font-medium">User Profile</span>
-                   </div>
+                   {user ? (
+                     <div className="space-y-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center overflow-hidden border">
+                            <img src={profile?.avatar_url || `https://picsum.photos/seed/${user.id}/40/40`} alt="Avatar" />
+                          </div>
+                          <span className="font-medium">{profile?.display_name || 'Usuário'}</span>
+                        </div>
+                        <Button variant="ghost" className="w-full justify-start text-destructive p-0" onClick={signOut}>
+                          <LogOut className="w-4 h-4 mr-2" /> Sair
+                        </Button>
+                     </div>
+                   ) : (
+                     <Link href="/login" className="w-full">
+                       <Button className="w-full">Entrar</Button>
+                     </Link>
+                   )}
                 </div>
               </div>
             </SheetContent>

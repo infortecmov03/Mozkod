@@ -1,39 +1,58 @@
 
 "use client";
 
+import { useEffect, useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { modules } from "@/lib/curriculum";
 import { Button } from "@/components/ui/button";
-import { Trophy, Clock, Zap, ArrowRight, Star, Target } from "lucide-react";
+import { Trophy, Clock, Zap, ArrowRight, Star, Target, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useLanguage } from "@/components/LanguageContext";
-import { useUser, useFirestore, useCollection, useDoc } from "@/firebase";
-import { useMemo } from "react";
-import { collection, doc } from "firebase/firestore";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase/client";
 
 export default function DashboardPage() {
   const { t } = useLanguage();
-  const { user } = useUser();
-  const firestore = useFirestore();
+  const { profile, loading: authLoading } = useAuth();
+  const [progress, setProgress] = useState<any[]>([]);
+  const [loadingProgress, setLoadingProgress] = useState(true);
 
-  const userProfileRef = useMemo(() => user && firestore ? doc(firestore, 'users', user.uid) : null, [user, firestore]);
-  const { data: profile } = useDoc(userProfileRef);
-
-  const progressQuery = useMemo(() => user && firestore ? collection(firestore, 'users', user.uid, 'progress') : null, [user, firestore]);
-  const { data: progressData } = useCollection(progressQuery);
+  useEffect(() => {
+    async function loadProgress() {
+      if (!profile) return;
+      const { data, error } = await supabase
+        .from('user_lesson_progress')
+        .select('*')
+        .eq('user_id', profile.id);
+      
+      if (!error && data) {
+        setProgress(data);
+      }
+      setLoadingProgress(false);
+    }
+    loadProgress();
+  }, [profile]);
 
   const getModuleProgress = (module: typeof modules[0]) => {
-    if (!progressData) return 0;
-    const moduleLessons = [];
+    if (!progress) return 0;
+    const moduleLessons: string[] = [];
     module.knowledgeAreas.forEach(ka => moduleLessons.push(...ka.lessons.map(l => l.id)));
-    const completedCount = progressData.filter(p => p.completed && moduleLessons.includes(p.lessonId)).length;
-    return Math.round((completedCount / moduleLessons.length) * 100);
+    const completedCount = progress.filter(p => p.completed && moduleLessons.includes(p.lessonId)).length;
+    return moduleLessons.length > 0 ? Math.round((completedCount / moduleLessons.length) * 100) : 0;
   };
 
   const getImg = (id: string) => PlaceHolderImages.find(img => img.id === id)?.imageUrl || '';
+
+  if (authLoading || loadingProgress) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background pb-12">
@@ -42,7 +61,7 @@ export default function DashboardPage() {
         <header className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <h1 className="font-headline text-3xl font-bold mb-2">
-              Olá, {user?.displayName?.split(' ')[0] || 'Dev'}! 👋
+              Olá, {profile?.display_name?.split(' ')[0] || 'Dev'}! 👋
             </h1>
             <p className="text-muted-foreground text-sm">Seu progresso está incrível. Continue codificando!</p>
           </div>
@@ -53,7 +72,7 @@ export default function DashboardPage() {
               </div>
               <div>
                 <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">{t.points}</p>
-                <p className="font-headline font-bold text-lg">{profile?.totalPoints || 0}</p>
+                <p className="font-headline font-bold text-lg">{profile?.total_points || 0}</p>
               </div>
             </Card>
             <Card className="bg-accent/10 border-accent/20 flex items-center gap-3 px-5 py-3 shadow-xl shadow-accent/5">
@@ -74,10 +93,10 @@ export default function DashboardPage() {
                <Target className="w-6 h-6 text-primary" />
                <div className="hidden sm:block">
                  <p className="text-xs text-muted-foreground">{t.lessonsCompleted}</p>
-                 <p className="text-xl font-headline font-bold">{progressData?.length || 0}</p>
+                 <p className="text-xl font-headline font-bold">{progress.length}</p>
                </div>
                <div className="sm:hidden">
-                 <p className="text-xl font-headline font-bold">{progressData?.length || 0}</p>
+                 <p className="text-xl font-headline font-bold">{progress.length}</p>
                </div>
              </div>
           </Card>

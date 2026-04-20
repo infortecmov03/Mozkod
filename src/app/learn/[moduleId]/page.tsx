@@ -7,23 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Terminal, BookOpen, Play, CheckCircle2, ChevronLeft, ChevronRight, Trophy, Zap } from "lucide-react";
+import { Terminal, BookOpen, Play, CheckCircle2, ChevronLeft, ChevronRight, Trophy, Zap, Loader2 } from "lucide-react";
 import { findLessonById, getNextLessonId } from "@/lib/curriculum";
 import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/components/LanguageContext";
-import { useFirestore, useUser, useDoc } from "@/firebase";
-import { doc, setDoc, serverTimestamp, increment } from "firebase/firestore";
-import { errorEmitter } from "@/firebase/error-emitter";
-import { FirestorePermissionError } from "@/firebase/errors";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/lib/supabase/client";
 
 export default function LearnPage() {
   const { moduleId } = useParams();
   const router = useRouter();
   const { toast } = useToast();
   const { t } = useLanguage();
-  const { user } = useUser();
-  const firestore = useFirestore();
+  const { profile } = useAuth();
 
   const lessonData = useMemo(() => findLessonById(moduleId as string), [moduleId]);
   
@@ -33,9 +30,7 @@ export default function LearnPage() {
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
   const [isCompleted, setIsCompleted] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("theory");
-
-  const userRef = useMemo(() => user && firestore ? doc(firestore, 'users', user.uid) : null, [user, firestore]);
-  const { data: profile } = useDoc(userRef);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (lessonData?.lesson.type === 'exercise' && lessonData.lesson.code) {
@@ -85,53 +80,47 @@ export default function LearnPage() {
   };
 
   const saveProgress = async (score: number) => {
-    if (!user || !firestore) return;
+    if (!profile) return;
+    setIsSaving(true);
     
-    const pointsToAdd = lesson.type === 'theory' ? 10 : 20;
-    const progressRef = doc(firestore, 'users', user.uid, 'progress', lesson.id);
-    const userDocRef = doc(firestore, 'users', user.uid);
+    try {
+      const { error: progressError } = await supabase
+        .from('user_lesson_progress')
+        .upsert({
+          user_id: profile.id,
+          level_id: parseInt(module.id),
+          ka_id: ka.id,
+          lesson_id: lesson.id,
+          lesson_type: lesson.type,
+          completed: true,
+          completed_at: new Date().toISOString(),
+          quiz_score: score,
+          quiz_passed: score >= 70,
+          last_code: lesson.type === 'exercise' ? code : null
+        }, { onConflict: 'user_id,lesson_id' });
 
-    const data = {
-      levelId: parseInt(module.id),
-      kaId: ka.id,
-      lessonId: lesson.id,
-      lessonType: lesson.type,
-      completed: true,
-      completedAt: serverTimestamp(),
-      quizScore: score,
-      quizPassed: score >= 70,
-      lastCode: lesson.type === 'exercise' ? code : null
-    };
+      if (progressError) throw progressError;
 
-    setDoc(progressRef, data, { merge: true }).catch(async () => {
-      errorEmitter.emit('permission-error', new FirestorePermissionError({
-        path: progressRef.path,
-        operation: 'write',
-        requestResourceData: data
-      }));
-    });
+      // Chama a RPC para calcular pontos (definida no schema)
+      const { data: points, error: pointsError } = await supabase.rpc('calculate_total_points', {
+        p_user_id: profile.id
+      });
 
-    // Lógica de Streak (simplificada para o protótipo)
-    let newStreak = (profile?.streak || 0);
-    const lastActive = profile?.lastActive?.toDate();
-    const today = new Date();
-    
-    if (!lastActive) {
-      newStreak = 1;
-    } else {
-      const diff = Math.floor((today.getTime() - lastActive.getTime()) / (1000 * 3600 * 24));
-      if (diff === 1) newStreak += 1;
-      else if (diff > 1) newStreak = 1;
+      if (!pointsError) {
+        await supabase
+          .from('profiles')
+          .update({ total_points: points })
+          .eq('id', profile.id);
+      }
+    } catch (err: any) {
+      toast({ variant: "destructive", title: "Erro ao salvar", description: err.message });
+    } finally {
+      setIsSaving(false);
     }
-
-    setDoc(userDocRef, { 
-      totalPoints: increment(pointsToAdd),
-      lastActive: serverTimestamp(),
-      streak: newStreak
-    }, { merge: true });
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    // Busca progresso atual para filtrar as completas (opcional no protótipo)
     const nextId = getNextLessonId(lesson.id, []);
     if (nextId) {
       router.push(`/learn/${nextId}`);
@@ -159,9 +148,9 @@ export default function LearnPage() {
         
         <div className="flex gap-2">
           {isCompleted && (
-            <Button size="sm" onClick={handleNext} className="bg-primary hover:bg-primary/90 rounded-full font-bold h-8 px-4 text-xs animate-bounce">
-              {t.next}
-              <ChevronRight className="w-3 h-3 ml-1" />
+            <Button size="sm" onClick={handleNext} disabled={isSaving} className="bg-primary hover:bg-primary/90 rounded-full font-bold h-8 px-4 text-xs animate-bounce">
+              {isSaving ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : t.next}
+              {!isSaving && <ChevronRight className="w-3 h-3 ml-1" />}
             </Button>
           )}
         </div>
