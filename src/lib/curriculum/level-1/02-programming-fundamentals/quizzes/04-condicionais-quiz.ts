@@ -1,20 +1,25 @@
-import type { Quiz } from '../../types';
+import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "pf-t4-quiz",
-  title: "Quiz: Tomada de Decisão",
+  title: "Quiz: Estruturas Condicionais",
   passingScore: 70,
   questions: [
     {
       id: "q1",
-      question: "Qual palavra-chave é usada para iniciar uma condição?",
-      options: ["while", "if", "for", "switch"],
-      correctAnswer: 1
+      question: "Qual palavra-chave é usada para o caminho alternativo se o IF falhar?",
+      options: ["Then", "Next", "Else", "Case"],
+      correctAnswer: 2
     },
     {
       id: "q2",
-      question: "O bloco 'else' é obrigatório num 'if'?",
-      options: ["Sim", "Não", "Apenas em Python", "Apenas em Java"],
+      question: "O que acontece se a condição de um IF for False e não houver ELSE?",
+      options: [
+        "O programa dá erro",
+        "O programa salta o bloco e continua",
+        "O programa entra em loop",
+        "O programa fecha"
+      ],
       correctAnswer: 1
     }
   ]

@@ -1,13 +1,15 @@
-import { lesson as lesson1 } from './theory/01-variaveis-tipos';
-import { lesson as lesson2 } from './theory/02-operadores';
-import { lesson as lesson3 } from './theory/03-strings-io';
-import { lesson as lesson4 } from './theory/04-condicionais';
-import { lesson as lesson5 } from './theory/05-loops';
-import { lesson as lesson6 } from './theory/06-funcoes-escopos';
-import { lesson as lesson7 } from './theory/07-arrays';
-import { lesson as lesson8 } from './theory/08-objetos-mapas';
+import { lesson as l1 } from './theory/01-variaveis-tipos';
+import { lesson as l2 } from './theory/02-operadores';
+import { lesson as l3 } from './theory/03-strings-io';
+import { lesson as l4 } from './theory/04-condicionais';
+import { lesson as l5 } from './theory/05-loops';
+import { lesson as l6 } from './theory/06-funcoes-escopos';
+import { lesson as l7 } from './theory/07-arrays';
+import { lesson as l8 } from './theory/08-objetos-mapas';
+import { lesson as l9 } from './theory/09-recursao';
+import { lesson as l10 } from './theory/10-poo-intro';
+import { lesson as l11 } from './theory/11-testes-debugging';
 
 export const lessons = [
-  lesson1, lesson2, lesson3, lesson4, lesson5,
-  lesson6, lesson7, lesson8
+  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11
 ];
