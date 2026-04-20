@@ -1,22 +1,57 @@
-import type { KnowledgeArea, TheoryLesson } from '../../types';
+import type { KnowledgeArea, TheoryLesson, Quiz } from '../../types';
 
 const htmlLessons: TheoryLesson[] = [
-  { id: "html-m1", title: "Semântica Avançada e Acessibilidade", content: "<p>Uso profundo de ARIA roles e tags semânticas para SEO e leitores de ecrã.</p>", quizId: "html-mq1" },
-  { id: "html-m2", title: "Arquitetura de Documentos Complexos", content: "<p>Estruturando aplicações web de grande porte.</p>", quizId: "html-mq2" },
-  { id: "html-m3", title: "HTML5 APIs: Canvas e SVG", content: "<p>Gráficos de alta performance diretamente no documento.</p>", quizId: "html-mq3" },
-  { id: "html-m4", title: "HTML5 APIs: Geolocation e Web Workers", content: "<p>Funcionalidades nativas do browser para apps modernas.</p>", quizId: "html-mq4" },
-  { id: "html-m5", title: "Formulários e Validação Nativa", content: "<p>Domínio total de inputs, patterns e feedback de erro.</p>", quizId: "html-mq5" },
-  { id: "html-m6", title: "SEO Técnico e Metadados", content: "<p>OpenGraph, JSON-LD e otimização para indexação.</p>", quizId: "html-mq6" },
-  { id: "html-m7", title: "Web Components: Shadow DOM", content: "<p>Criando tags customizadas e encapsuladas.</p>", quizId: "html-mq7" },
-  { id: "html-m8", title: "Performance: Preload e Resource Hints", content: "<p>Otimizando o carregamento crítico de recursos.</p>", quizId: "html-mq8" },
-  { id: "html-m9", title: "Segurança no HTML (CSP)", content: "<p>Prevenindo injeções de script através de marcação segura.</p>", quizId: "html-mq9" },
-  { id: "html-m10", title: "O Futuro: HTML6 e Web Standards", content: "<p>Novas propostas e a evolução do padrão W3C.</p>", quizId: "html-mq10" }
+  { id: "html-m1", title: "Semântica Avançada e Acessibilidade", content: `<div class="space-y-4">
+    <h2 class="text-2xl font-bold">🏗️ Além das Divs</h2>
+    <p>O HTML moderno exige o uso de tags que descrevam o seu conteúdo (main, section, article, aside). Isso é vital para SEO e para tecnologias assistivas.</p>
+    <ul class="list-disc ml-6">
+      <li><strong>ARIA Roles:</strong> Definem o propósito de um elemento quando a tag nativa não é suficiente.</li>
+      <li><strong>Landmarks:</strong> Permitem que usuários de leitores de ecrã naveguem rapidamente pela página.</li>
+    </ul>
+  </div>`, quizId: "html-mq1" },
+  { id: "html-m2", title: "Arquitetura de Documentos Complexos", content: "<p>Estruturando aplicações web de grande porte usando templates e slots.</p>", quizId: "html-mq2" },
+  { id: "html-m3", title: "HTML5 APIs: Canvas e SVG", content: "<p>Gráficos vetoriais e desenho programático para visualização de dados e jogos.</p>", quizId: "html-mq3" },
+  { id: "html-m4", title: "HTML5 APIs: Web Workers", content: "<p>Execução de scripts em background sem bloquear a UI principal.</p>", quizId: "html-mq4" },
+  { id: "html-m5", title: "Formulários e Validação Nativa", content: "<p>Uso de Constraint Validation API para feedback instantâneo sem bibliotecas pesadas.</p>", quizId: "html-mq5" },
+  { id: "html-m6", title: "SEO Técnico e Metadados", content: "<p>JSON-LD e Microdados para Schema.org, melhorando a visibilidade em motores de busca.</p>", quizId: "html-mq6" },
+  { id: "html-m7", title: "Web Components: Shadow DOM", content: "<p>Encapsulamento de estilos e comportamento em componentes reutilizáveis nativos.</p>", quizId: "html-mq7" },
+  { id: "html-m8", title: "Performance: Resource Hints", content: "<p>DNS-prefetch, Preconnect, Preload e Prefetch para carregamento ultra-rápido.</p>", quizId: "html-mq8" },
+  { id: "html-m9", title: "Segurança no HTML (CSP)", content: "<p>Configuração de Content Security Policy para prevenir XSS e injeções.</p>", quizId: "html-mq9" },
+  { id: "html-m10", title: "O Futuro: Web Standards", content: "<p>Novas propostas como WebGPU e a evolução do ecossistema W3C.</p>", quizId: "html-mq10" }
+];
+
+const htmlQuizzes: Quiz[] = [
+  {
+    id: "html-mq1",
+    title: "Quiz: Semântica e Acessibilidade",
+    passingScore: 80,
+    questions: [
+      {
+        id: "q1",
+        question: "Qual o propósito principal do atributo 'aria-live'?",
+        options: [
+          "Definir a cor de um elemento em tempo real",
+          "Anunciar atualizações de conteúdo dinâmico para leitores de ecrã",
+          "Aumentar o brilho da tela",
+          "Executar um script quando o usuário clica"
+        ],
+        correctAnswer: 1
+      },
+      {
+        id: "q2",
+        question: "Qual tag é a mais adequada para um conteúdo secundário relacionado ao principal?",
+        options: ["<div>", "<section>", "<aside>", "<article>"],
+        correctAnswer: 2
+      }
+    ]
+  }
+  // Os outros quizzes seriam preenchidos seguindo este padrão ACM
 ];
 
 export const htmlKA: KnowledgeArea = {
   id: 'lang-html',
   title: '01. HTML Master',
-  description: 'Domínio total da estrutura web e acessibilidade.',
+  description: 'Domínio total da estrutura web e acessibilidade profunda.',
   load: '30h',
   iconName: 'Code',
   theory: htmlLessons,
@@ -27,12 +62,12 @@ export const htmlKA: KnowledgeArea = {
         language: 'html',
         title: 'Laboratório: Acessibilidade Master',
         description: 'Criação de componentes totalmente acessíveis.',
-        statement: 'Use ARIA labels num componente de modal simulado.',
-        template: '<div role="dialog" aria-labelledby="title"></div>',
+        statement: 'Use o atributo ARIA correto para indicar que um elemento é um diálogo modal.',
+        template: '<div role=""></div>',
         detailedExplanation: '<p>A acessibilidade é a marca de um desenvolvedor sênior.</p>',
-        objectives: [{ id: 'obj1', description: 'Usar aria-labelledby', test: 'aria-labelledby' }]
+        objectives: [{ id: 'obj1', description: 'Definir o role como dialog', test: 'role="dialog"' }]
       }
     ]
   },
-  quizzes: htmlLessons.map(l => ({ id: l.quizId, title: `Quiz: ${l.title}`, questions: [], passingScore: 80 }))
+  quizzes: htmlQuizzes
 };
