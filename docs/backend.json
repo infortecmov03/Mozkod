@@ -1,0 +1,60 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "User profile and learning statistics",
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "avatarUrl": { "type": "string" },
+        "preferredLanguage": { "type": "string", "default": "pt" },
+        "preferredTheme": { "type": "string", "default": "system" },
+        "totalPoints": { "type": "number", "default": 0 },
+        "streak": { "type": "number", "default": 0 },
+        "lastActive": { "type": "string", "format": "date-time" }
+      }
+    },
+    "LessonProgress": {
+      "title": "Lesson Progress",
+      "description": "Tracks progress for each lesson",
+      "type": "object",
+      "properties": {
+        "completed": { "type": "boolean", "default": false },
+        "completedAt": { "type": "string", "format": "date-time" },
+        "quizPassed": { "type": "boolean", "default": false },
+        "quizScore": { "type": "number" },
+        "lastCode": { "type": "string" }
+      }
+    },
+    "Certificate": {
+      "title": "Certificate",
+      "description": "Verified certificates earned by users",
+      "type": "object",
+      "properties": {
+        "levelId": { "type": "string" },
+        "levelTitle": { "type": "string" },
+        "issuedAt": { "type": "string", "format": "date-time" },
+        "certificateUrl": { "type": "string" }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["google", "password"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Root user profile document"
+    },
+    "/users/{userId}/progress/{lessonId}": {
+      "schema": "LessonProgress",
+      "description": "Sub-collection for lesson progress"
+    },
+    "/users/{userId}/certificates/{certId}": {
+      "schema": "Certificate",
+      "description": "Sub-collection for earned certificates"
+    }
+  }
+}

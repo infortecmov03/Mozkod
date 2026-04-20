@@ -1,68 +1,94 @@
 
+export type LessonType = 'theory' | 'lab' | 'quiz';
+
+export type QuizQuestion = {
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+};
+
+export type Lesson = {
+  id: string;
+  title: string;
+  type: LessonType;
+  content: string;
+  code?: string;
+  language?: string;
+  solution?: string;
+  quiz?: QuizQuestion[];
+};
+
 export type Module = {
   id: string;
   title: string;
   category: string;
   description: string;
   image: string;
-  lessons: Lesson[];
   level: 'Beginner' | 'Intermediate' | 'Advanced';
-  progress: number;
-};
-
-export type Lesson = {
-  id: string;
-  title: string;
-  type: 'theory' | 'lab' | 'quiz';
-  content: string;
-  code?: string;
-  language?: string;
+  lessons: Lesson[];
+  progress?: number;
 };
 
 export const modules: Module[] = [
   {
     id: 'cs-basics',
-    title: 'CS Core: Algorithms',
+    title: 'Fundamentos de Algoritmos',
     category: 'CS Core',
-    description: 'Master the fundamental building blocks of computing.',
+    description: 'Domine a lógica por trás de cada linha de código.',
     image: 'cs-core',
     level: 'Beginner',
-    progress: 45,
     lessons: [
       {
-        id: 'intro',
-        title: 'What is an Algorithm?',
+        id: 'alg-intro',
+        title: 'O que é um Algoritmo?',
         type: 'theory',
-        content: 'An algorithm is a step-by-step procedure for solving a problem.'
+        content: 'Um algoritmo é uma sequência finita de passos bem definidos que visam resolver um problema específico. Pense nele como uma receita de bolo: você tem os ingredientes (entrada) e os passos a seguir para obter o resultado (saída).'
       },
       {
-        id: 'lab-1',
-        title: 'Sum of Two Numbers',
+        id: 'alg-quiz-1',
+        title: 'Verificação de Conceitos',
+        type: 'quiz',
+        content: 'Vamos testar o que você aprendeu sobre a definição básica de algoritmos.',
+        quiz: [
+          {
+            id: 'q1',
+            question: 'Qual das alternativas melhor define um algoritmo?',
+            options: [
+              'Um tipo de hardware de computador',
+              'Uma sequência finita de passos para resolver um problema',
+              'Uma linguagem de programação específica',
+              'Um erro de software'
+            ],
+            correctAnswer: 1
+          }
+        ]
+      },
+      {
+        id: 'alg-lab-1',
+        title: 'Operações Básicas',
         type: 'lab',
-        language: 'python',
-        code: 'def sum_numbers(a, b):\n    return a + b\n\nprint(sum_numbers(5, 10))',
-        content: 'Write a function that takes two numbers and returns their sum.'
+        language: 'javascript',
+        code: 'function somar(a, b) {\n  // Escreva seu código aqui\n  \n}',
+        solution: 'return a + b',
+        content: 'Complete a função para que ela retorne a soma de dois números passados como argumentos.'
       }
     ]
   },
   {
     id: 'web-foundations',
-    title: 'Web Core: Modern HTML/CSS',
+    title: 'Web Core: HTML5 & CSS3',
     category: 'Web Development',
-    description: 'Build beautiful, responsive interfaces for the modern web.',
+    description: 'Construa a estrutura e o estilo da web moderna.',
     image: 'web-dev',
     level: 'Beginner',
-    progress: 100,
-    lessons: []
-  },
-  {
-    id: 'ai-intro',
-    title: 'AI/ML Fundamentals',
-    category: 'Data Science',
-    description: 'Step into the world of intelligent systems.',
-    image: 'ai-ml',
-    level: 'Intermediate',
-    progress: 10,
-    lessons: []
+    lessons: [
+      {
+        id: 'html-intro',
+        title: 'Estrutura do HTML',
+        type: 'theory',
+        content: 'O HTML é a espinha dorsal de qualquer site. Ele define o conteúdo e a estrutura usando tags.'
+      }
+    ]
   }
 ];
