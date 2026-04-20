@@ -26,10 +26,10 @@
     --ring: 222.2 84% 4.9%;
     --radius: 0.75rem;
 
-    /* Logo Specific Variables */
-    --logo-bg-outer: 210 40% 98%;
+    /* Logo Specific Variables - Fundo Branco e Cores Acesas */
+    --logo-bg-outer: 210 40% 95%;
     --logo-bg-inner: 0 0% 100%;
-    --logo-text: 222.2 84% 4.9%;
+    --logo-text: 24 100% 50%; /* Laranja vibrante */
   }
 
   .dark {
@@ -53,10 +53,10 @@
     --input: 213 14% 25%;
     --ring: 219 100% 59%;
 
-    /* Logo Specific Variables Dark */
-    --logo-bg-outer: 220 20% 5%;
-    --logo-bg-inner: 213 14% 10%;
-    --logo-text: 0 0% 100%;
+    /* Logo Specific Variables Dark - Mantendo o fundo branco no ícone */
+    --logo-bg-outer: 213 14% 10%;
+    --logo-bg-inner: 0 0% 100%;
+    --logo-text: 24 100% 60%; /* Laranja ainda mais aceso no escuro */
   }
 }
 
