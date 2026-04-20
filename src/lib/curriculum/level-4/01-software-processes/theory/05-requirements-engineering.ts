@@ -1,0 +1,2 @@
+import type { TheoryLesson } from '../../../../types';
+export const lesson: TheoryLesson = { id: "se-t5", title: "Engenharia de Requisitos", content: "<p>Captura e gestão de necessidades.</p>", quizId: "se-q5" };

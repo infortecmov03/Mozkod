@@ -1,0 +1,2 @@
+import type { TheoryLesson } from '../../../../types';
+export const lesson: TheoryLesson = { id: "se-t8", title: "Cultura DevOps", content: "<p>Quebrando silos entre Dev e Ops.</p>", quizId: "se-q8" };

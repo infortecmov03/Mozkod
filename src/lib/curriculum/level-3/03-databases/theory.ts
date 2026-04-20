@@ -10,5 +10,16 @@ import { lesson as l9 } from './theory/09-nosql-systems';
 import { lesson as l10 } from './theory/10-data-warehousing';
 
 export const lessons = [
-  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10
+  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10,
+  ...Array.from({ length: 11 }, (_, i) => ({
+    id: `db-t${i + 11}`,
+    title: [
+      "LSM Trees vs B-Trees", "Execução de Queries Internals", "Sharding & Partitioning",
+      "Replicação & Consistência", "Teorema CAP Deep Dive", "Algoritmos de Consenso (Raft/Paxos)",
+      "Bases de Dados In-Memory", "Vector Databases para AI", "Armazenamento Colunar",
+      "Segurança & Data Masking", "Grafos & Teoria Relacional"
+    ][i],
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🗄️ Engenharia de Dados</h2><p>Exploração dos mecanismos internos de armazenamento e recuperação de informação em escala.</p></div>`,
+    quizId: `db-q${i + 11}`
+  }))
 ];

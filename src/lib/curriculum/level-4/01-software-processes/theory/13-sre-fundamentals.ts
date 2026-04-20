@@ -1,0 +1,2 @@
+import type { TheoryLesson } from '../../../../types';
+export const lesson: TheoryLesson = { id: "se-t13", title: "SRE: Site Reliability Engineering", content: "<p>Google's approach to operations.</p>", quizId: "se-q13" };

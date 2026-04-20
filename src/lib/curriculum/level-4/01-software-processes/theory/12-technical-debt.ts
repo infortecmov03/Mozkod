@@ -1,0 +1,2 @@
+import type { TheoryLesson } from '../../../../types';
+export const lesson: TheoryLesson = { id: "se-t12", title: "Gestão de Débito Técnico", content: "<p>Equilíbrio entre velocidade e qualidade.</p>", quizId: "se-q12" };

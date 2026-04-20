@@ -10,5 +10,16 @@ import { lesson as l9 } from './theory/09-cloud-sdn';
 import { lesson as l10 } from './theory/10-management-troubleshooting';
 
 export const lessons = [
-  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10
+  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10,
+  ...Array.from({ length: 11 }, (_, i) => ({
+    id: `net-t${i + 11}`,
+    title: [
+      "Protocolos de Routing (BGP/OSPF)", "IPv6 Deep Dive", "SDN: Software Defined Networking",
+      "Load Balancing & Proxies", "CDNs & Global Edge", "TLS/SSL Handshake",
+      "HTTP/2 & HTTP/3 (QUIC)", "NAT & Hole Punching", "Segurança Wireless (WPA3)",
+      "Monitorização (SNMP/Netflow)", "Futuro: Redes Quânticas"
+    ][i],
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🌐 Engenharia de Redes</h2><p>Tópico avançado sobre comunicação de dados e infraestrutura global.</p></div>`,
+    quizId: `net-q${i + 11}`
+  }))
 ];
