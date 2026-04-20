@@ -76,3 +76,24 @@ export function findQuizById(quizId: string): Quiz | null {
   }
   return null;
 }
+
+export function findNextLessonId(currentId: string): string | null {
+  const allLessons: string[] = [];
+  
+  modules.forEach(level => {
+    level.knowledgeAreas.forEach(ka => {
+      if (ka.theory) ka.theory.forEach(l => allLessons.push(l.id));
+      if (ka.practice) {
+        Object.values(ka.practice).forEach(exercises => {
+          exercises.forEach(ex => allLessons.push(ex.id));
+        });
+      }
+    });
+  });
+
+  const currentIndex = allLessons.indexOf(currentId);
+  if (currentIndex !== -1 && currentIndex < allLessons.length - 1) {
+    return allLessons[currentIndex + 1];
+  }
+  return null;
+}

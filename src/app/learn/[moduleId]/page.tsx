@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -17,7 +16,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, findQuizById } from "@/lib/curriculum";
+import { findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, findQuizById, findNextLessonId } from "@/lib/curriculum";
 import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/components/LanguageContext";
@@ -94,19 +93,34 @@ export default function LearnPage() {
 
   const handleQuizSubmit = async () => {
     if (!quiz) return;
-    setQuizSubmitted(true);
     
     const correctCount = quiz.questions.filter(q => quizAnswers[q.id] === q.correctAnswer).length;
     const score = Math.round((correctCount / quiz.questions.length) * 100);
 
-    if (score >= quiz.passingScore) {
+    setQuizSubmitted(true);
+
+    if (score === 100) {
+      toast({ 
+        title: "Perfeito! 🏆", 
+        description: "Excelente trabalho! Redirecionando para a próxima lição em 3 segundos..." 
+      });
+      
+      await handleComplete(100);
+
+      setTimeout(() => {
+        const nextId = findNextLessonId(lessonId);
+        if (nextId) router.push(`/learn/${nextId}`);
+        else router.push('/dashboard');
+      }, 3000);
+
+    } else if (score >= quiz.passingScore) {
       toast({ title: t.wellDone, description: `Aprovado com ${score}%` });
       await handleComplete(score);
     } else {
       toast({ 
         variant: "destructive", 
         title: "Nota insuficiente", 
-        description: `Pontuação: ${score}%. O mínimo necessário é ${quiz.passingScore}%. Analise os erros abaixo.` 
+        description: `Pontuação: ${score}%. Analisa as dicas e tenta novamente.` 
       });
     }
   };
@@ -121,9 +135,8 @@ export default function LearnPage() {
     setIsSaving(true);
     try {
       await markAsCompleted(lessonId, level.id, ka.id, theory ? 'theory' : 'exercise', score, practice ? code : undefined);
-      toast({ title: "Sucesso!", description: "Progresso guardado." });
     } catch (err: any) {
-      toast({ variant: "destructive", title: "Erro", description: err.message });
+      toast({ variant: "destructive", title: "Erro ao guardar progresso", description: err.message });
     } finally {
       setIsSaving(false);
     }
@@ -163,15 +176,6 @@ export default function LearnPage() {
                  <MessageSquare className="w-4 h-4" />
                  <span className="hidden sm:inline">{t.requestHelp}</span>
                </Button>
-               <Button 
-                 variant="outline" 
-                 size="sm" 
-                 onClick={handleOpenVSCode}
-                 className="gap-2 rounded-full border-blue-500/20 bg-blue-500/5 text-blue-500 hover:bg-blue-500/10"
-               >
-                 <MonitorSmartphone className="w-4 h-4" />
-                 <span className="hidden sm:inline">VS Code</span>
-               </Button>
              </>
            )}
            <Sheet>
@@ -183,7 +187,7 @@ export default function LearnPage() {
              </SheetTrigger>
              <SheetContent side="left" className="w-80 overflow-y-auto">
                <SheetHeader className="mb-6">
-                 <SheetTitle>Navegação</SheetTitle>
+                 <SheetTitle>Navegação do Módulo</SheetTitle>
                </SheetHeader>
                <div className="space-y-8">
                  {ka.theory?.length > 0 && (
@@ -204,7 +208,7 @@ export default function LearnPage() {
                  {ka.practice && Object.keys(ka.practice).length > 0 && (
                     <div>
                       <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
-                        <Code2 className="w-3 h-3" /> Labs
+                        <Code2 className="w-3 h-3" /> Laboratórios
                       </h4>
                       {Object.entries(ka.practice).map(([lang, exercises]) => (
                         <div key={lang} className="mt-4 first:mt-0">
@@ -247,11 +251,11 @@ export default function LearnPage() {
                         <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center"><HelpCircle className="w-6 h-6 text-primary" /></div>
                         <div>
                           <h3 className="font-headline font-bold text-2xl">{quiz.title}</h3>
-                          <p className="text-sm text-muted-foreground">Conclua o quiz para finalizar a lição.</p>
+                          <p className="text-sm text-muted-foreground">Valida o teu conhecimento para avançar.</p>
                         </div>
                       </div>
                       {quizSubmitted && (
-                        <Button variant="outline" size="sm" onClick={resetQuiz} className="rounded-full gap-2">
+                        <Button variant="outline" size="sm" onClick={resetQuiz} className="rounded-full gap-2 border-primary/20 hover:bg-primary/5">
                            <RotateCcw className="w-4 h-4" /> Tentar Novamente
                         </Button>
                       )}
@@ -277,10 +281,11 @@ export default function LearnPage() {
                                 const isOptionSelected = quizAnswers[q.id] === i;
                                 const isOptionCorrect = q.correctAnswer === i;
                                 
-                                let variantClass = "border bg-background/50";
+                                let variantClass = "border bg-background/50 hover:border-primary/30";
                                 if (quizSubmitted) {
-                                  if (isOptionCorrect) variantClass = "border-green-500 bg-green-500/10";
+                                  if (isOptionSelected && isCorrect) variantClass = "border-green-500 bg-green-500/10";
                                   else if (isOptionSelected && !isCorrect) variantClass = "border-red-500 bg-red-500/10";
+                                  else if (isOptionCorrect) variantClass = "border-green-500/50 opacity-80";
                                 } else if (isOptionSelected) {
                                   variantClass = "border-primary bg-primary/5";
                                 }
@@ -298,15 +303,15 @@ export default function LearnPage() {
                               })}
                             </RadioGroup>
                             
-                            {quizSubmitted && (
-                              <div className={cn("ml-10 p-5 rounded-2xl border flex gap-4 animate-in fade-in slide-in-from-top-2", isCorrect ? "bg-green-500/5 border-green-500/20" : "bg-red-500/5 border-red-500/20")}>
-                                {isCorrect ? <Zap className="w-5 h-5 text-green-500 shrink-0" /> : <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />}
+                            {quizSubmitted && q.explanation && (
+                              <div className={cn("ml-10 p-5 rounded-2xl border flex gap-4 animate-in fade-in slide-in-from-top-2", isCorrect ? "bg-green-500/5 border-green-500/20" : "bg-blue-500/5 border-blue-500/20")}>
+                                {isCorrect ? <Zap className="w-5 h-5 text-green-500 shrink-0" /> : <Info className="w-5 h-5 text-blue-500 shrink-0" />}
                                 <div>
-                                  <p className={cn("text-sm font-bold mb-1", isCorrect ? "text-green-500" : "text-red-500")}>
-                                    {isCorrect ? "Excelente!" : "Quase lá!"}
+                                  <p className={cn("text-sm font-bold mb-1", isCorrect ? "text-green-500" : "text-blue-500")}>
+                                    {isCorrect ? "Excelente!" : "Dica Pedagógica:"}
                                   </p>
                                   <p className="text-sm text-muted-foreground leading-relaxed">
-                                    {q.explanation || (isCorrect ? "Resposta correta!" : "A opção selecionada não está correta.")}
+                                    {q.explanation}
                                   </p>
                                 </div>
                               </div>
@@ -315,16 +320,15 @@ export default function LearnPage() {
                         );
                       })}
                     </div>
-                    {!isCompleted(lessonId) && (
-                      <Button 
-                        onClick={handleQuizSubmit} 
-                        className="w-full h-16 rounded-2xl font-bold text-xl bg-primary shadow-xl shadow-primary/20 transition-all mt-10" 
-                        disabled={isSaving || quizSubmitted || Object.keys(quizAnswers).length < quiz.questions.length}
-                      >
-                        {isSaving ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : <ShieldCheck className="w-6 h-6 mr-2" />}
-                        Finalizar Lição
-                      </Button>
-                    )}
+                    
+                    <Button 
+                      onClick={handleQuizSubmit} 
+                      className="w-full h-16 rounded-2xl font-bold text-xl bg-primary shadow-xl shadow-primary/20 transition-all mt-10" 
+                      disabled={isSaving || quizSubmitted || Object.keys(quizAnswers).length < quiz.questions.length}
+                    >
+                      {isSaving ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : <ShieldCheck className="w-6 h-6 mr-2" />}
+                      Finalizar Lição
+                    </Button>
                  </div>
                )}
             </div>
