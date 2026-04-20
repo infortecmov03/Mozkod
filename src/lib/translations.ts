@@ -20,7 +20,19 @@ export const translations = {
     notStarted: "Not Started",
     inProgress: "In Progress",
     generateCert: "Generate Certificate",
-    switchLang: "Português"
+    switchLang: "Português",
+    points: "Points",
+    streak: "Streak",
+    lessonsCompleted: "Lessons Completed",
+    lastActivity: "Last Activity",
+    continueLearning: "Continue Learning",
+    review: "Review",
+    wellDone: "Well Done!",
+    quizRequirement: "Mandatory Quiz",
+    validateAnswers: "Validate Answers",
+    next: "Next",
+    downloadCert: "Download PDF",
+    sharePortfolio: "Share Portfolio"
   },
   pt: {
     heroTitle: "Codifica o Teu Futuro em Qualquer Língua",
@@ -40,6 +52,18 @@ export const translations = {
     notStarted: "Não Iniciado",
     inProgress: "Em Progresso",
     generateCert: "Gerar Certificado",
-    switchLang: "English"
+    switchLang: "English",
+    points: "Pontos",
+    streak: "Streak",
+    lessonsCompleted: "Lições Completas",
+    lastActivity: "Última Atividade",
+    continueLearning: "Continuar Aprendendo",
+    review: "Revisar",
+    wellDone: "Excelente!",
+    quizRequirement: "Quiz Obrigatório",
+    validateAnswers: "Validar Respostas",
+    next: "Seguinte",
+    downloadCert: "Descarregar PDF",
+    sharePortfolio: "Partilhar Portfólio"
   }
 };
