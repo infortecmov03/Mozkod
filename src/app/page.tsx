@@ -36,7 +36,7 @@ export default function Home() {
             <span>AI-Powered Learning</span>
           </div>
           
-          <h1 className="font-headline text-4xl md:text-7xl font-bold tracking-tight text-white leading-tight">
+          <h1 className="font-headline text-4xl md:text-7xl font-bold tracking-tight leading-tight">
             {t.heroTitle.split(' ').slice(0, -3).join(' ')} <br className="hidden md:block" />
             <span className="text-primary">{t.heroTitle.split(' ').slice(-3).join(' ')}</span>
           </h1>
@@ -96,15 +96,20 @@ export default function Home() {
         </div>
       </section>
       
-      <footer className="mt-auto py-12 border-t">
-        <div className="container px-4 mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
-            <Logo className="h-8 w-auto" />
-          </Link>
-          <p className="text-sm text-muted-foreground">© 2024 Codworks Moz. Empowering the next tech hub.</p>
-          <div className="flex gap-6">
-            <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacidade</Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Termos</Link>
+      <footer className="mt-auto py-16 border-t bg-card/10">
+        <div className="container px-4 mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+          <div className="flex flex-col items-center md:items-start gap-4">
+            <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+              <Logo className="h-16 w-auto" />
+            </Link>
+            <p className="text-sm text-muted-foreground text-center md:text-left">
+              © 2024 Codworks Moz. <br className="md:hidden" /> Empowering the next tech hub.
+            </p>
+          </div>
+          <div className="flex gap-8">
+            <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">Privacidade</Link>
+            <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">Termos</Link>
+            <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">Suporte</Link>
           </div>
         </div>
       </footer>
