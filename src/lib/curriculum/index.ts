@@ -1,4 +1,3 @@
-
 import { level1 } from './level-1/index';
 import { level2 } from './level-2/index';
 import { level3 } from './level-3/index';
@@ -7,7 +6,7 @@ import { level5 } from './level-5/index';
 import { level6 } from './level-6/index';
 import { level7 } from './level-7/index';
 import { level8 } from './level-8-languages/index';
-import type { Level, KnowledgeArea, TheoryLesson, PracticeExercise, Quiz } from './types';
+import type { Level, TheoryLesson, PracticeExercise, Quiz } from './types';
 
 export * from './types';
 

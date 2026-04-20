@@ -10,20 +10,18 @@ import { quiz as q9 } from './quizzes/09-recursao-quiz';
 import { quiz as q10 } from './quizzes/10-poo-quiz';
 import { quiz as q11 } from './quizzes/11-testes-quiz';
 import { quiz as q12 } from './quizzes/12-exception-handling-quiz';
+import { quiz as q13 } from './quizzes/13-regex-patterns-quiz';
+import { quiz as q14 } from './quizzes/14-memory-stack-heap-quiz';
+import { quiz as q15 } from './quizzes/15-code-style-linting-quiz';
+import { quiz as q17 } from './quizzes/17-json-serialization-quiz';
 
 export const quizzes = [
-  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12,
-  ...Array.from({ length: 9 }, (_, i) => ({
-    id: `pf-q${i + 13}`,
-    title: `Programming Fundamentals Quiz ${i + 13}`,
-    questions: [
-      {
-        id: "q_auto",
-        question: "Pergunta de validação técnica para o tópico " + (i + 13),
-        options: ["Opção A (Correta)", "Opção B", "Opção C"],
-        correctAnswer: 0
-      }
-    ],
-    passingScore: 70
-  }))
+  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10,
+  q11, q12, q13, q14, q15,
+  { id: "pf-q16", title: "Quiz: Assincronia", questions: [], passingScore: 70 },
+  q17,
+  { id: "pf-q18", title: "Quiz: Funcional", questions: [], passingScore: 70 },
+  { id: "pf-q19", title: "Quiz: Pacotes", questions: [], passingScore: 70 },
+  { id: "pf-q20", title: "Quiz: Segurança Memória", questions: [], passingScore: 70 },
+  { id: "pf-q21", title: "Quiz: Princípios Design", questions: [], passingScore: 70 }
 ];
