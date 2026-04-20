@@ -142,48 +142,52 @@ export default function LearnPage() {
                  <SheetTitle>Navegação</SheetTitle>
                </SheetHeader>
                <div className="space-y-8">
-                 <div>
-                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
-                     <BookOpen className="w-3 h-3" /> Lições Teóricas
-                   </h4>
-                   <div className="grid gap-1">
-                     {ka.theory.map(l => (
-                        <Button 
-                          key={l.id} 
-                          variant={lessonId === l.id ? "secondary" : "ghost"}
-                          className="w-full justify-start text-xs h-9 rounded-lg"
-                          onClick={() => router.push(`/learn/${l.id}`)}
-                        >
-                          {isCompleted(l.id) && <CheckCircle2 className="w-3 h-3 mr-2 text-green-500" />}
-                          {l.title}
-                        </Button>
-                     ))}
-                   </div>
-                 </div>
-                 
-                 <div>
-                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
-                     <Terminal className="w-3 h-3" /> Laboratórios
-                   </h4>
-                   {Object.entries(ka.practice).map(([lang, exercises]) => (
-                     <div key={lang} className="mt-4 first:mt-0">
-                        <p className="text-[9px] font-bold text-primary mb-2 uppercase opacity-60 ml-2">{lang}</p>
-                        <div className="grid gap-1">
-                          {exercises.map(ex => (
+                 {ka.theory && ka.theory.length > 0 && (
+                    <div>
+                      <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
+                        <BookOpen className="w-3 h-3" /> Lições Teóricas
+                      </h4>
+                      <div className="grid gap-1">
+                        {ka.theory.map(l => (
                             <Button 
-                              key={ex.id} 
-                              variant={lessonId === ex.id ? "secondary" : "ghost"}
+                              key={l.id} 
+                              variant={lessonId === l.id ? "secondary" : "ghost"}
                               className="w-full justify-start text-xs h-9 rounded-lg"
-                              onClick={() => router.push(`/learn/${ex.id}`)}
+                              onClick={() => router.push(`/learn/${l.id}`)}
                             >
-                              {isCompleted(ex.id) && <CheckCircle2 className="w-3 h-3 mr-2 text-green-500" />}
-                              {ex.title}
+                              {isCompleted(l.id) && <CheckCircle2 className="w-3 h-3 mr-2 text-green-500" />}
+                              {l.title}
                             </Button>
-                          ))}
+                        ))}
+                      </div>
+                    </div>
+                 )}
+                 
+                 {ka.practice && Object.keys(ka.practice).length > 0 && (
+                    <div>
+                      <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
+                        <Terminal className="w-3 h-3" /> Laboratórios
+                      </h4>
+                      {Object.entries(ka.practice).map(([lang, exercises]) => (
+                        <div key={lang} className="mt-4 first:mt-0">
+                            <p className="text-[9px] font-bold text-primary mb-2 uppercase opacity-60 ml-2">{lang}</p>
+                            <div className="grid gap-1">
+                              {exercises.map(ex => (
+                                <Button 
+                                  key={ex.id} 
+                                  variant={lessonId === ex.id ? "secondary" : "ghost"}
+                                  className="w-full justify-start text-xs h-9 rounded-lg"
+                                  onClick={() => router.push(`/learn/${ex.id}`)}
+                                >
+                                  {isCompleted(ex.id) && <CheckCircle2 className="w-3 h-3 mr-2 text-green-500" />}
+                                  {ex.title}
+                                </Button>
+                              ))}
+                            </div>
                         </div>
-                     </div>
-                   ))}
-                 </div>
+                      ))}
+                    </div>
+                 )}
                </div>
              </SheetContent>
            </Sheet>
