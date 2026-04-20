@@ -8,13 +8,14 @@ export const quiz: Quiz = {
   questions: [
     {
       id: "q1",
-      question: "O que é o Git?",
-      options: [
-        "Uma linguagem de programação",
-        "Um sistema de controlo de versão",
-        "Um editor de texto",
-        "Um navegador web"
-      ],
+      question: "Qual comando inicia um novo repositório Git numa pasta?",
+      options: ["git start", "git init", "git begin", "git create"],
+      correctAnswer: 1
+    },
+    {
+      id: "q2",
+      question: "O Git é um sistema de controlo de versão centralizado ou distribuído?",
+      options: ["Centralizado", "Distribuído", "Nenhum dos dois", "Depende do servidor"],
       correctAnswer: 1
     }
   ]

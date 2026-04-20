@@ -4,20 +4,28 @@ import type { PracticeExercise } from '../../types';
 export const exercise: PracticeExercise = {
   id: "git-p1",
   language: "bash",
-  title: "Laboratório: Teu Primeiro Repositório",
-  description: "Inicia um projeto com Git.",
-  statement: "Usa o comando 'git init' para começar a monitorizar esta pasta.",
-  template: "# Digita o comando abaixo\n",
+  title: "Laboratório: O Teu Primeiro Commit",
+  description: "Aprende o fluxo básico: add e commit.",
+  statement: "Adiciona todos os ficheiros à área de estágio e faz um commit com a mensagem 'Primeiro commit'.",
+  template: "# Digita os comandos abaixo\n",
   detailedExplanation: `
-    <h3>🚀 Iniciando o Git</h3>
-    <p>O comando <code class="text-primary">git init</code> cria uma pasta oculta chamada <strong>.git</strong>. A partir desse momento, o Git passa a "vigiar" tudo o que acontece nessa pasta.</p>
+    <h3>📸 Capturando o Estado do Código</h3>
+    <p>O fluxo de trabalho do Git envolve dois passos principais:</p>
+    <ol class="list-decimal ml-6">
+      <li><code>git add .</code> - Prepara as alterações.</li>
+      <li><code>git commit -m "mensagem"</code> - Grava as alterações permanentemente.</li>
+    </ol>
   `,
   objectives: [
     {
       id: "obj1",
-      description: "Inicializar o repositório",
-      hint: "git init",
-      test: "git init"
+      description: "Adicionar ficheiros ao staging",
+      test: "git add"
+    },
+    {
+      id: "obj2",
+      description: "Realizar o commit",
+      test: "git commit -m"
     }
   ]
 };
