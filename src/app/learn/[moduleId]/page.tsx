@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -9,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { 
   Terminal, BookOpen, Play, CheckCircle2, ChevronLeft, 
   Trophy, Zap, Loader2, Menu, ListChecks, 
-  ShieldCheck, HelpCircle, Info, ChevronRight, Video
+  ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -166,7 +167,7 @@ export default function LearnPage() {
                  {ka.practice && Object.keys(ka.practice).length > 0 && (
                     <div>
                       <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
-                        <Terminal className="w-3 h-3" /> Laboratórios
+                        <Code2 className="w-3 h-3" /> Laboratórios
                       </h4>
                       {Object.entries(ka.practice).map(([lang, exercises]) => (
                         <div key={lang} className="mt-4 first:mt-0">
