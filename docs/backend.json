@@ -3,7 +3,7 @@
   "entities": {
     "UserProfile": {
       "title": "User Profile",
-      "description": "User profile and learning statistics",
+      "description": "Dados do utilizador e estatísticas de aprendizagem",
       "type": "object",
       "properties": {
         "displayName": { "type": "string" },
@@ -18,25 +18,44 @@
     },
     "LessonProgress": {
       "title": "Lesson Progress",
-      "description": "Tracks progress for each lesson",
+      "description": "Progresso em lições e exercícios",
       "type": "object",
       "properties": {
+        "levelId": { "type": "number" },
+        "kaId": { "type": "string" },
+        "lessonId": { "type": "string" },
+        "lessonType": { "type": "string", "enum": ["theory", "exercise"] },
         "completed": { "type": "boolean", "default": false },
         "completedAt": { "type": "string", "format": "date-time" },
         "quizPassed": { "type": "boolean", "default": false },
         "quizScore": { "type": "number" },
+        "quizAttempts": { "type": "number", "default": 0 },
         "lastCode": { "type": "string" }
+      }
+    },
+    "QuizAttempt": {
+      "title": "Quiz Attempt",
+      "description": "Histórico de tentativas de quiz",
+      "type": "object",
+      "properties": {
+        "quizId": { "type": "string" },
+        "lessonId": { "type": "string" },
+        "score": { "type": "number" },
+        "passed": { "type": "boolean" },
+        "answers": { "type": "object" },
+        "attemptedAt": { "type": "string", "format": "date-time" }
       }
     },
     "Certificate": {
       "title": "Certificate",
-      "description": "Verified certificates earned by users",
+      "description": "Certificados emitidos",
       "type": "object",
       "properties": {
-        "levelId": { "type": "string" },
+        "levelId": { "type": "number" },
         "levelTitle": { "type": "string" },
-        "issuedAt": { "type": "string", "format": "date-time" },
-        "certificateUrl": { "type": "string" }
+        "kaId": { "type": "string" },
+        "certificateUrl": { "type": "string" },
+        "issuedAt": { "type": "string", "format": "date-time" }
       }
     }
   },
@@ -46,15 +65,19 @@
   "firestore": {
     "/users/{userId}": {
       "schema": "UserProfile",
-      "description": "Root user profile document"
+      "description": "Documento raiz do perfil do usuário"
     },
     "/users/{userId}/progress/{lessonId}": {
       "schema": "LessonProgress",
-      "description": "Sub-collection for lesson progress"
+      "description": "Sub-coleção para progresso em lições"
+    },
+    "/users/{userId}/quiz_attempts/{attemptId}": {
+      "schema": "QuizAttempt",
+      "description": "Sub-coleção para tentativas de quiz"
     },
     "/users/{userId}/certificates/{certId}": {
       "schema": "Certificate",
-      "description": "Sub-collection for earned certificates"
+      "description": "Sub-coleção para certificados conquistados"
     }
   }
 }

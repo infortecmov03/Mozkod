@@ -1,5 +1,5 @@
 
-export type LessonType = 'theory' | 'lab' | 'quiz';
+export type LessonType = 'theory' | 'exercise';
 
 export type QuizQuestion = {
   id: string;
@@ -19,76 +19,86 @@ export type Lesson = {
   quiz?: QuizQuestion[];
 };
 
-export type Module = {
+export type KnowledgeArea = {
   id: string;
+  title: string;
+  lessons: Lesson[];
+};
+
+export type Module = {
+  id: string; // levelId
   title: string;
   category: string;
   description: string;
   image: string;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
-  lessons: Lesson[];
-  progress?: number;
+  knowledgeAreas: KnowledgeArea[];
 };
 
 export const modules: Module[] = [
   {
-    id: 'cs-basics',
-    title: 'Fundamentos de Algoritmos',
+    id: '1',
+    title: 'Programação de Fundamentos',
     category: 'CS Core',
     description: 'Domine a lógica por trás de cada linha de código.',
     image: 'cs-core',
     level: 'Beginner',
-    lessons: [
+    knowledgeAreas: [
       {
-        id: 'alg-intro',
-        title: 'O que é um Algoritmo?',
-        type: 'theory',
-        content: 'Um algoritmo é uma sequência finita de passos bem definidos que visam resolver um problema específico. Pense nele como uma receita de bolo: você tem os ingredientes (entrada) e os passos a seguir para obter o resultado (saída).'
-      },
-      {
-        id: 'alg-quiz-1',
-        title: 'Verificação de Conceitos',
-        type: 'quiz',
-        content: 'Vamos testar o que você aprendeu sobre a definição básica de algoritmos.',
-        quiz: [
+        id: 'ka-programming',
+        title: 'Introdução à Lógica',
+        lessons: [
           {
-            id: 'q1',
-            question: 'Qual das alternativas melhor define um algoritmo?',
-            options: [
-              'Um tipo de hardware de computador',
-              'Uma sequência finita de passos para resolver um problema',
-              'Uma linguagem de programação específica',
-              'Um erro de software'
-            ],
-            correctAnswer: 1
+            id: 'pf-t1',
+            title: 'Variáveis e Tipos de Dados',
+            type: 'theory',
+            content: 'Variáveis são como gavetas onde guardamos informações. Em linguagens como JavaScript, podemos ter tipos como string (texto), number (números) e boolean (verdadeiro/falso).',
+            quiz: [
+              {
+                id: 'q1',
+                question: 'Qual o tipo de dado usado para armazenar texto?',
+                options: ['Number', 'String', 'Boolean', 'Object'],
+                correctAnswer: 1
+              }
+            ]
+          },
+          {
+            id: 'pf-e1',
+            title: 'Praticando Soma',
+            type: 'exercise',
+            language: 'javascript',
+            code: 'function somar(a, b) {\n  // Retorne a soma de a e b\n  \n}',
+            solution: 'return a + b',
+            content: 'Complete a função para realizar a soma de dois valores.'
           }
         ]
-      },
-      {
-        id: 'alg-lab-1',
-        title: 'Operações Básicas',
-        type: 'lab',
-        language: 'javascript',
-        code: 'function somar(a, b) {\n  // Escreva seu código aqui\n  \n}',
-        solution: 'return a + b',
-        content: 'Complete a função para que ela retorne a soma de dois números passados como argumentos.'
-      }
-    ]
-  },
-  {
-    id: 'web-foundations',
-    title: 'Web Core: HTML5 & CSS3',
-    category: 'Web Development',
-    description: 'Construa a estrutura e o estilo da web moderna.',
-    image: 'web-dev',
-    level: 'Beginner',
-    lessons: [
-      {
-        id: 'html-intro',
-        title: 'Estrutura do HTML',
-        type: 'theory',
-        content: 'O HTML é a espinha dorsal de qualquer site. Ele define o conteúdo e a estrutura usando tags.'
       }
     ]
   }
 ];
+
+export function findLessonById(lessonId: string) {
+  for (const module of modules) {
+    for (const ka of module.knowledgeAreas) {
+      const lesson = ka.lessons.find(l => l.id === lessonId);
+      if (lesson) return { lesson, ka, module };
+    }
+  }
+  return null;
+}
+
+export function getNextLessonId(currentLessonId: string, completedLessonIds: string[]) {
+  let allLessons: Lesson[] = [];
+  modules.forEach(m => m.knowledgeAreas.forEach(ka => allLessons.push(...ka.lessons)));
+  
+  const currentIndex = allLessons.findIndex(l => l.id === currentLessonId);
+  if (currentIndex === -1) return null;
+
+  for (let i = currentIndex + 1; i < allLessons.length; i++) {
+    const lesson = allLessons[i];
+    if (!completedLessonIds.includes(lesson.id)) {
+      return lesson.id;
+    }
+  }
+  return null;
+}
