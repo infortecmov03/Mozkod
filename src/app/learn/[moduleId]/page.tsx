@@ -10,10 +10,12 @@ import { Label } from "@/components/ui/label";
 import { 
   Terminal, BookOpen, Play, CheckCircle2, ChevronLeft, 
   Trophy, Zap, Loader2, Menu, ListChecks, 
-  ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2
+  ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2,
+  ExternalLink, MonitorSmartphone, AlertCircle
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, findQuizById } from "@/lib/curriculum";
 import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
@@ -55,6 +57,8 @@ export default function LearnPage() {
 
   const { ka, level } = data;
 
+  const isCompiledLanguage = selectedLang === "java" || selectedLang === "cpp";
+
   const handleRunCode = async () => {
     setIsRunning(true);
     setTimeout(() => {
@@ -68,11 +72,21 @@ export default function LearnPage() {
       setCompletedObjectives(newCompleted);
 
       if (newCompleted.length === practice.objectives.length) {
-        setOutput("> ✅ Todos os objetivos concluídos!\n> Pronto para submeter.");
+        setOutput("> ✅ Simulação concluída com sucesso!\n> Todos os objetivos alcançados.\n> Pronto para submeter.");
       } else {
-        setOutput(`> ⚠️ ${newCompleted.length}/${practice.objectives.length} objetivos alcançados.\n> Revise o checklist e as dicas.`);
+        setOutput(`> ⚠️ Simulação: ${newCompleted.length}/${practice.objectives.length} objetivos alcançados.\n> Verifique a sintaxe e os requisitos.`);
       }
     }, 800);
+  };
+
+  const handleOpenVSCode = () => {
+    // Tenta abrir o VS Code com um ficheiro virtual baseado no ID da lição
+    const vscodeUri = `vscode://file/codworks-moz/lessons/${lessonId}.${selectedLang === 'python' ? 'py' : selectedLang === 'cpp' ? 'cpp' : selectedLang === 'java' ? 'java' : 'js'}`;
+    window.location.href = vscodeUri;
+    toast({ 
+      title: "Abrindo VS Code", 
+      description: "Certifique-se de que o VS Code está instalado no seu computador." 
+    });
   };
 
   const handleQuizSubmit = async () => {
@@ -131,16 +145,27 @@ export default function LearnPage() {
         </div>
         
         <div className="flex gap-2">
+           {practice && (
+             <Button 
+               variant="outline" 
+               size="sm" 
+               onClick={handleOpenVSCode}
+               className="gap-2 rounded-full border-blue-500/20 bg-blue-500/5 text-blue-500 hover:bg-blue-500/10"
+             >
+               <MonitorSmartphone className="w-4 h-4" />
+               <span className="hidden sm:inline">Abrir no VS Code</span>
+             </Button>
+           )}
            <Sheet>
              <SheetTrigger asChild>
                <Button variant="outline" size="sm" className="gap-2 rounded-full border-primary/20 bg-primary/5">
                  <Menu className="w-4 h-4 text-primary" />
-                 <span className="hidden sm:inline">Trilha</span>
+                 <span className="hidden sm:inline">Conteúdo</span>
                </Button>
              </SheetTrigger>
              <SheetContent side="left" className="w-80 overflow-y-auto">
                <SheetHeader className="mb-6">
-                 <SheetTitle>Navegação</SheetTitle>
+                 <SheetTitle>Navegação do Módulo</SheetTitle>
                </SheetHeader>
                <div className="space-y-8">
                  {ka.theory && ka.theory.length > 0 && (
@@ -268,6 +293,15 @@ export default function LearnPage() {
             </div>
           ) : practice ? (
             <div className="h-full flex flex-col bg-[#0d1117]">
+               {isCompiledLanguage && (
+                 <Alert className="m-4 bg-amber-500/10 border-amber-500/20 text-amber-500 rounded-xl">
+                    <AlertCircle className="h-4 w-4 stroke-amber-500" />
+                    <AlertTitle className="font-bold text-xs">Simulador de Linguagem Compilada</AlertTitle>
+                    <AlertDescription className="text-[10px] opacity-80">
+                      Esta é uma simulação fiel do ambiente {selectedLang.toUpperCase()}. Para melhor experiência, recomendamos usar o VS Code instalado localmente.
+                    </AlertDescription>
+                 </Alert>
+               )}
                <div className="p-3 border-b border-white/5 flex items-center justify-between bg-black/20">
                   <div className="flex items-center gap-3">
                     <span className="px-3 py-1 rounded-md bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/20">
@@ -291,10 +325,10 @@ export default function LearnPage() {
 
                <div className="h-40 border-t border-white/5 bg-black/40 p-4 font-code text-xs">
                   <div className="text-muted-foreground mb-2 flex items-center gap-2 uppercase tracking-widest font-bold text-[10px]">
-                    <Terminal className="w-3 h-3" /> Consola
+                    <Terminal className="w-3 h-3" /> Consola de Simulação
                   </div>
                   <div className={cn("whitespace-pre overflow-y-auto h-24", output.includes('✅') ? 'text-green-400' : 'text-blue-300')}>
-                    {output || "> Pronto para o laboratório."}
+                    {output || `> Simulador de ${selectedLang} pronto.`}
                   </div>
                </div>
             </div>
@@ -307,7 +341,7 @@ export default function LearnPage() {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <ListChecks className="w-5 h-5 text-primary" />
-                  <h3 className="font-headline font-bold text-sm uppercase tracking-widest">Objetivos</h3>
+                  <h3 className="font-headline font-bold text-sm uppercase tracking-widest">Objetivos do Lab</h3>
                 </div>
                 <div className="text-[10px] font-bold text-muted-foreground">
                   {completedObjectives.length}/{practice.objectives.length} CONCLUÍDO
@@ -348,7 +382,7 @@ export default function LearnPage() {
                       <AccordionContent className="px-4 pb-4 space-y-4">
                         {obj.hint && (
                           <div className="p-3 bg-primary/5 rounded-lg border border-primary/10">
-                            <p className="text-[10px] font-bold text-primary mb-1 uppercase tracking-tighter">💡 Dica:</p>
+                            <p className="text-[10px] font-bold text-primary mb-1 uppercase tracking-tighter">💡 Dica de Implementação:</p>
                             <code className="text-[10px] font-code text-primary/80">{obj.hint}</code>
                           </div>
                         )}
