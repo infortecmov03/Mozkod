@@ -1,5 +1,34 @@
-import type { KnowledgeArea } from '../../types';
+import type { KnowledgeArea, Quiz } from '../../types';
 import { lessons } from './theory';
+
+const netQuizzes: Quiz[] = [
+  {
+    id: "net-q1",
+    title: "Quiz: Modelo OSI e TCP/IP",
+    passingScore: 70,
+    questions: [
+      {
+        id: "q1",
+        question: "Qual camada do modelo OSI é responsável pelo endereçamento IP e roteamento?",
+        options: ["Sessão", "Transporte", "Rede", "Física"],
+        correctAnswer: 2
+      }
+    ]
+  },
+  {
+    id: "net-q5",
+    title: "Quiz: Camada de Transporte",
+    passingScore: 70,
+    questions: [
+      {
+        id: "q1",
+        question: "Qual protocolo garante que os pacotes chegam na ordem correta e sem erros?",
+        options: ["UDP", "IP", "TCP", "ICMP"],
+        correctAnswer: 2
+      }
+    ]
+  }
+];
 
 export const networking: KnowledgeArea = {
   id: 'ka-networking',
@@ -8,12 +37,7 @@ export const networking: KnowledgeArea = {
   load: '40h',
   iconName: 'Globe',
   theory: lessons,
-  quizzes: lessons.map(l => ({
-    id: l.quizId,
-    title: `Quiz: ${l.title}`,
-    questions: [],
-    passingScore: 70
-  })),
+  quizzes: netQuizzes,
   practice: {
     bash: [
       {

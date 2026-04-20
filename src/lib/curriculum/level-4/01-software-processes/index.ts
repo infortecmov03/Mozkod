@@ -1,5 +1,39 @@
+import type { KnowledgeArea, Quiz } from '../../types';
 
-import type { KnowledgeArea } from '../../types';
+const seQuizzes: Quiz[] = [
+  {
+    id: 'se-q1',
+    title: 'Quiz: Ciclo de Vida (SDLC)',
+    passingScore: 70,
+    questions: [
+      {
+        id: 'q1',
+        question: 'Em qual fase do SDLC os diagramas de arquitetura são criados?',
+        options: ['Análise', 'Design', 'Implementação', 'Manutenção'],
+        correctAnswer: 1
+      },
+      {
+        id: 'q2',
+        question: 'O que define a fase de Verificação?',
+        options: ['Escrever código', 'Testar se o software cumpre os requisitos', 'Falar com investidores', 'Vender o produto'],
+        correctAnswer: 1
+      }
+    ]
+  },
+  {
+    id: 'se-q2',
+    title: 'Quiz: Scrum e Agilidade',
+    passingScore: 70,
+    questions: [
+      {
+        id: 'q1',
+        question: 'Quem é responsável por priorizar o Backlog do Produto no Scrum?',
+        options: ['Scrum Master', 'Developers', 'Product Owner', 'CEO'],
+        correctAnswer: 2
+      }
+    ]
+  }
+];
 
 export const softwareProcesses: KnowledgeArea = {
   id: 'ka-se-processes',
@@ -60,7 +94,7 @@ export const softwareProcesses: KnowledgeArea = {
         title: 'Laboratório: Definição de User Stories',
         description: 'Escreva requisitos do ponto de vista do utilizador.',
         statement: 'Crie uma User Story para a funcionalidade de "Login". Use o padrão: "Como [quem], quero [o que] para [porquê]".',
-        template: 'Como usuário, quero ... para ...',
+        template: 'Como usuário, quero poder entrar na minha conta para ver meus dados.',
         detailedExplanation: '<p>Uma boa User Story deve ser INVEST: Independente, Negociável, Valiosa, Estimável, Pequena (Small) e Testável.</p>',
         objectives: [
           { id: 'obj1', description: 'Incluir a persona Usuário', test: 'Como usuário' },
@@ -69,14 +103,5 @@ export const softwareProcesses: KnowledgeArea = {
       }
     ]
   },
-  quizzes: [
-    {
-      id: 'se-q1',
-      title: 'Quiz: SDLC',
-      questions: [
-        { id: 'q1', question: 'Qual fase foca na definição do "O QUE" o sistema faz?', options: ['Design', 'Análise', 'Testes'], correctAnswer: 1 }
-      ],
-      passingScore: 70
-    }
-  ]
+  quizzes: seQuizzes
 };
