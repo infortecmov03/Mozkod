@@ -1,71 +1,83 @@
-
 import type { Level, KnowledgeArea } from '../types';
+import { lessons as webLessons } from './01-web-engineering/theory';
+import { lessons as aiLessons } from './02-ai-data-science/theory';
+import { lessons as secLessons } from './03-cybersecurity-cloud/theory';
 
-const webAdvanced: KnowledgeArea = {
-  id: 'ka-web-adv',
-  title: '01. Web Advanced',
-  description: 'Mastering Next.js, Server Components e Performance.',
+const webEngineering: KnowledgeArea = {
+  id: 'ka-web-eng',
+  title: '01. Web Engineering',
+  description: 'Mastering Next.js, Server Components e Performance de Elite.',
   load: '50h',
   iconName: 'Zap',
-  theory: [
-    {
-      id: 'web-adv-t1',
-      title: 'Hydration e Interatividade',
-      content: '<p>Como o Next.js transforma HTML estático em apps React vivas.</p>',
-      quizId: 'web-adv-t1-quiz'
-    }
-  ],
+  theory: webLessons,
   practice: {
     typescript: [
       {
         id: 'web-adv-p1',
         language: 'typescript',
-        title: 'Laboratório: useMemo e Performance',
-        description: 'Otimizando re-renderizações.',
-        statement: 'Use useMemo para guardar o resultado de um cálculo pesado.',
-        template: 'const valor = useMemo(() => calculoPesado(n), [n]);',
-        detailedExplanation: '<p>Memoization evita trabalho desnecessário no browser.</p>',
-        objectives: [{ id: 'obj1', description: 'Implementar useMemo', test: 'useMemo' }]
+        title: 'Laboratório: Server Components',
+        description: 'Implementando componentes que correm no servidor.',
+        statement: 'Crie uma função assíncrona que simule um fetch de dados no servidor.',
+        template: 'async function ServerData() {\n  // Fetch data here\n}',
+        detailedExplanation: '<p>Server Components permitem fetching de dados sem expor chaves de API ao cliente.</p>',
+        objectives: [{ id: 'obj1', description: 'Usar async function', test: 'async function' }]
       }
     ]
   },
-  quizzes: []
+  quizzes: webLessons.map(l => ({ id: l.quizId, title: `Quiz: ${l.title}`, questions: [], passingScore: 70 }))
 };
 
-const aiMlIntro: KnowledgeArea = {
-  id: 'ka-ai-ml',
-  title: '02. AI & Machine Learning',
-  description: 'Redes Neuronais, LLMs e Engenharia de Prompts.',
+const aiDataScience: KnowledgeArea = {
+  id: 'ka-ai-ds',
+  title: '02. AI & Data Science',
+  description: 'De Algoritmos Lineares a Grandes Modelos de Linguagem (LLMs).',
   load: '60h',
   iconName: 'Cpu',
-  theory: [
-    {
-      id: 'ai-t1',
-      title: 'O que são Transformers?',
-      content: '<p>A arquitetura por trás do ChatGPT e modelos modernos de linguagem.</p>',
-      quizId: 'ai-t1-quiz'
-    }
-  ],
+  theory: aiLessons,
   practice: {
     python: [
       {
         id: 'ai-p1',
         language: 'python',
-        title: 'Laboratório: Teu Primeiro Modelo',
-        description: 'Uso de Scikit-Learn.',
-        statement: 'Importe o LinearRegression do sklearn.',
-        template: 'from sklearn.linear_model import LinearRegression',
-        detailedExplanation: '<p>Regressão Linear é a base da predição numérica.</p>',
-        objectives: [{ id: 'obj1', description: 'Importar modelo', test: 'LinearRegression' }]
+        title: 'Laboratório: Regressão Linear',
+        description: 'Otimização de parâmetros simples.',
+        statement: 'Importe o Scikit-Learn para iniciar a modelagem.',
+        template: 'import sklearn',
+        detailedExplanation: '<p>Python é a língua franca da IA devido a bibliotecas como Sklearn e PyTorch.</p>',
+        objectives: [{ id: 'obj1', description: 'Importar sklearn', test: 'import sklearn' }]
       }
     ]
   },
-  quizzes: []
+  quizzes: aiLessons.map(l => ({ id: l.quizId, title: `Quiz: ${l.title}`, questions: [], passingScore: 70 }))
+};
+
+const cloudSecurity: KnowledgeArea = {
+  id: 'ka-cloud-sec',
+  title: '03. Cloud & Cybersecurity',
+  description: 'Segurança de Sistemas, Cloud Native e DevSecOps.',
+  load: '50h',
+  iconName: 'ShieldCheck',
+  theory: secLessons,
+  practice: {
+    bash: [
+      {
+        id: 'sec-p1',
+        language: 'bash',
+        title: 'Laboratório: Permissões de Sistema',
+        description: 'Configurando o modelo de segurança Linux.',
+        statement: 'Qual comando muda as permissões de um ficheiro? Escreva "chmod".',
+        template: 'let comando = "";',
+        detailedExplanation: '<p>O chmod controla quem pode ler, escrever ou executar ficheiros.</p>',
+        objectives: [{ id: 'obj1', description: 'Identificar chmod', test: 'chmod' }]
+      }
+    ]
+  },
+  quizzes: secLessons.map(l => ({ id: l.quizId, title: `Quiz: ${l.title}`, questions: [], passingScore: 70 }))
 };
 
 export const level5: Level = {
   id: 5,
-  title: 'Nível 5: Especializações',
-  description: 'Aprofunde-se nas tecnologias de ponta do mercado global.',
-  knowledgeAreas: [webAdvanced, aiMlIntro]
+  title: 'Nível 5: Especializações de Elite',
+  description: 'Aprofunde-se nas tecnologias de ponta que dominam o mercado global.',
+  knowledgeAreas: [webEngineering, aiDataScience, cloudSecurity]
 };
