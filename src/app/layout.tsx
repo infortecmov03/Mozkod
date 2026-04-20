@@ -5,8 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { LanguageProvider } from "@/components/LanguageContext";
 
 export const metadata: Metadata = {
-  title: 'Codworks Moz | Interactive Learning',
-  description: 'Master programming with interactive modules, real-time code execution, and localized learning paths.',
+  title: 'Codworks Moz | Aprendizagem Interactiva',
+  description: 'Domine a programação com módulos interactivos, execução de código em tempo real e trilhas de aprendizagem localizadas.',
 };
 
 export default function RootLayout({
@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="pt" className="dark">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
