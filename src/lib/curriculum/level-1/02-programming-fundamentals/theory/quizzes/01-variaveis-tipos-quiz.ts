@@ -1,4 +1,3 @@
-
 import type { Quiz } from '../../../../types';
 
 export const quiz: Quiz = {
@@ -8,26 +7,9 @@ export const quiz: Quiz = {
   questions: [
     {
       id: "q1",
-      question: "Qual é a função principal de uma variável?",
-      options: [
-        "Ligar o processador",
-        "Guardar informação na memória com um nome",
-        "Desenhar gráficos no ecrã",
-        "Apagar ficheiros inúteis"
-      ],
+      question: "Para que serve uma variável?",
+      options: ["Para apagar dados", "Para guardar informação com um nome", "Para ligar o monitor"],
       correctAnswer: 1
-    },
-    {
-      id: "q2",
-      question: "Como se chama o tipo de dado que guarda texto?",
-      options: ["Number", "Boolean", "String", "Float"],
-      correctAnswer: 2
-    },
-    {
-      id: "q3",
-      question: "Qual destes valores é um Boolean?",
-      options: ["'Verdadeiro'", "100", "null", "false"],
-      correctAnswer: 3
     }
   ]
 };
