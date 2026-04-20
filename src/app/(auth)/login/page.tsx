@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -26,7 +25,11 @@ export default function LoginPage() {
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
-      toast({ variant: "destructive", title: "Email obrigatório", description: "Digite seu email para continuar." });
+      toast({ 
+        variant: "destructive", 
+        title: "Email obrigatório", 
+        description: "Digite seu email para continuar." 
+      });
       return;
     }
 
@@ -34,9 +37,16 @@ export default function LoginPage() {
     try {
       await signInWithEmail(email);
       setIsMagicLinkSent(true);
-      toast({ title: "Link enviado!", description: `Verifique seu email ${email} para entrar.` });
+      toast({ 
+        title: "Link enviado!", 
+        description: `Verifique seu email ${email} para entrar.` 
+      });
     } catch (error: any) {
-      toast({ variant: "destructive", title: "Erro", description: error.message });
+      toast({ 
+        variant: "destructive", 
+        title: "Erro na autenticação", 
+        description: error.message 
+      });
     } finally {
       setIsSubmitting(false);
     }

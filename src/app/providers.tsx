@@ -18,7 +18,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <AuthProvider>
           <ProgressProvider>
             {children}
-            <Toaster richColors position="top-right" />
+            <Toaster 
+              richColors 
+              position="top-right" 
+              closeButton
+              theme="dark"
+            />
           </ProgressProvider>
         </AuthProvider>
       </LanguageProvider>
