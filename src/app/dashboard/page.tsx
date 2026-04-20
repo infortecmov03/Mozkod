@@ -24,14 +24,14 @@ export default function DashboardPage() {
     let completedCount = 0;
     
     module.knowledgeAreas.forEach(ka => {
-      // Contagem de Teoria
+      // Contagem de Teoria (Verificação resiliente)
       const theoryCount = ka.theory?.length || 0;
       total += theoryCount;
       if (ka.theory) {
         completedCount += ka.theory.filter(l => isCompleted(l.id)).length;
       }
 
-      // Contagem de Prática
+      // Contagem de Prática (Verificação resiliente)
       if (ka.practice) {
         Object.values(ka.practice).forEach(exercises => {
           if (Array.isArray(exercises)) {

@@ -1,7 +1,7 @@
-
 import type { KnowledgeArea } from '../../types';
 import { lessons } from './theory';
-import { quiz1 } from './quizzes/01-estrutura-html-quiz';
+import { quiz1 } from './theory/quizzes/01-estrutura-html-quiz';
+import { quiz as quiz2 } from './theory/quizzes/02-css-seletores-quiz';
 import { exerciseHTML1 } from './laboratory/html/01-estrutura-basica';
 
 export const webCore: KnowledgeArea = {
@@ -11,7 +11,7 @@ export const webCore: KnowledgeArea = {
   load: '25h',
   iconName: 'Globe',
   theory: lessons,
-  quizzes: [quiz1],
+  quizzes: [quiz1, quiz2],
   practice: {
     html: [exerciseHTML1]
   }
