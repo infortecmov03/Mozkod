@@ -13,7 +13,7 @@ import {
   ExternalLink, MonitorSmartphone, AlertCircle, MessageSquare,
   XCircle, RotateCcw
 } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, findQuizById, findNextLessonId } from "@/lib/curriculum";
@@ -54,7 +54,7 @@ export default function LearnPage() {
       setSelectedLang(practice.language);
       setCode(practice.template || "");
     }
-  }, [practice]);
+  }, [practice, lessonId]);
 
   if (!data) return <div className="p-20 text-center font-headline text-2xl">Conteúdo não encontrado</div>;
 
@@ -80,17 +80,6 @@ export default function LearnPage() {
     }, 800);
   };
 
-  const handleOpenVSCode = () => {
-    const extMap: Record<string, string> = {
-      python: 'py', cpp: 'cpp', java: 'java', go: 'go', rust: 'rs', 
-      kotlin: 'kt', ruby: 'rb', php: 'php', javascript: 'js', typescript: 'ts'
-    };
-    const ext = extMap[selectedLang] || 'txt';
-    const vscodeUri = `vscode://file/codworks-moz/lessons/${lessonId}.${ext}`;
-    window.location.href = vscodeUri;
-    toast({ title: "Abrindo VS Code", description: "Certifique-se de que o VS Code está instalado." });
-  };
-
   const handleQuizSubmit = async () => {
     if (!quiz) return;
     
@@ -114,13 +103,13 @@ export default function LearnPage() {
       }, 3000);
 
     } else if (score >= quiz.passingScore) {
-      toast({ title: t.wellDone, description: `Aprovado com ${score}%` });
+      toast({ title: t.wellDone, description: `Aprovado com ${score}%! Podes avançar ou rever as dicas abaixo.` });
       await handleComplete(score);
     } else {
       toast({ 
         variant: "destructive", 
         title: "Nota insuficiente", 
-        description: `Pontuação: ${score}%. Analisa as dicas e tenta novamente.` 
+        description: `Pontuação: ${score}%. Analisa as dicas pedagógicas e tenta novamente.` 
       });
     }
   };
@@ -166,17 +155,15 @@ export default function LearnPage() {
         
         <div className="flex gap-2">
            {practice && (
-             <>
-               <Button 
-                 variant="outline" 
-                 size="sm" 
-                 onClick={() => router.push(`/community/exercise/${lessonId}`)}
-                 className="gap-2 rounded-full border-accent/20 bg-accent/5 text-accent hover:bg-accent/10"
-               >
-                 <MessageSquare className="w-4 h-4" />
-                 <span className="hidden sm:inline">{t.requestHelp}</span>
-               </Button>
-             </>
+             <Button 
+               variant="outline" 
+               size="sm" 
+               onClick={() => router.push(`/community/exercise/${lessonId}`)}
+               className="gap-2 rounded-full border-accent/20 bg-accent/5 text-accent hover:bg-accent/10"
+             >
+               <MessageSquare className="w-4 h-4" />
+               <span className="hidden sm:inline">{t.requestHelp}</span>
+             </Button>
            )}
            <Sheet>
              <SheetTrigger asChild>
@@ -188,6 +175,7 @@ export default function LearnPage() {
              <SheetContent side="left" className="w-80 overflow-y-auto">
                <SheetHeader className="mb-6">
                  <SheetTitle>Navegação do Módulo</SheetTitle>
+                 <SheetDescription>Explora os tópicos deste nível.</SheetDescription>
                </SheetHeader>
                <div className="space-y-8">
                  {ka.theory?.length > 0 && (
@@ -244,6 +232,7 @@ export default function LearnPage() {
                   )}
                   <div className="prose prose-neutral dark:prose-invert max-w-none text-muted-foreground leading-relaxed text-lg" dangerouslySetInnerHTML={{ __html: theory.content }} />
                </div>
+               
                {quiz && (
                  <div className="bg-card border-2 border-primary/10 rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-2xl relative overflow-hidden group mb-20">
                     <div className="flex items-center justify-between mb-6">
@@ -260,6 +249,7 @@ export default function LearnPage() {
                         </Button>
                       )}
                     </div>
+                    
                     <div className="space-y-12">
                       {quiz.questions.map((q, qIndex) => {
                         const isCorrect = quizAnswers[q.id] === q.correctAnswer;
@@ -271,6 +261,7 @@ export default function LearnPage() {
                               <span className="text-2xl font-headline font-bold text-primary opacity-20">{String(qIndex + 1).padStart(2, '0')}</span>
                               <p className="text-lg font-medium pt-1">{q.question}</p>
                             </div>
+                            
                             <RadioGroup 
                               disabled={quizSubmitted}
                               onValueChange={(val) => setQuizAnswers(prev => ({...prev, [q.id]: parseInt(val)}))} 
@@ -285,7 +276,7 @@ export default function LearnPage() {
                                 if (quizSubmitted) {
                                   if (isOptionSelected && isCorrect) variantClass = "border-green-500 bg-green-500/10";
                                   else if (isOptionSelected && !isCorrect) variantClass = "border-red-500 bg-red-500/10";
-                                  else if (isOptionCorrect) variantClass = "border-green-500/50 opacity-80";
+                                  else if (isOptionCorrect) variantClass = "border-green-500/30 opacity-60";
                                 } else if (isOptionSelected) {
                                   variantClass = "border-primary bg-primary/5";
                                 }
@@ -295,7 +286,7 @@ export default function LearnPage() {
                                     <RadioGroupItem value={i.toString()} id={`${q.id}-${i}`} className="text-primary" />
                                     <Label htmlFor={`${q.id}-${i}`} className="flex-1 cursor-pointer font-normal text-base flex items-center justify-between">
                                       {opt}
-                                      {quizSubmitted && isOptionCorrect && <CheckCircle2 className="w-5 h-5 text-green-500" />}
+                                      {quizSubmitted && isOptionCorrect && isOptionSelected && <CheckCircle2 className="w-5 h-5 text-green-500" />}
                                       {quizSubmitted && isOptionSelected && !isCorrect && <XCircle className="w-5 h-5 text-red-500" />}
                                     </Label>
                                   </div>
