@@ -7,7 +7,7 @@ import { level4 } from './level-4';
 import { level5 } from './level-5';
 import { level6 } from './level-6';
 import { level7 } from './level-7';
-import { level8 } from './level-8';
+import { level8 } from './level-8-languages';
 
 export * from './types';
 
