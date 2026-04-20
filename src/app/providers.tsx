@@ -1,10 +1,10 @@
-
 'use client';
 
 import { ThemeProvider } from 'next-themes';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { ProgressProvider } from '@/contexts/ProgressContext';
 import { LanguageProvider } from "@/components/LanguageContext";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "sonner";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -16,8 +16,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
     >
       <LanguageProvider>
         <AuthProvider>
-          {children}
-          <Toaster />
+          <ProgressProvider>
+            {children}
+            <Toaster richColors position="top-right" />
+          </ProgressProvider>
         </AuthProvider>
       </LanguageProvider>
     </ThemeProvider>
