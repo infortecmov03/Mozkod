@@ -13,7 +13,13 @@ import { lesson as l12 } from './theory/12-logic-synthesis';
 import { lesson as l13 } from './theory/13-system-bus';
 import { lesson as l14 } from './theory/14-kernel-fundamentals';
 import { lesson as l15 } from './theory/15-future-computing';
+import { lesson as l16 } from './theory/16-pipelining';
+import { lesson as l17 } from './theory/17-virtualization-basics';
+import { lesson as l18 } from './theory/18-error-correction';
+import { lesson as l19 } from './theory/19-microarchitecture';
+import { lesson as l20 } from './theory/20-clock-cycles';
+import { lesson as l21 } from './theory/21-ethics-history';
 
 export const lessons = [
-  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15
+  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20, l21
 ];

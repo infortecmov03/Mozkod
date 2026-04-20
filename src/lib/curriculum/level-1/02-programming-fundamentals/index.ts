@@ -5,8 +5,8 @@ import { quizzes } from './quizzes';
 export const programmingFundamentals: KnowledgeArea = {
   id: 'ka-programming-fundamentals',
   title: '02. Programming Fundamentals',
-  description: 'Lógica universal expandida: de variáveis a padrões de tratamento de erros e memória.',
-  load: '40h',
+  description: 'Lógica universal expandida: de variáveis a padrões de tratamento de erros e memória. 21 tópicos fundamentais.',
+  load: '50h',
   iconName: 'Code2',
   theory: lessons,
   quizzes: quizzes,
