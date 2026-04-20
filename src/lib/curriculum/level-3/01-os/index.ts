@@ -1,46 +1,65 @@
 
-import { KnowledgeArea } from '../../types';
+import type { KnowledgeArea } from '../../types';
 
 export const os: KnowledgeArea = {
   id: 'ka-os',
   title: '01. Operating Systems',
   description: 'Funcionamento interno do Kernel e gestão de processos.',
-  supportedLanguages: ['bash'],
-  theoryLessons: [
+  load: '40h',
+  iconName: 'Cpu',
+  theory: [
     {
       id: 'os-t1',
-      title: 'O que é um Sistema Operativo?',
-      content: 'O SO é o software que gere todo o hardware e outros softwares num computador.',
-      beginnerExplanation: 'Imagina que o SO é o gerente de um restaurante. Ele decide quem usa o fogão (processador) e onde guardar os ingredientes (memória).',
-      quiz: [
+      title: 'O Kernel e o Hardware',
+      content: `
+        <div class="space-y-6">
+          <h2 class="text-2xl font-bold text-red-500">O Coração do Sistema</h2>
+          <p>O Kernel é a ponte entre o software e o hardware. Ele gere CPU, Memória e Dispositivos.</p>
+        </div>
+      `,
+      quizId: 'os-t1-quiz'
+    },
+    {
+      id: 'os-t2',
+      title: 'Processos e Threads',
+      content: `
+        <div class="space-y-6">
+          <h2 class="text-2xl font-bold">Multitarefa</h2>
+          <p>Aprende como o SO alterna entre programas tão rápido que parece que correm ao mesmo tempo.</p>
+        </div>
+      `,
+      quizId: 'os-t2-quiz'
+    }
+  ],
+  practice: {
+    bash: [
+      {
+        id: 'os-p1',
+        language: 'bash',
+        title: 'Laboratório: Gestão de Processos',
+        description: 'Uso dos comandos top e ps.',
+        statement: 'Qual comando mostra os processos em tempo real? Escreva "top".',
+        template: 'let comando = "";',
+        detailedExplanation: '<p>O utilitário top monitoriza o uso de recursos do sistema.</p>',
+        objectives: [
+          { id: 'obj1', description: 'Identificar o comando top', test: 'top' }
+        ]
+      }
+    ]
+  },
+  quizzes: [
+    {
+      id: 'os-t1-quiz',
+      title: 'Quiz: Kernel',
+      passingScore: 70,
+      questions: [
         {
           id: 'q1',
-          question: 'Qual a principal função do Kernel?',
-          options: ['Desenhar ícones', 'Gerir o hardware', 'Navegar na web'],
+          question: 'Onde reside o Kernel durante a execução?',
+          options: ['No monitor', 'Na memória RAM', 'No teclado'],
           correctAnswer: 1
         }
       ]
-    }
-  ],
-  practiceExercises: [
-    {
-      id: 'os-p1',
-      title: 'Laboratório: Explorando o Terminal',
-      description: 'Aprenda a navegar no sistema usando comandos.',
-      beginnerGuide: 'O Terminal permite dar ordens diretas ao "gerente" (SO).',
-      objectives: [
-        {
-          id: 'obj-1',
-          title: 'Onde estou?',
-          description: 'Use o comando para ver o diretório atual.',
-          explanation: 'O comando "pwd" (print working directory) mostra a sua localização.',
-          hint: 'pwd',
-          validationRegex: 'pwd'
-        }
-      ],
-      starterCode: {
-        bash: '# Digite o comando para ver a pasta atual\n'
-      }
     }
   ]
 };
