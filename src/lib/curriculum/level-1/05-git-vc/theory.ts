@@ -1,7 +1,6 @@
-import { lesson as lesson1 } from './theory/01-o-que-e-git';
-// Outras 9 lições importadas aqui...
+import { lesson as l1 } from './theory/01-o-que-e-git';
+import { lesson as l2 } from './theory/02-instalacao-config';
 
 export const lessons = [
-  lesson1,
-  // ... placeholders para as outras 9 lições
+  l1, l2
 ];

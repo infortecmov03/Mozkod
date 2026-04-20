@@ -6,15 +6,12 @@ export const lesson: TheoryLesson = {
   content: `
     <div class="space-y-6">
       <div class="bg-primary/5 p-6 rounded-2xl border border-primary/10">
-        <h2 class="text-2xl font-bold mb-4">🛠️ O que é uma Função?</h2>
-        <p class="text-lg">É um bloco de código que executa uma tarefa específica. Em vez de escreveres o mesmo código 10 vezes, crias uma função e chamas-a 10 vezes.</p>
+        <h2 class="text-2xl font-bold mb-4">🛠️ Modularização de Código</h2>
+        <p>Funções permitem encapsular lógica para ser reutilizada. O escopo define onde as variáveis são visíveis.</p>
       </div>
       <div class="prose prose-invert max-w-none">
-        <h3>Parâmetros e Retorno</h3>
-        <p>Funções podem receber dados (parâmetros) e devolver resultados (return).</p>
-        <pre class="bg-card p-4 rounded-xl border">function saudar(nome) {
-  return "Olá, " + nome;
-}</pre>
+        <h3>Declaração vs Invocação</h3>
+        <p>Declarar é criar a receita; Invocar é cozinhar o prato.</p>
       </div>
     </div>
   `,

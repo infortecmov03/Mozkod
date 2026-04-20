@@ -1,7 +1,6 @@
-import { lesson as lesson1 } from './theory/01-basic-computer-vocab';
-// Outras 9 lições importadas aqui...
+import { lesson as l1 } from './theory/01-basic-computer-vocab';
+import { lesson as l2 } from './theory/02-programming-terms';
 
 export const lessons = [
-  lesson1,
-  // ... placeholders para as outras 9 lições
+  l1, l2
 ];
