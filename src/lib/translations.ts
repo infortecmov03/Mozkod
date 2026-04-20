@@ -8,6 +8,8 @@ export const translations = {
     getStarted: "Get Started",
     dashboard: "Dashboard",
     modules: "Learning Modules",
+    community: "Community",
+    profile: "Profile",
     progress: "Your Progress",
     certifications: "Certifications",
     languages: "Languages",
@@ -32,14 +34,20 @@ export const translations = {
     validateAnswers: "Validate Answers",
     next: "Next",
     downloadCert: "Download PDF",
-    sharePortfolio: "Share Portfolio"
+    sharePortfolio: "Share Portfolio",
+    requestHelp: "Ask for Help",
+    noPostsYet: "No questions for this exercise yet. Be the first!",
+    createPost: "New Help Request",
+    solutions: "Solutions & Comments"
   },
   pt: {
     heroTitle: "Codifica o Teu Futuro em Qualquer Língua",
     heroSubtitle: "Plataforma de aprendizagem interactiva para a próxima geração de programadores Africanos.",
     getStarted: "Começar Agora",
-    dashboard: "Painel de Controlo",
-    modules: "Módulos de Aprendizagem",
+    dashboard: "Painel",
+    modules: "Módulos",
+    community: "Comunidade",
+    profile: "Meu Perfil",
     progress: "O Teu Progresso",
     certifications: "Certificações",
     languages: "Linguagens",
@@ -64,6 +72,10 @@ export const translations = {
     validateAnswers: "Validar Respostas",
     next: "Seguinte",
     downloadCert: "Descarregar PDF",
-    sharePortfolio: "Partilhar Portfólio"
+    sharePortfolio: "Partilhar Portfólio",
+    requestHelp: "Pedir Ajuda",
+    noPostsYet: "Ainda não existem dúvidas sobre este exercício. Sê o primeiro!",
+    createPost: "Novo Pedido de Ajuda",
+    solutions: "Soluções e Comentários"
   }
 };

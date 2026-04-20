@@ -11,7 +11,7 @@ import {
   Terminal, BookOpen, Play, CheckCircle2, ChevronLeft, 
   Trophy, Zap, Loader2, Menu, ListChecks, 
   ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2,
-  ExternalLink, MonitorSmartphone, AlertCircle
+  ExternalLink, MonitorSmartphone, AlertCircle, MessageSquare
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -24,6 +24,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useProgress } from "@/contexts/ProgressContext";
 import { cn } from "@/lib/utils";
 import Editor from "@monaco-editor/react";
+import Link from "next/link";
 
 export default function LearnPage() {
   const params = useParams();
@@ -58,8 +59,6 @@ export default function LearnPage() {
 
   const { ka, level } = data;
 
-  const isCompiledLanguage = ["java", "cpp", "go", "rust", "kotlin"].includes(selectedLang);
-
   const handleRunCode = async () => {
     setIsRunning(true);
     setTimeout(() => {
@@ -88,15 +87,11 @@ export default function LearnPage() {
     const ext = extMap[selectedLang] || 'txt';
     const vscodeUri = `vscode://file/codworks-moz/lessons/${lessonId}.${ext}`;
     window.location.href = vscodeUri;
-    toast({ 
-      title: "Abrindo VS Code", 
-      description: "Certifique-se de que o VS Code está instalado no seu computador." 
-    });
+    toast({ title: "Abrindo VS Code", description: "Certifique-se de que o VS Code está instalado." });
   };
 
   const handleQuizSubmit = async () => {
     if (!quiz) return;
-    
     const correctCount = quiz.questions.filter(q => quizAnswers[q.id] === q.correctAnswer).length;
     const score = Math.round((correctCount / quiz.questions.length) * 100);
 
@@ -104,11 +99,7 @@ export default function LearnPage() {
       toast({ title: t.wellDone, description: `Resultado: ${score}%` });
       await handleComplete(score);
     } else {
-      toast({ 
-        variant: "destructive", 
-        title: "Tente novamente", 
-        description: `Resultado: ${score}%. Precisas de pelo menos ${quiz.passingScore}%.` 
-      });
+      toast({ variant: "destructive", title: "Tente novamente", description: `Resultado: ${score}%. Mínimo: ${quiz.passingScore}%.` });
     }
   };
 
@@ -116,14 +107,7 @@ export default function LearnPage() {
     if (!profile) return;
     setIsSaving(true);
     try {
-      await markAsCompleted(
-        lessonId,
-        level.id,
-        ka.id,
-        theory ? 'theory' : 'exercise',
-        score,
-        practice ? code : undefined
-      );
+      await markAsCompleted(lessonId, level.id, ka.id, theory ? 'theory' : 'exercise', score, practice ? code : undefined);
       toast({ title: "Sucesso!", description: "Progresso guardado." });
     } catch (err: any) {
       toast({ variant: "destructive", title: "Erro", description: err.message });
@@ -133,23 +117,7 @@ export default function LearnPage() {
   };
 
   const getMonacoLanguage = (lang: string) => {
-    const map: Record<string, string> = {
-      javascript: "javascript",
-      typescript: "typescript",
-      python: "python",
-      java: "java",
-      cpp: "cpp",
-      html: "html",
-      css: "css",
-      sql: "sql",
-      bash: "shell",
-      go: "go",
-      rust: "rust",
-      kotlin: "kotlin",
-      ruby: "ruby",
-      php: "php",
-      concept: "markdown"
-    };
+    const map: Record<string, string> = { javascript: "javascript", typescript: "typescript", python: "python", java: "java", cpp: "cpp", html: "html", css: "css", sql: "sql", bash: "shell", go: "go", rust: "rust", kotlin: "kotlin", ruby: "ruby", php: "php", concept: "markdown" };
     return map[lang] || "plaintext";
   };
 
@@ -172,41 +140,47 @@ export default function LearnPage() {
         
         <div className="flex gap-2">
            {practice && (
-             <Button 
-               variant="outline" 
-               size="sm" 
-               onClick={handleOpenVSCode}
-               className="gap-2 rounded-full border-blue-500/20 bg-blue-500/5 text-blue-500 hover:bg-blue-500/10"
-             >
-               <MonitorSmartphone className="w-4 h-4" />
-               <span className="hidden sm:inline">Abrir no VS Code</span>
-             </Button>
+             <>
+               <Button 
+                 variant="outline" 
+                 size="sm" 
+                 onClick={() => router.push(`/community/exercise/${lessonId}`)}
+                 className="gap-2 rounded-full border-accent/20 bg-accent/5 text-accent hover:bg-accent/10"
+               >
+                 <MessageSquare className="w-4 h-4" />
+                 <span className="hidden sm:inline">{t.requestHelp}</span>
+               </Button>
+               <Button 
+                 variant="outline" 
+                 size="sm" 
+                 onClick={handleOpenVSCode}
+                 className="gap-2 rounded-full border-blue-500/20 bg-blue-500/5 text-blue-500 hover:bg-blue-500/10"
+               >
+                 <MonitorSmartphone className="w-4 h-4" />
+                 <span className="hidden sm:inline">VS Code</span>
+               </Button>
+             </>
            )}
            <Sheet>
              <SheetTrigger asChild>
                <Button variant="outline" size="sm" className="gap-2 rounded-full border-primary/20 bg-primary/5">
                  <Menu className="w-4 h-4 text-primary" />
-                 <span className="hidden sm:inline">Conteúdo</span>
+                 <span className="hidden sm:inline">Sumário</span>
                </Button>
              </SheetTrigger>
              <SheetContent side="left" className="w-80 overflow-y-auto">
                <SheetHeader className="mb-6">
-                 <SheetTitle>Navegação do Módulo</SheetTitle>
+                 <SheetTitle>Navegação</SheetTitle>
                </SheetHeader>
                <div className="space-y-8">
-                 {ka.theory && ka.theory.length > 0 && (
+                 {ka.theory?.length > 0 && (
                     <div>
                       <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
-                        <BookOpen className="w-3 h-3" /> Lições Teóricas
+                        <BookOpen className="w-3 h-3" /> Teoria
                       </h4>
                       <div className="grid gap-1">
                         {ka.theory.map(l => (
-                            <Button 
-                              key={l.id} 
-                              variant={lessonId === l.id ? "secondary" : "ghost"}
-                              className="w-full justify-start text-xs h-9 rounded-lg"
-                              onClick={() => router.push(`/learn/${l.id}`)}
-                            >
+                            <Button key={l.id} variant={lessonId === l.id ? "secondary" : "ghost"} className="w-full justify-start text-xs h-9 rounded-lg" onClick={() => router.push(`/learn/${l.id}`)}>
                               {isCompleted(l.id) && <CheckCircle2 className="w-3 h-3 mr-2 text-green-500" />}
                               {l.title}
                             </Button>
@@ -214,23 +188,17 @@ export default function LearnPage() {
                       </div>
                     </div>
                  )}
-                 
                  {ka.practice && Object.keys(ka.practice).length > 0 && (
                     <div>
                       <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
-                        <Code2 className="w-3 h-3" /> Laboratórios
+                        <Code2 className="w-3 h-3" /> Labs
                       </h4>
                       {Object.entries(ka.practice).map(([lang, exercises]) => (
                         <div key={lang} className="mt-4 first:mt-0">
                             <p className="text-[9px] font-bold text-primary mb-2 uppercase opacity-60 ml-2">{lang}</p>
                             <div className="grid gap-1">
                               {exercises.map(ex => (
-                                <Button 
-                                  key={ex.id} 
-                                  variant={lessonId === ex.id ? "secondary" : "ghost"}
-                                  className="w-full justify-start text-xs h-9 rounded-lg"
-                                  onClick={() => router.push(`/learn/${ex.id}`)}
-                                >
+                                <Button key={ex.id} variant={lessonId === ex.id ? "secondary" : "ghost"} className="w-full justify-start text-xs h-9 rounded-lg" onClick={() => router.push(`/learn/${ex.id}`)}>
                                   {isCompleted(ex.id) && <CheckCircle2 className="w-3 h-3 mr-2 text-green-500" />}
                                   {ex.title}
                                 </Button>
@@ -252,38 +220,22 @@ export default function LearnPage() {
             <div className="max-w-3xl mx-auto p-8 md:p-16 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
                <div className="space-y-6">
                   <h1 className="font-headline text-3xl md:text-5xl font-bold">{theory.title}</h1>
-                  
                   {theory.youtubeVideoId && (
                     <div className="aspect-video w-full rounded-3xl overflow-hidden bg-muted border shadow-2xl">
-                       <iframe 
-                        className="w-full h-full"
-                        src={`https://www.youtube.com/embed/${theory.youtubeVideoId}`}
-                        title="Lesson Video"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                       />
+                       <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${theory.youtubeVideoId}`} title="Video" allowFullScreen />
                     </div>
                   )}
-
-                  <div 
-                    className="prose prose-neutral dark:prose-invert max-w-none text-muted-foreground leading-relaxed text-lg"
-                    dangerouslySetInnerHTML={{ __html: theory.content }}
-                  />
+                  <div className="prose prose-neutral dark:prose-invert max-w-none text-muted-foreground leading-relaxed text-lg" dangerouslySetInnerHTML={{ __html: theory.content }} />
                </div>
-
                {quiz && (
                  <div className="bg-card border-2 border-primary/10 rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-2xl relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl group-hover:bg-primary/10 transition-all" />
                     <div className="flex items-center gap-4 mb-6">
-                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-                        <HelpCircle className="w-6 h-6 text-primary" />
-                      </div>
+                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center"><HelpCircle className="w-6 h-6 text-primary" /></div>
                       <div>
                         <h3 className="font-headline font-bold text-2xl">{quiz.title}</h3>
-                        <p className="text-sm text-muted-foreground">Conclua o quiz para marcar a lição como finalizada.</p>
+                        <p className="text-sm text-muted-foreground">Conclua o quiz para finalizar a lição.</p>
                       </div>
                     </div>
-
                     <div className="space-y-10">
                       {quiz.questions.map((q, qIndex) => (
                         <div key={q.id} className="space-y-6">
@@ -291,10 +243,7 @@ export default function LearnPage() {
                             <span className="text-2xl font-headline font-bold text-primary opacity-20">{String(qIndex + 1).padStart(2, '0')}</span>
                             <p className="text-lg font-medium pt-1">{q.question}</p>
                           </div>
-                          <RadioGroup 
-                            onValueChange={(val) => setQuizAnswers(prev => ({...prev, [q.id]: parseInt(val)}))}
-                            className="grid gap-4 ml-10"
-                          >
+                          <RadioGroup onValueChange={(val) => setQuizAnswers(prev => ({...prev, [q.id]: parseInt(val)}))} className="grid gap-4 ml-10">
                             {q.options.map((opt, i) => (
                               <div key={i} className="flex items-center space-x-2 p-5 rounded-2xl border bg-background/50 hover:bg-primary/5 hover:border-primary/20 transition-all cursor-pointer">
                                 <RadioGroupItem value={i.toString()} id={`${q.id}-${i}`} className="text-primary" />
@@ -305,41 +254,24 @@ export default function LearnPage() {
                         </div>
                       ))}
                     </div>
-
-                    <Button 
-                      onClick={handleQuizSubmit} 
-                      className="w-full h-16 rounded-2xl font-bold text-xl bg-primary shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all" 
-                      disabled={isSaving || Object.keys(quizAnswers).length < quiz.questions.length}
-                    >
+                    <Button onClick={handleQuizSubmit} className="w-full h-16 rounded-2xl font-bold text-xl bg-primary shadow-xl shadow-primary/20 transition-all" disabled={isSaving || Object.keys(quizAnswers).length < quiz.questions.length}>
                       {isSaving ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : <ShieldCheck className="w-6 h-6 mr-2" />}
-                      Validar Respostas e Finalizar
+                      Finalizar Lição
                     </Button>
                  </div>
                )}
             </div>
           ) : practice ? (
             <div className="h-full flex flex-col bg-[#1e1e1e]">
-               {isCompiledLanguage && (
-                 <Alert className="m-4 bg-amber-500/10 border-amber-500/20 text-amber-500 rounded-xl">
-                    <AlertCircle className="h-4 w-4 stroke-amber-500" />
-                    <AlertTitle className="font-bold text-xs">Simulador de Linguagem Compilada</AlertTitle>
-                    <AlertDescription className="text-[10px] opacity-80">
-                      Esta é uma simulação fiel do ambiente {selectedLang.toUpperCase()}. Para melhor experiência, recomendamos usar o VS Code instalado localmente através do botão no cabeçalho.
-                    </AlertDescription>
-                 </Alert>
-               )}
                <div className="p-3 border-b border-white/5 flex items-center justify-between bg-black/20">
-                  <div className="flex items-center gap-3">
-                    <span className="px-3 py-1 rounded-md bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/20">
-                      {practice.language}
-                    </span>
-                  </div>
+                  <span className="px-3 py-1 rounded-md bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/20">
+                    {practice.language}
+                  </span>
                   <Button size="sm" onClick={handleRunCode} disabled={isRunning} className="bg-green-600 hover:bg-green-700 h-8 rounded-full text-xs font-bold px-6">
-                    {isRunning ? "A VALIDAR..." : "EXECUTAR"}
+                    {isRunning ? "VALIDANDO..." : "EXECUTAR"}
                     <Play className="w-3 h-3 ml-2 fill-current" />
                   </Button>
                </div>
-               
                <div className="flex-1 relative">
                  <Editor
                    height="100%"
@@ -347,20 +279,12 @@ export default function LearnPage() {
                    theme="vs-dark"
                    value={code}
                    onChange={(value) => setCode(value || "")}
-                   options={{
-                     minimap: { enabled: false },
-                     fontSize: 14,
-                     lineNumbers: 'on',
-                     scrollBeyondLastLine: false,
-                     automaticLayout: true,
-                     padding: { top: 20 }
-                   }}
+                   options={{ minimap: { enabled: false }, fontSize: 14, lineNumbers: 'on', scrollBeyondLastLine: false, automaticLayout: true, padding: { top: 20 } }}
                  />
                </div>
-
                <div className="h-40 border-t border-white/5 bg-black/40 p-4 font-code text-xs">
                   <div className="text-muted-foreground mb-2 flex items-center gap-2 uppercase tracking-widest font-bold text-[10px]">
-                    <Terminal className="w-3 h-3" /> Consola de Simulação
+                    <Terminal className="w-3 h-3" /> Consola
                   </div>
                   <div className={cn("whitespace-pre overflow-y-auto h-24", output.includes('✅') ? 'text-green-400' : 'text-blue-300')}>
                     {output || `> Simulador de ${selectedLang} pronto.`}
@@ -376,63 +300,34 @@ export default function LearnPage() {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <ListChecks className="w-5 h-5 text-primary" />
-                  <h3 className="font-headline font-bold text-sm uppercase tracking-widest">Objetivos do Lab</h3>
+                  <h3 className="font-headline font-bold text-sm uppercase tracking-widest">Objetivos</h3>
                 </div>
                 <div className="text-[10px] font-bold text-muted-foreground">
                   {completedObjectives.length}/{practice.objectives.length} CONCLUÍDO
                 </div>
               </div>
-
-              <div 
-                className="mb-6 bg-accent/5 border border-accent/10 p-4 rounded-xl prose prose-invert prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: practice.detailedExplanation }}
-              />
-              
+              <div className="mb-6 bg-accent/5 border border-accent/10 p-4 rounded-xl prose prose-invert prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: practice.detailedExplanation }} />
               <div className="flex-1 overflow-y-auto space-y-4 pr-2">
                 <Accordion type="single" collapsible className="w-full space-y-3">
                   {practice.objectives.map((obj, i) => (
-                    <AccordionItem 
-                      key={obj.id} 
-                      value={obj.id}
-                      className={cn(
-                        "rounded-xl border transition-all overflow-hidden",
-                        completedObjectives.includes(obj.id) 
-                          ? "bg-green-500/5 border-green-500/20" 
-                          : "bg-background/40 border-white/5"
-                      )}
-                    >
+                    <AccordionItem key={obj.id} value={obj.id} className={cn("rounded-xl border transition-all overflow-hidden", completedObjectives.includes(obj.id) ? "bg-green-500/5 border-green-500/20" : "bg-background/40 border-white/5")}>
                       <AccordionTrigger className="px-4 py-3 hover:no-underline">
                         <div className="flex items-center gap-3 text-left">
-                          <div className={cn(
-                            "w-5 h-5 rounded-full flex items-center justify-center shrink-0",
-                            completedObjectives.includes(obj.id) ? "bg-green-500" : "bg-secondary"
-                          )}>
+                          <div className={cn("w-5 h-5 rounded-full flex items-center justify-center shrink-0", completedObjectives.includes(obj.id) ? "bg-green-500" : "bg-secondary")}>
                             {completedObjectives.includes(obj.id) ? <CheckCircle2 className="w-3 h-3 text-white" /> : <span className="text-[10px]">{i + 1}</span>}
                           </div>
-                          <span className={cn("text-xs font-bold", completedObjectives.includes(obj.id) && "text-green-500")}>
-                            {obj.description}
-                          </span>
+                          <span className={cn("text-xs font-bold", completedObjectives.includes(obj.id) && "text-green-500")}>{obj.description}</span>
                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="px-4 pb-4 space-y-4">
-                        {obj.hint && (
-                          <div className="p-3 bg-primary/5 rounded-lg border border-primary/10">
-                            <p className="text-[10px] font-bold text-primary mb-1 uppercase tracking-tighter">💡 Dica de Implementação:</p>
-                            <code className="text-[10px] font-code text-primary/80">{obj.hint}</code>
-                          </div>
-                        )}
+                        {obj.hint && <div className="p-3 bg-primary/5 rounded-lg border border-primary/10"><code className="text-[10px] font-code text-primary/80">{obj.hint}</code></div>}
                       </AccordionContent>
                     </AccordionItem>
                   ))}
                 </Accordion>
               </div>
-
               {completedObjectives.length === practice.objectives.length && (
-                <Button 
-                  onClick={() => handleComplete(100)} 
-                  className="w-full mt-6 h-14 rounded-2xl font-bold text-lg bg-primary shadow-xl shadow-primary/20"
-                  disabled={isSaving}
-                >
+                <Button onClick={() => handleComplete(100)} className="w-full mt-6 h-14 rounded-2xl font-bold text-lg bg-primary shadow-xl shadow-primary/20" disabled={isSaving}>
                   {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Trophy className="w-5 h-5 mr-2" />}
                   Finalizar Laboratório
                 </Button>

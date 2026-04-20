@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, GraduationCap, Award, Languages, Menu, LogOut, User, Sun, Moon } from "lucide-react";
+import { LayoutDashboard, GraduationCap, Award, Languages, Menu, LogOut, User, Sun, Moon, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useLanguage } from "./LanguageContext";
@@ -26,6 +26,7 @@ export function Navigation() {
   const navItems = [
     { href: "/dashboard", label: t.dashboard, icon: LayoutDashboard },
     { href: "/modules", label: t.modules, icon: GraduationCap },
+    { href: "/community", label: t.community, icon: Users },
     { href: "/certifications", label: t.certifications, icon: Award },
   ];
 
@@ -52,11 +53,9 @@ export function Navigation() {
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
-          {/* Apenas o nome no cabeçalho para maior clareza */}
           <Logo className="h-20 w-auto mt-4" showDevices={false} />
         </Link>
 
-        {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           <NavLinks />
           <div className="h-6 w-px bg-border" />
@@ -90,10 +89,12 @@ export function Navigation() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem className="gap-2">
-                    <User className="w-4 h-4" /> Perfil
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="flex items-center gap-2 w-full cursor-pointer">
+                      <User className="w-4 h-4" /> {t.profile}
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={signOut} className="gap-2 text-destructive">
+                  <DropdownMenuItem onClick={signOut} className="gap-2 text-destructive cursor-pointer">
                     <LogOut className="w-4 h-4" /> Sair
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -106,7 +107,6 @@ export function Navigation() {
           </div>
         </div>
 
-        {/* Mobile Nav */}
         <div className="md:hidden flex items-center gap-2">
           {mounted && (
             <Button
@@ -129,12 +129,12 @@ export function Navigation() {
                 <div className="border-t pt-6 mt-2">
                    {user ? (
                      <div className="space-y-4">
-                        <div className="flex items-center gap-4">
+                        <Link href="/profile" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
                           <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center overflow-hidden border">
                             <img src={profile?.avatar_url || `https://picsum.photos/seed/${user.id}/40/40`} alt="Avatar" />
                           </div>
                           <span className="font-medium">{profile?.display_name || 'Usuário'}</span>
-                        </div>
+                        </Link>
                         <Button variant="ghost" className="w-full justify-start text-destructive p-0" onClick={signOut}>
                           <LogOut className="w-4 h-4 mr-2" /> Sair
                         </Button>
