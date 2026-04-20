@@ -1,14 +1,20 @@
 
-import { Module } from '../types';
+import type { Level } from '../types';
 
-export const level7: Module = {
-  id: '7',
-  title: 'Nível 7: Certificações',
-  level: 'Certified',
-  description: 'Projetos finais para certificação internacional.',
-  image: 'certificate-badge',
+export const level7: Level = {
+  id: 7,
+  title: 'Nível 7: Projetos & Certificações',
+  description: 'Construção de projetos reais para o portfólio e exames de certificação.',
   knowledgeAreas: [
-    { id: 'fcc-web', title: '01. Responsive Web', description: 'Certificação HTML/CSS.', supportedLanguages: ['html', 'css'], theoryLessons: [], practiceExercises: [] },
-    { id: 'fcc-js', title: '02. JS Algorithms', description: 'Lógica e Algoritmos JS.', supportedLanguages: ['javascript'], theoryLessons: [], practiceExercises: [] }
+    {
+      id: 'ka-capstone',
+      title: '01. Capstone Project',
+      description: 'Projeto final integrando todo o conhecimento do curso.',
+      load: '80h',
+      iconName: 'Trophy',
+      theory: [],
+      practice: {},
+      quizzes: []
+    }
   ]
 };

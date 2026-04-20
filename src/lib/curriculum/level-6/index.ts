@@ -1,15 +1,30 @@
 
-import { Module } from '../types';
+import type { Level } from '../types';
 
-export const level6: Module = {
-  id: '6',
+export const level6: Level = {
+  id: 6,
   title: 'Nível 6: Desenvolvimento Profissional',
-  level: 'Expert',
-  description: 'Carreira, Soft Skills e Empreendedorismo.',
-  image: 'certificate-badge',
+  description: 'Carreira, Soft Skills, Portfólio e Preparação para o Mercado Global.',
   knowledgeAreas: [
-    { id: 'ka-career', title: '01. Career', description: 'LinkedIn e Portfólio.', supportedLanguages: [], theoryLessons: [], practiceExercises: [] },
-    { id: 'ka-soft-skills', title: '02. Soft Skills', description: 'Comunicação e Liderança.', supportedLanguages: [], theoryLessons: [], practiceExercises: [] },
-    { id: 'ka-entrepreneurship', title: '03. Entrepreneurship', description: 'Lançar a sua Startup.', supportedLanguages: [], theoryLessons: [], practiceExercises: [] }
+    {
+      id: 'ka-career',
+      title: '01. Career Development',
+      description: 'LinkedIn, CV e Estratégias de Entrevista.',
+      load: '10h',
+      iconName: 'Briefcase',
+      theory: [],
+      practice: {},
+      quizzes: []
+    },
+    {
+      id: 'ka-soft-skills',
+      title: '02. Soft Skills',
+      description: 'Comunicação, Liderança e Trabalho em Equipa.',
+      load: '10h',
+      iconName: 'Users',
+      theory: [],
+      practice: {},
+      quizzes: []
+    }
   ]
 };
