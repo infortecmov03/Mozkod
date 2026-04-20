@@ -1,8 +1,7 @@
-
 import type { KnowledgeArea } from '../../types';
-import { lessons } from './theory.ts';
-import { quiz as quiz1 } from './theory/quizzes/01-sistemas-numericos-quiz';
-import { exercise as exercise1 } from './laboratory/01-sistemas-numericos';
+import { lessons } from './theory';
+import { quiz as q1 } from './quizzes/01-sistemas-numericos-quiz';
+import { exercise as e1 } from './laboratory/01-sistemas-numericos';
 
 export const csCore: KnowledgeArea = {
   id: 'ka-cs-core',
@@ -12,9 +11,9 @@ export const csCore: KnowledgeArea = {
   iconName: 'Cpu',
   theory: lessons,
   quizzes: [
-    quiz1,
+    q1
   ],
   practice: {
-    concept: [exercise1]
+    concept: [e1]
   }
 };

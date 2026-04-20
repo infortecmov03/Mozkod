@@ -1,4 +1,4 @@
-import type { Quiz } from '../../../types';
+import type { Quiz } from '../../types';
 
 export const quiz: Quiz = {
   id: "cs-t1-quiz",
