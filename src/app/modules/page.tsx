@@ -12,10 +12,12 @@ import { useLanguage } from "@/components/LanguageContext";
 import { useProgress } from "@/contexts/ProgressContext";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 export default function ModulesPage() {
   const { t } = useLanguage();
   const { isCompleted } = useProgress();
+  const [selectedLangs, setSelectedLangs] = useState<Record<string, string>>({});
 
   const getModuleProgress = (module: any) => {
     if (!module || !module.knowledgeAreas) return 0;
@@ -24,12 +26,10 @@ export default function ModulesPage() {
     let completed = 0;
     
     module.knowledgeAreas.forEach((ka: any) => {
-      // Teoria
       const theoryList = ka.theory || [];
       total += theoryList.length;
       completed += theoryList.filter((l: any) => isCompleted(l.id)).length;
       
-      // Prática (Iterar sobre todas as linguagens no objeto practice)
       if (ka.practice) {
         Object.values(ka.practice).forEach((exercises: any) => {
           if (Array.isArray(exercises)) {
@@ -51,9 +51,9 @@ export default function ModulesPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-primary/10 mb-6 border-2 border-primary/20">
             <GraduationCap className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">Currículo 1-8</h1>
+          <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4">Currículo de Engenharia 1-8</h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Uma jornada estruturada em 8 níveis, cobrindo da lógica fundamental ao domínio avançado.
+            Uma jornada estruturada em 8 níveis com 255 tópicos, cobrindo da lógica fundamental ao domínio de elite.
           </p>
         </header>
 
@@ -85,8 +85,9 @@ export default function ModulesPage() {
                   <div className="grid gap-8">
                     {module.knowledgeAreas.map((ka) => {
                       const theoryLessons = ka.theory || [];
-                      // Pegar o primeiro array de exercícios disponível ou um array vazio
-                      const practiceExercises = Object.values(ka.practice || {})[0] as any[] || [];
+                      const availableLangs = Object.keys(ka.practice || {});
+                      const currentLang = selectedLangs[ka.id] || availableLangs[0] || "";
+                      const practiceExercises = ka.practice?.[currentLang] || [];
                       
                       return (
                         <div key={ka.id} className="space-y-4">
@@ -97,7 +98,6 @@ export default function ModulesPage() {
                           </div>
                           
                           <div className="grid md:grid-cols-2 gap-6">
-                             {/* Card de Teoria */}
                              <Card className="bg-background/40 border-white/5 hover:border-primary/20 transition-all overflow-hidden group/card shadow-xl">
                                 <CardContent className="p-6 space-y-6">
                                   <div className="flex justify-between items-start">
@@ -130,19 +130,32 @@ export default function ModulesPage() {
                                 </CardContent>
                              </Card>
 
-                             {/* Card de Prática */}
-                             {practiceExercises.length > 0 ? (
+                             {availableLangs.length > 0 ? (
                                <Card className="bg-background/40 border-white/5 hover:border-accent/20 transition-all overflow-hidden group/card shadow-xl">
                                  <CardContent className="p-6 space-y-6">
                                     <div className="flex justify-between items-start">
                                        <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
                                           <Code2 className="w-5 h-5 text-accent" />
                                        </div>
-                                       <Badge variant="ghost" className="text-[10px] uppercase text-accent">PRÁTICA</Badge>
+                                       <div className="flex gap-1">
+                                          {availableLangs.map(lang => (
+                                            <button
+                                              key={lang}
+                                              onClick={() => setSelectedLangs(prev => ({...prev, [ka.id]: lang}))}
+                                              className={cn(
+                                                "text-[9px] px-2 py-0.5 rounded-md border font-bold uppercase transition-all",
+                                                currentLang === lang 
+                                                  ? "bg-accent text-accent-foreground border-accent" 
+                                                  : "bg-transparent text-muted-foreground border-white/10 hover:border-accent/50"
+                                              )}
+                                            >
+                                              {lang}
+                                            </button>
+                                          ))}
+                                       </div>
                                     </div>
                                     <div className="space-y-2">
                                        {practiceExercises.map(ex => {
-                                         // Bloquear prática se a teoria correspondente não estiver feita (lógica simples por índice)
                                          const theoryId = theoryLessons[practiceExercises.indexOf(ex)]?.id;
                                          const isLocked = theoryId && !isCompleted(theoryId);
                                          return (
@@ -163,12 +176,14 @@ export default function ModulesPage() {
                                          );
                                        })}
                                     </div>
-                                    <Link href={`/learn/${practiceExercises[0].id}`}>
-                                      <Button variant="outline" className="w-full rounded-xl font-bold h-10 gap-2 text-xs border-accent/20 hover:bg-accent/5">
-                                        Laboratório
-                                        <Laptop className="w-4 h-4" />
-                                      </Button>
-                                    </Link>
+                                    {practiceExercises.length > 0 && (
+                                      <Link href={`/learn/${practiceExercises[0].id}`}>
+                                        <Button variant="outline" className="w-full rounded-xl font-bold h-10 gap-2 text-xs border-accent/20 hover:bg-accent/5">
+                                          Laboratório {currentLang.toUpperCase()}
+                                          <Laptop className="w-4 h-4" />
+                                        </Button>
+                                      </Link>
+                                    )}
                                  </CardContent>
                                </Card>
                              ) : (
