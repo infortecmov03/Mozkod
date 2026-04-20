@@ -3,16 +3,14 @@ import { Module } from '../types';
 
 export const level8: Module = {
   id: '8',
-  title: 'Nível 8: Linguagens de Programação',
+  title: 'Nível 8: Domínio de Linguagens',
   level: 'Master',
-  description: 'Domínio profundo de múltiplas sintaxes.',
+  description: 'Aprofunde-se em sintaxes específicas e avançadas.',
   image: 'web-dev',
   knowledgeAreas: [
-    { id: 'lang-javascript', title: '01. JavaScript', description: 'JS Moderno.', supportedLanguages: ['javascript'], theoryLessons: [], practiceExercises: [] },
-    { id: 'lang-python', title: '02. Python', description: 'Python Geral.', supportedLanguages: ['python'], theoryLessons: [], practiceExercises: [] },
-    { id: 'lang-sql', title: '03. SQL', description: 'Dados Relacionais.', supportedLanguages: ['sql'], theoryLessons: [], practiceExercises: [] },
-    { id: 'lang-typescript', title: '04. TypeScript', description: 'Tipagem forte.', supportedLanguages: ['typescript'], theoryLessons: [], practiceExercises: [] },
-    { id: 'lang-rust', title: '05. Rust', description: 'Memória e Segurança.', supportedLanguages: ['rust'], theoryLessons: [], practiceExercises: [] },
-    { id: 'lang-go', title: '06. Go', description: 'Simplicidade e Performance.', supportedLanguages: ['go'], theoryLessons: [], practiceExercises: [] }
+    { id: 'lang-html', title: '01. HTML Master', description: 'Semântica e SEO.', supportedLanguages: ['html'], theoryLessons: [], practiceExercises: [] },
+    { id: 'lang-css', title: '02. CSS Master', description: 'Animações e Flexbox.', supportedLanguages: ['css'], theoryLessons: [], practiceExercises: [] },
+    { id: 'lang-js', title: '03. JS Master', description: 'ESNext e Assincronismo.', supportedLanguages: ['javascript'], theoryLessons: [], practiceExercises: [] },
+    { id: 'lang-python', title: '04. Python Master', description: 'Data e Scripts.', supportedLanguages: ['python'], theoryLessons: [], practiceExercises: [] }
   ]
 };
