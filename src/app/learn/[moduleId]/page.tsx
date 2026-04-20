@@ -10,11 +10,11 @@ import { Label } from "@/components/ui/label";
 import { 
   Terminal, BookOpen, Play, CheckCircle2, ChevronLeft, 
   Trophy, Zap, Loader2, Menu, ListChecks, 
-  Code2, ShieldCheck, HelpCircle, Info
+  ShieldCheck, HelpCircle, Info, ChevronRight, Video
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise } from "@/lib/curriculum";
+import { findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, findQuizById } from "@/lib/curriculum";
 import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/components/LanguageContext";
@@ -23,16 +23,18 @@ import { useProgress } from "@/contexts/ProgressContext";
 import { cn } from "@/lib/utils";
 
 export default function LearnPage() {
-  const { moduleId: lessonId } = useParams();
+  const params = useParams();
+  const lessonId = params.moduleId as string;
   const router = useRouter();
   const { toast } = useToast();
   const { t } = useLanguage();
   const { profile } = useAuth();
   const { markAsCompleted, isCompleted } = useProgress();
 
-  const data = useMemo(() => findKnowledgeAreaByLessonId(lessonId as string), [lessonId]);
-  const theory = useMemo(() => findTheoryLesson(lessonId as string), [lessonId]);
-  const practice = useMemo(() => findPracticeExercise(lessonId as string), [lessonId]);
+  const data = useMemo(() => findKnowledgeAreaByLessonId(lessonId), [lessonId]);
+  const theory = useMemo(() => findTheoryLesson(lessonId), [lessonId]);
+  const practice = useMemo(() => findPracticeExercise(lessonId), [lessonId]);
+  const quiz = useMemo(() => theory?.quizId ? findQuizById(theory.quizId) : null, [theory]);
 
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
@@ -44,24 +46,23 @@ export default function LearnPage() {
 
   useEffect(() => {
     if (practice) {
-      const initialLang = data?.ka.supportedLanguages[0] || "javascript";
-      setSelectedLang(initialLang);
-      setCode(practice.starterCode[initialLang] || "");
+      setSelectedLang(practice.language);
+      setCode(practice.template || "");
     }
-  }, [practice, data]);
+  }, [practice]);
 
-  if (!data) return <div className="p-8 text-center">Conteúdo não encontrado</div>;
+  if (!data) return <div className="p-20 text-center font-headline text-2xl">Conteúdo não encontrado</div>;
 
-  const { ka, module } = data;
+  const { ka, level } = data;
 
   const handleRunCode = async () => {
     setIsRunning(true);
-    setTimeout(async () => {
+    setTimeout(() => {
       setIsRunning(false);
       if (!practice) return;
 
       const newCompleted = practice.objectives
-        .filter(obj => new RegExp(obj.validationRegex, 'i').test(code))
+        .filter(obj => code.includes(obj.test))
         .map(obj => obj.id);
 
       setCompletedObjectives(newCompleted);
@@ -75,24 +76,19 @@ export default function LearnPage() {
   };
 
   const handleQuizSubmit = async () => {
-    if (!theory) return;
-    const questions = theory.quiz || [];
-    if (questions.length === 0) {
-      await handleComplete(100);
-      return;
-    }
+    if (!quiz) return;
+    
+    const correctCount = quiz.questions.filter(q => quizAnswers[q.id] === q.correctAnswer).length;
+    const score = Math.round((correctCount / quiz.questions.length) * 100);
 
-    const correctCount = questions.filter(q => quizAnswers[q.id] === q.correctAnswer).length;
-    const score = Math.round((correctCount / questions.length) * 100);
-
-    if (score >= 70) {
+    if (score >= quiz.passingScore) {
       toast({ title: t.wellDone, description: `Resultado: ${score}%` });
       await handleComplete(score);
     } else {
       toast({ 
         variant: "destructive", 
         title: "Tente novamente", 
-        description: `Resultado: ${score}%. Precisas de pelo menos 70%.` 
+        description: `Resultado: ${score}%. Precisas de pelo menos ${quiz.passingScore}%.` 
       });
     }
   };
@@ -102,8 +98,8 @@ export default function LearnPage() {
     setIsSaving(true);
     try {
       await markAsCompleted(
-        lessonId as string,
-        parseInt(module.id),
+        lessonId,
+        level.id,
         ka.id,
         theory ? 'theory' : 'exercise',
         score,
@@ -140,20 +136,20 @@ export default function LearnPage() {
              <SheetTrigger asChild>
                <Button variant="outline" size="sm" className="gap-2 rounded-full border-primary/20 bg-primary/5">
                  <Menu className="w-4 h-4 text-primary" />
-                 <span className="hidden sm:inline">Conteúdo do Módulo</span>
+                 <span className="hidden sm:inline">Trilha de Aprendizagem</span>
                </Button>
              </SheetTrigger>
-             <SheetContent side="left" className="w-80">
+             <SheetContent side="left" className="w-80 overflow-y-auto">
                <SheetHeader className="mb-6">
                  <SheetTitle>Navegação</SheetTitle>
                </SheetHeader>
-               <div className="space-y-6">
+               <div className="space-y-8">
                  <div>
                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
-                     <BookOpen className="w-3 h-3" /> Teoria
+                     <BookOpen className="w-3 h-3" /> Lições Teóricas
                    </h4>
                    <div className="grid gap-1">
-                     {ka.theoryLessons.map(l => (
+                     {ka.theory.map(l => (
                         <Button 
                           key={l.id} 
                           variant={lessonId === l.id ? "secondary" : "ghost"}
@@ -166,26 +162,30 @@ export default function LearnPage() {
                      ))}
                    </div>
                  </div>
-                 {ka.practiceExercises.length > 0 && (
-                   <div>
-                     <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
-                       <Terminal className="w-3 h-3" /> Laboratórios
-                     </h4>
-                     <div className="grid gap-1">
-                       {ka.practiceExercises.map(p => (
-                          <Button 
-                            key={p.id} 
-                            variant={lessonId === p.id ? "secondary" : "ghost"}
-                            className="w-full justify-start text-xs h-9 rounded-lg"
-                            onClick={() => router.push(`/learn/${p.id}`)}
-                          >
-                            {isCompleted(p.id) && <CheckCircle2 className="w-3 h-3 mr-2 text-green-500" />}
-                            {p.title}
-                          </Button>
-                       ))}
+                 
+                 <div>
+                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
+                     <Terminal className="w-3 h-3" /> Práticas & Labs
+                   </h4>
+                   {Object.entries(ka.practice).map(([lang, exercises]) => (
+                     <div key={lang} className="mt-4 first:mt-0">
+                        <p className="text-[9px] font-bold text-primary mb-2 uppercase opacity-60 ml-2">{lang}</p>
+                        <div className="grid gap-1">
+                          {exercises.map(ex => (
+                            <Button 
+                              key={ex.id} 
+                              variant={lessonId === ex.id ? "secondary" : "ghost"}
+                              className="w-full justify-start text-xs h-9 rounded-lg"
+                              onClick={() => router.push(`/learn/${ex.id}`)}
+                            >
+                              {isCompleted(ex.id) && <CheckCircle2 className="w-3 h-3 mr-2 text-green-500" />}
+                              {ex.title}
+                            </Button>
+                          ))}
+                        </div>
                      </div>
-                   </div>
-                 )}
+                   ))}
+                 </div>
                </div>
              </SheetContent>
            </Sheet>
@@ -199,28 +199,31 @@ export default function LearnPage() {
                <div className="space-y-6">
                   <h1 className="font-headline text-3xl md:text-5xl font-bold">{theory.title}</h1>
                   
-                  <Card className="bg-primary/5 border-primary/10 p-6 rounded-2xl flex gap-4 items-start">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <Info className="w-5 h-5 text-primary" />
+                  {theory.youtubeVideoId && (
+                    <div className="aspect-video w-full rounded-2xl overflow-hidden bg-muted border shadow-2xl">
+                       <iframe 
+                        className="w-full h-full"
+                        src={`https://www.youtube.com/embed/${theory.youtubeVideoId}`}
+                        title="Lesson Video"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                       />
                     </div>
-                    <div>
-                      <h4 className="font-bold text-sm mb-1">Para quem nunca programou:</h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{theory.beginnerExplanation}</p>
-                    </div>
-                  </Card>
+                  )}
 
-                  <div className="prose prose-invert max-w-none text-muted-foreground leading-relaxed text-lg">
-                    {theory.content.split('\n').map((para, i) => <p key={i}>{para}</p>)}
-                  </div>
+                  <div 
+                    className="prose prose-invert max-w-none text-muted-foreground leading-relaxed text-lg"
+                    dangerouslySetInnerHTML={{ __html: theory.content }}
+                  />
                </div>
 
-               {theory.quiz.length > 0 && (
+               {quiz && (
                  <div className="bg-card/30 border border-white/5 rounded-3xl p-8 md:p-12 space-y-8">
                     <div className="flex items-center gap-3">
                       <HelpCircle className="w-6 h-6 text-accent" />
-                      <h3 className="font-headline font-bold text-xl">Quiz de Validação</h3>
+                      <h3 className="font-headline font-bold text-xl">{quiz.title}</h3>
                     </div>
-                    {theory.quiz.map((q) => (
+                    {quiz.questions.map((q) => (
                       <div key={q.id} className="space-y-4">
                         <p className="font-medium">{q.question}</p>
                         <RadioGroup 
@@ -246,21 +249,10 @@ export default function LearnPage() {
           ) : practice ? (
             <div className="h-full flex flex-col bg-[#0d1117]">
                <div className="p-3 border-b border-white/5 flex items-center justify-between bg-black/20">
-                  <div className="flex gap-2">
-                    {ka.supportedLanguages.map(lang => (
-                      <Button
-                        key={lang}
-                        variant={selectedLang === lang ? "secondary" : "ghost"}
-                        size="sm"
-                        className={cn("h-7 px-3 rounded-md text-[10px] uppercase font-bold", selectedLang === lang && "bg-primary text-primary-foreground")}
-                        onClick={() => {
-                          setSelectedLang(lang);
-                          setCode(practice.starterCode[lang] || "");
-                        }}
-                      >
-                        {lang}
-                      </Button>
-                    ))}
+                  <div className="flex items-center gap-3">
+                    <span className="px-3 py-1 rounded-md bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/20">
+                      {practice.language}
+                    </span>
                   </div>
                   <Button size="sm" onClick={handleRunCode} disabled={isRunning} className="bg-green-600 hover:bg-green-700 h-8 rounded-full text-xs font-bold px-6">
                     {isRunning ? "A VALIDAR..." : "EXECUTAR"}
@@ -295,19 +287,17 @@ export default function LearnPage() {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <ListChecks className="w-5 h-5 text-primary" />
-                  <h3 className="font-headline font-bold text-sm uppercase tracking-widest">Passo a Passo</h3>
+                  <h3 className="font-headline font-bold text-sm uppercase tracking-widest">Objetivos</h3>
                 </div>
                 <div className="text-[10px] font-bold text-muted-foreground">
                   {completedObjectives.length}/{practice.objectives.length} CONCLUÍDO
                 </div>
               </div>
 
-              <div className="mb-6 bg-accent/10 border border-accent/20 p-4 rounded-xl">
-                 <h4 className="text-xs font-bold text-accent mb-1 flex items-center gap-2 uppercase">
-                   <Zap className="w-3 h-3" /> Guia de Início
-                 </h4>
-                 <p className="text-xs text-muted-foreground leading-relaxed">{practice.beginnerGuide}</p>
-              </div>
+              <div 
+                className="mb-6 bg-accent/5 border border-accent/10 p-4 rounded-xl prose prose-invert prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: practice.detailedExplanation }}
+              />
               
               <div className="flex-1 overflow-y-auto space-y-4 pr-2">
                 <Accordion type="single" collapsible className="w-full space-y-3">
@@ -331,22 +321,17 @@ export default function LearnPage() {
                             {completedObjectives.includes(obj.id) ? <CheckCircle2 className="w-3 h-3 text-white" /> : <span className="text-[10px]">{i + 1}</span>}
                           </div>
                           <span className={cn("text-xs font-bold", completedObjectives.includes(obj.id) && "text-green-500")}>
-                            {obj.title}
+                            {obj.description}
                           </span>
                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="px-4 pb-4 space-y-4">
-                        <div className="space-y-2">
-                           <p className="text-xs text-muted-foreground leading-relaxed">{obj.description}</p>
-                           <div className="p-3 bg-black/40 rounded-lg border border-white/5">
-                              <p className="text-[10px] font-bold text-primary mb-1 uppercase tracking-tighter">Explicação Passo a Passo:</p>
-                              <p className="text-[11px] text-muted-foreground">{obj.explanation}</p>
-                           </div>
-                           <div className="p-3 bg-primary/5 rounded-lg border border-primary/10">
-                              <p className="text-[10px] font-bold text-primary mb-1 uppercase tracking-tighter">💡 Dica de Código:</p>
-                              <code className="text-[10px] font-code text-primary/80">{obj.hint}</code>
-                           </div>
-                        </div>
+                        {obj.hint && (
+                          <div className="p-3 bg-primary/5 rounded-lg border border-primary/10">
+                            <p className="text-[10px] font-bold text-primary mb-1 uppercase tracking-tighter">💡 Dica:</p>
+                            <code className="text-[10px] font-code text-primary/80">{obj.hint}</code>
+                          </div>
+                        )}
                       </AccordionContent>
                     </AccordionItem>
                   ))}

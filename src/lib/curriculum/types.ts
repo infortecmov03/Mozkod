@@ -1,5 +1,11 @@
 
-export type LessonType = 'theory' | 'exercise';
+export type TheoryLesson = {
+  id: string;
+  title: string;
+  content: string;
+  youtubeVideoId?: string;
+  quizId: string;
+};
 
 export type QuizQuestion = {
   id: string;
@@ -8,47 +14,47 @@ export type QuizQuestion = {
   correctAnswer: number;
 };
 
-export type TheoryLesson = {
+export type Quiz = {
   id: string;
   title: string;
-  content: string;
-  beginnerExplanation: string;
-  videoUrl?: string;
-  quiz: QuizQuestion[];
+  questions: QuizQuestion[];
+  passingScore: number;
 };
 
-export type PracticeObjective = {
+export type Objective = {
   id: string;
-  title: string;
   description: string;
-  explanation: string;
-  hint: string;
-  validationRegex: string;
+  hint?: string;
+  test: string;
 };
 
 export type PracticeExercise = {
   id: string;
+  language: string;
   title: string;
   description: string;
-  beginnerGuide: string;
-  objectives: PracticeObjective[];
-  starterCode: Record<string, string>;
+  statement: string;
+  template: string;
+  detailedExplanation: string;
+  objectives: Objective[];
 };
 
 export type KnowledgeArea = {
   id: string;
   title: string;
   description: string;
-  theoryLessons: TheoryLesson[];
-  practiceExercises: PracticeExercise[];
-  supportedLanguages: string[];
+  load: string;
+  iconName: string;
+  theory: TheoryLesson[];
+  practice: {
+    [key: string]: PracticeExercise[];
+  };
+  quizzes: Quiz[];
 };
 
-export type Module = {
-  id: string;
+export type Level = {
+  id: number;
   title: string;
-  level: string;
   description: string;
-  image: string;
   knowledgeAreas: KnowledgeArea[];
 };
