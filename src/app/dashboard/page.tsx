@@ -30,7 +30,7 @@ export default function DashboardPage() {
     return total > 0 ? Math.round((completed / total) * 100) : 0;
   };
 
-  const getImg = (id: string | undefined) => {
+  const getImg = (id: string) => {
     if (!id) return null;
     const found = PlaceHolderImages.find(img => img.id === id);
     return found?.imageUrl || null;
@@ -155,7 +155,7 @@ export default function DashboardPage() {
                       
                       <div className="flex items-center gap-6">
                         <Progress value={moduleProgress} className="h-1.5 flex-1 bg-secondary/50" />
-                        <Link href={`/learn/${module.knowledgeAreas[0].theoryLessons[0].id}`}>
+                        <Link href="/modules">
                           <Button className="rounded-full gap-2 font-bold px-8 h-12 shadow-lg shadow-primary/20 group-hover:translate-x-1 transition-transform">
                             {moduleProgress === 100 ? t.review : t.continueLearning}
                             <ArrowRight className="w-4 h-4" />
