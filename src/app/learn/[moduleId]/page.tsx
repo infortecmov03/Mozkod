@@ -11,7 +11,8 @@ import {
   Terminal, BookOpen, Play, CheckCircle2, ChevronLeft, 
   Trophy, Zap, Loader2, Menu, ListChecks, 
   ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2,
-  ExternalLink, MonitorSmartphone, AlertCircle, MessageSquare
+  ExternalLink, MonitorSmartphone, AlertCircle, MessageSquare,
+  XCircle, RotateCcw
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -45,6 +46,7 @@ export default function LearnPage() {
   const [isRunning, setIsRunning] = useState(false);
   const [selectedLang, setSelectedLang] = useState<string>("");
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
+  const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [completedObjectives, setCompletedObjectives] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -92,15 +94,26 @@ export default function LearnPage() {
 
   const handleQuizSubmit = async () => {
     if (!quiz) return;
+    setQuizSubmitted(true);
+    
     const correctCount = quiz.questions.filter(q => quizAnswers[q.id] === q.correctAnswer).length;
     const score = Math.round((correctCount / quiz.questions.length) * 100);
 
     if (score >= quiz.passingScore) {
-      toast({ title: t.wellDone, description: `Resultado: ${score}%` });
+      toast({ title: t.wellDone, description: `Aprovado com ${score}%` });
       await handleComplete(score);
     } else {
-      toast({ variant: "destructive", title: "Tente novamente", description: `Resultado: ${score}%. Mínimo: ${quiz.passingScore}%.` });
+      toast({ 
+        variant: "destructive", 
+        title: "Nota insuficiente", 
+        description: `Pontuação: ${score}%. O mínimo necessário é ${quiz.passingScore}%. Analise os erros abaixo.` 
+      });
     }
+  };
+
+  const resetQuiz = () => {
+    setQuizAnswers({});
+    setQuizSubmitted(false);
   };
 
   const handleComplete = async (score: number) => {
@@ -228,36 +241,90 @@ export default function LearnPage() {
                   <div className="prose prose-neutral dark:prose-invert max-w-none text-muted-foreground leading-relaxed text-lg" dangerouslySetInnerHTML={{ __html: theory.content }} />
                </div>
                {quiz && (
-                 <div className="bg-card border-2 border-primary/10 rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-2xl relative overflow-hidden group">
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center"><HelpCircle className="w-6 h-6 text-primary" /></div>
-                      <div>
-                        <h3 className="font-headline font-bold text-2xl">{quiz.title}</h3>
-                        <p className="text-sm text-muted-foreground">Conclua o quiz para finalizar a lição.</p>
-                      </div>
-                    </div>
-                    <div className="space-y-10">
-                      {quiz.questions.map((q, qIndex) => (
-                        <div key={q.id} className="space-y-6">
-                          <div className="flex gap-4">
-                            <span className="text-2xl font-headline font-bold text-primary opacity-20">{String(qIndex + 1).padStart(2, '0')}</span>
-                            <p className="text-lg font-medium pt-1">{q.question}</p>
-                          </div>
-                          <RadioGroup onValueChange={(val) => setQuizAnswers(prev => ({...prev, [q.id]: parseInt(val)}))} className="grid gap-4 ml-10">
-                            {q.options.map((opt, i) => (
-                              <div key={i} className="flex items-center space-x-2 p-5 rounded-2xl border bg-background/50 hover:bg-primary/5 hover:border-primary/20 transition-all cursor-pointer">
-                                <RadioGroupItem value={i.toString()} id={`${q.id}-${i}`} className="text-primary" />
-                                <Label htmlFor={`${q.id}-${i}`} className="flex-1 cursor-pointer font-normal text-base">{opt}</Label>
-                              </div>
-                            ))}
-                          </RadioGroup>
+                 <div className="bg-card border-2 border-primary/10 rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-2xl relative overflow-hidden group mb-20">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center"><HelpCircle className="w-6 h-6 text-primary" /></div>
+                        <div>
+                          <h3 className="font-headline font-bold text-2xl">{quiz.title}</h3>
+                          <p className="text-sm text-muted-foreground">Conclua o quiz para finalizar a lição.</p>
                         </div>
-                      ))}
+                      </div>
+                      {quizSubmitted && (
+                        <Button variant="outline" size="sm" onClick={resetQuiz} className="rounded-full gap-2">
+                           <RotateCcw className="w-4 h-4" /> Tentar Novamente
+                        </Button>
+                      )}
                     </div>
-                    <Button onClick={handleQuizSubmit} className="w-full h-16 rounded-2xl font-bold text-xl bg-primary shadow-xl shadow-primary/20 transition-all" disabled={isSaving || Object.keys(quizAnswers).length < quiz.questions.length}>
-                      {isSaving ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : <ShieldCheck className="w-6 h-6 mr-2" />}
-                      Finalizar Lição
-                    </Button>
+                    <div className="space-y-12">
+                      {quiz.questions.map((q, qIndex) => {
+                        const isCorrect = quizAnswers[q.id] === q.correctAnswer;
+                        const hasSelected = quizAnswers[q.id] !== undefined;
+
+                        return (
+                          <div key={q.id} className="space-y-6">
+                            <div className="flex gap-4">
+                              <span className="text-2xl font-headline font-bold text-primary opacity-20">{String(qIndex + 1).padStart(2, '0')}</span>
+                              <p className="text-lg font-medium pt-1">{q.question}</p>
+                            </div>
+                            <RadioGroup 
+                              disabled={quizSubmitted}
+                              onValueChange={(val) => setQuizAnswers(prev => ({...prev, [q.id]: parseInt(val)}))} 
+                              value={quizAnswers[q.id]?.toString()}
+                              className="grid gap-4 ml-10"
+                            >
+                              {q.options.map((opt, i) => {
+                                const isOptionSelected = quizAnswers[q.id] === i;
+                                const isOptionCorrect = q.correctAnswer === i;
+                                
+                                let variantClass = "border bg-background/50";
+                                if (quizSubmitted) {
+                                  if (isOptionCorrect) variantClass = "border-green-500 bg-green-500/10";
+                                  else if (isOptionSelected && !isCorrect) variantClass = "border-red-500 bg-red-500/10";
+                                } else if (isOptionSelected) {
+                                  variantClass = "border-primary bg-primary/5";
+                                }
+
+                                return (
+                                  <div key={i} className={cn("flex items-center space-x-2 p-5 rounded-2xl transition-all cursor-pointer", variantClass)}>
+                                    <RadioGroupItem value={i.toString()} id={`${q.id}-${i}`} className="text-primary" />
+                                    <Label htmlFor={`${q.id}-${i}`} className="flex-1 cursor-pointer font-normal text-base flex items-center justify-between">
+                                      {opt}
+                                      {quizSubmitted && isOptionCorrect && <CheckCircle2 className="w-5 h-5 text-green-500" />}
+                                      {quizSubmitted && isOptionSelected && !isCorrect && <XCircle className="w-5 h-5 text-red-500" />}
+                                    </Label>
+                                  </div>
+                                );
+                              })}
+                            </RadioGroup>
+                            
+                            {quizSubmitted && (
+                              <div className={cn("ml-10 p-5 rounded-2xl border flex gap-4 animate-in fade-in slide-in-from-top-2", isCorrect ? "bg-green-500/5 border-green-500/20" : "bg-red-500/5 border-red-500/20")}>
+                                {isCorrect ? <Zap className="w-5 h-5 text-green-500 shrink-0" /> : <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />}
+                                <div>
+                                  <p className={cn("text-sm font-bold mb-1", isCorrect ? "text-green-500" : "text-red-500")}>
+                                    {isCorrect ? "Excelente!" : "Quase lá!"}
+                                  </p>
+                                  <p className="text-sm text-muted-foreground leading-relaxed">
+                                    {q.explanation || (isCorrect ? "Resposta correta!" : "A opção selecionada não está correta.")}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {!isCompleted(lessonId) && (
+                      <Button 
+                        onClick={handleQuizSubmit} 
+                        className="w-full h-16 rounded-2xl font-bold text-xl bg-primary shadow-xl shadow-primary/20 transition-all mt-10" 
+                        disabled={isSaving || quizSubmitted || Object.keys(quizAnswers).length < quiz.questions.length}
+                      >
+                        {isSaving ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : <ShieldCheck className="w-6 h-6 mr-2" />}
+                        Finalizar Lição
+                      </Button>
+                    )}
                  </div>
                )}
             </div>
