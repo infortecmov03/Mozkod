@@ -1,16 +1,26 @@
 
-import { Module } from '../types';
+import type { Level } from '../types';
+import { htmlKA } from './01-html/index';
+import { cssKA } from './02-css/index';
+import { javascriptKA } from './03-javascript/index';
 
-export const level8: Module = {
-  id: '8',
+export const level8: Level = {
+  id: 8,
   title: 'Nível 8: Domínio de Linguagens',
-  level: 'Master',
-  description: 'Aprofunde-se em sintaxes específicas e avançadas.',
-  image: 'web-dev',
+  description: 'Especialização profunda em sintaxes e ferramentas específicas.',
   knowledgeAreas: [
-    { id: 'lang-html', title: '01. HTML Master', description: 'Semântica e SEO.', supportedLanguages: ['html'], theoryLessons: [], practiceExercises: [] },
-    { id: 'lang-css', title: '02. CSS Master', description: 'Animações e Flexbox.', supportedLanguages: ['css'], theoryLessons: [], practiceExercises: [] },
-    { id: 'lang-js', title: '03. JS Master', description: 'ESNext e Assincronismo.', supportedLanguages: ['javascript'], theoryLessons: [], practiceExercises: [] },
-    { id: 'lang-python', title: '04. Python Master', description: 'Data e Scripts.', supportedLanguages: ['python'], theoryLessons: [], practiceExercises: [] }
+    htmlKA,
+    cssKA,
+    javascriptKA,
+    {
+      id: 'lang-python',
+      title: '04. Python Master',
+      description: 'Data Science, automação e backend com Python.',
+      load: '40h',
+      iconName: 'Code2',
+      theory: [],
+      practice: {},
+      quizzes: []
+    }
   ]
 };
