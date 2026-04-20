@@ -15,7 +15,7 @@ type ProgressContextType = {
 const ProgressContext = createContext<ProgressContextType>({} as ProgressContextType);
 
 export function ProgressProvider({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
+  const { user, refreshProfile } = useAuth();
   const [progress, setProgress] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -72,7 +72,10 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       }, { onConflict: 'user_id,lesson_id' });
 
     if (!error) {
+      // Chamar a RPC para recalcular pontos (opcional, pode ser via trigger no banco)
+      await supabase.rpc('calculate_total_points', { p_user_id: user.id });
       await fetchProgress();
+      await refreshProfile();
     }
   };
 

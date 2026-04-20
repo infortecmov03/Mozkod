@@ -11,9 +11,18 @@ export async function middleware(request: NextRequest) {
     },
   });
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  // Se as variáveis de ambiente não existirem, pula a verificação do Supabase
+  // para evitar erro 500 no middleware durante o setup inicial.
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return response;
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         get(name: string) {
@@ -40,7 +49,6 @@ export async function middleware(request: NextRequest) {
   const { data: { session } } = await supabase.auth.getSession();
   const { pathname } = request.nextUrl;
   
-  // Remover o locale do pathname para verificar as rotas (se aplicável)
   const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}/, '') || '/';
   
   const isPublicRoute = publicRoutes.includes(pathWithoutLocale) || 

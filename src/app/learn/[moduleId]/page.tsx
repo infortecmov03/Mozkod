@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -13,7 +12,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/lib/supabase/client";
+import { useProgress } from "@/contexts/ProgressContext";
 
 export default function LearnPage() {
   const { moduleId } = useParams();
@@ -21,6 +20,7 @@ export default function LearnPage() {
   const { toast } = useToast();
   const { t } = useLanguage();
   const { profile } = useAuth();
+  const { markAsCompleted, progress } = useProgress();
 
   const lessonData = useMemo(() => findLessonById(moduleId as string), [moduleId]);
   
@@ -28,7 +28,7 @@ export default function LearnPage() {
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [isCompletedState, setIsCompletedState] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("theory");
   const [isSaving, setIsSaving] = useState(false);
 
@@ -40,36 +40,36 @@ export default function LearnPage() {
       setActiveTab("theory");
     }
     setOutput("");
-    setIsCompleted(false);
+    setIsCompletedState(false);
   }, [lessonData]);
 
   if (!lessonData) return <div className="p-8 text-center">Lição não encontrada</div>;
 
   const { lesson, ka, module } = lessonData;
 
-  const handleRunCode = () => {
+  const handleRunCode = async () => {
     setIsRunning(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       setIsRunning(false);
       if (lesson.solution && code.includes(lesson.solution)) {
         setOutput("> ✅ Testes passados!\n> Pontuação: 20 pts");
-        setIsCompleted(true);
-        saveProgress(100);
+        setIsCompletedState(true);
+        await handleSaveProgress(100);
       } else {
         setOutput("> ❌ Erro: Resultado inesperado.\n> Dica: Verifique a lógica da função.");
       }
     }, 800);
   };
 
-  const handleQuizSubmit = () => {
+  const handleQuizSubmit = async () => {
     const questions = lesson.quiz || [];
     const correctCount = questions.filter(q => quizAnswers[q.id] === q.correctAnswer).length;
     const score = Math.round((correctCount / questions.length) * 100);
 
     if (score >= 70) {
       toast({ title: t.wellDone, description: `Score: ${score}%` });
-      setIsCompleted(true);
-      saveProgress(score);
+      setIsCompletedState(true);
+      await handleSaveProgress(score);
     } else {
       toast({ 
         variant: "destructive", 
@@ -79,39 +79,18 @@ export default function LearnPage() {
     }
   };
 
-  const saveProgress = async (score: number) => {
+  const handleSaveProgress = async (score: number) => {
     if (!profile) return;
     setIsSaving(true);
-    
     try {
-      const { error: progressError } = await supabase
-        .from('user_lesson_progress')
-        .upsert({
-          user_id: profile.id,
-          level_id: parseInt(module.id),
-          ka_id: ka.id,
-          lesson_id: lesson.id,
-          lesson_type: lesson.type,
-          completed: true,
-          completed_at: new Date().toISOString(),
-          quiz_score: score,
-          quiz_passed: score >= 70,
-          last_code: lesson.type === 'exercise' ? code : null
-        }, { onConflict: 'user_id,lesson_id' });
-
-      if (progressError) throw progressError;
-
-      // Chama a RPC para calcular pontos (definida no schema)
-      const { data: points, error: pointsError } = await supabase.rpc('calculate_total_points', {
-        p_user_id: profile.id
-      });
-
-      if (!pointsError) {
-        await supabase
-          .from('profiles')
-          .update({ total_points: points })
-          .eq('id', profile.id);
-      }
+      await markAsCompleted(
+        lesson.id,
+        parseInt(module.id),
+        ka.id,
+        lesson.type,
+        score,
+        lesson.type === 'exercise' ? code : undefined
+      );
     } catch (err: any) {
       toast({ variant: "destructive", title: "Erro ao salvar", description: err.message });
     } finally {
@@ -119,9 +98,9 @@ export default function LearnPage() {
     }
   };
 
-  const handleNext = async () => {
-    // Busca progresso atual para filtrar as completas (opcional no protótipo)
-    const nextId = getNextLessonId(lesson.id, []);
+  const handleNext = () => {
+    const completedIds = progress.map(p => p.lesson_id);
+    const nextId = getNextLessonId(lesson.id, completedIds);
     if (nextId) {
       router.push(`/learn/${nextId}`);
     } else {
@@ -147,7 +126,7 @@ export default function LearnPage() {
         </div>
         
         <div className="flex gap-2">
-          {isCompleted && (
+          {isCompletedState && (
             <Button size="sm" onClick={handleNext} disabled={isSaving} className="bg-primary hover:bg-primary/90 rounded-full font-bold h-8 px-4 text-xs animate-bounce">
               {isSaving ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : t.next}
               {!isSaving && <ChevronRight className="w-3 h-3 ml-1" />}

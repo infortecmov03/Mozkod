@@ -1,7 +1,5 @@
-
 "use client";
 
-import { useEffect, useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,41 +10,24 @@ import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/lib/supabase/client";
+import { useProgress } from "@/contexts/ProgressContext";
 
 export default function DashboardPage() {
   const { t } = useLanguage();
   const { profile, loading: authLoading } = useAuth();
-  const [progress, setProgress] = useState<any[]>([]);
-  const [loadingProgress, setLoadingProgress] = useState(true);
-
-  useEffect(() => {
-    async function loadProgress() {
-      if (!profile) return;
-      const { data, error } = await supabase
-        .from('user_lesson_progress')
-        .select('*')
-        .eq('user_id', profile.id);
-      
-      if (!error && data) {
-        setProgress(data);
-      }
-      setLoadingProgress(false);
-    }
-    loadProgress();
-  }, [profile]);
+  const { progress, loading: progressLoading, isCompleted } = useProgress();
 
   const getModuleProgress = (module: typeof modules[0]) => {
     if (!progress) return 0;
     const moduleLessons: string[] = [];
     module.knowledgeAreas.forEach(ka => moduleLessons.push(...ka.lessons.map(l => l.id)));
-    const completedCount = progress.filter(p => p.completed && moduleLessons.includes(p.lessonId)).length;
+    const completedCount = moduleLessons.filter(id => isCompleted(id)).length;
     return moduleLessons.length > 0 ? Math.round((completedCount / moduleLessons.length) * 100) : 0;
   };
 
   const getImg = (id: string) => PlaceHolderImages.find(img => img.id === id)?.imageUrl || '';
 
-  if (authLoading || loadingProgress) {
+  if (authLoading || progressLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="w-10 h-10 animate-spin text-primary" />
