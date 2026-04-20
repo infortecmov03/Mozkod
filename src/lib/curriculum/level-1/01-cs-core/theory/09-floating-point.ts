@@ -1,3 +1,4 @@
+
 import type { TheoryLesson } from '../../../types';
 export const lesson: TheoryLesson = {
   id: "cs-t9",
