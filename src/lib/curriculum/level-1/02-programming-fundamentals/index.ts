@@ -1,7 +1,7 @@
 
 import type { KnowledgeArea } from '../../types';
-import { lessons } from './theory';
-import { quiz as quiz1 } from './quizzes/01-variaveis-tipos-quiz';
+import { lessons } from './theory.ts';
+import { quiz as quiz1 } from './theory/quizzes/01-variaveis-tipos-quiz';
 import { exercise as exerciseJS } from './laboratory/javascript/01-variaveis';
 import { exercise as exercisePY } from './laboratory/python/01-variaveis';
 

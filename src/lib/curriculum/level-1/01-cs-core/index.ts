@@ -1,6 +1,7 @@
+
 import type { KnowledgeArea } from '../../types';
-import { lessons } from './theory';
-import { quiz as quiz1 } from './quizzes/01-sistemas-numericos-quiz';
+import { lessons } from './theory.ts';
+import { quiz as quiz1 } from './theory/quizzes/01-sistemas-numericos-quiz';
 import { exercise as exercise1 } from './laboratory/01-sistemas-numericos';
 
 export const csCore: KnowledgeArea = {
