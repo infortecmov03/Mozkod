@@ -1,46 +1,24 @@
-import type { Level, KnowledgeArea, TheoryLesson, Quiz } from '../types';
 
-const careerLessons: TheoryLesson[] = [
-  { id: "career-t1", title: "O Mercado de Tecnologia Global", content: "<p>Tendências, salários e como se posicionar como um engenheiro de elite no mercado internacional.</p>", quizId: "career-q1" },
-  { id: "career-t2", title: "Currículo e Branding Pessoal", content: "<p>Como destacar as tuas competências para recrutadores e sistemas de ATS.</p>", quizId: "career-q2" },
-  { id: "career-t3", title: "LinkedIn Estratégico", content: "<p>Otimização de perfil, palavras-chave e networking ativo.</p>", quizId: "career-q3" },
-  { id: "career-t4", title: "Portfólio de Engenheiro", content: "<p>Documentação de projetos, decisões técnicas e cases de sucesso.</p>", quizId: "career-q4" },
-  { id: "career-t5", title: "Entrevistas de Algoritmos", content: "<p>Como resolver problemas em tempo real sob pressão.</p>", quizId: "career-q5" },
-  { id: "career-t6", title: "System Design Interviews", content: "<p>Desenhando sistemas de larga escala durante a entrevista.</p>", quizId: "career-q6" },
-  { id: "career-t7", title: "Soft Skills para Devs", content: "<p>Comunicação não-violenta, liderança técnica e trabalho em equipa.</p>", quizId: "career-q7" },
-  { id: "career-t8", title: "Negociação Salarial", content: "<p>Entendendo o teu valor de mercado e benefícios.</p>", quizId: "career-q8" },
-  { id: "career-t9", title: "Trabalho Remoto Internacional", content: "<p>Gestão de fuso horário, impostos e cultura global.</p>", quizId: "career-q9" },
-  { id: "career-t10", title: "O Caminho para Senioridade", content: "<p>Plano de carreira: Individual Contributor vs Management.</p>", quizId: "career-q10" }
-];
+import type { Level, KnowledgeArea } from '../types';
 
-const careerQuizzes: Quiz[] = [
-  {
-    id: "career-q1",
-    title: "Quiz: Mercado Global",
-    passingScore: 70,
-    questions: [
-      {
-        id: "q1",
-        question: "Qual competência é mais valorizada em equipas distribuídas?",
-        options: ["Escrever código rápido", "Comunicação clara e assíncrona", "Trabalhar 15 horas por dia", "Usar o melhor teclado"],
-        correctAnswer: 1
-      }
-    ]
-  },
-  {
-    id: "career-q5",
-    title: "Quiz: Entrevistas Técnicas",
-    passingScore: 70,
-    questions: [
-      {
-        id: "q1",
-        question: "Durante um desafio de código, o que deves fazer se não souberes a solução imediata?",
-        options: ["Ficar em silêncio", "Desistir da entrevista", "Explicar o teu raciocínio em voz alta e pedir clarificações", "Chorar"],
-        correctAnswer: 2
-      }
-    ]
-  }
-];
+const careerLessons = Array.from({ length: 21 }, (_, i) => ({
+  id: `career-t${i + 1}`,
+  title: [
+    "Mercado Global & Tendências", "Currículo de Engenheiro (ATS Ready)",
+    "Branding Pessoal & LinkedIn", "Portfólio de Decisões Técnicas",
+    "Entrevistas de Algoritmos (LeetCode)", "System Design Interviews",
+    "Soft Skills: Comunicação & Liderança", "Negociação Salarial & Benefícios",
+    "Trabalho Remoto Internacional", "Roadmap para Senioridade",
+    "Open Source como Alavanca", "Public Speaking para Tech",
+    "Escrita Técnica (Technical Writing)", "Gestão de Tempo para Engenheiros",
+    "Networking Ativo em Comunidades", "Mentoria: Dar e Receber",
+    "Impostos & Legal para Freelancers", "Cultura de Silicon Valley",
+    "Inglês para Negócios & Reuniões", "Saúde Mental & Burnout Prevention",
+    "Engenharia como Carreira de Vida"
+  ][i],
+  content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>💼 Carreira de Elite</h2><p>Estratégias para se posicionar entre os melhores engenheiros do mundo.</p></div>`,
+  quizId: `career-q${i + 1}`
+}));
 
 const careerDev: KnowledgeArea = {
   id: 'ka-career',
@@ -49,21 +27,13 @@ const careerDev: KnowledgeArea = {
   load: '30h',
   iconName: 'Briefcase',
   theory: careerLessons,
-  practice: {
-    text: [
-      {
-        id: 'career-p1',
-        language: 'text',
-        title: 'Laboratório: Escrita de README Profissional',
-        description: 'Documentação de projetos que vende o seu trabalho.',
-        statement: 'Escreva um README que inclua arquitetura e decisões técnicas. Use a palavra "Arquitetura".',
-        template: '# Título do Projeto\n\n## Arquitetura\nExplique aqui as tecnologias usadas...',
-        detailedExplanation: '<p>Um bom README demonstra que tu pensas como um engenheiro e não apenas como um codificador.</p>',
-        objectives: [{ id: 'obj1', description: 'Incluir seção de Arquitetura', test: 'Arquitetura' }]
-      }
-    ]
-  },
-  quizzes: careerQuizzes
+  practice: { text: [] },
+  quizzes: Array.from({ length: 21 }, (_, i) => ({
+    id: `career-q${i + 1}`,
+    title: `Career Quiz ${i + 1}`,
+    questions: [],
+    passingScore: 70
+  }))
 };
 
 export const level6: Level = {
