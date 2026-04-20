@@ -1,8 +1,10 @@
+
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { useAuth } from './AuthContext';
+import { modules } from '@/lib/curriculum';
 
 type ProgressContextType = {
   isCompleted: (id: string) => boolean;
@@ -46,6 +48,41 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     return progress.some(p => p.lesson_id === id && p.completed === true);
   };
 
+  const checkAndIssueCertificate = async (userId: string, levelId: number) => {
+    const level = modules.find(m => m.id === levelId);
+    if (!level) return;
+
+    let totalItems = 0;
+    level.knowledgeAreas.forEach(ka => {
+      totalItems += (ka.theory?.length || 0);
+      Object.values(ka.practice || {}).forEach(exercises => {
+        totalItems += exercises.length;
+      });
+    });
+
+    const completedInLevel = progress.filter(p => p.level_id === levelId && p.completed === true).length;
+    
+    // Se completou 100% do nível, emite certificado
+    if (totalItems > 0 && completedInLevel >= totalItems) {
+      const { data: existing } = await supabase
+        .from('certificates')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('level_id', levelId)
+        .maybeSingle();
+
+      if (!existing) {
+        await supabase.from('certificates').insert({
+          user_id: userId,
+          level_id: levelId,
+          level_title: level.title,
+          certificate_url: '#',
+          issued_at: new Date().toISOString()
+        });
+      }
+    }
+  };
+
   const markAsCompleted = async (
     id: string, 
     levelId: number, 
@@ -72,10 +109,10 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       }, { onConflict: 'user_id,lesson_id' });
 
     if (!error) {
-      // Tentar atualizar pontos via RPC se disponível, ou atualizar perfil manualmente
       await supabase.rpc('calculate_total_points', { p_user_id: user.id });
       await fetchProgress();
       await refreshProfile();
+      await checkAndIssueCertificate(user.id, levelId);
     }
   };
 
