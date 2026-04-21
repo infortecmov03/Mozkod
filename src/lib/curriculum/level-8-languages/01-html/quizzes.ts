@@ -1,10 +1,12 @@
+import { quiz as q1 } from './quizzes/01-structure-quiz';
+import { quiz as q2 } from './quizzes/01-semantics-quiz';
 
-import { quiz as q1 } from './quizzes/01-semantics-quiz';
 export const quizzes = [
   q1,
-  ...Array.from({ length: 20 }, (_, i) => ({
-    id: `html-mq${i + 2}`,
-    title: `HTML Master Quiz ${i + 2}`,
+  q2,
+  ...Array.from({ length: 19 }, (_, i) => ({
+    id: `html-mq${i + 3}`,
+    title: `HTML Master Quiz ${i + 3}`,
     questions: [],
     passingScore: 80
   }))

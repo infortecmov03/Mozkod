@@ -1,13 +1,14 @@
-
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
-  id: "html-m1",
+  id: "html-m2",
   title: "Semântica Avançada e Acessibilidade Digital",
   content: `
     <div class="space-y-6">
       <div class="bg-primary/5 p-6 rounded-2xl border border-primary/10">
-        <h2 class="text-2xl font-bold mb-4">🏗️ Além do Layout Visual</h2>
+        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+          ♿ Além do Layout Visual
+        </h2>
         <p class="text-lg leading-relaxed">
           O HTML5 Master não se foca apenas em colocar elementos no ecrã, mas em dar <strong>significado</strong> aos dados para motores de busca (SEO) e tecnologias assistivas.
         </p>
@@ -25,5 +26,5 @@ export const lesson: TheoryLesson = {
       </div>
     </div>
   `,
-  quizId: "html-mq1"
+  quizId: "html-mq2"
 };
