@@ -1,58 +1,63 @@
 
+/**
+ * @fileOverview Definições de tipos para o motor do currículo.
+ * Use estes tipos para garantir que as novas lições sejam compatíveis com a UI.
+ */
+
 export type TheoryLesson = {
-  id: string;
-  title: string;
-  content: string;
-  youtubeVideoId?: string;
-  quizId: string;
+  id: string;             // ID único (ex: 'cs-t1')
+  title: string;          // Título da aula
+  content: string;        // Conteúdo em HTML (suporta tags de estilo)
+  youtubeVideoId?: string; // ID do vídeo do Youtube (opcional)
+  quizId: string;         // ID do quiz vinculado a esta aula
 };
 
 export type QuizQuestion = {
   id: string;
   question: string;
   options: string[];
-  correctAnswer: number;
-  explanation?: string;
+  correctAnswer: number;  // Índice da opção correta (0, 1, 2...)
+  explanation?: string;   // Dica exibida após a resposta (opcional)
 };
 
 export type Quiz = {
   id: string;
   title: string;
   questions: QuizQuestion[];
-  passingScore: number;
+  passingScore: number;   // Percentagem mínima (ex: 70)
 };
 
 export type Objective = {
   id: string;
-  description: string;
-  hint?: string;
-  test: string;
+  description: string;    // O que o aluno deve fazer
+  hint?: string;          // Dica técnica
+  test: string;           // String ou Regex que o código do aluno deve conter para validar
 };
 
 export type PracticeExercise = {
   id: string;
-  language: string;
+  language: string;       // 'html', 'css', 'javascript', 'python', 'java', etc.
   title: string;
   description: string;
-  statement: string;
-  template: string; // Template principal (HTML, CSS ou JS conforme o campo language)
-  htmlTemplate?: string; // Template de suporte HTML (opcional)
-  cssTemplate?: string;  // Template de suporte CSS (opcional)
-  jsTemplate?: string;   // Template de suporte JS (opcional)
-  detailedExplanation: string;
+  statement: string;      // Instrução curta
+  template: string;       // Código inicial no editor
+  htmlTemplate?: string;  // HTML de suporte para aulas de CSS/JS
+  cssTemplate?: string;   // CSS de suporte para aulas de JS
+  jsTemplate?: string;    // JS de suporte para aulas de CSS
+  detailedExplanation: string; // Briefing da missão (HTML)
   objectives: Objective[];
-  isProjectPart?: boolean; // Define se este exercício herda código do anterior
+  isProjectPart?: boolean; // Se true, o motor procura o código das aulas anteriores
 };
 
 export type KnowledgeArea = {
   id: string;
   title: string;
   description: string;
-  load: string;
-  iconName: string;
+  load: string;           // Carga horária (ex: '20h')
+  iconName: string;       // Nome do ícone da Lucide-React
   theory: TheoryLesson[];
   practice: {
-    [key: string]: PracticeExercise[];
+    [key: string]: PracticeExercise[]; // Chave é a linguagem (ex: 'python')
   };
   quizzes: Quiz[];
 };
