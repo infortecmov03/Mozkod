@@ -2,6 +2,7 @@
 "use client";
 
 import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { modules, findOrderedLessons } from "@/lib/curriculum";
@@ -46,7 +47,6 @@ export default function DashboardPage() {
     return total > 0 ? Math.round((completedCount / total) * 100) : 0;
   };
 
-  // Trilha de progresso para o módulo atual (Nível 1 por padrão ou o mais recente)
   const currentPath = useMemo(() => {
     const ordered = findOrderedLessons();
     const items = ordered.map(id => {
@@ -78,9 +78,9 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-12 font-body">
+    <div className="min-h-screen flex flex-col bg-background font-body">
       <Navigation />
-      <main className="container mx-auto px-4 py-8 max-w-6xl">
+      <main className="container mx-auto px-4 py-8 max-w-6xl flex-1">
         <header className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <h1 className="font-headline text-3xl font-bold mb-2">
@@ -106,7 +106,6 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        {/* Learning Track Section */}
         <section className="mb-16">
            <div className="flex items-center justify-between mb-6">
               <h2 className="font-headline text-xl font-bold flex items-center gap-2">
@@ -115,7 +114,7 @@ export default function DashboardPage() {
               <Link href="/modules" className="text-xs font-bold text-primary hover:underline">Ver currículo completo</Link>
            </div>
            
-           <Card className="bg-card/40 border-none shadow-2xl p-8 overflow-hidden relative">
+           <Card className="bg-card/40 border-none shadow-2xl p-8 overflow-hidden relative rounded-[2.5rem]">
               <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-primary via-accent to-primary opacity-50" />
               <div className="flex flex-col md:flex-row gap-8 items-center">
                  <div className="flex-1 space-y-4">
@@ -131,10 +130,8 @@ export default function DashboardPage() {
                  </div>
                  
                  <div className="w-full md:w-2/3">
-                    <div className="relative flex justify-between items-center py-6">
-                       {/* Background Line */}
-                       <div className="absolute top-1/2 left-0 w-full h-0.5 bg-muted -translate-y-1/2" />
-                       
+                    <div className="relative flex justify-between items-center py-6 px-4">
+                       <div className="absolute top-1/2 left-4 right-4 h-0.5 bg-muted -translate-y-1/2" />
                        {currentPath.map((node, i) => (
                          <div key={i} className="relative z-10 flex flex-col items-center gap-2">
                             <div className={cn(
@@ -159,13 +156,13 @@ export default function DashboardPage() {
            </Card>
         </section>
 
-        <section className="space-y-8">
+        <section className="space-y-8 mb-20">
           <h2 className="font-headline text-2xl font-bold">{t.modules}</h2>
           <div className="grid gap-6">
             {modules.map((module) => {
               const moduleProgress = getModuleProgress(module);
               return (
-                <Card key={module.id} className="overflow-hidden bg-card/40 hover:bg-card/60 transition-all border-none group shadow-2xl">
+                <Card key={module.id} className="overflow-hidden bg-card/40 hover:bg-card/60 transition-all border-none group shadow-2xl rounded-[2rem]">
                   <div className="flex flex-col sm:flex-row">
                     <CardContent className="p-8 flex-1 flex flex-col justify-between gap-6">
                       <div className="space-y-3">
@@ -193,6 +190,7 @@ export default function DashboardPage() {
           </div>
         </section>
       </main>
+      <Footer />
     </div>
   );
 }

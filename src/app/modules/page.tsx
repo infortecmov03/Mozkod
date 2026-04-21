@@ -2,6 +2,7 @@
 "use client";
 
 import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { modules } from "@/lib/curriculum";
 import { Button } from "@/components/ui/button";
@@ -12,10 +13,9 @@ import { useLanguage } from "@/components/LanguageContext";
 import { useProgress } from "@/contexts/ProgressContext";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { useState, useEffect, Suspense, useMemo } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-// Função utilitária para agrupar lições por Fase
 const groupLessonsByPhase = (lessons: any[]) => {
   const phases: Record<string, any[]> = {};
   lessons.forEach(lesson => {
@@ -37,22 +37,17 @@ function ModulesContent() {
   const [activeLevel, setActiveLevel] = useState<string | undefined>(levelParam || undefined);
 
   useEffect(() => {
-    if (levelParam) {
-      setActiveLevel(levelParam);
-    }
+    if (levelParam) setActiveLevel(levelParam);
   }, [levelParam]);
 
   const getModuleProgress = (module: any) => {
     if (!module || !module.knowledgeAreas) return 0;
-    
     let total = 0;
     let completed = 0;
-    
     module.knowledgeAreas.forEach((ka: any) => {
       const theoryList = ka.theory || [];
       total += theoryList.length;
       completed += theoryList.filter((l: any) => isCompleted(l.id)).length;
-      
       if (ka.practice) {
         Object.values(ka.practice).forEach((exercises: any) => {
           if (Array.isArray(exercises)) {
@@ -62,12 +57,11 @@ function ModulesContent() {
         });
       }
     });
-    
     return total > 0 ? Math.round((completed / total) * 100) : 0;
   };
 
   return (
-    <main className="container mx-auto px-4 py-12 max-w-5xl">
+    <main className="container mx-auto px-4 py-12 max-w-5xl flex-1">
       <header className="mb-16 text-center animate-in fade-in slide-in-from-top-4 duration-700">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-primary/10 mb-6 border-2 border-primary/20">
           <GraduationCap className="w-8 h-8 text-primary" />
@@ -81,14 +75,13 @@ function ModulesContent() {
       <Accordion 
         type="single" 
         collapsible 
-        className="w-full space-y-4"
+        className="w-full space-y-4 mb-20"
         value={activeLevel}
         onValueChange={setActiveLevel}
       >
         {modules.map((module) => {
           const progress = getModuleProgress(module);
           const isLevel8 = module.id === 8;
-
           return (
             <AccordionItem key={module.id} value={module.id.toString()} className="border-none">
               <AccordionTrigger className="hover:no-underline bg-card/40 rounded-2xl px-6 py-4 shadow-sm border border-white/5 data-[state=open]:rounded-b-none data-[state=open]:border-b-0 transition-all group">
@@ -111,9 +104,7 @@ function ModulesContent() {
               </AccordionTrigger>
               <AccordionContent className="bg-card/20 rounded-b-2xl border-x border-b border-white/5 p-4 md:p-8 pt-4">
                 <p className="text-sm text-muted-foreground mb-8 max-w-2xl px-2">{module.description}</p>
-                
                 {isLevel8 ? (
-                  /* Layout Especial para Nível 8: Acordeões por Linguagem */
                   <Accordion type="single" collapsible className="w-full space-y-3">
                     {module.knowledgeAreas.map((ka) => {
                       const theoryByPhase = groupLessonsByPhase(ka.theory || []);
@@ -165,8 +156,6 @@ function ModulesContent() {
                                      </div>
                                   </div>
                                 ))}
-                                
-                                {/* Labs da Linguagem */}
                                 <div className="pt-4 border-t border-white/5">
                                    <div className="flex items-center justify-between mb-4">
                                       <h5 className="font-headline font-bold text-sm text-accent uppercase tracking-tighter flex items-center gap-2">
@@ -198,14 +187,12 @@ function ModulesContent() {
                     })}
                   </Accordion>
                 ) : (
-                  /* Layout Padrão para os outros níveis (1-7) */
                   <div className="grid gap-8">
                     {module.knowledgeAreas.map((ka) => {
                       const theoryLessons = ka.theory || [];
                       const availableLangs = Object.keys(ka.practice || {});
                       const currentLang = selectedLangs[ka.id] || availableLangs[0] || "";
                       const practiceExercises = ka.practice?.[currentLang] || [];
-                      
                       return (
                         <div key={ka.id} className="space-y-4">
                           <div className="flex items-center gap-3 mb-2">
@@ -213,9 +200,8 @@ function ModulesContent() {
                             <h4 className="font-headline font-bold text-sm uppercase tracking-widest text-primary/80">{ka.title}</h4>
                             <div className="h-px flex-1 bg-white/5" />
                           </div>
-                          
                           <div className="grid md:grid-cols-2 gap-6">
-                             <Card className="bg-background/40 border-white/5 hover:border-primary/20 transition-all overflow-hidden group/card shadow-xl">
+                             <Card className="bg-background/40 border-white/5 hover:border-primary/20 transition-all overflow-hidden group/card shadow-xl rounded-2xl">
                                 <CardContent className="p-6 space-y-6">
                                   <div className="flex justify-between items-start">
                                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -246,9 +232,8 @@ function ModulesContent() {
                                   )}
                                 </CardContent>
                              </Card>
-
                              {availableLangs.length > 0 ? (
-                               <Card className="bg-background/40 border-white/5 hover:border-accent/20 transition-all overflow-hidden group/card shadow-xl">
+                               <Card className="bg-background/40 border-white/5 hover:border-accent/20 transition-all overflow-hidden group/card shadow-xl rounded-2xl">
                                  <CardContent className="p-6 space-y-6">
                                     <div className="flex justify-between items-start">
                                        <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
@@ -304,7 +289,7 @@ function ModulesContent() {
                                  </CardContent>
                                </Card>
                              ) : (
-                               <Card className="bg-card/10 border-dashed border-2 flex items-center justify-center p-8 opacity-40">
+                               <Card className="bg-card/10 border-dashed border-2 flex items-center justify-center p-8 opacity-40 rounded-2xl">
                                   <p className="text-xs font-bold text-muted-foreground italic">Prática em breve</p>
                                </Card>
                              )}
@@ -325,11 +310,12 @@ function ModulesContent() {
 
 export default function ModulesPage() {
   return (
-    <div className="min-h-screen bg-background pb-12">
+    <div className="min-h-screen flex flex-col bg-background pb-0 font-body">
       <Navigation />
       <Suspense fallback={<div className="flex h-screen items-center justify-center"><Loader2 className="w-10 h-10 animate-spin text-primary" /></div>}>
         <ModulesContent />
       </Suspense>
+      <Footer />
     </div>
   );
 }

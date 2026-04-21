@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,7 +26,6 @@ export default function LeaderboardPage() {
         .select('*')
         .order('total_points', { ascending: false })
         .limit(50);
-      
       if (!error && data) setLeaders(data);
       setLoading(false);
     }
@@ -46,18 +46,13 @@ export default function LeaderboardPage() {
     if (user.total_points >= 1000) list.push(<Trophy key="t" className="w-3 h-3 text-yellow-500" />);
     if (user.streak >= 7) list.push(<Flame key="f" className="w-3 h-3 text-orange-500" />);
     if (user.total_points >= 500) list.push(<ShieldCheck key="s" className="w-3 h-3 text-blue-500" />);
-    
-    return (
-      <div className="flex gap-1 ml-2">
-        {list}
-      </div>
-    );
+    return <div className="flex gap-1 ml-2">{list}</div>;
   };
 
   return (
-    <div className="min-h-screen bg-background pb-12 font-body">
+    <div className="min-h-screen flex flex-col bg-background font-body">
       <Navigation />
-      <main className="container mx-auto px-4 py-12 max-w-4xl">
+      <main className="container mx-auto px-4 py-12 max-w-4xl flex-1">
         <header className="text-center mb-16 space-y-4">
           <div className="inline-flex items-center justify-center w-24 h-24 rounded-[2.5rem] bg-primary/10 mb-6 border-4 border-primary/20 shadow-2xl">
             <Trophy className="w-12 h-12 text-primary" />
@@ -74,8 +69,7 @@ export default function LeaderboardPage() {
             <Loader2 className="w-12 h-12 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="space-y-12">
-            {/* Top 3 Podium Cards */}
+          <div className="space-y-12 mb-20">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end mb-16">
               {leaders.slice(0, 3).map((leader, i) => (
                 <Card key={leader.id} className={cn(
@@ -85,19 +79,13 @@ export default function LeaderboardPage() {
                   i === 2 && "md:order-last"
                 )}>
                   <CardContent className="flex flex-col items-center justify-center h-full p-8 text-center">
-                    <div className="absolute top-6 right-6">
-                      {getRankIcon(i)}
-                    </div>
+                    <div className="absolute top-6 right-6">{getRankIcon(i)}</div>
                     <div className="relative mb-6">
                       <Avatar className={cn("w-24 h-24 border-4 shadow-2xl", i === 0 ? "border-primary" : "border-background")}>
                         <AvatarImage src={leader.avatar_url} />
                         <AvatarFallback className="text-2xl font-bold">{leader.display_name?.[0]}</AvatarFallback>
                       </Avatar>
-                      {i === 0 && (
-                        <div className="absolute -bottom-2 -right-2 bg-yellow-500 text-black text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg">
-                          MVP
-                        </div>
-                      )}
+                      {i === 0 && <div className="absolute -bottom-2 -right-2 bg-yellow-500 text-black text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg">MVP</div>}
                     </div>
                     <div className="flex items-center gap-1 mb-1">
                       <h3 className="font-headline font-bold text-xl line-clamp-1">{leader.display_name}</h3>
@@ -117,7 +105,6 @@ export default function LeaderboardPage() {
               ))}
             </div>
 
-            {/* List for the rest */}
             <Card className="bg-card/40 border-none shadow-2xl overflow-hidden rounded-[2rem] border border-white/5">
               <Table>
                 <TableHeader className="bg-secondary/30">
@@ -130,9 +117,7 @@ export default function LeaderboardPage() {
                 <TableBody>
                   {leaders.slice(3).map((leader, i) => (
                     <TableRow key={leader.id} className="hover:bg-white/[0.03] transition-colors border-white/5 h-20 group">
-                      <TableCell className="text-center font-black text-lg text-muted-foreground group-hover:text-primary transition-colors">
-                        {i + 4}
-                      </TableCell>
+                      <TableCell className="text-center font-black text-lg text-muted-foreground group-hover:text-primary transition-colors">{i + 4}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-4">
                           <Avatar className="w-12 h-12 border-2 border-white/10 group-hover:border-primary/50 transition-all">
@@ -164,6 +149,7 @@ export default function LeaderboardPage() {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   );
 }

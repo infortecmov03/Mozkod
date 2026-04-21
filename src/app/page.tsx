@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Code2, Cpu, Globe, Zap } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useLanguage } from "@/components/LanguageContext";
 import { Logo } from "@/components/Logo";
@@ -15,7 +16,7 @@ export default function Home() {
   const heroAsset = PlaceHolderImages.find(img => img.id === 'hero-bg');
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col font-body">
       <Navigation />
       
       {/* Hero Section */}
@@ -69,7 +70,7 @@ export default function Home() {
       <section className="py-16 md:py-24 bg-secondary/30">
         <div className="container px-4 mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            <div className="p-8 rounded-2xl bg-card border hover:border-primary/50 transition-all group">
+            <div className="p-8 rounded-2xl bg-card border hover:border-primary/50 transition-all group shadow-xl">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Code2 className="text-primary w-6 h-6" />
               </div>
@@ -79,7 +80,7 @@ export default function Home() {
               </p>
             </div>
             
-            <div className="p-8 rounded-2xl bg-card border hover:border-primary/50 transition-all group">
+            <div className="p-8 rounded-2xl bg-card border hover:border-primary/50 transition-all group shadow-xl">
               <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Globe className="text-accent w-6 h-6" />
               </div>
@@ -89,7 +90,7 @@ export default function Home() {
               </p>
             </div>
             
-            <div className="p-8 rounded-2xl bg-card border hover:border-primary/50 transition-all group">
+            <div className="p-8 rounded-2xl bg-card border hover:border-primary/50 transition-all group shadow-xl">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Cpu className="text-primary w-6 h-6" />
               </div>
@@ -102,23 +103,7 @@ export default function Home() {
         </div>
       </section>
       
-      <footer className="mt-auto py-16 border-t bg-card/10">
-        <div className="container px-4 mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="flex flex-col items-center md:items-start gap-4">
-            <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
-              <Logo className="h-32 w-auto" />
-            </Link>
-            <p className="text-sm text-muted-foreground text-center md:text-left">
-              © 2024 Codworks Moz. <br className="md:hidden" /> Empowering the next tech hub.
-            </p>
-          </div>
-          <div className="flex gap-8">
-            <Link href="/privacy" className="text-sm font-medium hover:text-primary transition-colors">Privacidade</Link>
-            <Link href="/terms" className="text-sm font-medium hover:text-primary transition-colors">Termos</Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">Suporte</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
