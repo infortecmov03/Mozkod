@@ -1,17 +1,23 @@
-
 import { lesson as l1 } from './theory/01-php8-attributes';
+import { lesson as l2 } from './theory/02-strong-typing-union-types';
+
 export const lessons = [
-  l1,
-  ...Array.from({ length: 20 }, (_, i) => ({
-    id: `php-m${i + 2}`,
+  l1, l2,
+  ...Array.from({ length: 19 }, (_, i) => ({
+    id: `php-m${i + 3}`,
     title: [
-      "Strong Typing & Union Types", "Constructor Property Promotion", "Enums & Pattern Matching", "Readonly Properties & Classes",
-      "Advanced Traits Usage", "Generators & Coroutines", "PHP 8.3 Typed Constants", "Swoole Concurrency",
-      "PHP Fibers & Multitasking", "OpCache & Preloading", "Parallel Extension", "Streams & Sockets",
-      "Event Loop with ReactPHP", "Concurrency Safety Patterns", "Zend Engine: Opcodes", "JIT Compiler Internals",
-      "FFI (Foreign Function Interface)", "Memory Management: Ref Counting", "Developing C Extensions", "Reflection API Master", "Static Analysis with PHPStan"
+      "Constructor Property Promotion & DTOs", "Enums & Pattern Matching (Match Expression)",
+      "Readonly Properties & Classes", "Advanced Traits & Horizontal Reuse",
+      "Fibers: Concorrência Cooperativa em PHP", "Generators & Memory Efficient Processing",
+      "OpCache, Preloading & JIT Compilation", "Swoole: Corrotinas e Concorrência Real",
+      "Zend Engine: Opcodes e Ciclo de Vida", "Streams, Sockets e Low-level I/O",
+      "Dependency Injection Containers (DIC) Internals", "Reflection API & Metaprogramação",
+      "Security: Proteção contra SQLi, XSS e CSRF", "Arquitetura Hexagonal & Clean Architecture",
+      "Testing: PHPUnit & Pest Design Patterns", "Static Analysis com PHPStan & Psalm",
+      "FFI (Foreign Function Interface) com C", "Memory Management & Garbage Collection",
+      "Dockerização de Apps PHP de Elite", "Capstone: High-Scale Event Server"
     ][i],
-    content: "<p>Engenharia de backend com PHP moderno.</p>",
-    quizId: `php-mq${i + 2}`
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐘 PHP Master: Engenharia de Backend</h2><p>Foco na modernização da linguagem e sistemas de larga escala.</p></div>`,
+    quizId: `php-mq${i + 3}`
   }))
 ];

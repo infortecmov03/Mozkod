@@ -1,17 +1,18 @@
-
-import type { PracticeExercise } from '../../types';
+import { exercise as p1 } from './laboratory/01-event-server-init-lab';
 
 export const practice = {
   php: [
-    {
-      id: "php-p1",
+    p1,
+    ...Array.from({ length: 20 }, (_, i) => ({
+      id: `php-p${i + 2}`,
       language: "php",
-      title: "Lab: Constructor Promotion",
-      description: "Código limpo em PHP 8.",
-      statement: "Use promoção no construtor.",
-      template: "public function __construct(public string $name) { }",
-      detailedExplanation: "<p>Reduz o boilerplate massivamente.</p>",
-      objectives: [{ id: "obj1", description: "Usar promotion", test: "__construct" }]
-    }
+      title: `Lab PHP Master #${i + 2}`,
+      description: "Evolução do Servidor de Eventos.",
+      statement: "Implemente a lógica de backend solicitada.",
+      isProjectPart: true,
+      template: `<?php\n// Continue o servidor\n`,
+      detailedExplanation: `<p>Expanda o seu sistema de eventos para produção.</p>`,
+      objectives: [{ id: `obj_p${i + 2}`, description: "Implemente a funcionalidade PHP.", test: "{" }]
+    }))
   ]
 };
