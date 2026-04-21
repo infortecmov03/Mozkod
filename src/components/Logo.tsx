@@ -4,9 +4,10 @@ import React from 'react';
 interface LogoProps {
   className?: string;
   showDevices?: boolean;
+  showText?: boolean;
 }
 
-export function Logo({ className = "h-10 w-auto", showDevices = true }: LogoProps) {
+export function Logo({ className = "h-10 w-auto", showDevices = true, showText = true }: LogoProps) {
   return (
     <div className={className}>
       <svg width="100%" height="100%" viewBox="0 0 680 420" role="img" xmlns="http://www.w3.org/2000/svg">
@@ -67,21 +68,23 @@ export function Logo({ className = "h-10 w-auto", showDevices = true }: LogoProp
           )}
 
           {/* NOME: CODEWORKS MOZ - Se showDevices for false, centralizamos ou mantemos a curva */}
-          <g transform={!showDevices ? "translate(0, -60)" : ""}>
-            <text transform="translate(239,279) rotate(-308)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">C</text>
-            <text transform="translate(251,291) rotate(-316)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">O</text>
-            <text transform="translate(265,304) rotate(-324)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">D</text>
-            <text transform="translate(280,313) rotate(-332)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">E</text>
-            <text transform="translate(296,320) rotate(-340)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" fill="#FF6B00" textAnchor="middle">W</text>
-            <text transform="translate(313,325) rotate(-348)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">O</text>
-            <text transform="translate(331,328) rotate(-356)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">R</text>
-            <text transform="translate(349,328) rotate(-4)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">K</text>
-            <text transform="translate(367,325) rotate(-12)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" fill="#FF6B00" textAnchor="middle">S</text>
-            <circle cx="384" cy="320" r="4" fill="#FFD000" filter="url(#glow)"/>
-            <text transform="translate(400,313) rotate(-28)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">M</text>
-            <text transform="translate(415,304) rotate(-36)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">O</text>
-            <text transform="translate(429,291) rotate(-44)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" fill="#FFD000" textAnchor="middle">Z</text>
-          </g>
+          {showText && (
+            <g transform={!showDevices ? "translate(0, -60)" : ""}>
+              <text transform="translate(239,279) rotate(-308)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">C</text>
+              <text transform="translate(251,291) rotate(-316)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">O</text>
+              <text transform="translate(265,304) rotate(-324)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">D</text>
+              <text transform="translate(280,313) rotate(-332)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">E</text>
+              <text transform="translate(296,320) rotate(-340)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" fill="#FF6B00" textAnchor="middle">W</text>
+              <text transform="translate(313,325) rotate(-348)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">O</text>
+              <text transform="translate(331,328) rotate(-356)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">R</text>
+              <text transform="translate(349,328) rotate(-4)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">K</text>
+              <text transform="translate(367,325) rotate(-12)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" fill="#FF6B00" textAnchor="middle">S</text>
+              <circle cx="384" cy="320" r="4" fill="#FFD000" filter="url(#glow)"/>
+              <text transform="translate(400,313) rotate(-28)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">M</text>
+              <text transform="translate(415,304) rotate(-36)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" className="logo-text-dynamic" textAnchor="middle">O</text>
+              <text transform="translate(429,291) rotate(-44)" fontFamily="'Segoe UI',Arial,sans-serif" fontSize="18" fontWeight="900" fill="#FFD000" textAnchor="middle">Z</text>
+            </g>
+          )}
         </g>
       </svg>
     </div>

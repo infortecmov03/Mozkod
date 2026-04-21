@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, GraduationCap, Award, Languages, Menu, LogOut, User, Sun, Moon, Users, Trophy } from "lucide-react";
+import { LayoutDashboard, GraduationCap, Languages, Menu, LogOut, User, Sun, Moon, Users, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { useLanguage } from "./LanguageContext";
@@ -52,8 +52,14 @@ export function Navigation() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
-          <Logo className="h-20 w-auto mt-4" showDevices={false} />
+        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          {/* Logo como ícone central apenas */}
+          <div className="relative w-10 h-10 flex items-center justify-center">
+             <Logo className="w-16 h-16 absolute -top-1" showDevices={false} showText={false} />
+          </div>
+          <span className="font-headline text-xl font-bold tracking-tight hidden sm:inline-block">
+            CodWorks <span className="text-primary">Moz</span>
+          </span>
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
@@ -125,7 +131,9 @@ export function Navigation() {
             </SheetTrigger>
             <SheetContent side="right" className="w-[280px] bg-background p-6">
               <SheetHeader className="mb-6">
-                <SheetTitle className="text-left font-headline font-bold">Codworks Moz</SheetTitle>
+                <SheetTitle className="text-left font-headline font-bold">
+                  CodWorks <span className="text-primary">Moz</span>
+                </SheetTitle>
                 <SheetDescription className="sr-only">Menu de navegação móvel</SheetDescription>
               </SheetHeader>
               <div className="flex flex-col gap-6 mt-4">
