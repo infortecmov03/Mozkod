@@ -124,13 +124,13 @@ export default function ProfilePage() {
           <div className="lg:col-span-8">
             <Tabs defaultValue="overview" className="space-y-8">
               <TabsList className="bg-secondary/50 p-1 rounded-2xl h-14 w-full grid grid-cols-3 md:w-fit">
-                <TabsTrigger value="overview" className="rounded-xl data-[state=active]:bg-background font-bold px-8">
+                <TabsTrigger value="overview" className="rounded-xl data-[state=active]:bg-background font-bold px-4 md:px-8">
                   Visão Geral
                 </TabsTrigger>
-                <TabsTrigger value="security" className="rounded-xl data-[state=active]:bg-background font-bold px-8">
+                <TabsTrigger value="security" className="rounded-xl data-[state=active]:bg-background font-bold px-4 md:px-8">
                   Segurança
                 </TabsTrigger>
-                <TabsTrigger value="settings" className="rounded-xl data-[state=active]:bg-background font-bold px-8">
+                <TabsTrigger value="settings" className="rounded-xl data-[state=active]:bg-background font-bold px-4 md:px-8">
                   Definições
                 </TabsTrigger>
               </TabsList>

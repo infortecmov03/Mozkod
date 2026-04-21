@@ -109,35 +109,38 @@ export default function LeaderboardPage() {
               <Table>
                 <TableHeader className="bg-secondary/30">
                   <TableRow className="border-white/5 h-16">
-                    <TableHead className="w-24 text-center font-black uppercase text-[10px] tracking-widest">{t.rank}</TableHead>
-                    <TableHead className="font-black uppercase text-[10px] tracking-widest">{t.user}</TableHead>
-                    <TableHead className="text-right font-black uppercase text-[10px] tracking-widest">{t.points}</TableHead>
+                    <TableHead className="w-16 text-center font-black uppercase text-[10px] tracking-widest px-2 sm:px-4">{t.rank}</TableHead>
+                    <TableHead className="font-black uppercase text-[10px] tracking-widest px-2 sm:px-4">{t.user}</TableHead>
+                    <TableHead className="text-right font-black uppercase text-[10px] tracking-widest px-2 sm:px-4">{t.points}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {leaders.slice(3).map((leader, i) => (
                     <TableRow key={leader.id} className="hover:bg-white/[0.03] transition-colors border-white/5 h-20 group">
-                      <TableCell className="text-center font-black text-lg text-muted-foreground group-hover:text-primary transition-colors">{i + 4}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-4">
-                          <Avatar className="w-12 h-12 border-2 border-white/10 group-hover:border-primary/50 transition-all">
+                      <TableCell className="text-center font-black text-lg text-muted-foreground group-hover:text-primary transition-colors p-2 sm:p-4">{i + 4}</TableCell>
+                      <TableCell className="p-2 sm:p-4">
+                        <div className="flex items-center gap-2 sm:gap-4">
+                          <Avatar className="w-10 h-10 sm:w-12 sm:h-12 border-2 border-white/10 group-hover:border-primary/50 transition-all">
                             <AvatarImage src={leader.avatar_url} />
                             <AvatarFallback>{leader.display_name?.[0]}</AvatarFallback>
                           </Avatar>
-                          <div className="flex flex-col">
+                          <div className="flex flex-col overflow-hidden">
                             <div className="flex items-center gap-2">
-                              <span className="font-bold text-base">{leader.display_name}</span>
-                              <UserBadges user={leader} />
+                              <span className="font-bold text-sm sm:text-base truncate">{leader.display_name}</span>
+                              <div className="hidden sm:flex">
+                                <UserBadges user={leader} />
+                              </div>
                             </div>
                             <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                              <Flame className="w-3 h-3 text-orange-500" /> {leader.streak || 0} dias de streak
+                              <Flame className="w-3 h-3 text-orange-500" /> {leader.streak || 0}
+                              <span className="hidden sm:inline">&nbsp;dias de streak</span>
                             </span>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="text-right">
-                         <div className="inline-flex items-center justify-end gap-2 px-4 py-2 rounded-2xl bg-primary/5 font-black text-primary text-xl border border-primary/10">
-                            <Zap className="w-4 h-4 fill-primary" />
+                      <TableCell className="text-right p-2 sm:p-4">
+                         <div className="inline-flex items-center justify-end gap-1 sm:gap-2 px-2 py-1 sm:px-4 sm:py-2 rounded-2xl bg-primary/5 font-black text-primary text-base sm:text-xl border border-primary/10">
+                            <Zap className="w-3 h-3 sm:w-4 sm:h-4 fill-primary" />
                             {leader.total_points || 0}
                          </div>
                       </TableCell>

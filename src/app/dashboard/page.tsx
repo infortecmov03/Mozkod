@@ -86,7 +86,7 @@ export default function DashboardPage() {
             </h1>
             <p className="text-muted-foreground text-sm">Seu progresso está incrível. Continue codificando!</p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap justify-center md:justify-start gap-4">
             <Card className="bg-primary/10 border-primary/20 flex items-center gap-3 px-5 py-3 shadow-xl shadow-primary/5">
               <Zap className="w-5 h-5 text-primary fill-primary" />
               <div>
@@ -171,10 +171,10 @@ export default function DashboardPage() {
                         <h3 className="text-2xl font-headline font-bold">{module.title}</h3>
                         <p className="text-muted-foreground text-sm line-clamp-2">{module.description}</p>
                       </div>
-                      <div className="flex items-center gap-6">
-                        <Progress value={moduleProgress} className="h-1.5 flex-1 bg-secondary/50" />
-                        <Link href={`/modules?level=${module.id}`}>
-                          <Button className="rounded-full gap-2 font-bold px-8 h-12 shadow-lg shadow-primary/20">
+                      <div className="flex flex-col sm:flex-row items-center gap-4">
+                        <Progress value={moduleProgress} className="h-1.5 flex-1 w-full sm:w-auto bg-secondary/50" />
+                        <Link href={`/modules?level=${module.id}`} className="w-full sm:w-auto">
+                          <Button className="w-full rounded-full gap-2 font-bold px-8 h-12 shadow-lg shadow-primary/20">
                             {moduleProgress === 100 ? t.review : t.continueLearning}
                             <ArrowRight className="w-4 h-4" />
                           </Button>

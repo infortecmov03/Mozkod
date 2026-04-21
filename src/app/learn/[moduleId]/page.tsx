@@ -255,12 +255,12 @@ export default function LearnPage() {
   };
 
   const handleCompletePractice = async () => {
-    if (!profile) return;
+    if (!profile || !practice) return;
     setIsSaving(true);
     try {
-      const finalCode = practice?.language === 'html' ? htmlCode : 
-                        practice?.language === 'css' ? cssCode : 
-                        practice?.language === 'javascript' ? jsCode : code;
+      const finalCode = practice.language === 'html' ? htmlCode : 
+                        practice.language === 'css' ? cssCode : 
+                        practice.language === 'javascript' ? jsCode : code;
 
       await markAsCompleted(lessonId, level.id, ka.id, 'exercise', 100, finalCode);
       toast({ title: t.wellDone, description: "Laboratório concluído com sucesso!" });
@@ -324,6 +324,75 @@ export default function LearnPage() {
 
   const { ka, level } = data;
 
+  const MissionSidebar = practice ? (
+    <div className="p-6 h-full flex flex-col">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+            <ListChecks className="w-4 h-4 text-primary" />
+          </div>
+          <h3 className="font-headline font-bold text-xs uppercase tracking-widest">Missão Técnica</h3>
+        </div>
+        <div className="text-[9px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">
+          {completedObjectives.length}/{practice.objectives.length} OK
+        </div>
+      </div>
+      
+      <Accordion type="single" collapsible className="w-full mb-6">
+        <AccordionItem value="explanation" className="border-none">
+          <AccordionTrigger className="bg-accent/10 hover:bg-accent/20 transition-all rounded-xl px-4 py-3 hover:no-underline border border-accent/20 text-accent">
+            <div className="flex items-center gap-3">
+              <Lightbulb className="w-4 h-4 fill-accent" />
+              <span className="font-headline font-bold text-[10px] uppercase tracking-tighter">Briefing da Operação</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="pt-4">
+            <div className="bg-background/40 border border-white/5 p-4 rounded-xl prose prose-invert prose-sm max-w-none text-xs leading-relaxed" dangerouslySetInnerHTML={{ __html: practice.detailedExplanation }} />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+      
+      <div className="flex-1 overflow-y-auto pr-2 space-y-3">
+        <h4 className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-4">Requisitos do Sistema</h4>
+        {practice.objectives.map((obj, i) => (
+          <div 
+            key={obj.id} 
+            className={cn(
+              "rounded-xl border p-4 transition-all relative overflow-hidden", 
+              completedObjectives.includes(obj.id) 
+                ? "bg-green-500/5 border-green-500/30" 
+                : "bg-background/20 border-white/5"
+            )}
+          >
+            <div className="flex items-start gap-3">
+              <div className={cn(
+                "w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 transition-colors", 
+                completedObjectives.includes(obj.id) ? "bg-green-500" : "bg-white/10"
+              )}>
+                {completedObjectives.includes(obj.id) ? <CheckCircle2 className="w-3 h-3 text-white" /> : <span className="text-[9px] font-bold">{i + 1}</span>}
+              </div>
+              <div className="flex-1 space-y-1">
+                <span className={cn("text-[11px] font-bold leading-tight block", completedObjectives.includes(obj.id) ? "text-green-400" : "text-foreground")}>
+                  {obj.description}
+                </span>
+                {obj.hint && !completedObjectives.includes(obj.id) && (
+                  <p className="text-[9px] text-muted-foreground italic">{obj.hint}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {(completedObjectives.length === practice.objectives.length || isCompleted(lessonId)) && (
+        <Button onClick={handleCompletePractice} className="w-full mt-6 h-14 rounded-2xl font-black text-sm bg-primary shadow-xl shadow-primary/20 uppercase tracking-widest" disabled={isSaving}>
+          {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Trophy className="w-5 h-5 mr-2" />}
+          {isCompleted(lessonId) ? "Finalizar e Seguir" : "Submeter Solução"}
+        </Button>
+      )}
+    </div>
+  ) : null;
+
   return (
     <div className="flex flex-col h-screen bg-background overflow-hidden font-body">
       <Navigation />
@@ -341,7 +410,7 @@ export default function LearnPage() {
           </div>
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
            {isCompleted(lessonId) && (
              <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-500/10 text-green-500 border border-green-500/20 text-[10px] font-black uppercase">
                 <CheckCircle2 className="w-3 h-3" /> Concluído
@@ -351,32 +420,51 @@ export default function LearnPage() {
              <Link href={`/community/exercise/${lessonId}`}>
                <Button variant="outline" size="sm" className="gap-2 rounded-full border-primary/20 bg-primary/5 text-primary hover:bg-primary/10">
                  <MessageSquare className="w-4 h-4" />
-                 <span className="hidden sm:inline">Dúvidas da Comunidade</span>
+                 <span className="hidden sm:inline">Dúvidas</span>
                </Button>
              </Link>
            )}
+
+           <div className="hidden lg:flex items-center gap-2">
+              {practice && isWebLang && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setShowPreview(!showPreview)}
+                  className={cn("gap-2 rounded-full border-primary/20 bg-primary/5 text-primary hover:bg-primary/10", !showPreview && "opacity-50")}
+                >
+                  {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  <span className="hidden sm:inline">{showPreview ? "Preview" : "Preview"}</span>
+                </Button>
+              )}
+              {practice && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setShowSidebar(!showSidebar)}
+                  className="gap-2 rounded-full border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"
+                >
+                  {showSidebar ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
+                  <span className="hidden sm:inline">Missão</span>
+                </Button>
+              )}
+           </div>
+
            {practice && (
-             <>
-               <Button 
-                 variant="outline" 
-                 size="sm" 
-                 onClick={() => setShowPreview(!showPreview)}
-                 className={cn("gap-2 rounded-full border-primary/20 bg-primary/5 text-primary hover:bg-primary/10", !showPreview && "opacity-50")}
-               >
-                 {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                 <span className="hidden sm:inline">{showPreview ? "Ocultar Preview" : "Ver Preview"}</span>
-               </Button>
-               <Button 
-                 variant="outline" 
-                 size="sm" 
-                 onClick={() => setShowSidebar(!showSidebar)}
-                 className="gap-2 rounded-full border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"
-               >
-                 {showSidebar ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
-                 <span className="hidden sm:inline">{showSidebar ? "Ocultar Missão" : "Ver Missão"}</span>
-               </Button>
-             </>
+             <div className="lg:hidden">
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" size="icon" className="rounded-full border-primary/20 bg-primary/5 text-primary">
+                      <ListChecks className="w-4 h-4" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="right" className="w-[350px] bg-[#0d1117] border-l-0 p-0">
+                    {MissionSidebar}
+                  </SheetContent>
+                </Sheet>
+             </div>
            )}
+           
            <Sheet>
              <SheetTrigger asChild>
                <Button variant="outline" size="sm" className="gap-2 rounded-full border-primary/20 bg-primary/5">
@@ -431,8 +519,8 @@ export default function LearnPage() {
         </div>
       </div>
 
-      <main className="flex-1 flex overflow-hidden">
-        <div className={cn("flex-1 flex flex-col min-w-0 bg-background transition-all duration-300", (practice && showSidebar) && "max-w-[65%]")}>
+      <main className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+        <div className="flex-1 flex flex-col min-w-0 bg-background">
           {theory ? (
             <div className="flex-1 overflow-y-auto p-8 md:p-16 max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
                <div className="space-y-6">
@@ -603,73 +691,8 @@ export default function LearnPage() {
         </div>
 
         {practice && showSidebar && (
-          <div className="w-[35%] bg-[#0d1117] flex flex-col border-l border-white/5 overflow-hidden animate-in slide-in-from-right duration-300 shrink-0">
-            <div className="p-6 h-full flex flex-col">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <ListChecks className="w-4 h-4 text-primary" />
-                  </div>
-                  <h3 className="font-headline font-bold text-xs uppercase tracking-widest">Missão Técnica</h3>
-                </div>
-                <div className="text-[9px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">
-                  {completedObjectives.length}/{practice.objectives.length} OK
-                </div>
-              </div>
-              
-              <Accordion type="single" collapsible className="w-full mb-6">
-                <AccordionItem value="explanation" className="border-none">
-                  <AccordionTrigger className="bg-accent/10 hover:bg-accent/20 transition-all rounded-xl px-4 py-3 hover:no-underline border border-accent/20 text-accent">
-                    <div className="flex items-center gap-3">
-                      <Lightbulb className="w-4 h-4 fill-accent" />
-                      <span className="font-headline font-bold text-[10px] uppercase tracking-tighter">Briefing da Operação</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pt-4">
-                    <div className="bg-background/40 border border-white/5 p-4 rounded-xl prose prose-invert prose-sm max-w-none text-xs leading-relaxed" dangerouslySetInnerHTML={{ __html: practice.detailedExplanation }} />
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-              
-              <div className="flex-1 overflow-y-auto pr-2 space-y-3">
-                <h4 className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-4">Requisitos do Sistema</h4>
-                {practice.objectives.map((obj, i) => (
-                  <div 
-                    key={obj.id} 
-                    className={cn(
-                      "rounded-xl border p-4 transition-all relative overflow-hidden", 
-                      completedObjectives.includes(obj.id) 
-                        ? "bg-green-500/5 border-green-500/30" 
-                        : "bg-background/20 border-white/5"
-                    )}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={cn(
-                        "w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 transition-colors", 
-                        completedObjectives.includes(obj.id) ? "bg-green-500" : "bg-white/10"
-                      )}>
-                        {completedObjectives.includes(obj.id) ? <CheckCircle2 className="w-3 h-3 text-white" /> : <span className="text-[9px] font-bold">{i + 1}</span>}
-                      </div>
-                      <div className="flex-1 space-y-1">
-                        <span className={cn("text-[11px] font-bold leading-tight block", completedObjectives.includes(obj.id) ? "text-green-400" : "text-foreground")}>
-                          {obj.description}
-                        </span>
-                        {obj.hint && !completedObjectives.includes(obj.id) && (
-                          <p className="text-[9px] text-muted-foreground italic">{obj.hint}</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {(completedObjectives.length === practice.objectives.length || isCompleted(lessonId)) && (
-                <Button onClick={handleCompletePractice} className="w-full mt-6 h-14 rounded-2xl font-black text-sm bg-primary shadow-xl shadow-primary/20 uppercase tracking-widest" disabled={isSaving}>
-                  {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Trophy className="w-5 h-5 mr-2" />}
-                  {isCompleted(lessonId) ? "Finalizar e Seguir" : "Submeter Solução"}
-                </Button>
-              )}
-            </div>
+          <div className="w-[35%] bg-[#0d1117] hidden lg:flex flex-col border-l border-white/5 overflow-hidden animate-in slide-in-from-right duration-300 shrink-0">
+            {MissionSidebar}
           </div>
         )}
       </main>

@@ -200,16 +200,16 @@ function ModulesContent() {
                             <h4 className="font-headline font-bold text-sm uppercase tracking-widest text-primary/80">{ka.title}</h4>
                             <div className="h-px flex-1 bg-white/5" />
                           </div>
-                          <div className="grid md:grid-cols-2 gap-6">
-                             <Card className="bg-background/40 border-white/5 hover:border-primary/20 transition-all overflow-hidden group/card shadow-xl rounded-2xl">
-                                <CardContent className="p-6 space-y-6">
+                          <div className="grid md:grid-cols-2 gap-6 md:items-stretch">
+                             <Card className="bg-background/40 border-white/5 hover:border-primary/20 transition-all overflow-hidden group/card shadow-xl rounded-2xl flex flex-col">
+                                <CardContent className="p-6 space-y-6 flex-1 flex flex-col">
                                   <div className="flex justify-between items-start">
                                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
                                         <BookOpen className="w-5 h-5 text-primary" />
                                      </div>
-                                     <Badge variant="ghost" className="text-[10px] uppercase">TEORIA</Badge>
+                                     <Badge variant="outline" className="text-[10px] uppercase">TEORIA</Badge>
                                   </div>
-                                  <div className="space-y-2">
+                                  <div className="space-y-2 flex-1">
                                      {theoryLessons.map(lesson => (
                                        <div key={lesson.id} className="flex items-center justify-between text-xs p-2 rounded-lg hover:bg-white/5 transition-colors">
                                           <div className="flex items-center gap-3">
@@ -233,8 +233,8 @@ function ModulesContent() {
                                 </CardContent>
                              </Card>
                              {availableLangs.length > 0 ? (
-                               <Card className="bg-background/40 border-white/5 hover:border-accent/20 transition-all overflow-hidden group/card shadow-xl rounded-2xl">
-                                 <CardContent className="p-6 space-y-6">
+                               <Card className="bg-background/40 border-white/5 hover:border-accent/20 transition-all overflow-hidden group/card shadow-xl rounded-2xl flex flex-col">
+                                 <CardContent className="p-6 space-y-6 flex-1 flex flex-col">
                                     <div className="flex justify-between items-start">
                                        <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
                                           <Code2 className="w-5 h-5 text-accent" />
@@ -256,7 +256,7 @@ function ModulesContent() {
                                           ))}
                                        </div>
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 flex-1">
                                        {practiceExercises.map(ex => {
                                          const theoryId = theoryLessons[practiceExercises.indexOf(ex)]?.id;
                                          const isLocked = theoryId && !isCompleted(theoryId);
