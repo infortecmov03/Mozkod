@@ -11,8 +11,11 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/lib/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/components/LanguageContext";
-import { MessageSquare, ArrowLeft, Send, Loader2, AlertCircle, Info } from "lucide-react";
+import { MessageSquare, ArrowLeft, Send, Loader2, Info, User } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 
 export default function ExerciseCommunityPage() {
   const params = useParams();
@@ -20,6 +23,7 @@ export default function ExerciseCommunityPage() {
   const router = useRouter();
   const { user } = useAuth();
   const { t } = useLanguage();
+  const { toast } = useToast();
 
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,26 +49,50 @@ export default function ExerciseCommunityPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !newTitle || !newContent) return;
+    if (!user) {
+      toast({ 
+        variant: "destructive", 
+        title: "Acesso Negado", 
+        description: "Precisas de estar logado para pedir ajuda." 
+      });
+      return;
+    }
+
+    if (!newTitle || !newContent) return;
 
     setIsPosting(true);
-    const { data, error } = await supabase
-      .from('community_posts')
-      .insert({
-        user_id: user.id,
-        exercise_id: exerciseId,
-        title: newTitle,
-        content: newContent
-      })
-      .select(`*, profiles:user_id (display_name, avatar_url)`)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('community_posts')
+        .insert({
+          user_id: user.id,
+          exercise_id: exerciseId,
+          title: newTitle,
+          content: newContent
+        })
+        .select(`*, profiles:user_id (display_name, avatar_url)`)
+        .single();
 
-    if (!error && data) {
-      setPosts([data, ...posts]);
-      setNewTitle("");
-      setNewContent("");
+      if (error) throw error;
+
+      if (data) {
+        setPosts([data, ...posts]);
+        setNewTitle("");
+        setNewContent("");
+        toast({ 
+          title: "Dúvida Enviada!", 
+          description: "A tua dúvida foi publicada. Alguém da comunidade irá ajudar em breve." 
+        });
+      }
+    } catch (err: any) {
+      toast({ 
+        variant: "destructive", 
+        title: "Erro ao publicar", 
+        description: err.message 
+      });
+    } finally {
+      setIsPosting(false);
     }
-    setIsPosting(false);
   };
 
   return (
@@ -81,47 +109,57 @@ export default function ExerciseCommunityPage() {
                 <MessageSquare className="w-6 h-6" />
              </div>
              <div>
-                <h1 className="text-3xl font-headline font-bold">Dúvidas: {exerciseId}</h1>
-                <p className="text-muted-foreground">Específico para este laboratório.</p>
+                <h1 className="text-3xl font-headline font-bold uppercase tracking-tight">Laboratório: {exerciseId}</h1>
+                <p className="text-muted-foreground">Fórum de ajuda específico para este desafio.</p>
              </div>
           </div>
         </header>
 
         <div className="space-y-12">
-          {/* Post Form */}
-          <Card className="bg-card/50 border-primary/20 shadow-2xl overflow-hidden">
-            <CardHeader className="bg-primary/5">
-              <CardTitle className="text-lg">{t.createPost}</CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-               <form onSubmit={handleSubmit} className="space-y-4">
-                  <Input 
-                    placeholder="Título curto (ex: Erro no loop for)" 
-                    className="rounded-xl"
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    required
-                  />
-                  <Textarea 
-                    placeholder="Explica o que estás a tentar fazer e qual é o erro específico..." 
-                    className="min-h-[150px] rounded-xl"
-                    value={newContent}
-                    onChange={(e) => setNewContent(e.target.value)}
-                    required
-                  />
-                  <Button type="submit" className="w-full rounded-xl h-12 font-bold gap-2" disabled={isPosting}>
-                    {isPosting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                    Submeter Pedido de Ajuda
-                  </Button>
-               </form>
-            </CardContent>
-          </Card>
+          {/* Post Form - Só visível se logado */}
+          {user ? (
+            <Card className="bg-card/50 border-primary/20 shadow-2xl overflow-hidden rounded-[2rem]">
+              <CardHeader className="bg-primary/5">
+                <CardTitle className="text-lg flex items-center gap-2">
+                   <Send className="w-4 h-4 text-primary" /> {t.createPost}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                 <form onSubmit={handleSubmit} className="space-y-4">
+                    <Input 
+                      placeholder="Título curto (ex: Erro no loop for)" 
+                      className="rounded-xl h-12 bg-background/50"
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                      required
+                    />
+                    <Textarea 
+                      placeholder="Explica o que estás a tentar fazer e qual é o erro específico que encontraste..." 
+                      className="min-h-[150px] rounded-xl bg-background/50 resize-none"
+                      value={newContent}
+                      onChange={(e) => setNewContent(e.target.value)}
+                      required
+                    />
+                    <Button type="submit" className="w-full rounded-xl h-12 font-bold gap-2 shadow-lg shadow-primary/20" disabled={isPosting}>
+                      {isPosting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                      Publicar Pedido de Ajuda
+                    </Button>
+                 </form>
+              </CardContent>
+            </Card>
+          ) : (
+            <Alert className="bg-primary/5 border-primary/20 rounded-2xl">
+              <Info className="h-4 w-4" />
+              <AlertTitle>Faz login para participar</AlertTitle>
+              <AlertDescription>Precisas de estar autenticado para criar um pedido de ajuda neste exercício.</AlertDescription>
+            </Alert>
+          )}
 
           {/* Posts List */}
           <div className="space-y-6">
-             <h3 className="font-headline text-xl font-bold flex items-center gap-2">
-                Discussões Existentes
-                <span className="text-xs bg-secondary px-2 py-0.5 rounded-full">{posts.length}</span>
+             <h3 className="font-headline text-xl font-bold flex items-center gap-3">
+                Discussões Ativas
+                <span className="text-xs bg-primary/20 text-primary px-3 py-1 rounded-full">{posts.length}</span>
              </h3>
 
              {loading ? (
@@ -130,31 +168,38 @@ export default function ExerciseCommunityPage() {
                 </div>
              ) : posts.length > 0 ? (
                 posts.map(post => (
-                  <Card key={post.id} className="bg-card/30 border-white/5 shadow-lg">
+                  <Card key={post.id} className="bg-card/40 border-white/5 hover:border-primary/20 transition-all shadow-xl rounded-2xl">
                     <CardContent className="p-6 space-y-4">
-                       <div className="flex items-center gap-2">
-                          <Avatar className="w-6 h-6">
-                             <AvatarImage src={post.profiles?.avatar_url} />
-                             <AvatarFallback>{post.profiles?.display_name?.[0]}</AvatarFallback>
-                          </Avatar>
-                          <span className="text-xs font-bold">{post.profiles?.display_name}</span>
-                          <span className="text-[10px] text-muted-foreground">• {new Date(post.created_at).toLocaleDateString()}</span>
+                       <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                             <Avatar className="w-8 h-8 border">
+                                <AvatarImage src={post.profiles?.avatar_url} />
+                                <AvatarFallback><User className="w-4 h-4" /></AvatarFallback>
+                             </Avatar>
+                             <div>
+                                <p className="text-xs font-bold leading-none">{post.profiles?.display_name || 'Estudante Moz'}</p>
+                                <p className="text-[10px] text-muted-foreground">{new Date(post.created_at).toLocaleDateString()}</p>
+                             </div>
+                          </div>
+                          <span className="text-[9px] font-bold bg-secondary px-2 py-0.5 rounded-md uppercase text-muted-foreground">Pendente</span>
                        </div>
-                       <h4 className="text-lg font-bold">{post.title}</h4>
-                       <p className="text-sm text-muted-foreground whitespace-pre-wrap">{post.content}</p>
-                       <Separator />
-                       <Button variant="link" className="p-0 h-auto text-primary text-xs font-bold">
-                          Ver Respostas e Soluções
-                       </Button>
+                       <h4 className="text-lg font-bold font-headline">{post.title}</h4>
+                       <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{post.content}</p>
+                       <Separator className="opacity-10" />
+                       <div className="flex justify-end">
+                         <Button variant="link" className="p-0 h-auto text-primary text-xs font-bold hover:no-underline">
+                            Ver Soluções e 0 Respostas →
+                         </Button>
+                       </div>
                     </CardContent>
                   </Card>
                 ))
              ) : (
-                <Alert className="bg-accent/5 border-accent/20">
-                   <Info className="h-4 w-4" />
-                   <AlertTitle>Não há dúvidas ainda!</AlertTitle>
-                   <AlertDescription>{t.noPostsYet}</AlertDescription>
-                </Alert>
+                <div className="text-center py-20 bg-card/10 rounded-[2rem] border-2 border-dashed border-white/5">
+                   <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
+                   <h3 className="text-xl font-bold opacity-60 mb-2">Ainda não há dúvidas!</h3>
+                   <p className="text-muted-foreground text-sm max-w-xs mx-auto">Sê o primeiro a pedir ajuda. Não tenhas vergonha de aprender!</p>
+                </div>
              )}
           </div>
         </div>
