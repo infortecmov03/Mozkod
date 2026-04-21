@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, GraduationCap, Award, Languages, Menu, LogOut, User, Sun, Moon, Users } from "lucide-react";
+import { LayoutDashboard, GraduationCap, Award, Languages, Menu, LogOut, User, Sun, Moon, Users, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { useLanguage } from "./LanguageContext";
@@ -26,8 +26,8 @@ export function Navigation() {
   const navItems = [
     { href: "/dashboard", label: t.dashboard, icon: LayoutDashboard },
     { href: "/modules", label: t.modules, icon: GraduationCap },
+    { href: "/leaderboard", label: t.leaderboard, icon: Trophy },
     { href: "/community", label: t.community, icon: Users },
-    { href: "/certifications", label: t.certifications, icon: Award },
   ];
 
   const NavLinks = ({ className = "", mobile = false }: { className?: string; mobile?: boolean }) => (
@@ -38,7 +38,7 @@ export function Navigation() {
           href={item.href}
           className={cn(
             "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
-            pathname.startsWith(item.href) ? "text-primary" : "text-muted-foreground",
+            pathname.startsWith(item.href) ? "text-primary font-bold" : "text-muted-foreground",
             mobile && "text-lg p-2 w-full"
           )}
         >

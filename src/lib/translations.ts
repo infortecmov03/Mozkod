@@ -38,7 +38,10 @@ export const translations = {
     requestHelp: "Ask for Help",
     noPostsYet: "No questions for this exercise yet. Be the first!",
     createPost: "New Help Request",
-    solutions: "Solutions & Comments"
+    solutions: "Solutions & Comments",
+    leaderboard: "Ranking",
+    rank: "Rank",
+    user: "Developer"
   },
   pt: {
     heroTitle: "Codifica o Teu Futuro em Qualquer Língua",
@@ -76,6 +79,9 @@ export const translations = {
     requestHelp: "Pedir Ajuda",
     noPostsYet: "Ainda não existem dúvidas sobre este exercício. Sê o primeiro!",
     createPost: "Novo Pedido de Ajuda",
-    solutions: "Soluções e Comentários"
+    solutions: "Soluções e Comentários",
+    leaderboard: "Ranking",
+    rank: "Posição",
+    user: "Desenvolvedor"
   }
 };
