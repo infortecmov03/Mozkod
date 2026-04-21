@@ -1,89 +1,107 @@
+-- Codworks Moz - Esquema Unificado de Produção
+-- Este script cria a estrutura necessária para Autenticação, Currículo (1-8), Progresso e Comunidade.
 
--- 🏗️ Esquema Unificado Codworks Moz (Engenharia de Elite)
-
--- Habilitar extensões
+-- Habilitar extensões necessárias
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
--- Tabela: profiles (estende auth.users)
-CREATE TABLE IF NOT EXISTS public.profiles (
+-- 1. TABELA: profiles
+-- Armazena dados do utilizador e estatísticas de gamificação.
+CREATE TABLE public.profiles (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    username TEXT UNIQUE NOT NULL,
     display_name TEXT,
     full_name TEXT,
-    username TEXT UNIQUE,
     avatar_url TEXT,
+    bio TEXT,
     preferred_language TEXT DEFAULT 'pt',
-    preferred_theme TEXT DEFAULT 'system',
+    preferred_theme TEXT DEFAULT 'dark',
+    level INTEGER DEFAULT 1,
     total_points INTEGER DEFAULT 0,
     total_xp INTEGER DEFAULT 0,
     streak INTEGER DEFAULT 0,
-    level INTEGER DEFAULT 1,
     last_active TIMESTAMPTZ DEFAULT NOW(),
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Tabela: acm_curriculum
-CREATE TABLE IF NOT EXISTS public.acm_curriculum (
-    id TEXT PRIMARY KEY,
+-- 2. TABELA: acm_curriculum
+-- Define as Knowledge Areas (KAs) organizadas por nível.
+CREATE TABLE public.acm_curriculum (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    level INTEGER NOT NULL CHECK (level BETWEEN 1 AND 8),
     ka_code TEXT NOT NULL,
     ka_name TEXT NOT NULL,
+    ka_name_pt TEXT,
     description TEXT,
-    level INTEGER NOT NULL,
     required_hours INTEGER,
     iconName TEXT,
-    order_index INTEGER
+    order_index INTEGER,
+    prerequisites JSONB DEFAULT '[]',
+    UNIQUE(level, ka_code)
 );
 
--- Tabela: lessons
-CREATE TABLE IF NOT EXISTS public.lessons (
-    id TEXT PRIMARY KEY,
-    ka_id TEXT REFERENCES public.acm_curriculum(id) ON DELETE CASCADE,
+-- 3. TABELA: lessons
+-- Conteúdo teórico das lições.
+CREATE TABLE public.lessons (
+    id TEXT PRIMARY KEY, -- ID legível (ex: 'cs-t1')
+    ka_id UUID REFERENCES public.acm_curriculum(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     content_mdx TEXT,
     youtube_video_id TEXT,
+    order_index INTEGER,
+    quiz_id TEXT -- Referência lógica para a tabela quizzes
+);
+
+-- 4. TABELA: exercises
+-- Desafios práticos de laboratório.
+CREATE TABLE public.exercises (
+    id TEXT PRIMARY KEY, -- ID legível (ex: 'html-p1')
+    ka_id UUID REFERENCES public.acm_curriculum(id) ON DELETE CASCADE,
+    lesson_id TEXT REFERENCES public.lessons(id) ON DELETE SET NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    language TEXT NOT NULL,
+    statement TEXT,
+    template_code TEXT,
+    solution_code TEXT,
+    detailed_explanation TEXT,
+    test_cases JSONB DEFAULT '[]',
+    objectives JSONB DEFAULT '[]',
+    is_project_part BOOLEAN DEFAULT FALSE,
     order_index INTEGER
 );
 
--- Tabela: exercises
-CREATE TABLE IF NOT EXISTS public.exercises (
+-- 5. TABELA: quizzes
+-- Avaliações teóricas.
+CREATE TABLE public.quizzes (
     id TEXT PRIMARY KEY,
-    lesson_id TEXT REFERENCES public.lessons(id) ON DELETE SET NULL,
-    ka_id TEXT REFERENCES public.acm_curriculum(id) ON DELETE CASCADE,
+    ka_id UUID REFERENCES public.acm_curriculum(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
-    statement TEXT,
-    language TEXT NOT NULL,
-    template_code TEXT,
-    test_cases JSONB DEFAULT '[]'
+    description TEXT,
+    passing_score INTEGER DEFAULT 70,
+    questions JSONB NOT NULL DEFAULT '[]'
 );
 
--- Tabela: quizzes
-CREATE TABLE IF NOT EXISTS public.quizzes (
-    id TEXT PRIMARY KEY,
-    ka_id TEXT REFERENCES public.acm_curriculum(id) ON DELETE CASCADE,
-    title TEXT NOT NULL,
-    questions JSONB NOT NULL DEFAULT '[]',
-    passing_score INTEGER DEFAULT 70
-);
-
--- Tabela: user_lesson_progress
-CREATE TABLE IF NOT EXISTS public.user_lesson_progress (
+-- 6. TABELA: user_lesson_progress (Sincronizado com o ProgressContext.tsx)
+-- Regista a conclusão de lições e exercícios.
+CREATE TABLE public.user_lesson_progress (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
     level_id INTEGER,
     ka_id TEXT,
     lesson_id TEXT NOT NULL,
-    lesson_type TEXT,
+    lesson_type TEXT CHECK (lesson_type IN ('theory', 'exercise')),
     completed BOOLEAN DEFAULT FALSE,
-    completed_at TIMESTAMPTZ,
-    quiz_passed BOOLEAN DEFAULT FALSE,
+    completed_at TIMESTAMPTZ DEFAULT NOW(),
     quiz_score INTEGER,
+    quiz_passed BOOLEAN DEFAULT FALSE,
     last_code TEXT,
     UNIQUE(user_id, lesson_id)
 );
 
--- Tabela: community_posts
-CREATE TABLE IF NOT EXISTS public.community_posts (
+-- 7. TABELA: community_posts (Fórum de Ajuda)
+CREATE TABLE public.community_posts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
     exercise_id TEXT,
@@ -92,71 +110,76 @@ CREATE TABLE IF NOT EXISTS public.community_posts (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Tabela: community_comments
-CREATE TABLE IF NOT EXISTS public.community_comments (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    post_id UUID REFERENCES public.community_posts(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    content TEXT NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Tabela: certificates
-CREATE TABLE IF NOT EXISTS public.certificates (
+-- 8. TABELA: certificates
+CREATE TABLE public.certificates (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
     level_id INTEGER,
     level_title TEXT,
+    certificate_type TEXT DEFAULT 'professional',
     certificate_url TEXT,
     issued_at TIMESTAMPTZ DEFAULT NOW(),
-    verification_code TEXT UNIQUE DEFAULT encode(gen_random_bytes(16), 'hex')
+    verification_code TEXT UNIQUE DEFAULT encode(gen_random_bytes(16), 'hex'),
+    metadata JSONB DEFAULT '{}'
 );
 
--- Função para atualizar pontos baseada no progresso
-CREATE OR REPLACE FUNCTION public.calculate_total_points(p_user_id UUID)
-RETURNS void AS $$
-DECLARE
-    points_count INTEGER;
-BEGIN
-    SELECT count(*) * 10 INTO points_count 
-    FROM public.user_lesson_progress 
-    WHERE user_id = p_user_id AND completed = true;
+-- TRIGGERS E SEGURANÇA (RLS) --
 
-    UPDATE public.profiles 
-    SET total_points = points_count, total_xp = points_count
-    WHERE id = p_user_id;
-END;
-$$ LANGUAGE plpgsql;
-
--- Trigger para criar perfil automaticamente
+-- Função para criar perfil automaticamente no SignUp
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO public.profiles (id, display_name, username)
+    INSERT INTO public.profiles (id, username, display_name, avatar_url)
     VALUES (
         NEW.id,
-        COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'user_name', split_part(NEW.email, '@', 1)),
-        COALESCE(NEW.raw_user_meta_data->>'user_name', split_part(NEW.email, '@', 1) || floor(random()*1000)::text)
+        COALESCE(NEW.raw_user_meta_data->>'user_name', NEW.email),
+        COALESCE(NEW.raw_user_meta_data->>'display_name', NEW.raw_user_meta_data->>'full_name', 'Estudante Moz'),
+        NEW.raw_user_meta_data->>'avatar_url'
     );
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- RLS e Políticas
+-- Habilitar RLS
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_lesson_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.community_posts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.community_comments ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.certificates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.acm_curriculum ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.lessons ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.exercises ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.quizzes ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Perfis públicos" ON public.profiles FOR SELECT USING (true);
-CREATE POLICY "Edição do próprio perfil" ON public.profiles FOR UPDATE USING (auth.uid() = id);
-CREATE POLICY "Acesso ao próprio progresso" ON public.user_lesson_progress FOR ALL USING (auth.uid() = user_id);
-CREATE POLICY "Leitura pública do fórum" ON public.community_posts FOR SELECT USING (true);
-CREATE POLICY "Criação de posts" ON public.community_posts FOR INSERT WITH CHECK (auth.uid() = user_id);
-CREATE POLICY "Leitura de certificados" ON public.certificates FOR SELECT USING (true);
+-- Políticas de Acesso
+CREATE POLICY "Leitura pública do currículo" ON public.acm_curriculum FOR SELECT USING (true);
+CREATE POLICY "Leitura pública de lições" ON public.lessons FOR SELECT USING (true);
+CREATE POLICY "Leitura pública de exercícios" ON public.exercises FOR SELECT USING (true);
+CREATE POLICY "Leitura pública de quizzes" ON public.quizzes FOR SELECT USING (true);
+
+CREATE POLICY "Perfis visíveis para todos" ON public.profiles FOR SELECT USING (true);
+CREATE POLICY "Dono edita seu perfil" ON public.profiles FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "Utilizador gere seu progresso" ON public.user_lesson_progress 
+    FOR ALL USING (auth.uid() = user_id);
+
+CREATE POLICY "Utilizador gere seus posts" ON public.community_posts 
+    FOR ALL USING (auth.uid() = user_id);
+
+CREATE POLICY "Posts visíveis para todos" ON public.community_posts FOR SELECT USING (true);
+
+-- Função para calcular pontos
+CREATE OR REPLACE FUNCTION public.calculate_total_points(p_user_id UUID)
+RETURNS void AS $$
+DECLARE
+    v_points INTEGER;
+BEGIN
+    SELECT COUNT(*) * 50 INTO v_points 
+    FROM public.user_lesson_progress 
+    WHERE user_id = p_user_id AND completed = true;
+    
+    UPDATE public.profiles SET total_points = v_points WHERE id = p_user_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
