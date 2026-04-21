@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { Navigation } from "@/components/Navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/components/LanguageContext";
@@ -149,37 +149,25 @@ export default function CommunityPage() {
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-           {/* Sidebar Filters */}
            <div className="lg:col-span-1 space-y-6">
               <Card className="bg-card/40 border-white/5 shadow-2xl rounded-3xl overflow-hidden">
                  <div className="p-6 pb-0">
                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary opacity-70">Filtros Rápidos</h3>
                  </div>
                  <CardContent className="p-4 space-y-1">
-                    <Button variant="ghost" className="w-full justify-start text-sm rounded-xl h-11 hover:bg-primary/10 hover:text-primary">
+                    <Button variant="ghost" className="w-full justify-start text-sm rounded-xl h-11 hover:bg-primary/10 hover:text-primary font-bold">
                        🔥 Recentes
                     </Button>
-                    <Button variant="ghost" className="w-full justify-start text-sm rounded-xl h-11 hover:bg-primary/10 hover:text-primary">
+                    <Button variant="ghost" className="w-full justify-start text-sm rounded-xl h-11 hover:bg-primary/10 hover:text-primary font-bold">
                        ✅ Resolvidos
                     </Button>
-                    <Button variant="ghost" className="w-full justify-start text-sm rounded-xl h-11 hover:bg-primary/10 hover:text-primary">
+                    <Button variant="ghost" className="w-full justify-start text-sm rounded-xl h-11 hover:bg-primary/10 hover:text-primary font-bold">
                        ❓ Sem Resposta
                     </Button>
                  </CardContent>
               </Card>
-
-              <Card className="bg-primary/5 border-primary/20 shadow-xl rounded-3xl overflow-hidden">
-                 <CardContent className="p-6 text-center space-y-4">
-                    <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto border-2 border-primary/20">
-                       <Filter className="w-7 h-7 text-primary" />
-                    </div>
-                    <h3 className="font-headline font-bold text-base">Top Colaboradores</h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">Ranking semanal dos heróis que mais ajudam a comunidade.</p>
-                 </CardContent>
-              </Card>
            </div>
 
-           {/* Main Posts Area */}
            <div className="lg:col-span-3 space-y-4">
               {loading ? (
                 <div className="py-20 text-center">
@@ -211,10 +199,10 @@ export default function CommunityPage() {
                               <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">{post.content}</p>
                               <div className="flex items-center gap-6 pt-4">
                                  <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
-                                    <MessageSquare className="w-4 h-4 text-primary" /> 0 comentários
+                                    <MessageSquare className="w-4 h-4 text-primary" /> Ver discussão
                                  </div>
                                  <div className="flex items-center gap-1.5 text-xs text-primary font-bold opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0">
-                                    Ver discussão <ArrowRight className="w-3.5 h-3.5" />
+                                    Explorar soluções <ArrowRight className="w-3.5 h-3.5" />
                                  </div>
                               </div>
                            </div>
