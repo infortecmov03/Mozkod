@@ -1,8 +1,18 @@
+
+/**
+ * @fileOverview MÓDULO: CSS MASTER
+ * 
+ * GUIA DE MANUTENÇÃO:
+ * - A ordem das lições em 'theory' dita a sequência da trilha.
+ * - Use 'htmlTemplate' nos exercícios práticos para fornecer o HTML base.
+ * - 'isProjectPart: true' garante que o aluno continue a estilizar o projeto iniciado.
+ */
+
 import type { KnowledgeArea } from '../../types';
 import { lessons } from './theory';
 import { quizzes } from './quizzes';
 
-// Importação de Laboratórios Reais
+// Importação de Laboratórios Master
 import { exercise as p1 } from './laboratory/01-selectors-lab';
 import { exercise as p2 } from './laboratory/02-cascade-layers-lab';
 import { exercise as p3 } from './laboratory/03-logical-properties-lab';

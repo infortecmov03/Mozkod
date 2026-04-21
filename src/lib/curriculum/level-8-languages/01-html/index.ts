@@ -1,3 +1,17 @@
+
+/**
+ * @fileOverview MÓDULO: HTML MASTER
+ * 
+ * GUIA DE MANUTENÇÃO:
+ * - THEORY: Adiciona lições em ./theory/*.ts e regista em theory.ts.
+ * - QUIZZES: Cria questões em ./quizzes/*.ts e regista em quizzes.ts.
+ * - LABORATORY: Cria exercícios em ./laboratory/*.ts e regista em index.ts (abaixo).
+ * 
+ * HERANÇA DE PROJETO:
+ * Ao definir 'isProjectPart: true' num laboratório, o aluno herda 
+ * o código das lições anteriores deste módulo.
+ */
+
 import type { KnowledgeArea } from '../../types';
 import { lessons } from './theory';
 import { quizzes } from './quizzes';

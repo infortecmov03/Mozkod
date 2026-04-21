@@ -1,3 +1,14 @@
+
+/**
+ * @fileOverview MÓDULO: JAVASCRIPT MASTER
+ * 
+ * GUIA DE MANUTENÇÃO:
+ * - LABORATORY: Utilize 'htmlTemplate' e 'cssTemplate' para montar o ambiente.
+ * - VALIDATION: O campo 'test' nos objetivos pode ser um snippet de código 
+ *   ou uma Regex que o código do aluno deve conter para passar.
+ * - PROJECT: isProjectPart garante a evolução do código entre lições.
+ */
+
 import type { KnowledgeArea } from '../../types';
 import { lessons } from './theory';
 import { quizzes } from './quizzes';

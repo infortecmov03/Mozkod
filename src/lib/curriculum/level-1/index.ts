@@ -1,3 +1,15 @@
+
+/**
+ * @fileOverview NÍVEL 1: FUNDAMENTOS (CORE FOUNDATIONS)
+ * 
+ * Este nível foca na base essencial para qualquer engenheiro.
+ * 
+ * COMO ADICIONAR UMA NOVA KNOWLEDGE AREA (KA):
+ * 1. Cria uma pasta em 'src/lib/curriculum/level-1/nome-da-ka/'
+ * 2. Implementa o ficheiro 'index.ts' seguindo o tipo KnowledgeArea.
+ * 3. Importa e adiciona ao array 'knowledgeAreas' abaixo.
+ */
+
 import type { Level } from '../types';
 import { csCore } from './01-cs-core/index';
 import { programmingFundamentals } from './02-programming-fundamentals/index';
