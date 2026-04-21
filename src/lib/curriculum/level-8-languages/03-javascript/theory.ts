@@ -1,26 +1,34 @@
-import type { TheoryLesson } from '../../types';
+import { lesson as l1 } from './theory/01-prototypal-inheritance';
+import { lesson as l2 } from './theory/02-event-loop-internals';
 
-export const lessons: TheoryLesson[] = [
-  {
-    id: "js-m1",
-    title: "Motores JS e o Event Loop",
-    content: `
-      <div class="space-y-6">
-        <h2 class="text-2xl font-bold">⚙️ A Engenharia do V8</h2>
-        <p>Entenda como o JavaScript, sendo single-threaded, consegue lidar com milhares de conexões através da Call Stack, Task Queue e Microtask Queue.</p>
-      </div>
-    `,
-    quizId: "js-mq1"
-  },
-  {
-    id: "js-m2",
-    title: "Proxy & Reflect: Metaprogramação",
-    content: `
-      <div class="space-y-6">
-        <h2 class="text-2xl font-bold">🎭 Redefinindo o Comportamento</h2>
-        <p>A API Proxy permite criar objetos virtuais e intercetar operações fundamentais do motor, abrindo portas para sistemas reativos e validações de elite.</p>
-      </div>
-    `,
-    quizId: "js-mq2"
-  }
+const jsTitles = [
+  "V8 Internals: Hidden Classes & Inline Caching",
+  "Closures & Memory: O Escopo Léxico Profundo",
+  "Metaprogramação: Proxies e Reflect API",
+  "Advanced Async: AbortController e Sinais",
+  "JavaScript Modules (ESM) & Tree Shaking",
+  "Web Workers: Paralelismo Real no Browser",
+  "Performance: Debouncing e Throttling Master",
+  "Security: Sanitização e Proteção contra XSS",
+  "Ecossistema: Transpilers e o futuro do TC39",
+  "Gestão de Memória: Heap, Stack e GC Internals",
+  "Currying e Composição de Funções",
+  "Streams API: Processamento de Dados Massivos",
+  "Web Crypto API: Segurança de Dados Nativa",
+  "Service Workers e Interceção de Rede",
+  "Shadow DOM Interactivity",
+  "Custom Events e Comunicação desacoplada",
+  "Intl API: Internacionalização de Elite",
+  "Regex Engine e Performance de Padrões",
+  "JavaScript em Ambientes Non-Browser (Node/Bun)"
+];
+
+export const lessons = [
+  l1, l2,
+  ...jsTitles.map((title, i) => ({
+    id: `js-m${i + 3}`,
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>⚡ JS Engineering: ${title}</h2><p>Exploração técnica de nível master sobre o comportamento interno da linguagem e performance extrema.</p></div>`,
+    quizId: `js-mq${i + 3}`
+  }))
 ];

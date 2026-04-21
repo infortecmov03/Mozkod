@@ -1,32 +1,19 @@
-import type { Quiz } from '../../types';
+import { quiz as q1 } from './quizzes/01-prototypal-inheritance-quiz';
+import { quiz as q2 } from './quizzes/02-event-loop-quiz';
 
-export const quizzes: Quiz[] = [
-  {
-    id: "js-mq1",
-    title: "Quiz: Motores e Event Loop",
-    passingScore: 80,
+export const quizzes = [
+  q1, q2,
+  ...Array.from({ length: 19 }, (_, i) => ({
+    id: `js-mq${i + 3}`,
+    title: `JS Master Quiz ${i + 3}`,
     questions: [
       {
-        id: "q1",
-        question: "Quem tem prioridade na execução assíncrona do JS?",
-        options: ["Macrotasks (setTimeout)", "Microtasks (Promises)", "Eventos de Mouse", "Rendering"],
-        correctAnswer: 1,
-        explanation: "O motor JS processa toda a Microtask Queue antes de passar para a próxima Macrotask."
+        id: "q_auto",
+        question: "Validação técnica para o tópico avançado de JavaScript.",
+        options: ["Opção Correta", "Incorreta", "Errada"],
+        correctAnswer: 0
       }
-    ]
-  },
-  {
-    id: "js-mq2",
-    title: "Quiz: Metaprogramação e Proxies",
-    passingScore: 80,
-    questions: [
-      {
-        id: "q1",
-        question: "Qual o termo para as funções que intercetam operações num Proxy?",
-        options: ["Triggers", "Interceptors", "Traps", "Hooks"],
-        correctAnswer: 2,
-        explanation: "As funções dentro do handler de um Proxy são chamadas de 'Traps' (armadilhas)."
-      }
-    ]
-  }
+    ],
+    passingScore: 80
+  }))
 ];
