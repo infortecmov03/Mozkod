@@ -1,13 +1,12 @@
-
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
   id: "html-m1",
   title: "Arquitetura de Documentos: A Estrutura Master",
   content: `
-    <div class="space-y-6">
+    <div class="space-y-8">
       <div class="bg-primary/5 p-6 rounded-2xl border border-primary/10">
-        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2 text-primary">
+        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2 text-primary text-headline">
           🏗️ A Anatomia de um Documento de Elite
         </h2>
         <p class="text-lg leading-relaxed">
@@ -15,37 +14,28 @@ export const lesson: TheoryLesson = {
         </p>
       </div>
 
-      <div class="grid gap-6">
-        <div class="prose prose-invert max-w-none space-y-4">
-          <h3 class="text-xl font-bold border-b border-white/10 pb-2">1. <!DOCTYPE html> - O Gatilho de Standards</h3>
-          <p>Esta não é uma tag HTML, mas uma instrução. Sem ela, o browser entra em <strong>Quirks Mode</strong> (Modo de Compatibilidade), usando motores de renderização da década de 90. 
-          <br/><span class="text-red-400 text-sm">Impacto:</span> O CSS moderno (Grid, Flexbox) pode comportar-se de forma imprevisível.</p>
-
-          <h3 class="text-xl font-bold border-b border-white/10 pb-2">2. <html lang="pt-MZ"> - O Contexto Global</h3>
-          <p>O atributo <code>lang</code> é crítico para o algoritmo do Google e para motores de síntese de voz (Acessibilidade). 
-          <br/><span class="text-red-400 text-sm">Impacto:</span> Sem isto, leitores de ecrã podem usar a pronúncia errada e o SEO local é prejudicado.</p>
-
-          <h3 class="text-xl font-bold border-b border-white/10 pb-2">3. <meta charset="UTF-8"> - Integridade de Dados</h3>
-          <p>Define a codificação de caracteres. UTF-8 cobre quase todos os símbolos do mundo.
-          <br/><span class="text-red-400 text-sm">Impacto:</span> Sem isto, caracteres especiais (como acentos ou emojis) aparecem como símbolos estranhos ().</p>
-
-          <h3 class="text-xl font-bold border-b border-white/10 pb-2">4. <meta name="viewport"> - Renderização Mobile</h3>
-          <p>Instrui o browser sobre como ajustar as dimensões da página ao ecrã do dispositivo.
-          <br/><span class="text-red-400 text-sm">Impacto:</span> Sem esta linha, o site aparecerá "encolhido" no telemóvel, forçando o utilizador a fazer zoom.</p>
+      <div class="space-y-6">
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">O Gatilho de Standards (DOCTYPE)</h3>
+        <p>Sem o DOCTYPE, o browser entra em <em>Quirks Mode</em>, emulando bugs de browsers dos anos 90 para não quebrar sites antigos. No nível Master, garantimos o modo padrão.</p>
+        <div class="bg-black/40 p-4 rounded-xl font-code text-sm border border-white/5">
+          <span class="text-muted-foreground">&lt;!-- Força o modo de standards moderno --&gt;</span><br/>
+          <span class="text-primary">&lt;!DOCTYPE html&gt;</span>
         </div>
-      </div>
 
-      <div class="bg-card p-6 rounded-2xl border shadow-inner">
-        <h4 class="font-bold text-accent mb-4">Hierarquia de Fecho</h4>
-        <p class="text-sm leading-relaxed mb-4">
-          Cada tag aberta deve ter o seu par de fecho (exceto as self-closing). O browser constrói o DOM (Document Object Model) em árvore; um erro de fecho pode "aninhar" elementos erradamente e destruir o layout.
-        </p>
-        <div class="bg-black/40 p-4 rounded-xl font-code text-xs">
-          &lt;html&gt;<br/>
-          &nbsp;&nbsp;&lt;head&gt;...&lt;/head&gt;<br/>
-          &nbsp;&nbsp;&lt;body&gt;...&lt;/body&gt;<br/>
-          &lt;/html&gt;
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">Metadados de Controlo de Viewport</h3>
+        <p>Essencial para o design responsivo. Sem esta tag, o browser assume um ecrã desktop de 980px e "encolhe" o site no telemóvel.</p>
+        <div class="bg-black/40 p-4 rounded-xl font-code text-sm border border-white/5">
+          <span class="text-primary">&lt;meta</span> <span class="text-accent">name</span>=<span class="text-green-400">"viewport"</span> <span class="text-accent">content</span>=<span class="text-green-400">"width=device-width, initial-scale=1.0"</span><span class="text-primary">&gt;</span>
         </div>
+
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">Prevenção de FOUC (Flash of Unstyled Content)</h3>
+        <p>Um erro comum é carregar scripts pesados antes do CSS, fazendo com que o utilizador veja o site sem estilos por um breve momento. A ordem no <code>&lt;head&gt;</code> é uma decisão de performance:</p>
+        <ol class="list-decimal ml-6 space-y-4">
+          <li><strong>Preconnect:</strong> Estabelece conexões com fontes ou APIs precocemente.</li>
+          <li><strong>Meta Charset:</strong> Deve ser a primeira tag para evitar re-parsing.</li>
+          <li><strong>CSS Crítico:</strong> In-line ou links prioritários.</li>
+          <li><strong>Scripts:</strong> Sempre com <code>defer</code> ou <code>async</code>.</li>
+        </ol>
       </div>
     </div>
   `,
