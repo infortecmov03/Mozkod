@@ -12,7 +12,7 @@ import {
   Trophy, Zap, Loader2, Menu, ListChecks, 
   ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2,
   AlertCircle, MessageSquare, XCircle, Eye, ExternalLink,
-  PanelRightClose, PanelRightOpen
+  PanelRightClose, PanelRightOpen, Lightbulb
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
@@ -63,7 +63,6 @@ export default function LearnPage() {
       setSelectedLang(practice.language);
       
       if (practice.isProjectPart) {
-        // Lógica de herança melhorada: busca o código do último laboratório completado
         const ordered = findOrderedLessons();
         const currentIndex = ordered.indexOf(lessonId);
         
@@ -471,15 +470,27 @@ export default function LearnPage() {
                 </div>
               </div>
               
-              <div className="mb-6 bg-accent/5 border border-accent/10 p-4 rounded-xl prose prose-invert prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: practice.detailedExplanation }} />
+              <Accordion type="single" collapsible className="w-full mb-6">
+                <AccordionItem value="explanation" className="border-none">
+                  <AccordionTrigger className="bg-accent/10 hover:bg-accent/20 transition-all rounded-xl px-4 py-3 hover:no-underline border border-accent/20 text-accent">
+                    <div className="flex items-center gap-3">
+                      <Lightbulb className="w-4 h-4 fill-accent" />
+                      <span className="font-headline font-bold text-xs uppercase tracking-tighter">Contexto da Missão</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-4">
+                    <div className="bg-accent/5 border border-accent/10 p-4 rounded-xl prose prose-invert prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: practice.detailedExplanation }} />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
               
               <div className="flex-1 overflow-y-auto pr-2">
-                <Accordion type="single" collapsible className="w-full space-y-3">
+                <Accordion type="single" collapsible className="w-full space-y-3" defaultValue="objectives-list">
                   <AccordionItem value="objectives-list" className="border-none">
                     <AccordionTrigger className="bg-primary/10 hover:bg-primary/20 transition-all rounded-xl px-4 py-3 hover:no-underline border border-primary/20">
                        <div className="flex items-center gap-3">
                           <Zap className="w-4 h-4 text-primary fill-primary" />
-                          <span className="font-headline font-bold text-xs uppercase tracking-tighter">Ver Todos os Objetivos</span>
+                          <span className="font-headline font-bold text-xs uppercase tracking-tighter">Objetivos Técnicos</span>
                        </div>
                     </AccordionTrigger>
                     <AccordionContent className="pt-4 space-y-3">
