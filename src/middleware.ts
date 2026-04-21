@@ -1,4 +1,3 @@
-
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
@@ -11,7 +10,9 @@ const publicRoutes = [
   '/privacy', 
   '/security', 
   '/modules', 
-  '/leaderboard'
+  '/leaderboard',
+  '/documentation',
+  '/partners'
 ];
 const protectedRoutes = ['/dashboard', '/learn', '/certifications', '/settings', '/profile', '/community'];
 

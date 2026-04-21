@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -50,9 +49,9 @@ export function Footer() {
             <h4 className="font-headline font-bold text-xs uppercase tracking-[0.2em] text-primary">Comunidade</h4>
             <ul className="space-y-4 text-sm text-muted-foreground font-medium">
               <li><Link href="/community" className="hover:text-primary transition-colors">{t.community}</Link></li>
-              <li><Link href="#" className="hover:text-primary transition-colors">Documentação</Link></li>
-              <li><Link href="#" className="hover:text-primary transition-colors">Fórum de Ajuda</Link></li>
-              <li><Link href="#" className="hover:text-primary transition-colors">Parceiros</Link></li>
+              <li><Link href="/documentation" className="hover:text-primary transition-colors">Documentação</Link></li>
+              <li><Link href="/partners" className="hover:text-primary transition-colors">Parceiros</Link></li>
+              <li><Link href="/community" className="hover:text-primary transition-colors">Fórum de Ajuda</Link></li>
             </ul>
           </div>
 
