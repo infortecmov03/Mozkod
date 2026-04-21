@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -77,11 +76,11 @@ export function Footer() {
         </div>
 
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
-          <p>© 2024 Codworks Moz. Todos os direitos reservados.</p>
+          <p>© 2026 Codworks Moz. Todos os direitos reservados.</p>
           <div className="flex gap-8">
             <Link href="/privacy" className="hover:text-primary transition-colors">Privacidade</Link>
             <Link href="/terms" className="hover:text-primary transition-colors">Termos</Link>
-            <Link href="#" className="hover:text-primary transition-colors">Segurança</Link>
+            <Link href="/security" className="hover:text-primary transition-colors">Segurança</Link>
           </div>
           <p className="flex items-center gap-1.5">
             Built with <span className="text-red-500 text-base">♥</span> in Maputo
