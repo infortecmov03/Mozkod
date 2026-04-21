@@ -3,6 +3,7 @@ import type { Level } from '../types';
 import { softwareProcesses } from './01-software-processes/index';
 import { softwareDesign } from './02-software-design/index';
 import { softwareQuality } from './03-software-quality/index';
+import { integrativeProjects } from './04-integrative-projects/index';
 
 export const level4: Level = {
   id: 4,
@@ -11,6 +12,7 @@ export const level4: Level = {
   knowledgeAreas: [
     softwareProcesses,
     softwareDesign,
-    softwareQuality
+    softwareQuality,
+    integrativeProjects
   ]
 };
