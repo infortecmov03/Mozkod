@@ -12,16 +12,18 @@ import { Zap, Star, Trophy, Calendar, MapPin, Edit2, Loader2, MessageSquare, Awa
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { modules } from "@/lib/curriculum";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 export default function ProfilePage() {
   const { user, profile, loading: authLoading } = useAuth();
   const { progress, loading: progressLoading } = useProgress();
   const { t } = useLanguage();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const completedLessons = useMemo(() => progress.filter(p => p.completed).length, [progress]);
   
-  // Cálculo dinâmico do total de lições no currículo
   const totalAvailableLessons = useMemo(() => {
     let total = 0;
     modules.forEach(level => {
@@ -37,7 +39,6 @@ export default function ProfilePage() {
     return total;
   }, []);
 
-  // Total específico do Nível 1 para o widget de domínio
   const level1Total = useMemo(() => {
     let total = 0;
     const l1 = modules.find(m => m.id === 1);
@@ -54,7 +55,6 @@ export default function ProfilePage() {
     return progress.filter(p => p.level_id === 1 && p.completed).length;
   }, [progress]);
 
-  // Lógica de Badges Dinâmicos
   const badges = useMemo(() => {
     const list = [];
     if ((profile?.total_points || 0) >= 100) {
@@ -72,7 +72,7 @@ export default function ProfilePage() {
     return list;
   }, [profile, completedInL1, level1Total]);
 
-  if (authLoading || progressLoading) {
+  if (!mounted || authLoading || progressLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -112,7 +112,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="flex items-center gap-3 text-sm text-muted-foreground">
                   <Calendar className="w-4 h-4 text-primary" /> 
-                  <span>Membro desde {new Date(profile?.created_at || '').toLocaleDateString()}</span>
+                  <span>Membro desde {profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : 'N/A'}</span>
                 </div>
               </CardContent>
             </Card>
@@ -188,7 +188,8 @@ export default function ProfilePage() {
                        <p className="text-xs text-muted-foreground">Faltam {Math.max(0, level1Total - completedInL1)} tópicos para completar o Nível 1.</p>
                     </div>
                   </div>
-                </section>
+                </Card>
+             </section>
 
              <section className="space-y-4">
                 <h3 className="font-headline text-xl font-bold flex items-center gap-2">

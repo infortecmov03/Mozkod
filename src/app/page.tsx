@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Code2, Cpu, Globe, Zap } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
@@ -11,7 +12,7 @@ import { Logo } from "@/components/Logo";
 
 export default function Home() {
   const { t } = useLanguage();
-  const heroImg = PlaceHolderImages.find(img => img.id === 'hero-bg')?.imageUrl;
+  const heroAsset = PlaceHolderImages.find(img => img.id === 'hero-bg');
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -21,11 +22,14 @@ export default function Home() {
       <section className="relative py-16 md:py-32 overflow-hidden flex flex-col items-center justify-center text-center">
         <div className="absolute inset-0 -z-10 opacity-20">
           <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-background to-background" />
-          {heroImg && (
-            <img 
-              src={heroImg} 
-              alt="Hero background" 
-              className="w-full h-full object-cover"
+          {heroAsset && (
+            <Image 
+              src={heroAsset.imageUrl} 
+              alt={heroAsset.description}
+              fill
+              className="object-cover"
+              data-ai-hint={heroAsset.imageHint}
+              priority
             />
           )}
         </div>
@@ -102,7 +106,6 @@ export default function Home() {
         <div className="container px-4 mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
           <div className="flex flex-col items-center md:items-start gap-4">
             <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
-              {/* Logo completo no rodapé com maior destaque */}
               <Logo className="h-32 w-auto" />
             </Link>
             <p className="text-sm text-muted-foreground text-center md:text-left">
@@ -110,8 +113,8 @@ export default function Home() {
             </p>
           </div>
           <div className="flex gap-8">
-            <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">Privacidade</Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">Termos</Link>
+            <Link href="/privacy" className="text-sm font-medium hover:text-primary transition-colors">Privacidade</Link>
+            <Link href="/terms" className="text-sm font-medium hover:text-primary transition-colors">Termos</Link>
             <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">Suporte</Link>
           </div>
         </div>

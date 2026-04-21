@@ -30,6 +30,12 @@
       "description": "A golden badge for certification",
       "imageUrl": "https://picsum.photos/seed/cert/200/200",
       "imageHint": "gold medal"
+    },
+    {
+      "id": "avatar-fallback",
+      "description": "User avatar placeholder",
+      "imageUrl": "https://picsum.photos/seed/user/100/100",
+      "imageHint": "user profile"
     }
   ]
 }

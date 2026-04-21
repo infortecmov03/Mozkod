@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, GraduationCap, Languages, Menu, LogOut, User, Sun, Moon, Users, Trophy } from "lucide-react";
@@ -13,6 +14,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Logo } from "./Logo";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export function Navigation() {
   const pathname = usePathname();
@@ -23,7 +25,8 @@ export function Navigation() {
 
   useEffect(() => setMounted(true), []);
 
-  // Definimos quais itens são públicos e quais exigem login
+  const avatarFallback = PlaceHolderImages.find(img => img.id === 'avatar-fallback')?.imageUrl;
+
   const navItems = [
     { href: "/dashboard", label: t.dashboard, icon: LayoutDashboard, protected: true },
     { href: "/modules", label: t.modules, icon: GraduationCap, protected: false },
@@ -31,7 +34,6 @@ export function Navigation() {
     { href: "/community", label: t.community, icon: Users, protected: true },
   ];
 
-  // Filtramos os itens baseados no estado de autenticação
   const visibleItems = navItems.filter(item => !item.protected || (item.protected && user));
 
   const NavLinks = ({ className = "", mobile = false }: { className?: string; mobile?: boolean }) => (
@@ -75,6 +77,7 @@ export function Navigation() {
                 size="icon"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                 className="rounded-full"
+                aria-label="Toggle theme"
               >
                 {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </Button>
@@ -94,7 +97,13 @@ export function Navigation() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative w-8 h-8 rounded-full overflow-hidden border">
-                    <img src={profile?.avatar_url || `https://picsum.photos/seed/${user.id}/32/32`} alt="Avatar" />
+                    <Image 
+                      src={profile?.avatar_url || avatarFallback || ""} 
+                      alt="Avatar" 
+                      width={32}
+                      height={32}
+                      className="object-cover"
+                    />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
@@ -122,13 +131,14 @@ export function Navigation() {
               variant="ghost"
               size="icon"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              aria-label="Toggle theme"
             >
               {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </Button>
           )}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" aria-label="Open menu">
                 <Menu className="w-6 h-6" />
               </Button>
             </SheetTrigger>
@@ -146,7 +156,12 @@ export function Navigation() {
                      <div className="space-y-4">
                         <Link href="/profile" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
                           <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center overflow-hidden border">
-                            <img src={profile?.avatar_url || `https://picsum.photos/seed/${user.id}/40/40`} alt="Avatar" />
+                            <Image 
+                              src={profile?.avatar_url || avatarFallback || ""} 
+                              alt="Avatar" 
+                              width={40}
+                              height={40}
+                            />
                           </div>
                           <span className="font-medium">{profile?.display_name || 'Usuário'}</span>
                         </Link>

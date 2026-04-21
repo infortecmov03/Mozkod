@@ -4,11 +4,11 @@
 import { Navigation } from "@/components/Navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import { Award, Download, Share2, ShieldCheck, CheckCircle, ExternalLink, Loader2 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
-import { useProgress } from "@/contexts/ProgressContext";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
 import jsPDF from "jspdf";
@@ -16,7 +16,7 @@ import jsPDF from "jspdf";
 export default function CertificationsPage() {
   const { t } = useLanguage();
   const { user, profile } = useAuth();
-  const certBadge = PlaceHolderImages.find(img => img.id === 'certificate-badge')?.imageUrl;
+  const certAsset = PlaceHolderImages.find(img => img.id === 'certificate-badge');
   
   const [certificates, setCertificates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -109,11 +109,16 @@ export default function CertificationsPage() {
                   <div className="flex flex-col md:flex-row">
                     <div className="md:w-1/3 bg-secondary/30 p-8 flex items-center justify-center relative">
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 pointer-events-none" />
-                      <img 
-                        src={certBadge} 
-                        alt="Certificate Badge" 
-                        className="w-32 h-32 md:w-48 md:h-48 drop-shadow-2xl group-hover:scale-110 transition-transform duration-500"
-                      />
+                      {certAsset && (
+                        <Image 
+                          src={certAsset.imageUrl} 
+                          alt={certAsset.description}
+                          width={200}
+                          height={200}
+                          className="drop-shadow-2xl group-hover:scale-110 transition-transform duration-500"
+                          data-ai-hint={certAsset.imageHint}
+                        />
+                      )}
                     </div>
                     <CardContent className="md:w-2/3 p-8 flex flex-col justify-between">
                       <div>
@@ -156,30 +161,6 @@ export default function CertificationsPage() {
                 <p className="text-muted-foreground text-sm">Complete os módulos para desbloquear suas certificações.</p>
               </div>
             )}
-
-            <div className="grid md:grid-cols-2 gap-8">
-              <Card className="bg-card/20 border-dashed border-2 p-8 flex flex-col items-center justify-center text-center opacity-60">
-                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                  <CheckCircle className="w-8 h-8 text-muted-foreground" />
-                </div>
-                <h3 className="font-headline font-bold text-xl mb-2">Python Advanced</h3>
-                <p className="text-sm text-muted-foreground mb-6">Complete mais lições para desbloquear.</p>
-                <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
-                  <div className="h-full bg-primary/40 w-[60%]" />
-                </div>
-              </Card>
-
-              <Card className="bg-card/20 border-dashed border-2 p-8 flex flex-col items-center justify-center text-center opacity-60">
-                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                  <CheckCircle className="w-8 h-8 text-muted-foreground" />
-                </div>
-                <h3 className="font-headline font-bold text-xl mb-2">Data Structures II</h3>
-                <p className="text-sm text-muted-foreground mb-6">Complete mais lições para desbloquear.</p>
-                <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
-                  <div className="h-full bg-primary/40 w-[15%]" />
-                </div>
-              </Card>
-            </div>
           </div>
         )}
       </main>
