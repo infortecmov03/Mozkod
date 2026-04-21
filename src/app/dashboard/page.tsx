@@ -2,14 +2,12 @@
 "use client";
 
 import { Navigation } from "@/components/Navigation";
-import { Footer } from "@/components/Footer";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { modules, findOrderedLessons } from "@/lib/curriculum";
 import { Button } from "@/components/ui/button";
-import { Trophy, Clock, Zap, ArrowRight, Star, Target, Loader2, CheckCircle2, PlayCircle, Lock } from "lucide-react";
+import { Clock, Zap, ArrowRight, Star, Target, Loader2, CheckCircle2, PlayCircle, Lock } from "lucide-react";
 import Link from "next/link";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useProgress } from "@/contexts/ProgressContext";
@@ -78,7 +76,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background font-body">
+    <div className="flex flex-col bg-background font-body">
       <Navigation />
       <main className="container mx-auto px-4 py-8 max-w-6xl flex-1">
         <header className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -190,7 +188,6 @@ export default function DashboardPage() {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

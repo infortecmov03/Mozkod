@@ -6,17 +6,15 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Code2, Cpu, Globe, Zap } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
-import { Footer } from "@/components/Footer";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useLanguage } from "@/components/LanguageContext";
-import { Logo } from "@/components/Logo";
 
 export default function Home() {
   const { t } = useLanguage();
   const heroAsset = PlaceHolderImages.find(img => img.id === 'hero-bg');
 
   return (
-    <div className="min-h-screen flex flex-col font-body">
+    <div className="flex flex-col font-body">
       <Navigation />
       
       {/* Hero Section */}
@@ -29,7 +27,7 @@ export default function Home() {
               alt={heroAsset.description}
               fill
               className="object-cover"
-              data-ai-hint={heroAsset.imageHint}
+              data-ai-hint="coding abstract"
               priority
             />
           )}
@@ -38,7 +36,7 @@ export default function Home() {
         <div className="container px-4 mx-auto max-w-4xl space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/10 text-primary text-xs md:text-sm font-medium">
             <Zap className="w-3 h-3" />
-            <span>AI-Powered Learning</span>
+            <span>Engenharia de Software de Elite</span>
           </div>
           
           <h1 className="font-headline text-4xl md:text-7xl font-bold tracking-tight leading-tight">
@@ -76,7 +74,7 @@ export default function Home() {
               </div>
               <h3 className="font-headline text-xl font-bold mb-3">{t.practice}</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Pratique codificação diretamente no seu navegador com suporte para Python, JavaScript, Java e C++.
+                Pratique codificação diretamente no seu navegador com suporte para as linguagens mais poderosas do mercado.
               </p>
             </div>
             
@@ -84,9 +82,9 @@ export default function Home() {
               <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Globe className="text-accent w-6 h-6" />
               </div>
-              <h3 className="font-headline text-xl font-bold mb-3">{t.languages}</h3>
+              <h3 className="font-headline text-xl font-bold mb-3">Contexto Local</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Alterne entre Inglês e Português sem problemas. Conteúdo adaptado para o contexto local.
+                Conteúdo adaptado para o contexto de Moçambique, preparando-te para desafios globais a partir de casa.
               </p>
             </div>
             
@@ -102,8 +100,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
-      <Footer />
     </div>
   );
 }

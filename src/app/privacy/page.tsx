@@ -1,7 +1,7 @@
+
 "use client";
 
 import { Navigation } from "@/components/Navigation";
-import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ShieldCheck, Database, Lock } from "lucide-react";
@@ -12,7 +12,7 @@ export default function PrivacyPage() {
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen flex flex-col bg-background font-body">
+    <div className="flex flex-col bg-background font-body">
       <Navigation />
       <main className="container mx-auto px-4 py-12 max-w-3xl flex-1">
         <Button 
@@ -66,7 +66,6 @@ export default function PrivacyPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

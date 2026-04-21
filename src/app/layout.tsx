@@ -1,10 +1,10 @@
-
 import type {Metadata} from 'next';
 import './globals.css';
 import { Providers } from "./providers";
+import { FooterWrapper } from "@/components/FooterWrapper";
 
 export const metadata: Metadata = {
-  title: 'Codworks Moz | Aprendizagem Interactiva',
+  title: 'Codworks Moz | Engenharia de Software de Elite',
   description: 'Domine a programação com módulos interactivos, execução de código em tempo real e trilhas de aprendizagem localizadas.',
 };
 
@@ -24,7 +24,12 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <Providers>
-          {children}
+          <div className="flex flex-col min-h-screen">
+            <div className="flex-1">
+              {children}
+            </div>
+            <FooterWrapper />
+          </div>
         </Providers>
       </body>
     </html>

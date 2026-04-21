@@ -1,18 +1,18 @@
+
 "use client";
 
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ShieldCheck, Lock, Fingerprint, Eye, Server, Radio } from "lucide-react";
+import { ArrowLeft, ShieldCheck, Lock, Fingerprint, Server, Radio } from "lucide-react";
 import { useLanguage } from "@/components/LanguageContext";
-import { Footer } from "@/components/Footer";
 
 export default function SecurityPage() {
   const router = useRouter();
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-background flex flex-col font-body">
+    <div className="bg-background flex flex-col font-body">
       <Navigation />
       <main className="container mx-auto px-4 py-12 max-w-4xl flex-1">
         <Button 
@@ -62,7 +62,7 @@ export default function SecurityPage() {
               </div>
               <h2 className="text-xl font-headline font-bold">Infraestrutura Isolada</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                O teu código corre em ambientes de sandbox isolados (gVisor). Tentativas de injeção ou fuga do contentor são bloqueadas instantaneamente pelo nosso kernel de segurança.
+                O teu código corre em ambientes de sandbox isolados. Tentativas de injeção ou fuga do contentor são bloqueadas instantaneamente pelo nosso kernel de segurança.
               </p>
             </div>
 
@@ -72,7 +72,7 @@ export default function SecurityPage() {
               </div>
               <h2 className="text-xl font-headline font-bold">Monitorização 24/7</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                A nossa equipa de DevOps monitoriza anomalias em tempo real. Qualquer comportamento suspeito dispara um alerta imediato para o nosso centro de operações de segurança.
+                A nossa equipa de DevOps monitoriza anomalias em tempo real. Qualquer comportamento suspeito dispara um alerta imediato para o nosso centro de operações.
               </p>
             </div>
           </section>
@@ -85,7 +85,6 @@ export default function SecurityPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
