@@ -11,7 +11,7 @@ import {
   Terminal, BookOpen, Play, CheckCircle2, ChevronLeft, 
   Trophy, Zap, Loader2, Menu, ListChecks, 
   ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2,
-  AlertCircle, MessageSquare, XCircle
+  AlertCircle, MessageSquare, XCircle, Eye, ExternalLink
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
@@ -55,13 +55,11 @@ export default function LearnPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  // Lógica de herança de código do projeto anterior
   useEffect(() => {
     setMounted(true);
     if (practice) {
       setSelectedLang(practice.language);
       
-      // Verificar se este laboratório deve herdar o código do anterior
       if (practice.isProjectPart) {
         const prevId = findPreviousLessonId(lessonId);
         const prevProgress = progress.find(p => p.lesson_id === prevId);
@@ -101,9 +99,32 @@ export default function LearnPage() {
       if (newCompleted.length === practice.objectives.length) {
         setOutput("> ✅ Simulação concluída com sucesso!\n> Todos os objetivos alcançados.\n> Pronto para submeter.");
       } else {
-        setOutput(`> ⚠️ Simulação: ${newCompleted.length}/${practice.objectives.length} objetivos alcançados.\n> Verifique os requisitos.`);
+        const nextObjective = practice.objectives.find(obj => !newCompleted.includes(obj.id));
+        setOutput(`> ⚠️ Simulação: ${newCompleted.length}/${practice.objectives.length} objetivos alcançados.\n> Próximo passo: ${nextObjective?.description || 'Verifique os requisitos.'}`);
       }
     }, 800);
+  };
+
+  const handlePreview = () => {
+    const previewWindow = window.open('', '_blank');
+    if (previewWindow) {
+      previewWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Codworks Preview</title>
+            <meta charset="UTF-8">
+            <style>
+              body { font-family: sans-serif; padding: 20px; }
+            </style>
+          </head>
+          <body>
+            ${code}
+          </body>
+        </html>
+      `);
+      previewWindow.document.close();
+    }
   };
 
   const handleQuizAction = async () => {
@@ -370,10 +391,18 @@ export default function LearnPage() {
                       </span>
                     )}
                   </div>
-                  <Button size="sm" onClick={handleRunCode} disabled={isRunning} className="bg-green-600 hover:bg-green-700 h-8 rounded-full text-xs font-bold px-6">
-                    {isRunning ? "VALIDANDO..." : "EXECUTAR"}
-                    <Play className="w-3 h-3 ml-2 fill-current" />
-                  </Button>
+                  <div className="flex gap-2">
+                    {['html', 'css', 'javascript'].includes(practice.language.toLowerCase()) && (
+                       <Button variant="outline" size="sm" onClick={handlePreview} className="border-white/20 bg-white/5 hover:bg-white/10 h-8 rounded-full text-xs font-bold px-6 gap-2">
+                          PRÉ-VISUALIZAR
+                          <Eye className="w-3 h-3" />
+                       </Button>
+                    )}
+                    <Button size="sm" onClick={handleRunCode} disabled={isRunning} className="bg-green-600 hover:bg-green-700 h-8 rounded-full text-xs font-bold px-6">
+                      {isRunning ? "VALIDANDO..." : "EXECUTAR"}
+                      <Play className="w-3 h-3 ml-2 fill-current" />
+                    </Button>
+                  </div>
                </div>
                <div className="flex-1 relative">
                  <Editor
@@ -411,32 +440,60 @@ export default function LearnPage() {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
                   <ListChecks className="w-5 h-5 text-primary" />
-                  <h3 className="font-headline font-bold text-sm uppercase tracking-widest">Objetivos</h3>
+                  <h3 className="font-headline font-bold text-sm uppercase tracking-widest">Missão Atual</h3>
                 </div>
                 <div className="text-[10px] font-bold text-muted-foreground">
                   {completedObjectives.length}/{practice.objectives.length} CONCLUÍDO
                 </div>
               </div>
+              
               <div className="mb-6 bg-accent/5 border border-accent/10 p-4 rounded-xl prose prose-invert prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: practice.detailedExplanation }} />
-              <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+              
+              <div className="flex-1 overflow-y-auto pr-2">
                 <Accordion type="single" collapsible className="w-full space-y-3">
-                  {practice.objectives.map((obj, i) => (
-                    <AccordionItem key={obj.id} value={obj.id} className={cn("rounded-xl border transition-all overflow-hidden", completedObjectives.includes(obj.id) ? "bg-green-500/5 border-green-500/20" : "bg-background/40 border-white/5")}>
-                      <AccordionTrigger className="px-4 py-3 hover:no-underline">
-                        <div className="flex items-center gap-3 text-left">
-                          <div className={cn("w-5 h-5 rounded-full flex items-center justify-center shrink-0", completedObjectives.includes(obj.id) ? "bg-green-500" : "bg-secondary")}>
-                            {completedObjectives.includes(obj.id) ? <CheckCircle2 className="w-3 h-3 text-white" /> : <span className="text-[10px]">{i + 1}</span>}
+                  <AccordionItem value="objectives-list" className="border-none">
+                    <AccordionTrigger className="bg-primary/10 hover:bg-primary/20 transition-all rounded-xl px-4 py-3 hover:no-underline border border-primary/20">
+                       <div className="flex items-center gap-3">
+                          <Zap className="w-4 h-4 text-primary fill-primary" />
+                          <span className="font-headline font-bold text-xs uppercase tracking-tighter">Ver Todos os Objetivos</span>
+                       </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-4 space-y-3">
+                      {practice.objectives.map((obj, i) => (
+                        <div 
+                          key={obj.id} 
+                          className={cn(
+                            "rounded-xl border p-4 transition-all", 
+                            completedObjectives.includes(obj.id) 
+                              ? "bg-green-500/10 border-green-500/20" 
+                              : "bg-background/40 border-white/5"
+                          )}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className={cn(
+                              "w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5", 
+                              completedObjectives.includes(obj.id) ? "bg-green-500" : "bg-secondary"
+                            )}>
+                              {completedObjectives.includes(obj.id) ? <CheckCircle2 className="w-3 h-3 text-white" /> : <span className="text-[10px]">{i + 1}</span>}
+                            </div>
+                            <div className="flex-1 space-y-2">
+                              <span className={cn("text-xs font-bold leading-tight block", completedObjectives.includes(obj.id) && "text-green-500")}>
+                                {obj.description}
+                              </span>
+                              {obj.hint && !completedObjectives.includes(obj.id) && (
+                                <div className="p-2 bg-primary/5 rounded-lg border border-primary/10 mt-2">
+                                  <code className="text-[9px] font-code text-primary/80 break-all">{obj.hint}</code>
+                                </div>
+                              )}
+                            </div>
                           </div>
-                          <span className={cn("text-xs font-bold", completedObjectives.includes(obj.id) && "text-green-500")}>{obj.description}</span>
                         </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="px-4 pb-4 space-y-4">
-                        {obj.hint && <div className="p-3 bg-primary/5 rounded-lg border border-primary/10"><code className="text-[10px] font-code text-primary/80">{obj.hint}</code></div>}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
+                      ))}
+                    </AccordionContent>
+                  </AccordionItem>
                 </Accordion>
               </div>
+
               {completedObjectives.length === practice.objectives.length && (
                 <Button onClick={handleCompletePractice} className="w-full mt-6 h-14 rounded-2xl font-bold text-lg bg-primary shadow-xl shadow-primary/20" disabled={isSaving}>
                   {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Trophy className="w-5 h-5 mr-2" />}
