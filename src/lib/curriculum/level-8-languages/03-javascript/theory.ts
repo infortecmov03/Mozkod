@@ -1,22 +1,26 @@
+import type { TheoryLesson } from '../../types';
 
-import { lesson as l1 } from './theory/01-event-loop';
-
-const jsMasterTitles = [
-  "Prototypal Inheritance Deep Dive", "Closures & Lexical Environment", "Functional Composition & HOCs", 
-  "Proxy & Reflect Metaprogramming", "Symbols & Metadata", "Iterators & Generators Internals", 
-  "Modern Classes & Private Fields", "Web Workers & Threading", "Promise States & Internals", 
-  "MessageChannel API", "SharedArrayBuffer & Atomics", "Scheduling: requestIdleCallback",
-  "Async Error Propagation", "V8 Hidden Classes & ICs", "V8 Garbage Collection (Orinoco)", 
-  "Ignition Interpreter", "TurboFan JIT Compiler", "Memory Leaks & Heap Profiling", 
-  "WebAssembly Interop", "Signals & Reactive Engines"
-];
-
-export const lessons = [
-  l1,
-  ...jsMasterTitles.map((title, i) => ({
-    id: `js-m${i + 2}`,
-    title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>⚡ JS Master: ${title}</h2><p>Análise interna do motor V8 e padrões avançados da linguagem para sistemas de alta performance.</p></div>`,
-    quizId: `js-mq${i + 2}`
-  }))
+export const lessons: TheoryLesson[] = [
+  {
+    id: "js-m1",
+    title: "Motores JS e o Event Loop",
+    content: `
+      <div class="space-y-6">
+        <h2 class="text-2xl font-bold">⚙️ A Engenharia do V8</h2>
+        <p>Entenda como o JavaScript, sendo single-threaded, consegue lidar com milhares de conexões através da Call Stack, Task Queue e Microtask Queue.</p>
+      </div>
+    `,
+    quizId: "js-mq1"
+  },
+  {
+    id: "js-m2",
+    title: "Proxy & Reflect: Metaprogramação",
+    content: `
+      <div class="space-y-6">
+        <h2 class="text-2xl font-bold">🎭 Redefinindo o Comportamento</h2>
+        <p>A API Proxy permite criar objetos virtuais e intercetar operações fundamentais do motor, abrindo portas para sistemas reativos e validações de elite.</p>
+      </div>
+    `,
+    quizId: "js-mq2"
+  }
 ];
