@@ -5,10 +5,106 @@ import { quiz as q4 } from './quizzes/04-flexbox-quiz';
 
 export const quizzes = [
   q1, q2, q3, q4,
-  ...Array.from({ length: 17 }, (_, i) => ({
-    id: `web-q${i + 5}`,
-    title: `Web Quiz ${i + 5}`,
-    questions: [],
+  {
+    id: "web-q5",
+    title: "Quiz: CSS Grid",
+    questions: [{ id: "q1", question: "O Grid é para quantas dimensões?", options: ["Uma (linhas)", "Duas (linhas e colunas)", "Três (3D)"], correctAnswer: 1 }],
     passingScore: 70
-  }))
+  },
+  {
+    id: "web-q6",
+    title: "Quiz: Responsividade",
+    questions: [{ id: "q1", question: "Qual regra CSS permite adaptar o site ao ecrã?", options: ["@media", "@import", "@font-face"], correctAnswer: 0 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q7",
+    title: "Quiz: Formulários",
+    questions: [{ id: "q1", question: "Qual atributo de input é obrigatório para envio?", options: ["class", "name", "id"], correctAnswer: 1 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q8",
+    title: "Quiz: Publicação",
+    questions: [{ id: "q1", question: "O que é Deployment?", options: ["Escrever código", "Colocar o site num servidor", "Apagar o projeto"], correctAnswer: 1 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q9",
+    title: "Quiz: SEO",
+    questions: [{ id: "q1", question: "O que significa SEO?", options: ["Search Engine Optimization", "System Entry Office", "Secure Engine Open"], correctAnswer: 0 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q10",
+    title: "Quiz: SVG",
+    questions: [{ id: "q1", question: "SVG é baseado em quê?", options: ["Pixels", "Vetores (XML)", "Vídeo"], correctAnswer: 1 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q11",
+    title: "Quiz: Acessibilidade",
+    questions: [{ id: "q1", question: "O que são papéis ARIA?", options: ["Cores", "Atributos que descrevem a função do elemento", "Scripts"], correctAnswer: 1 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q12",
+    title: "Quiz: Animações",
+    questions: [{ id: "q1", question: "Qual propriedade CSS cria movimento suave?", options: ["transition", "static", "block"], correctAnswer: 0 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q13",
+    title: "Quiz: BEM",
+    questions: [{ id: "q1", question: "O que significa BEM?", options: ["Block Element Modifier", "Big Entry Mode", "Body Entry Menu"], correctAnswer: 0 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q14",
+    title: "Quiz: HTTP",
+    questions: [{ id: "q1", question: "Qual status code significa 'Não Encontrado'?", options: ["200", "404", "500"], correctAnswer: 1 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q15",
+    title: "Quiz: Performance",
+    questions: [{ id: "q1", question: "O que mede o LCP?", options: ["Segurança", "Tempo de carregamento do maior elemento", "Número de cliques"], correctAnswer: 1 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q16",
+    title: "Quiz: Segurança",
+    questions: [{ id: "q1", question: "O que o HTTPS garante?", options: ["Mais cores", "Comunicação encriptada", "Internet grátis"], correctAnswer: 1 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q17",
+    title: "Quiz: PWA",
+    questions: [{ id: "q1", question: "Qual componente permite o modo offline?", options: ["Service Worker", "HTML tag", "CSS class"], correctAnswer: 0 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q18",
+    title: "Quiz: DevTools",
+    questions: [{ id: "q1", question: "Qual separador permite ver os pedidos de rede?", options: ["Console", "Network", "Elements"], correctAnswer: 1 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q19",
+    title: "Quiz: Tipografia",
+    questions: [{ id: "q1", question: "O que é FOUT?", options: ["Erro de fonte", "Flash of Unstyled Text", "Fonte colorida"], correctAnswer: 1 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q20",
+    title: "Quiz: Container Queries",
+    questions: [{ id: "q1", question: "Onde o componente olha para mudar de estilo?", options: ["Janela (Viewport)", "Elemento Pai (Container)", "Rede"], correctAnswer: 1 }],
+    passingScore: 70
+  },
+  {
+    id: "web-q21",
+    title: "Quiz: DOM",
+    questions: [{ id: "q1", question: "O que é o DOM?", options: ["Document Object Model", "Data Online Mode", "Digital Object Menu"], correctAnswer: 0 }],
+    passingScore: 70
+  }
 ];
