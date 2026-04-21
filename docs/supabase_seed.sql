@@ -1,42 +1,58 @@
--- Codworks Moz - Complete Curriculum Seed
--- Popula os níveis 1 a 8 com dados estruturados da ACM/IEEE.
+-- Codworks Moz - Complete Curriculum Seed (Levels 1-8)
+-- Limpa currículo antigo preservando usuários
+TRUNCATE TABLE public.quizzes, public.exercises, public.lessons, public.acm_curriculum CASCADE;
 
--- Limpeza Segura
-TRUNCATE public.acm_curriculum, public.lessons, public.exercises, public.quizzes CASCADE;
+-- ==========================================
+-- NÍVEL 1: FUNDAMENTOS (CORE FOUNDATIONS)
+-- ==========================================
+INSERT INTO public.acm_curriculum (id, ka_code, ka_name, description, level, required_hours, iconName, order_index) VALUES
+('ka-cs-core', 'CS-101', 'Computer Science Core', 'Binário, Lógica Booleana e Arquitetura Von Neumann.', 1, '45h', 'Cpu', 1),
+('ka-programming-f1', 'PF-1', 'Programming Fundamentals', 'Lógica, Variáveis, Loops e Funções.', 1, '40h', 'SquareTerminal', 2),
+('ka-web-f1', 'WEB-1', 'Web Core (HTML/CSS)', 'Estrutura semântica e estilização moderna.', 1, '30h', 'Globe', 3),
+('ka-git-f1', 'GIT-1', 'Git & Version Control', 'Controlo de versões e colaboração.', 1, '15h', 'GitBranch', 4);
 
--- NÍVEL 1: FUNDAMENTOS
-INSERT INTO public.acm_curriculum (id, level, ka_code, ka_name, description, required_hours, iconName, order_index) VALUES
-('ka-cs-core', 1, 'CS-1', '01. CS Core (Engenharia Base)', 'Sistemas binários, lógica e arquitetura.', '45h', 'Cpu', 1),
-('ka-prog-fund', 1, 'PF-1', '02. Programming Fundamentals', 'Lógica de programação e sintaxe.', '80h', 'Code2', 2),
-('ka-web-core', 1, 'WEB-1', '03. Web Core (HTML/CSS)', 'Estrutura e estilo da interface web.', '60h', 'Globe', 3),
-('ka-git-vc', 1, 'GIT-1', '05. Git & Controlo Versão', 'Gestão de histórico e colaboração.', '15h', 'GitBranch', 4);
-
--- NÍVEL 2: ALGORITMOS
-INSERT INTO public.acm_curriculum (id, level, ka_code, ka_name, description, required_hours, iconName, order_index) VALUES
-('ka-algorithms', 2, 'ALG-2', '01. Algorithms', 'Eficiência, ordenação e busca.', '35h', 'Zap', 1),
-('ka-data-struct', 2, 'DS-2', '02. Data Structures', 'Organização de memória e dados.', '40h', 'Database', 2);
-
--- NÍVEL 8: DOMÍNIO (LINGUAGENS)
-INSERT INTO public.acm_curriculum (id, level, ka_code, ka_name, description, required_hours, iconName, order_index) VALUES
-('lang-js-master', 8, 'JS-8', 'JavaScript Master', 'Especialização profunda em JS e Motores.', '50h', 'Zap', 1),
-('lang-rust-master', 8, 'RS-8', 'Rust Master', 'Sistemas críticos e performance extrema.', '60h', 'Shield', 2),
-('lang-python-master', 8, 'PY-8', 'Python Master', 'Engenharia de dados e produção.', '40h', 'Terminal', 3);
-
--- LIÇÕES EXEMPLO (NÍVEL 1)
-INSERT INTO public.lessons (id, ka_id, title, content_mdx, youtube_video_id, order_index) VALUES
-('cs-t1', 'ka-cs-core', 'Sistemas Numéricos: O Mundo Binário', '<p>O computador entende apenas 0 e 1.</p>', 'rXc_A7G43m0', 1),
-('pf-t1', 'ka-prog-fund', 'Variáveis: As Caixas da Memória', '<p>Guardando dados com nomes amigáveis.</p>', '_B6K2G_Q4e4', 1);
-
--- LIÇÕES EXEMPLO (NÍVEL 8)
+-- Lições Nível 1
 INSERT INTO public.lessons (id, ka_id, title, content_mdx, order_index) VALUES
-('js-m1', 'lang-js-master', 'Fase 1: Prototypal Inheritance', '<p>Como o JS gere herança via protótipos.</p>', 1),
-('rs-m1', 'lang-rust-master', 'Fase 1: Ownership e Borrowing', '<p>O sistema de segurança de memória do Rust.</p>', 1);
+('cs-t1', 'ka-cs-core', 'O Mundo Binário', '<p>Computadores funcionam com estados 0 e 1.</p>', 1),
+('pf-t1', 'ka-programming-f1', 'Variáveis e Tipos', '<p>Caixas de memória para guardar dados.</p>', 1),
+('web-t1', 'ka-web-f1', 'Estrutura HTML5', '<p>O esqueleto semântico da web.</p>', 1);
 
--- EXERCÍCIOS EXEMPLO
-INSERT INTO public.exercises (id, ka_id, language, title, statement, template_code, test_cases) VALUES
-('js-p1', 'lang-js-master', 'javascript', 'Laboratório: Prototype Chain', 'Aceda ao protótipo do objeto.', 'const obj = {};', '[{"test": "Object.getPrototypeOf"}]'),
-('py-p1', 'ka-prog-fund', 'python', 'Lab: Variáveis Python', 'Crie a variável nome.', 'nome = ""', '[{"test": "nome ="}]');
+-- Exercícios Nível 1
+INSERT INTO public.exercises (id, ka_id, lesson_id, title, language, test_cases) VALUES
+('cs-p1', 'ka-cs-core', 'cs-t1', 'Conversão Binária', 'concept', '[{"test": "0101"}]'),
+('pf-p1', 'ka-programming-f1', 'pf-t1', 'Declarando Variáveis', 'javascript', '[{"test": "let nome ="}]');
 
--- QUIZZES EXEMPLO
+-- ==========================================
+-- NÍVEIS 2 A 7: ESPECIALIZAÇÕES
+-- ==========================================
+INSERT INTO public.acm_curriculum (id, ka_code, ka_name, description, level, required_hours, iconName, order_index) VALUES
+('ka-alg-ds', 'ALG-2', 'Algorithms & Data Structures', 'Eficiência e organização de memória.', 2, '60h', 'Brain', 1),
+('ka-os-net', 'SYS-3', 'Systems & Infrastructure', 'Sistemas Operativos e Redes.', 3, '50h', 'Settings', 1),
+('ka-se-master', 'SE-4', 'Software Engineering', 'Design Patterns e Qualidade.', 4, '40h', 'Layers', 1),
+('ka-ai-sec', 'ADV-5', 'AI & Cybersecurity', 'IA Generativa e Segurança.', 5, '60h', 'ShieldCheck', 1),
+('ka-career', 'PRO-6', 'Professional Development', 'Carreira Global e Soft Skills.', 6, '20h', 'Briefcase', 1),
+('ka-capstone', 'GRAD-7', 'Capstone Project', 'Projeto de Graduação Final.', 7, '100h', 'Trophy', 1);
+
+-- ==========================================
+-- NÍVEL 8: DOMÍNIO DE LINGUAGENS (MASTERY)
+-- ==========================================
+INSERT INTO public.acm_curriculum (id, ka_code, ka_name, description, level, required_hours, iconName, order_index) VALUES
+('lang-js', 'M-JS', 'JavaScript Master', 'Metaprogramação e Internals do V8.', 8, '80h', 'Zap', 1),
+('lang-rust', 'M-RS', 'Rust Master', 'Ownership e Memory Safety.', 8, '90h', 'Shield', 2),
+('lang-go', 'M-GO', 'Go Master', 'Concorrência nativa e Cloud.', 8, '70h', 'Cloud', 3),
+('lang-python', 'M-PY', 'Python Master', 'AsyncIO e Ciência de Dados.', 8, '80h', 'Cpu', 4),
+('lang-java', 'M-JV', 'Java Master', 'JVM Tuning e Enterprise.', 8, '80h', 'Coffee', 5),
+('lang-kotlin', 'M-KT', 'Kotlin Master', 'Multiplatform e Coroutines.', 8, '60h', 'Smartphone', 6),
+('lang-php', 'M-PHP', 'PHP Master', 'PHP 8.2 e Swoole Performance.', 8, '50h', 'Globe', 7),
+('lang-ruby', 'M-RB', 'Ruby Master', 'Metaprogramação e Elegância.', 8, '50h', 'Gem', 8),
+('lang-cpp', 'M-CPP', 'C++ Master', 'Gestão manual de memória.', 8, '100h', 'Terminal', 9),
+('lang-swift', 'M-SW', 'Swift Master', 'iOS e Performance Nativa.', 8, '70h', 'Smartphone', 10);
+
+-- Amostra de Lições Nível 8
+INSERT INTO public.lessons (id, ka_id, title, content_mdx, order_index) VALUES
+('js-m1', 'lang-js', 'Fase 1: V8 Engine e Call Stack', '<p>Como o motor do Chrome executa o teu código.</p>', 1),
+('rs-m1', 'lang-rust', 'Fase 1: O Sistema de Ownership', '<p>A regra de ouro da memória em Rust.</p>', 1);
+
+-- Amostra de Quizzes Nível 8
 INSERT INTO public.quizzes (id, ka_id, title, questions) VALUES
-('quiz-cs-1', 'ka-cs-core', 'Validação Binária', '[{"question": "O que é um Bit?", "options": ["Binary Digit", "Big Text", "Basic Item"], "correctAnswer": 0}]');
+('quiz-js-m1', 'lang-js', 'Quiz: V8 Internals', '[{"question": "O que é a Call Stack?", "options": ["Uma pilha LIFO", "Uma fila FIFO"], "correctAnswer": 0}]');
