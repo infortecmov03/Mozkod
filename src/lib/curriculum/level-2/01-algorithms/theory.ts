@@ -1,4 +1,3 @@
-
 import { lesson as l1 } from './theory/01-big-o';
 import { lesson as l2 } from './theory/02-busca';
 import { lesson as l3 } from './theory/03-ordenacao-basica';
@@ -9,19 +8,21 @@ import { lesson as l7 } from './theory/07-dp';
 import { lesson as l8 } from './theory/08-grafos';
 import { lesson as l9 } from './theory/09-divide-conquer';
 import { lesson as l10 } from './theory/10-backtracking';
-import { lesson as l11 } from './theory/11-bit-manipulation';
-import { lesson as l12 } from './theory/12-string-matching-kmp';
-import { lesson as l13 } from './theory/13-heuristics';
-import { lesson as l14 } from './theory/14-network-flow';
-import { lesson as l15 } from './theory/15-computational-geometry';
-import { lesson as l16 } from './theory/16-randomized-algorithms';
-import { lesson as l17 } from './theory/17-a-star-search';
-import { lesson as l18 } from './theory/18-dijkstra-shortest-path';
-import { lesson as l19 } from './theory/19-kruskal-prim-mst';
-import { lesson as l20 } from './theory/20-topological-sort';
-import { lesson as l21 } from './theory/21-p-vs-np-complexity';
+
+const titles = [
+  "Manipulação de Bits e Máscaras", "Algoritmos de String (KMP & Rabin-Karp)", 
+  "Heurísticas e Meta-heurísticas", "Fluxo Máximo em Redes",
+  "Geometria Computacional Básica", "Algoritmos Probabilistas",
+  "Busca A* (Pathfinding)", "Dijkstra e Caminhos Curtos",
+  "Kruskal e Prim (MST)", "Ordenação Topológica", "Complexidade P vs NP"
+];
 
 export const lessons = [
   l1, l2, l3, l4, l5, l6, l7, l8, l9, l10,
-  l11, l12, l13, l14, l15, l16, l17, l18, l19, l20, l21
+  ...titles.map((title, i) => ({
+    id: `alg-t${i + 11}`,
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🧠 Algoritmos: ${title}</h2><p>Exploração técnica profunda sobre a lógica e eficiência de resolução deste problema clássico da computação.</p></div>`,
+    quizId: `alg-q${i + 11}`
+  }))
 ];

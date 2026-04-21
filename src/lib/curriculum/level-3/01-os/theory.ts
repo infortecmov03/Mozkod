@@ -10,17 +10,22 @@ import { lesson as l9 } from './theory/09-io-systems';
 import { lesson as l10 } from './theory/10-os-security';
 import { lesson as l11 } from './theory/11-virtualization-hypervisors';
 import { lesson as l12 } from './theory/12-containers-isolation';
-import { lesson as l13 } from './theory/13-device-drivers-bios';
-import { lesson as l14 } from './theory/14-distributed-systems-rpc';
-import { lesson as l15 } from './theory/15-kernel-networking';
-import { lesson as l16 } from './theory/16-signals-ipc';
-import { lesson as l17 } from './theory/17-shared-memory-semaphores';
-import { lesson as l18 } from './theory/18-real-time-os';
-import { lesson as l19 } from './theory/19-system-profiling-ebpf';
-import { lesson as l20 } from './theory/20-boot-init-systems';
 import { lesson as l21 } from './theory/21-cloud-os-internals';
 
+const titles = [
+  "Drivers de Dispositivos e BIOS/UEFI", "Sistemas Distribuídos e RPC",
+  "Networking no Espaço do Kernel", "Sinais e Comunicação Inter-Processos (IPC)",
+  "Memória Partilhada e Semáforos", "Sistemas Operativos de Tempo Real (RTOS)",
+  "Profiling de Sistema e eBPF", "Sistemas de Inicialização: Systemd e Init"
+];
+
 export const lessons = [
-  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10,
-  l11, l12, l13, l14, l15, l16, l17, l18, l19, l20, l21
+  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12,
+  ...titles.map((title, i) => ({
+    id: `os-t${i + 13}`,
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>⚙️ OS Internals: ${title}</h2><p>Exploração das camadas mais profundas do sistema operativo e interação com o hardware.</p></div>`,
+    quizId: `os-q${i + 13}`
+  })),
+  l21
 ];
