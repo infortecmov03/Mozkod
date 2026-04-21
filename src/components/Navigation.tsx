@@ -23,16 +23,20 @@ export function Navigation() {
 
   useEffect(() => setMounted(true), []);
 
+  // Definimos quais itens são públicos e quais exigem login
   const navItems = [
-    { href: "/dashboard", label: t.dashboard, icon: LayoutDashboard },
-    { href: "/modules", label: t.modules, icon: GraduationCap },
-    { href: "/leaderboard", label: t.leaderboard, icon: Trophy },
-    { href: "/community", label: t.community, icon: Users },
+    { href: "/dashboard", label: t.dashboard, icon: LayoutDashboard, protected: true },
+    { href: "/modules", label: t.modules, icon: GraduationCap, protected: false },
+    { href: "/leaderboard", label: t.leaderboard, icon: Trophy, protected: false },
+    { href: "/community", label: t.community, icon: Users, protected: true },
   ];
+
+  // Filtramos os itens baseados no estado de autenticação
+  const visibleItems = navItems.filter(item => !item.protected || (item.protected && user));
 
   const NavLinks = ({ className = "", mobile = false }: { className?: string; mobile?: boolean }) => (
     <div className={cn("flex items-center gap-6", className)}>
-      {navItems.map((item) => (
+      {visibleItems.map((item) => (
         <Link
           key={item.href}
           href={item.href}
@@ -53,7 +57,6 @@ export function Navigation() {
     <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          {/* Logo como ícone central apenas */}
           <div className="relative w-10 h-10 flex items-center justify-center">
              <Logo className="w-16 h-16 absolute -top-1" showDevices={false} showText={false} />
           </div>
@@ -107,7 +110,7 @@ export function Navigation() {
               </DropdownMenu>
             ) : (
               <Link href="/login">
-                <Button size="sm" className="rounded-full font-bold">Entrar</Button>
+                <Button size="sm" className="rounded-full font-bold px-6">Entrar</Button>
               </Link>
             )}
           </div>
