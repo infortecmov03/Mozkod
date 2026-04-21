@@ -77,16 +77,25 @@ export function findQuizById(quizId: string): Quiz | null {
   return null;
 }
 
+/**
+ * Encontra a próxima lição na sequência lógica.
+ * A lógica agora intercala Teoria e Prática dentro de cada Área de Conhecimento.
+ */
 export function findNextLessonId(currentId: string): string | null {
   const allLessons: string[] = [];
   
   modules.forEach(level => {
     level.knowledgeAreas.forEach(ka => {
-      if (ka.theory) ka.theory.forEach(l => allLessons.push(l.id));
+      const theory = ka.theory || [];
+      const practiceList: PracticeExercise[] = [];
       if (ka.practice) {
-        Object.values(ka.practice).forEach(exercises => {
-          exercises.forEach(ex => allLessons.push(ex.id));
-        });
+        Object.values(ka.practice).forEach(list => practiceList.push(...list));
+      }
+      
+      const max = Math.max(theory.length, practiceList.length);
+      for (let i = 0; i < max; i++) {
+        if (theory[i]) allLessons.push(theory[i].id);
+        if (practiceList[i]) allLessons.push(practiceList[i].id);
       }
     });
   });

@@ -4,6 +4,9 @@ import { quizzes } from './quizzes';
 import { exercise as p1 } from './laboratory/01-structure-lab';
 import { exercise as p2 } from './laboratory/01-accessibility-lab';
 import { exercise as p3 } from './laboratory/02-seo-lab';
+import { exercise as p4 } from './laboratory/03-hydration-lab';
+import { exercise as p5 } from './laboratory/04-web-components-lab';
+import { exercise as p6 } from './laboratory/05-forms-lab';
 
 export const htmlKA: KnowledgeArea = {
   id: 'lang-html',
@@ -13,21 +16,7 @@ export const htmlKA: KnowledgeArea = {
   iconName: 'Code',
   theory: lessons,
   practice: {
-    html: [
-      p1, 
-      p2,
-      p3,
-      {
-        id: "html-p4",
-        language: "html",
-        title: "Lab: SSR & Hydration analysis",
-        description: "Análise de performance de renderização.",
-        statement: "Identifique o atributo de script que permite carregamento assíncrono.",
-        template: "<script src='app.js' ></script>",
-        detailedExplanation: "<p>O atributo async permite carregar o JS sem bloquear o parse do HTML.</p>",
-        objectives: [{ id: "obj1", description: "Usar async", test: "async" }]
-      }
-    ]
+    html: [p1, p2, p3, p4, p5, p6]
   },
   quizzes: quizzes
 };
