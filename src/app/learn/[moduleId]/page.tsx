@@ -94,12 +94,6 @@ export default function LearnPage() {
       setActiveTab('code');
     }
 
-    // LOAD LOGIC:
-    // A. Priority 1: LocalStorage (Unsaved changes)
-    // B. Priority 2: Database (Previous saved submission for this lesson)
-    // C. Priority 3: Project Inheritance (Last codes from previous project lessons)
-    // D. Priority 4: Lesson Template
-
     const ordered = findOrderedLessons();
     const currentIndex = ordered.indexOf(lessonId);
 
@@ -202,53 +196,6 @@ export default function LearnPage() {
     return () => clearTimeout(timer);
   }, [updatePreview]);
 
-  // Resizing logic for console
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    const newHeight = window.innerHeight - e.clientY;
-    if (newHeight > 40 && newHeight < window.innerHeight * 0.5) {
-      setConsoleHeight(newHeight);
-      if (newHeight > 60 && !isConsoleOpen) setIsConsoleOpen(true);
-    }
-  }, [isConsoleOpen]);
-
-  const handleMouseUp = useCallback(() => {
-    window.removeEventListener("mousemove", handleMouseMove);
-    window.removeEventListener("mouseup", handleMouseUp);
-    document.body.style.cursor = "default";
-  }, [handleMouseMove]);
-
-  const startResizing = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-    document.body.style.cursor = "ns-resize";
-  }, [handleMouseMove, handleMouseUp]);
-
-  const allAnswersCorrect = useMemo(() => {
-    if (!quiz) return false;
-    return quiz.questions.length > 0 && quiz.questions.every(q => quizAnswers[q.id] === q.correctAnswer);
-  }, [quiz, quizAnswers]);
-
-  if (!mounted) return null;
-  if (!data) return <div className="p-20 text-center font-headline text-2xl">Conteúdo não encontrado</div>;
-
-  const { ka, level } = data;
-
-  const getActiveCode = () => {
-    if (activeTab === 'html') return htmlCode;
-    if (activeTab === 'css') return cssCode;
-    if (activeTab === 'js') return jsCode;
-    return code;
-  };
-
-  const handleCodeChange = (value: string | undefined) => {
-    const val = value || "";
-    if (activeTab === 'html') setHtmlCode(val);
-    else if (activeTab === 'css') setCssCode(val);
-    else if (activeTab === 'js') setJsCode(val);
-    else setCode(val);
-  };
-
   const handleRunCode = async () => {
     setIsRunning(true);
     if (!isConsoleOpen) setIsConsoleOpen(true);
@@ -318,7 +265,6 @@ export default function LearnPage() {
       await markAsCompleted(lessonId, level.id, ka.id, 'exercise', 100, finalCode);
       toast({ title: t.wellDone, description: "Laboratório concluído com sucesso!" });
       
-      // Clear local storage for this lesson after successful submission
       localStorage.removeItem(getStorageKey('html'));
       localStorage.removeItem(getStorageKey('css'));
       localStorage.removeItem(getStorageKey('js'));
@@ -336,6 +282,11 @@ export default function LearnPage() {
     }
   };
 
+  const allAnswersCorrect = useMemo(() => {
+    if (!quiz) return false;
+    return quiz.questions.length > 0 && quiz.questions.every(q => quizAnswers[q.id] === q.correctAnswer);
+  }, [quiz, quizAnswers]);
+
   const getMonacoLanguage = (tab: string) => {
     if (tab === 'html') return 'html';
     if (tab === 'css') return 'css';
@@ -347,11 +298,36 @@ export default function LearnPage() {
     return map[selectedLang] || "plaintext";
   };
 
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    const newHeight = window.innerHeight - e.clientY;
+    if (newHeight > 40 && newHeight < window.innerHeight * 0.5) {
+      setConsoleHeight(newHeight);
+      if (newHeight > 60 && !isConsoleOpen) setIsConsoleOpen(true);
+    }
+  }, [isConsoleOpen]);
+
+  const handleMouseUp = useCallback(() => {
+    window.removeEventListener("mousemove", handleMouseMove);
+    window.removeEventListener("mouseup", handleMouseUp);
+    document.body.style.cursor = "default";
+  }, [handleMouseMove]);
+
+  const startResizing = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    document.body.style.cursor = "ns-resize";
+  }, [handleMouseMove, handleMouseUp]);
+
+  if (!mounted) return null;
+  if (!data) return <div className="p-20 text-center font-headline text-2xl">Conteúdo não encontrado</div>;
+
+  const { ka, level } = data;
+
   return (
     <div className="flex flex-col h-screen bg-background overflow-hidden font-body">
       <Navigation />
       
-      {/* Header Toolbar */}
       <div className="bg-card/50 border-b px-6 py-3 flex items-center justify-between gap-4 shrink-0">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.push('/modules')} className="rounded-full">
@@ -370,6 +346,14 @@ export default function LearnPage() {
              <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-500/10 text-green-500 border border-green-500/20 text-[10px] font-black uppercase">
                 <CheckCircle2 className="w-3 h-3" /> Concluído
              </div>
+           )}
+           {practice && (
+             <Link href={`/community/exercise/${lessonId}`}>
+               <Button variant="outline" size="sm" className="gap-2 rounded-full border-primary/20 bg-primary/5 text-primary hover:bg-primary/10">
+                 <MessageSquare className="w-4 h-4" />
+                 <span className="hidden sm:inline">Dúvidas da Comunidade</span>
+               </Button>
+             </Link>
            )}
            {practice && (
              <>
@@ -448,7 +432,6 @@ export default function LearnPage() {
       </div>
 
       <main className="flex-1 flex overflow-hidden">
-        {/* Theory or Editor Area */}
         <div className={cn("flex-1 flex flex-col min-w-0 bg-background transition-all duration-300", (practice && showSidebar) && "max-w-[65%]")}>
           {theory ? (
             <div className="flex-1 overflow-y-auto p-8 md:p-16 max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -525,7 +508,6 @@ export default function LearnPage() {
             </div>
           ) : practice ? (
             <div className="flex-1 flex flex-col bg-[#1e1e1e] overflow-hidden">
-               {/* Editor Toolbar */}
                <div className="px-4 py-2 border-b border-white/5 flex items-center justify-between bg-black/40 shrink-0">
                   <div className="flex gap-2">
                     {isWebLang ? (
@@ -554,15 +536,20 @@ export default function LearnPage() {
                   </div>
                </div>
                
-               {/* Multi-Pane: Editor & Preview */}
                <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
                  <div className={cn("flex-1 relative flex flex-col", showPreview && isWebLang && "md:w-1/2 border-r border-white/5")}>
                     <Editor
                       height="100%"
                       language={getMonacoLanguage(activeTab)}
                       theme="vs-dark"
-                      value={getActiveCode()}
-                      onChange={handleCodeChange}
+                      value={activeTab === 'html' ? htmlCode : activeTab === 'css' ? cssCode : activeTab === 'js' ? jsCode : code}
+                      onChange={(v) => {
+                        const val = v || "";
+                        if (activeTab === 'html') setHtmlCode(val);
+                        else if (activeTab === 'css') setCssCode(val);
+                        else if (activeTab === 'js') setJsCode(val);
+                        else setCode(val);
+                      }}
                       options={{ 
                         minimap: { enabled: false }, fontSize: 13, lineNumbers: 'on', 
                         scrollBeyondLastLine: false, automaticLayout: true, 
@@ -588,7 +575,6 @@ export default function LearnPage() {
                  )}
                </div>
 
-               {/* Console Drawer */}
                <div 
                  style={{ height: isConsoleOpen ? `${consoleHeight}px` : "40px" }}
                  className="border-t border-white/10 bg-[#121212] flex flex-col transition-[height] duration-200 relative shrink-0"
@@ -616,7 +602,6 @@ export default function LearnPage() {
           ) : null}
         </div>
 
-        {/* Mission Sidebar */}
         {practice && showSidebar && (
           <div className="w-[35%] bg-[#0d1117] flex flex-col border-l border-white/5 overflow-hidden animate-in slide-in-from-right duration-300 shrink-0">
             <div className="p-6 h-full flex flex-col">
