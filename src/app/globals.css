@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -65,9 +64,17 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground transition-colors duration-300;
+    @apply bg-background text-foreground transition-colors duration-300 min-h-[100dvh];
     font-feature-settings: "rlig" 1, "calt" 1;
+    overscroll-behavior-y: none;
   }
+}
+
+/* Fix for mobile scroll issues */
+.scroll-container {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  overscroll-behavior: contain;
 }
 
 /* Custom Scrollbar for Elite look */

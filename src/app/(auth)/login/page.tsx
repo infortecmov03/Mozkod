@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -86,15 +85,15 @@ export default function LoginPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-[100dvh] items-center justify-center bg-background">
         <Loader2 className="h-10 w-10 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4 overflow-y-auto">
-      <Card className="w-full max-w-md border-none shadow-2xl bg-card/50 backdrop-blur-sm rounded-[2.5rem]">
+    <div className="flex min-h-[100dvh] items-center justify-center bg-background p-4 overflow-y-auto scroll-container">
+      <Card className="w-full max-w-md border-none shadow-2xl bg-card/50 backdrop-blur-sm rounded-[2.5rem] my-8">
         <CardHeader className="text-center pt-8">
           <CardTitle className="text-4xl font-headline font-bold">Codworks <span className="text-primary">Moz</span></CardTitle>
           <CardDescription>
