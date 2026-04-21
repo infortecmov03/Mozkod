@@ -1,31 +1,88 @@
 
--- Supabase Curriculum Seeding Script (Final Production Version)
+-- Supabase Curriculum Seeding Script - FULL (Levels 1-7)
+-- Execute este script no seu editor de SQL do Supabase.
 
--- Limpa as tabelas existentes para evitar duplicatas
+-- Limpa as tabelas existentes de currículo para evitar duplicatas
 TRUNCATE TABLE public.quizzes, public.exercises, public.lessons, public.acm_curriculum RESTART IDENTITY;
 
--- NÍVEL 1 --
+-- ==========================================
+-- NÍVEL 1: FUNDAMENTOS
+-- ==========================================
 
--- Inserir Knowledge Areas (KA) do Nível 1
-INSERT INTO public.acm_curriculum (id, ka_code, ka_name, description, level, required_hours, iconName, order_index) VALUES
-('ka-cs-core', 'CS-Core', 'Computer Science Core', 'Sistemas binários, lógica booleana, representação de dados.', 1, 40, 'Cpu', 1),
-('ka-programming', 'PF', 'Programming Fundamentals', 'Variáveis, tipos, estruturas de controle, funções, arrays.', 1, 80, 'Terminal', 2),
-('ka-web', 'WEB-Core', 'Web Core', 'HTML5 semântico, CSS3 (Flexbox/Grid), padrões web.', 1, 60, 'Globe', 3),
-('ka-tech-english', 'T-ENG', 'Technical English', 'Vocabulário, leitura de documentação, mensagens de erro.', 1, 30, 'Languages', 4),
-('ka-git', 'GIT-VC', 'Git & Version Control', 'Comandos básicos, GitHub, controle de versão.', 1, 30, 'GitBranch', 5),
-('ka-hci', 'HCI', 'Human-Computer Interaction', 'Usabilidade, acessibilidade, design centrado no usuário.', 1, 20, 'MousePointerClick', 6),
-('ka-dev-tools', 'DEV-Tools', 'Ferramentas de Desenvolvimento', 'IDEs, editores de código, e o ambiente de desenvolvimento.', 1, 10, 'SquareTerminal', 7);
+INSERT INTO public.acm_curriculum (id, ka_code, ka_name, description, level, required_hours, iconName) VALUES
+('ka-cs-core', 'CS-Core', 'Computer Science Core', 'Binário, lógica booleana e hardware.', 1, 45, 'Cpu'),
+('ka-programming-1', 'PF-1', 'Programming Fundamentals', 'Lógica, variáveis e controle de fluxo.', 1, 80, 'Terminal'),
+('ka-web-core', 'WEB-Core', 'Web Core', 'HTML5 semântico e CSS3 moderno.', 1, 60, 'Globe'),
+('ka-git-vc', 'GIT-VC', 'Git & Version Control', 'Controlo de versão e colaboração.', 1, 30, 'GitBranch');
 
--- Inserir Lições (Lessons) para Nível 1
 INSERT INTO public.lessons (id, ka_id, title, content_mdx, youtube_video_id, order_index) VALUES
-('cs-t1', 'ka-cs-core', 'Sistemas Binários e de Numeração', '<h2>O que são Sistemas de Numeração?</h2> <p>Um sistema de numeração é um conjunto de regras e símbolos que nos permite representar números. O sistema que usamos no dia-a-dia é o <strong>decimal (base 10)</strong>, que usa dez dígitos (0-9).</p> <p>Os computadores, por outro lado, operam com o sistema <strong>binário (base 2)</strong>. Ele usa apenas dois dígitos: 0 e 1. Cada dígito binário é chamado de <strong>bit</strong>.</p> <h3>Por que binário?</h3> <p>Computadores usam transistores, que são como interruptores elétricos. Eles podem estar em um de dois estados: ligado (representado por 1) ou desligado (representado por 0). Esta é a razão fundamental pela qual os computadores funcionam em binário.</p>', '10_yY-sLzJo', 1),
-('cs-t2', 'ka-cs-core', 'Lógica Booleana', '<h2>O que é Lógica Booleana?</h2> <p>A lógica booleana é a base da computação digital. Ela lida com valores verdadeiros (True) e falsos (False), representados por 1 e 0.</p> <h3>Operadores Fundamentais:</h3> <ul> <li><strong>AND:</strong> Verdadeiro somente se ambos forem 1.</li> <li><strong>OR:</strong> Verdadeiro se pelo menos um for 1.</li> <li><strong>NOT:</strong> Inverte o valor.</li> </ul>', 'gI-qXk7XojA', 2),
-('pf-t1', 'ka-programming', 'Variáveis e Tipos de Dados', '<h2>O que é uma Variável?</h2> <p>Pense em uma variável como uma caixa com uma etiqueta. Você pode guardar informações dentro dessa caixa e usar a etiqueta (o nome da variável) para se referir a ela mais tarde.</p>', '_B6K2G_Q4e4', 1);
+('cs-t1', 'ka-cs-core', 'Sistemas Binários', '<h2>O Mundo dos Bits</h2><p>Computadores operam em base 2...</p>', 'rXc_A7G43m0', 1),
+('pf1-t1', 'ka-programming-1', 'Variáveis e Memória', '<h2>Guardando Dados</h2><p>Variáveis são contentores...</p>', '_B6K2G_Q4e4', 1);
 
--- Inserir Exercícios (Exercises) para Nível 1
+-- ==========================================
+-- NÍVEL 2: ALGORITMOS E ESTRUTURAS
+-- ==========================================
+
+INSERT INTO public.acm_curriculum (id, ka_code, ka_name, description, level, required_hours, iconName) VALUES
+('ka-algorithms', 'ALG', 'Algorithms', 'Resolução de problemas e complexidade Big O.', 2, 40, 'Zap'),
+('ka-data-structures', 'DS', 'Data Structures', 'Listas, Pilhas, Filas e Árvores.', 2, 45, 'Database'),
+('ka-discrete-math', 'MATH', 'Discrete Mathematics', 'Lógica matemática e grafos.', 2, 40, 'Calculator');
+
+INSERT INTO public.lessons (id, ka_id, title, content_mdx, youtube_video_id, order_index) VALUES
+('alg-t1', 'ka-algorithms', 'Notação Big O', '<h2>Análise de Eficiência</h2><p>Como medir a velocidade do código...</p>', 'v4cd1O4zkGw', 1),
+('ds-t1', 'ka-data-structures', 'Listas Ligadas', '<h2>Nós e Ponteiros</h2><p>Organização dinâmica de memória...</p>', 'njTh_NvM1Mw', 1);
+
+-- ==========================================
+-- NÍVEL 3: SISTEMAS E INFRAESTRUTURA
+-- ==========================================
+
+INSERT INTO public.acm_curriculum (id, ka_code, ka_name, description, level, required_hours, iconName) VALUES
+('ka-os-internals', 'OS', 'Operating Systems', 'Kernels, Processos e Memória Virtual.', 3, 50, 'Cpu'),
+('ka-networking-adv', 'NET', 'Networking', 'Protocolos TCP/IP e Segurança de Rede.', 3, 40, 'Globe'),
+('ka-db-engine', 'DB-Eng', 'Database Engines', 'SQL avançado e transações ACID.', 3, 45, 'Database');
+
+-- ==========================================
+-- NÍVEL 4: ENGENHARIA DE SOFTWARE
+-- ==========================================
+
+INSERT INTO public.acm_curriculum (id, ka_code, ka_name, description, level, required_hours, iconName) VALUES
+('ka-software-processes', 'SE-PROC', 'Software Processes', 'Agile, Scrum e SDLC.', 4, 30, 'Settings'),
+('ka-software-design', 'SE-DES', 'Design & Architecture', 'SOLID, Design Patterns e Clean Arch.', 4, 50, 'Layout'),
+('ka-software-quality', 'SE-QUAL', 'Software Quality', 'QA, Testes e CI/CD.', 4, 40, 'ShieldCheck');
+
+-- ==========================================
+-- NÍVEL 5: ESPECIALIZAÇÕES
+-- ==========================================
+
+INSERT INTO public.acm_curriculum (id, ka_code, ka_name, description, level, required_hours, iconName) VALUES
+('ka-web-engineering', 'WEB-ENG', 'Web Engineering', 'Next.js e Performance de Elite.', 5, 60, 'Zap'),
+('ka-ai-ds', 'AI-DS', 'AI & Data Science', 'Machine Learning e Redes Neuronais.', 5, 70, 'Brain'),
+('ka-cloud-sec', 'CLOUD-SEC', 'Cloud & Cybersecurity', 'DevSecOps e Kubernetes.', 5, 60, 'Lock');
+
+-- ==========================================
+-- NÍVEL 6: CARREIRA
+-- ==========================================
+
+INSERT INTO public.acm_curriculum (id, ka_code, ka_name, description, level, required_hours, iconName) VALUES
+('ka-career-dev', 'CAREER', 'Career Development', 'LinkedIn, Currículo e Entrevistas Globais.', 6, 30, 'Briefcase');
+
+-- ==========================================
+-- NÍVEL 7: CAPSTONE
+-- ==========================================
+
+INSERT INTO public.acm_curriculum (id, ka_code, ka_name, description, level, required_hours, iconName) VALUES
+('ka-capstone-project', 'CAPSTONE', 'Capstone Project', 'Desenvolvimento do projeto final de graduação.', 7, 100, 'Trophy');
+
+-- ==========================================
+-- QUIZZES E EXERCÍCIOS DE EXEMPLO (N2-N7)
+-- ==========================================
+
+INSERT INTO public.quizzes (id, ka_id, title, questions) VALUES
+('quiz-alg-1', 'ka-algorithms', 'Quiz: Complexidade Big O', '[{"id": "q1", "question": "O(n) representa qual tipo de crescimento?", "options": ["Constante", "Linear", "Quadrático"], "correctAnswer": 1}]'),
+('quiz-se-1', 'ka-software-processes', 'Quiz: Metodologias Ágeis', '[{"id": "q1", "question": "Quem facilita as reuniões no Scrum?", "options": ["Product Owner", "Scrum Master", "CEO"], "correctAnswer": 1}]');
+
 INSERT INTO public.exercises (id, ka_id, language, title, statement, template_code, test_cases) VALUES
-('js-vars', 'ka-programming', 'javascript', 'Exercício de Variáveis', 'Declare variáveis para nome, idade e cidade.', '// Escreva seu código abaixo', '[{"description": "Variável nome deve ser string", "code": "return typeof nome === ''string'';"}]');
+('alg-binary-search', 'ka-algorithms', 'javascript', 'Busca Binária', 'Implemente a busca binária num array ordenado.', 'function search(arr, target) { \n  // Escreva aqui \n}', '[{"description": "Deve retornar o índice correto", "code": "return search([1,2,3], 2) === 1"}]');
 
--- Inserir Quizzes para Nível 1
-INSERT INTO public.quizzes (id, ka_id, title, questions, passing_score) VALUES
-('quiz-pf-1', 'ka-programming', 'Quiz de Fundamentos 1', '[{"id": "q1", "question": "Qual tipo de dado é usado para armazenar texto?", "options": ["Integer", "Boolean", "String", "Float"], "correctAnswer": 2}]', 70);
+-- NOTA: O Nível 8 (Linguagens) é gerido via código no sistema de fases, 
+-- mas a estrutura base 1-7 agora reside no banco de dados.
