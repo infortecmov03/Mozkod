@@ -1,4 +1,5 @@
-import { createServerClient } from '@supabase/ssr';
+
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 const publicRoutes = [
@@ -27,6 +28,7 @@ export async function middleware(request: NextRequest) {
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('Middleware: Supabase env vars not set!');
     return response;
   }
 
@@ -37,34 +39,18 @@ export async function middleware(request: NextRequest) {
       cookies: {
         get(name: string) {
           const cookie = request.cookies.get(name);
-          if (!cookie) return;
-
-          const { value } = cookie;
-
-          try {
-            const parsed = JSON.parse(value);
-            if (typeof parsed === 'string') {
-              return parsed;
-            }
-          } catch (e) {
-            // ignore
+          // if we have a cookie and it's in the old format, ignore it and request deletion
+          if (cookie && cookie.value.startsWith('base64-')) {
+            response.cookies.delete(name);
+            return undefined;
           }
-
-          return value;
+          return cookie?.value;
         },
-        set(name: string, value: string, options: any) {
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          });
+        set(name: string, value: string, options: CookieOptions) {
+          response.cookies.set({ name, value, ...options });
         },
-        remove(name: string, options: any) {
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
-          });
+        remove(name: string, options: CookieOptions) {
+          response.cookies.set({ name, value: '', ...options });
         },
       },
     }
@@ -74,11 +60,13 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
+  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
+
   if (session && publicRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
-  if (!session && protectedRoutes.includes(pathname)) {
+  if (!session && isProtectedRoute) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
@@ -87,22 +75,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/',
-    '/login',
-    '/register',
-    '/auth/callback',
-    '/terms',
-    '/privacy',
-    '/security',
-    '/modules',
-    '/leaderboard',
-    '/documentation',
-    '/partners',
-    '/dashboard',
-    '/learn/:path*',
-    '/certifications/:path*',
-    '/settings',
-    '/profile',
-    '/community/:path*',
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 };
