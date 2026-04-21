@@ -48,11 +48,11 @@ export default function LearnPage() {
   const quiz = useMemo(() => theory?.quizId ? findQuizById(theory.quizId) : null, [theory]);
 
   // Multi-file state for Web Projects
-  const [htmlCode, setHtmlCode] = useState("<!-- Adicione o HTML aqui -->");
-  const [cssCode, setCssCode] = useState("/* Adicione o CSS aqui */");
-  const [jsCode, setJsCode] = useState("// Adicione o JS aqui");
+  const [htmlCode, setHtmlCode] = useState("");
+  const [cssCode, setCssCode] = useState("");
+  const [jsCode, setJsCode] = useState("");
   
-  // Single code state for non-web languages
+  // Single code state for non-web languages (python, java, etc)
   const [code, setCode] = useState("");
   
   const [activeTab, setActiveTab] = useState<string>("code");
@@ -81,14 +81,20 @@ export default function LearnPage() {
     if (practice) {
       setSelectedLang(practice.language);
       
-      // Initialize code
+      // Initialize layout tabs
       if (isWebLang) {
-        setActiveTab(practice.language === 'javascript' ? 'js' : practice.language);
+        setActiveTab(practice.language === 'javascript' ? 'js' : (practice.language === 'css' ? 'css' : 'html'));
       } else {
         setActiveTab('code');
       }
 
-      // Project logic: Load cumulative code
+      // 1. Carregar templates específicos se existirem
+      setHtmlCode(practice.htmlTemplate || "<!-- Estrutura HTML -->");
+      setCssCode(practice.cssTemplate || "/* Estilos CSS */");
+      setJsCode(practice.jsTemplate || "// Lógica JS");
+      setCode(practice.template || "");
+
+      // 2. Se for parte de um projeto, carregar o código acumulado das lições anteriores
       if (practice.isProjectPart) {
         const ordered = findOrderedLessons();
         const currentIndex = ordered.indexOf(lessonId);
@@ -97,12 +103,13 @@ export default function LearnPage() {
         let foundCss = "";
         let foundJs = "";
 
-        // Scan backwards for each type of code
+        // Percorre para trás para encontrar o estado mais recente de cada tipo de ficheiro
         for (let i = currentIndex - 1; i >= 0; i--) {
-          const prevLessonProgress = progress.find(p => p.lesson_id === ordered[i]);
+          const prevId = ordered[i];
+          const prevLessonProgress = progress.find(p => p.lesson_id === prevId);
           if (!prevLessonProgress?.last_code) continue;
 
-          const prevEx = findPracticeExercise(ordered[i]);
+          const prevEx = findPracticeExercise(prevId);
           if (!prevEx) continue;
 
           if (prevEx.language === 'html' && !foundHtml) foundHtml = prevLessonProgress.last_code;
@@ -114,13 +121,13 @@ export default function LearnPage() {
         if (foundCss) setCssCode(foundCss);
         if (foundJs) setJsCode(foundJs);
 
-        // Current lesson code
-        const currentCode = practice.template || "";
-        if (practice.language === 'html') setHtmlCode(currentCode);
-        else if (practice.language === 'css') setCssCode(currentCode);
-        else if (practice.language === 'javascript') setJsCode(currentCode);
-        else setCode(currentCode);
+        // O template da lição atual substitui o ficheiro correspondente à sua linguagem
+        const currentTemplate = practice.template || "";
+        if (practice.language === 'html') setHtmlCode(currentTemplate);
+        else if (practice.language === 'css') setCssCode(currentTemplate);
+        else if (practice.language === 'javascript') setJsCode(currentTemplate);
       } else {
+        // Se não for projeto, o template da lição é o código principal
         const template = practice.template || "";
         if (practice.language === 'html') setHtmlCode(template);
         else if (practice.language === 'css') setCssCode(template);
@@ -209,7 +216,7 @@ export default function LearnPage() {
     if (previewWindow) {
       previewWindow.document.write(`
         <!DOCTYPE html>
-        <html>
+        <html lang="pt-MZ">
           <head>
             <title>Codworks Preview</title>
             <meta charset="UTF-8">
@@ -224,7 +231,7 @@ export default function LearnPage() {
               try {
                 ${jsCode}
               } catch (e) {
-                document.body.innerHTML += '<div style="color: #f87171; background: #450a0a; padding: 1rem; margin-top: 2rem; border-radius: 0.5rem; border: 1px solid #991b1b; font-family: monospace;"><b>JS Error:</b> ' + e.message + '</div>';
+                document.body.innerHTML += '<div style="color: #f87171; background: #450a0a; padding: 1rem; margin-top: 2rem; border-radius: 0.5rem; border: 1px solid #991b1b; font-family: monospace;"><b>Runtime Error:</b> ' + e.message + '</div>';
               }
             </script>
           </body>
@@ -269,6 +276,7 @@ export default function LearnPage() {
     if (!profile) return;
     setIsSaving(true);
     try {
+      // Guardamos apenas o código da linguagem principal do laboratório
       const finalCode = practice?.language === 'html' ? htmlCode : 
                         practice?.language === 'css' ? cssCode : 
                         practice?.language === 'javascript' ? jsCode : code;

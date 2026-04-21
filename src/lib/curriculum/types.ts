@@ -35,7 +35,10 @@ export type PracticeExercise = {
   title: string;
   description: string;
   statement: string;
-  template: string;
+  template: string; // Template principal (HTML, CSS ou JS conforme o campo language)
+  htmlTemplate?: string; // Template de suporte HTML (opcional)
+  cssTemplate?: string;  // Template de suporte CSS (opcional)
+  jsTemplate?: string;   // Template de suporte JS (opcional)
   detailedExplanation: string;
   objectives: Objective[];
   isProjectPart?: boolean; // Define se este exercício herda código do anterior
