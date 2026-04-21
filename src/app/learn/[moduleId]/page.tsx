@@ -45,7 +45,8 @@ export default function LearnPage() {
   const [isRunning, setIsRunning] = useState(false);
   const [selectedLang, setSelectedLang] = useState<string>("");
   const [quizAnswers, setQuizAnswers] = useState<Record<string, number>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
+  const [showQuizFeedback, setShowQuizFeedback] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [completedObjectives, setCompletedObjectives] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -55,6 +56,12 @@ export default function LearnPage() {
       setCode(practice.template || "");
     }
   }, [practice, lessonId]);
+
+  // Calcula se todas as respostas estão corretas em tempo real
+  const allAnswersCorrect = useMemo(() => {
+    if (!quiz) return false;
+    return quiz.questions.every(q => quizAnswers[q.id] === q.correctAnswer);
+  }, [quiz, quizAnswers]);
 
   if (!data) return <div className="p-20 text-center font-headline text-2xl">Conteúdo não encontrado</div>;
 
@@ -80,50 +87,52 @@ export default function LearnPage() {
     }, 800);
   };
 
-  const handleQuizSubmit = async () => {
+  const handleQuizAction = async () => {
     if (!quiz) return;
-    
-    const correctCount = quiz.questions.filter(q => quizAnswers[q.id] === q.correctAnswer).length;
-    const score = Math.round((correctCount / quiz.questions.length) * 100);
 
-    setQuizSubmitted(true);
+    if (!allAnswersCorrect) {
+      setShowQuizFeedback(true);
+      toast({ 
+        variant: "destructive", 
+        title: "Ainda há erros", 
+        description: "Analisa as dicas pedagógicas e tenta novamente." 
+      });
+      return;
+    }
 
-    if (score === 100) {
+    // Se estiver tudo correto, finaliza
+    setIsSaving(true);
+    try {
+      await markAsCompleted(lessonId, level.id, ka.id, 'theory', 100);
+      setIsSuccess(true);
       toast({ 
         title: "Perfeito! 🏆", 
-        description: "Excelente trabalho! Redirecionando para a próxima lição em 3 segundos..." 
+        description: "Excelente trabalho! Redirecionando em 3 segundos..." 
       });
-      
-      await handleComplete(100);
 
       setTimeout(() => {
         const nextId = findNextLessonId(lessonId);
         if (nextId) router.push(`/learn/${nextId}`);
         else router.push('/dashboard');
       }, 3000);
-
-    } else if (score >= quiz.passingScore) {
-      toast({ title: t.wellDone, description: `Aprovado com ${score}%! Podes avançar ou rever as dicas abaixo.` });
-      await handleComplete(score);
-    } else {
-      toast({ 
-        variant: "destructive", 
-        title: "Nota insuficiente", 
-        description: `Pontuação: ${score}%. Analisa as dicas pedagógicas e tenta novamente.` 
-      });
+    } catch (err: any) {
+      toast({ variant: "destructive", title: "Erro ao guardar progresso", description: err.message });
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  const resetQuiz = () => {
-    setQuizAnswers({});
-    setQuizSubmitted(false);
-  };
-
-  const handleComplete = async (score: number) => {
+  const handleCompletePractice = async () => {
     if (!profile) return;
     setIsSaving(true);
     try {
-      await markAsCompleted(lessonId, level.id, ka.id, theory ? 'theory' : 'exercise', score, practice ? code : undefined);
+      await markAsCompleted(lessonId, level.id, ka.id, 'exercise', 100, code);
+      toast({ title: t.wellDone, description: "Laboratório concluído com sucesso!" });
+      setTimeout(() => {
+        const nextId = findNextLessonId(lessonId);
+        if (nextId) router.push(`/learn/${nextId}`);
+        else router.push('/dashboard');
+      }, 2000);
     } catch (err: any) {
       toast({ variant: "destructive", title: "Erro ao guardar progresso", description: err.message });
     } finally {
@@ -243,17 +252,13 @@ export default function LearnPage() {
                           <p className="text-sm text-muted-foreground">Valida o teu conhecimento para avançar.</p>
                         </div>
                       </div>
-                      {quizSubmitted && (
-                        <Button variant="outline" size="sm" onClick={resetQuiz} className="rounded-full gap-2 border-primary/20 hover:bg-primary/5">
-                           <RotateCcw className="w-4 h-4" /> Tentar Novamente
-                        </Button>
-                      )}
                     </div>
                     
                     <div className="space-y-12">
                       {quiz.questions.map((q, qIndex) => {
                         const isCorrect = quizAnswers[q.id] === q.correctAnswer;
                         const hasSelected = quizAnswers[q.id] !== undefined;
+                        const showHint = showQuizFeedback && !isCorrect && hasSelected;
 
                         return (
                           <div key={q.id} className="space-y-6">
@@ -263,22 +268,25 @@ export default function LearnPage() {
                             </div>
                             
                             <RadioGroup 
-                              disabled={quizSubmitted}
-                              onValueChange={(val) => setQuizAnswers(prev => ({...prev, [q.id]: parseInt(val)}))} 
+                              disabled={isSuccess}
+                              onValueChange={(val) => {
+                                setQuizAnswers(prev => ({...prev, [q.id]: parseInt(val)}));
+                                // Opcional: Se quiseres esconder a dica mal o user mude a resposta
+                                // setShowQuizFeedback(false); 
+                              }} 
                               value={quizAnswers[q.id]?.toString()}
                               className="grid gap-4 ml-10"
                             >
                               {q.options.map((opt, i) => {
                                 const isOptionSelected = quizAnswers[q.id] === i;
-                                const isOptionCorrect = q.correctAnswer === i;
                                 
                                 let variantClass = "border bg-background/50 hover:border-primary/30";
-                                if (quizSubmitted) {
-                                  if (isOptionSelected && isCorrect) variantClass = "border-green-500 bg-green-500/10";
-                                  else if (isOptionSelected && !isCorrect) variantClass = "border-red-500 bg-red-500/10";
-                                  else if (isOptionCorrect) variantClass = "border-green-500/30 opacity-60";
-                                } else if (isOptionSelected) {
-                                  variantClass = "border-primary bg-primary/5";
+                                if (isOptionSelected) {
+                                  if (showQuizFeedback) {
+                                    variantClass = isCorrect ? "border-green-500 bg-green-500/10" : "border-red-500 bg-red-500/10";
+                                  } else {
+                                    variantClass = "border-primary bg-primary/5";
+                                  }
                                 }
 
                                 return (
@@ -286,24 +294,21 @@ export default function LearnPage() {
                                     <RadioGroupItem value={i.toString()} id={`${q.id}-${i}`} className="text-primary" />
                                     <Label htmlFor={`${q.id}-${i}`} className="flex-1 cursor-pointer font-normal text-base flex items-center justify-between">
                                       {opt}
-                                      {quizSubmitted && isOptionCorrect && isOptionSelected && <CheckCircle2 className="w-5 h-5 text-green-500" />}
-                                      {quizSubmitted && isOptionSelected && !isCorrect && <XCircle className="w-5 h-5 text-red-500" />}
+                                      {showQuizFeedback && isOptionSelected && (
+                                        isCorrect ? <CheckCircle2 className="w-5 h-5 text-green-500" /> : <XCircle className="w-5 h-5 text-red-500" />
+                                      )}
                                     </Label>
                                   </div>
                                 );
                               })}
                             </RadioGroup>
                             
-                            {quizSubmitted && q.explanation && (
-                              <div className={cn("ml-10 p-5 rounded-2xl border flex gap-4 animate-in fade-in slide-in-from-top-2", isCorrect ? "bg-green-500/5 border-green-500/20" : "bg-blue-500/5 border-blue-500/20")}>
-                                {isCorrect ? <Zap className="w-5 h-5 text-green-500 shrink-0" /> : <Info className="w-5 h-5 text-blue-500 shrink-0" />}
+                            {showHint && q.explanation && (
+                              <div className="ml-10 p-5 rounded-2xl border bg-blue-500/5 border-blue-500/20 flex gap-4 animate-in fade-in slide-in-from-top-2">
+                                <Info className="w-5 h-5 text-blue-500 shrink-0" />
                                 <div>
-                                  <p className={cn("text-sm font-bold mb-1", isCorrect ? "text-green-500" : "text-blue-500")}>
-                                    {isCorrect ? "Excelente!" : "Dica Pedagógica:"}
-                                  </p>
-                                  <p className="text-sm text-muted-foreground leading-relaxed">
-                                    {q.explanation}
-                                  </p>
+                                  <p className="text-sm font-bold mb-1 text-blue-500">Dica Pedagógica:</p>
+                                  <p className="text-sm text-muted-foreground leading-relaxed">{q.explanation}</p>
                                 </div>
                               </div>
                             )}
@@ -313,12 +318,15 @@ export default function LearnPage() {
                     </div>
                     
                     <Button 
-                      onClick={handleQuizSubmit} 
-                      className="w-full h-16 rounded-2xl font-bold text-xl bg-primary shadow-xl shadow-primary/20 transition-all mt-10" 
-                      disabled={isSaving || quizSubmitted || Object.keys(quizAnswers).length < quiz.questions.length}
+                      onClick={handleQuizAction} 
+                      className={cn(
+                        "w-full h-16 rounded-2xl font-bold text-xl transition-all mt-10 shadow-xl",
+                        allAnswersCorrect ? "bg-green-600 hover:bg-green-700 shadow-green-500/20" : "bg-primary shadow-primary/20"
+                      )} 
+                      disabled={isSaving || isSuccess || Object.keys(quizAnswers).length < quiz.questions.length}
                     >
                       {isSaving ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : <ShieldCheck className="w-6 h-6 mr-2" />}
-                      Finalizar Lição
+                      {allAnswersCorrect ? "Finalizar Lição" : "Verificar Respostas"}
                     </Button>
                  </div>
                )}
@@ -389,7 +397,7 @@ export default function LearnPage() {
                 </Accordion>
               </div>
               {completedObjectives.length === practice.objectives.length && (
-                <Button onClick={() => handleComplete(100)} className="w-full mt-6 h-14 rounded-2xl font-bold text-lg bg-primary shadow-xl shadow-primary/20" disabled={isSaving}>
+                <Button onClick={handleCompletePractice} className="w-full mt-6 h-14 rounded-2xl font-bold text-lg bg-primary shadow-xl shadow-primary/20" disabled={isSaving}>
                   {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Trophy className="w-5 h-5 mr-2" />}
                   Finalizar Laboratório
                 </Button>
