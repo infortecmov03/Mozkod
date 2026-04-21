@@ -2,32 +2,39 @@
 import type { TheoryLesson } from '../../types';
 
 const goTitles = [
-  "Fase 1: Pacotes, Imports e Variáveis",
-  "Fase 1: Ponteiros, Structs e Slices",
-  "Fase 1: Maps, Loops e Controle de Fluxo",
-  "Fase 2: Interfaces Implícitas (Satisfação)",
-  "Fase 2: Error Handling: Erros como Valores",
-  "Fase 2: Defer, Panic e Recover (Resiliência)",
-  "Fase 2: Goroutines: Concorrência de Baixo Custo",
-  "Fase 2: Channels: Comunicação Segura",
-  "Fase 2: Select e Multiplexação de Canais",
-  "Fase 2: WaitGroups, Mutex e Atomic",
-  "Fase 2: Context: Cancelamento e Deadlines",
-  "Fase 3: Generics (Go 1.18+) e Constraints",
-  "Fase 3: Reflection e Struct Tags",
-  "Fase 3: Testing: Table-driven e Benchmarking",
-  "Fase 3: Escape Analysis e Memory Optimization",
-  "Fase 3: CGO: Chamando Código C",
-  "Fase 4: Servidores HTTP e Middleware Patterns",
-  "Fase 4: SQL, GORM e Migrations",
-  "Fase 4: gRPC e Protocol Buffers",
-  "Fase 4: Microserviços e Message Brokers (Kafka)",
-  "Fase 4: Capstone: Deploy de API Cloud Native"
+  // FASE 1: Fundamentos (1-4)
+  "Fase 1: Pacotes, Imports e Gestão de Módulos",
+  "Fase 1: Variáveis, Constantes e Type Inference (:=)",
+  "Fase 1: Ponteiros e Semântica de Memória",
+  "Fase 1: Arrays vs Slices: A Ciência do Redimensionamento",
+  
+  // FASE 2: Intermediário (5-11)
+  "Fase 2: Structs e Composição sobre Herança",
+  "Fase 2: Interfaces Implícitas e Duck Typing Estático",
+  "Fase 2: Error Handling: Erros como Valores de Primeira Classe",
+  "Fase 2: Defer, Panic e Recover: Padrões de Resiliência",
+  "Fase 2: Goroutines: Concorrência de Ultra-Baixo Custo",
+  "Fase 2: Channels: Buffered vs Unbuffered Communication",
+  "Fase 2: Select, WaitGroups e Sincronização de Grupo",
+  
+  // FASE 3: Avançado (12-16)
+  "Fase 3: Context: Propagação, Cancelamento e Deadlines",
+  "Fase 3: Generics (Go 1.18+), Constraints e Any",
+  "Fase 3: Reflection (reflect) e Struct Tags para JSON/ORM",
+  "Fase 3: Testing: Table-driven, Benchmarks e Fuzzing",
+  "Fase 3: Performance: Escape Analysis e Pprof Profiling",
+  
+  // FASE 4: Web & Cloud Native (17-21)
+  "Fase 4: CGO: Chamando Bibliotecas C com Performance",
+  "Fase 4: Servidores HTTP, Middleware e WebSockets",
+  "Fase 4: SQL Nativo, GORM e Estratégias de Migração",
+  "Fase 4: gRPC, Protocol Buffers e Microserviços Cloud",
+  "Fase 4: Capstone: Deploy de Distributed Task Engine"
 ];
 
 export const lessons: TheoryLesson[] = goTitles.map((title, i) => ({
   id: `go-m${i + 1}`,
   title: title,
-  content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐹 Go Master: ${title}</h2><p>Simplicidade e performance para sistemas distribuídos e infraestrutura de nuvem.</p></div>`,
+  content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐹 Go Master: ${title}</h2><p>Domine a linguagem da infraestrutura moderna, focada em simplicidade, velocidade e escalabilidade massiva.</p></div>`,
   quizId: `go-mq${i + 1}`
 }));
