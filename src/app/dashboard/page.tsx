@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Navigation } from "@/components/Navigation";
@@ -107,7 +108,7 @@ export default function DashboardPage() {
                       </div>
                       <div className="flex items-center gap-6">
                         <Progress value={moduleProgress} className="h-1.5 flex-1 bg-secondary/50" />
-                        <Link href="/modules">
+                        <Link href={`/modules?level=${module.id}`}>
                           <Button className="rounded-full gap-2 font-bold px-8 h-12 shadow-lg shadow-primary/20">
                             {moduleProgress === 100 ? t.review : t.continueLearning}
                             <ArrowRight className="w-4 h-4" />
