@@ -1,10 +1,9 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ShieldCheck, XCircle, Loader2, Award, User, Calendar, CheckCircle2 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import Link from "next/link";
@@ -46,7 +45,7 @@ export default function VerificationPage() {
       {loading ? (
         <div className="text-center space-y-4">
           <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto" />
-          <p className="text-muted-foreground font-medium animate-pulse">Verificando credencial na blockchain Codworks...</p>
+          <p className="text-muted-foreground font-medium animate-pulse">Verificando credencial na infraestrutura Codworks...</p>
         </div>
       ) : error ? (
         <Card className="w-full max-w-md border-destructive/20 bg-destructive/5 rounded-[2.5rem]">

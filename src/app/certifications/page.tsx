@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Navigation } from "@/components/Navigation";
@@ -50,7 +49,7 @@ export default function CertificationsPage() {
     doc.setFillColor(15, 23, 42); // slate-900
     doc.rect(0, 0, 297, 210, "F");
     
-    // Bordas de Ouro/Primárias
+    // Bordas Primárias
     doc.setDrawColor(59, 130, 246); // primary
     doc.setLineWidth(1);
     doc.rect(5, 5, 287, 200);
@@ -100,7 +99,7 @@ export default function CertificationsPage() {
     doc.setTextColor(59, 130, 246);
     doc.text(`Validar autenticidade em: ${verifyUrl}`, 40, 199);
 
-    // Selo de Qualidade (Canto Direito)
+    // Selo de Qualidade
     doc.setDrawColor(59, 130, 246);
     doc.setLineWidth(0.5);
     doc.circle(250, 180, 15, 'S');
@@ -119,7 +118,7 @@ export default function CertificationsPage() {
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-primary/10 mb-6 border-2 border-primary/20">
             <Award className="w-10 h-10 text-primary" />
           </div>
-          <h1 className="font-headline text-5xl font-bold mb-4">Suas Conquistas de Engenharia</h1>
+          <h1 className="font-headline text-5xl font-bold mb-4">Conquistas de Engenharia</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Cada certificado possui um ID de verificação único e cumpre os padrões internacionais de competência técnica.
           </p>
@@ -133,7 +132,7 @@ export default function CertificationsPage() {
           <div className="grid gap-8">
             {certificates.length > 0 ? (
               certificates.map((cert) => (
-                <Card key={cert.id} className="bg-card/50 border-none shadow-2xl overflow-hidden group hover:ring-2 ring-primary/20 transition-all">
+                <Card key={cert.id} className="bg-card/50 border-none shadow-2xl overflow-hidden group hover:ring-2 ring-primary/20 transition-all rounded-[2.5rem]">
                   <div className="flex flex-col md:flex-row">
                     <div className="md:w-1/3 bg-primary/5 p-12 flex items-center justify-center relative border-r border-white/5">
                       {certAsset && (
@@ -169,7 +168,7 @@ export default function CertificationsPage() {
                         </Button>
                         <Button variant="outline" className="flex-1 rounded-2xl h-14 font-bold border-white/10 hover:bg-white/5">
                           <Share2 className="w-5 h-5 mr-2" />
-                          {t.sharePortfolio}
+                          Partilhar
                         </Button>
                       </div>
                     </CardContent>
