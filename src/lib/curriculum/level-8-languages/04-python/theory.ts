@@ -1,3 +1,4 @@
+
 import { lesson as l1 } from './theory/01-gil-internals';
 import { lesson as l2 } from './theory/02-metaprogramming';
 import { lesson as l3 } from './theory/03-asyncio';
@@ -12,16 +13,26 @@ import { lesson as l11 } from './theory/11-context-managers';
 import { lesson as l12 } from './theory/12-descriptors';
 import { lesson as l20 } from './theory/20-dis-bytecode';
 
+const pyRemainingTitles = [
+  "Iterators & Generators Internals", "Functional Python: Lambdas & Map", 
+  "Profiling & Performance Optimization", "Concurrent.futures Library",
+  "Shared Memory Multiprocessing", "C-Extensions & Cython", 
+  "__slots__ & Memory Optimization", "AST Manipulation & Static Analysis"
+];
+
 export const lessons = [
-  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10,
-  l11, l12, 
-  { id: "py-m13", title: "Iterators & Generators", content: "...", quizId: "py-mq13" },
-  { id: "py-m14", title: "Functional Python Patterns", content: "...", quizId: "py-mq14" },
-  { id: "py-m15", title: "Profiling & Performance Metrics", content: "...", quizId: "py-mq15" },
-  { id: "py-m16", title: "Concurrent.futures Library", content: "...", quizId: "py-mq16" },
-  { id: "py-m17", title: "Shared Memory Multiprocessing", content: "...", quizId: "py-mq17" },
-  { id: "py-m18", title: "C-Extensions Internals", content: "...", quizId: "py-mq18" },
-  { id: "py-m19", title: "__slots__ Optimization", content: "...", quizId: "py-mq19" },
+  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12,
+  ...pyRemainingTitles.slice(0, 7).map((title, i) => ({
+    id: `py-m${i + 13}`,
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐍 Python Master: ${title}</h2><p>Especialização em internals de Python, processamento de dados massivo e automação de baixo nível.</p></div>`,
+    quizId: `py-mq${i + 13}`
+  })),
   l20,
-  { id: "py-m21", title: "AST Manipulation", content: "...", quizId: "py-mq21" }
+  {
+    id: "py-m21",
+    title: pyRemainingTitles[7],
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐍 Python Master: ${pyRemainingTitles[7]}</h2><p>Manipulação de Árvores de Sintaxe Abstrata para criação de ferramentas de linting e segurança.</p></div>`,
+    quizId: "py-mq21"
+  }
 ];

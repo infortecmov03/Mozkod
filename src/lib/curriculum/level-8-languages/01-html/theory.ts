@@ -1,19 +1,22 @@
 
 import { lesson as l1 } from './theory/01-semantics';
-// As lições 2 a 21 são importadas como objetos básicos para garantir o carregamento
-// Em produção, cada uma teria seu ficheiro .ts dedicado na pasta /theory
+
+const htmlMasterTitles = [
+  "SEO & Metadata Optimization", "SSR & Hydration Strategies", "Microdata & Schema.org", 
+  "Web Components Architecture", "Shadow DOM Internals", "Custom Elements Lifecycle",
+  "Templating Engines Internals", "ARIA Roles & State Management", "Focus Management & Tab Index", 
+  "Screen Readers Engine Interop", "Keyboard Navigation Patterns", "SVG Accessibility & Optimization", 
+  "Advanced Form Validation A11y", "Multimedia Captions & Tracks", "Canvas Rendering Engine Basics", 
+  "WebAssembly DOM Integration", "Resource Hints (Preload/Prefetch)", "Content Security Policy (CSP)", 
+  "WebGPU Canvas Integration", "Service Workers & Offline HTML"
+];
+
 export const lessons = [
   l1,
-  ...Array.from({ length: 20 }, (_, i) => ({
+  ...htmlMasterTitles.map((title, i) => ({
     id: `html-m${i + 2}`,
-    title: [
-      "SEO & Metadata Optimization", "SSR & Hydration Strategies", "Microdata & Schema.org", "Web Components Architecture",
-      "Shadow DOM Internals", "Templating Engines", "ARIA Roles & Attributes", "Focus Management", "Screen Readers Engine",
-      "Keyboard Navigation Patterns", "SVG Accessibility", "Form Validation A11y", "Multimedia Captions & Tracks",
-      "Canvas Rendering Engine", "WebAssembly DOM Integration", "Resource Hints (Preload/Prefetch)", "Content Security Policy",
-      "WebGPU Canvas Integration", "Service Workers & Offline HTML", "PWA Manifest & Installation"
-    ][i],
-    content: "<p>Conteúdo avançado de engenharia HTML em desenvolvimento.</p>",
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🏗️ HTML Master: ${title}</h2><p>Exploração profunda sobre como a estrutura semântica e as APIs do browser definem a performance e acessibilidade da web moderna.</p></div>`,
     quizId: `html-mq${i + 2}`
   }))
 ];

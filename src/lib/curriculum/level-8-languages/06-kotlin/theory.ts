@@ -3,26 +3,36 @@ import { lesson as l1 } from './theory/01-null-safety-engine';
 import { lesson as l8 } from './theory/08-coroutines-suspension';
 import { lesson as l15 } from './theory/15-compiler-plugins-ksp';
 
+const kotlinMasterTitles = [
+  "Extension Functions & Property Delegates", "DSL Construction with Lambda Receivers", 
+  "Delegation Pattern: Class vs Property", "Sealed Interfaces & Data Classes Internals", 
+  "Inline Classes & Value Types (Project Valhalla)", "Generics: Reified, Variance & Covariance", 
+  "Structured Concurrency & Job Lifecycle", "Flows & Cold/Hot Streams", "Channels & Select Expressions", 
+  "Shared Mutable State & Mutex", "Testing Coroutines & Dispatchers", "KMP: Kotlin Multiplatform Architecture", 
+  "Kotlin Compiler (K2) Internals", "Bytecode & Metadata Inspection", "Compose Compiler & Recomposition", 
+  "Serialization & ProtoBuf Internals", "GraalVM Native Image with Kotlin", "Contract API: Compiler Hints"
+];
+
 export const lessons = [
   l1,
-  { id: "kt-m2", title: "Extension Functions & Properties", content: "...", quizId: "kt-mq2" },
-  { id: "kt-m3", title: "DSL Construction", content: "...", quizId: "kt-mq3" },
-  { id: "kt-m4", title: "Delegation Pattern", content: "...", quizId: "kt-mq4" },
-  { id: "kt-m5", title: "Sealed Interfaces & Pattern Matching", content: "...", quizId: "kt-mq5" },
-  { id: "kt-m6", title: "Inline Classes & Value Types", content: "...", quizId: "kt-mq6" },
-  { id: "kt-m7", title: "Generics: Reified & Variance", content: "...", quizId: "kt-mq7" },
+  ...kotlinMasterTitles.slice(0, 6).map((title, i) => ({
+    id: `kt-m${i + 2}`,
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>📱 Kotlin Master: ${title}</h2><p>Dominando as funcionalidades expressivas e seguras da linguagem para mobile e backend.</p></div>`,
+    quizId: `kt-mq${i + 2}`
+  })),
   l8,
-  { id: "kt-m9", title: "Structured Concurrency", content: "...", quizId: "kt-mq9" },
-  { id: "kt-m10", title: "Flows & Reactive Streams", content: "...", quizId: "kt-mq10" },
-  { id: "kt-m11", title: "Channels & Select", content: "...", quizId: "kt-mq11" },
-  { id: "kt-m12", title: "Shared Mutable State & Mutex", content: "...", quizId: "kt-mq12" },
-  { id: "kt-m13", title: "Testing Coroutines", content: "...", quizId: "kt-mq13" },
-  { id: "kt-m14", title: "KMP Concurrency", content: "...", quizId: "kt-mq14" },
+  ...kotlinMasterTitles.slice(6, 12).map((title, i) => ({
+    id: `kt-m${i + 9}`,
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>📱 Kotlin Master: ${title}</h2><p>Concorrência massiva e gestão de fluxos de dados com Coroutines.</p></div>`,
+    quizId: `kt-mq${i + 9}`
+  })),
   l15,
-  { id: "kt-m16", title: "Kotlin Compiler (K2) Internals", content: "...", quizId: "kt-mq16" },
-  { id: "kt-m17", title: "Bytecode Optimization", content: "...", quizId: "kt-mq17" },
-  { id: "kt-m18", title: "Reflection vs Metadata", content: "...", quizId: "kt-mq18" },
-  { id: "kt-m19", title: "Compose Compiler Internals", content: "...", quizId: "kt-mq19" },
-  { id: "kt-m20", title: "Serialization Internals", content: "...", quizId: "kt-mq20" },
-  { id: "kt-m21", title: "GraalVM Native with Kotlin", content: "...", quizId: "kt-mq21" }
+  ...kotlinMasterTitles.slice(12).map((title, i) => ({
+    id: `kt-m${i + 16}`,
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>📱 Kotlin Master: ${title}</h2><p>Arquitetura do compilador K2 e integração nativa de alta performance.</p></div>`,
+    quizId: `kt-mq${i + 16}`
+  }))
 ];
