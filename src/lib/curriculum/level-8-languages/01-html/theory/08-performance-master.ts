@@ -1,3 +1,4 @@
+
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
@@ -5,36 +6,33 @@ export const lesson: TheoryLesson = {
   title: "Performance: Resource Hints e o Caminho Crítico",
   content: `
     <div class="space-y-8">
-      <div class="bg-green-500/10 p-6 rounded-2xl border border-green-500/20">
-        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2 text-headline">
-          ⚡ Velocidade de Elite
+      <div class="bg-green-500/10 p-6 rounded-2xl border border-green-500/20 shadow-lg">
+        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2 font-headline">
+          ⚡ Velocidade de Silício
         </h2>
-        <p class="text-lg">O HTML Master controla como e quando o browser descarrega os recursos. Cada milissegundo poupado no parsing melhora as métricas de Core Web Vitals.</p>
+        <p class="text-lg">O HTML Master controla a ordem de descarregamento do browser. Pequenas diretivas no <code>&lt;head&gt;</code> podem reduzir o tempo de carregamento em segundos.</p>
       </div>
 
       <div class="space-y-6">
-        <h3 class="text-xl font-bold font-headline text-primary">Preconnect e DNS-Prefetch</h3>
-        <p>Instrua o browser a preparar a conexão antes mesmo do utilizador clicar. Útil para fontes do Google ou APIs de terceiros.</p>
-        <div class="bg-black/40 p-4 rounded-xl font-code text-sm">
-          <span class="text-primary">&lt;link</span> <span class="text-accent">rel</span>=<span class="text-green-400">"preconnect"</span> <span class="text-accent">href</span>=<span class="text-green-400">"https://fonts.gstatic.com"</span><span class="text-primary">&gt;</span>
-        </div>
-
-        <h3 class="text-xl font-bold font-headline text-primary">Preload vs Prefetch</h3>
+        <h3 class="text-xl font-bold font-headline text-primary border-b border-white/5 pb-2">Resource Hints: Antecipando o Futuro</h3>
         <ul class="space-y-4">
           <li class="bg-card p-4 rounded-xl border border-white/5">
-            <strong class="text-accent">Preload:</strong> Recurso crítico necessário para a página ATUAL (ex: a imagem do banner).
-            <br/><code class="text-[10px]">rel="preload" as="image"</code>
+            <strong class="text-accent">Preconnect:</strong> Resolve o DNS e faz o aperto de mão TCP/TLS antes do utilizador precisar do recurso (ex: fontes ou APIs).
+            <br/><code class="text-[10px] text-green-400">&lt;link rel="preconnect" href="https://api.exemplo.com"&gt;</code>
           </li>
           <li class="bg-card p-4 rounded-xl border border-white/5">
-            <strong class="text-accent">Prefetch:</strong> Recurso que PODE ser necessário na PRÓXIMA página (baixa prioridade).
-            <br/><code class="text-[10px]">rel="prefetch" as="script"</code>
+            <strong class="text-accent">Preload:</strong> Força o download de um recurso crítico que o browser ainda não detetou (ex: uma fonte pesada ou imagem de banner).
+            <br/><code class="text-[10px] text-green-400">&lt;link rel="preload" href="hero.webp" as="image"&gt;</code>
           </li>
         </ul>
 
-        <h3 class="text-xl font-bold font-headline text-primary">Otimização de Imagens (Loading=lazy)</h3>
-        <p>Nunca descarregue imagens que o utilizador ainda não viu (abaixo da "dobra").</p>
-        <div class="bg-black/40 p-4 rounded-xl font-code text-sm">
-          <span class="text-primary">&lt;img</span> <span class="text-accent">src</span>=<span class="text-green-400">"foto.jpg"</span> <span class="text-accent">loading</span>=<span class="text-green-400">"lazy"</span> <span class="text-accent">alt</span>=<span class="text-green-400">"..."</span><span class="text-primary">&gt;</span>
+        <h3 class="text-xl font-bold font-headline text-primary">Native Lazy Loading</h3>
+        <p>Nunca descarregue imagens que o utilizador não está a ver. O atributo <code>loading="lazy"</code> é agora um standard nativo que poupa dados e memória.</p>
+        
+        <h3 class="text-xl font-bold font-headline text-primary">Fetch Priority (Novidade 2024)</h3>
+        <p>Diga ao browser qual imagem é a mais importante de todas (o LCP). Isto altera o algoritmo de agendamento de rede do Chrome/Firefox.</p>
+        <div class="bg-black/40 p-4 rounded-xl font-code text-xs">
+          <span class="text-primary">&lt;img</span> <span class="text-accent">src</span>=<span class="text-green-400">"banner.jpg"</span> <span class="text-accent">fetchpriority</span>=<span class="text-green-400">"high"</span><span class="text-primary">&gt;</span>
         </div>
       </div>
     </div>

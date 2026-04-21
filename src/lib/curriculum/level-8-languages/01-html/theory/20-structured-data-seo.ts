@@ -1,3 +1,4 @@
+
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
@@ -5,27 +6,26 @@ export const lesson: TheoryLesson = {
   title: "Microdata, JSON-LD e SEO de Dados",
   content: `
     <div class="space-y-8">
-      <div class="bg-primary/5 p-6 rounded-2xl border border-primary/10">
-        <h2 class="text-2xl font-bold mb-4 text-primary text-headline">🏷️ Web Semântica de Dados</h2>
-        <p>Dados estruturados permitem que o Google exiba "Rich Snippets" (estrelas, preços, stock) diretamente nos resultados de busca.</p>
+      <div class="bg-primary/5 p-6 rounded-2xl border border-primary/10 shadow-2xl">
+        <h2 class="text-2xl font-bold mb-4 font-headline text-primary">🏷️ A Web de Dados Estruturados</h2>
+        <p class="text-lg">Dados estruturados permitem que fales diretamente com os robôs do Google. É assim que obténs as "estrelas", "preços" e "instruções" diretamente nos resultados de busca.</p>
       </div>
 
       <div class="space-y-6">
-        <h3 class="text-xl font-bold font-headline">JSON-LD: O Formato Recomendado</h3>
-        <p>Em vez de poluir o HTML com atributos, colocamos um bloco de script com um objeto JSON seguindo o padrão da <strong>Schema.org</strong>.</p>
-        <div class="bg-black/40 p-4 rounded-xl font-code text-xs border border-white/5 space-y-1">
-          <span class="text-primary">&lt;script</span> <span class="text-accent">type</span>=<span class="text-green-400">"application/ld+json"</span><span class="text-primary">&gt;</span><br/>
-          {<br/>
-          &nbsp;&nbsp;<span class="text-accent">"@context"</span>: <span class="text-green-400">"https://schema.org"</span>,<br/>
-          &nbsp;&nbsp;<span class="text-accent">"@type"</span>: <span class="text-green-400">"Course"</span>,<br/>
-          &nbsp;&nbsp;<span class="text-accent">"name"</span>: <span class="text-green-400">"HTML Master"</span>,<br/>
-          &nbsp;&nbsp;<span class="text-accent">"provider"</span>: { <span class="text-accent">"name"</span>: <span class="text-green-400">"Codworks Moz"</span> }<br/>
-          }<br/>
-          <span class="text-primary">&lt;/script&gt;</span>
+        <h3 class="text-xl font-bold font-headline border-b border-white/5 pb-2">JSON-LD: O Padrão de Elite</h3>
+        <p>Diferente do Microdata (que polui o HTML com atributos), o JSON-LD é um bloco de script separado que descreve os dados seguindo o vocabulário da <strong>Schema.org</strong>.</p>
+        <div class="bg-black/40 p-6 rounded-xl border font-code text-xs text-accent space-y-1">
+          <p><span class="text-primary">&lt;script</span> <span class="text-accent">type</span>=<span class="text-green-400">"application/ld+json"</span><span class="text-primary">&gt;</span></p>
+          <p>{</p>
+          <p>&nbsp;&nbsp;<span class="text-green-400">"@context"</span>: <span class="text-green-400">"https://schema.org"</span>,</p>
+          <p>&nbsp;&nbsp;<span class="text-green-400">"@type"</span>: <span class="text-green-400">"Course"</span>,</p>
+          <p>&nbsp;&nbsp;<span class="text-green-400">"name"</span>: <span class="text-green-400">"Formação de Engenharia Master"</span></p>
+          <p>}</p>
+          <p><span class="text-primary">&lt;/script&gt;</span></p>
         </div>
 
-        <h3 class="text-xl font-bold font-headline">Breadcrumbs e Knowledge Graph</h3>
-        <p>Implementar dados estruturados ajuda a construir a autoridade da sua marca no grafo de conhecimento do Google.</p>
+        <h3 class="text-xl font-bold font-headline">Rich Snippets e Grafo de Conhecimento</h3>
+        <p>Ao implementar dados estruturados corretamente, o seu site pode aparecer no painel lateral do Google (Knowledge Graph), aumentando a autoridade da sua marca digital.</p>
       </div>
     </div>
   `,

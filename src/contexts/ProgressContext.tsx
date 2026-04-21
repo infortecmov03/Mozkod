@@ -5,6 +5,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from 'rea
 import { supabase } from '@/lib/supabase/client';
 import { useAuth } from './AuthContext';
 import { modules } from '@/lib/curriculum';
+import { toast } from 'sonner';
 
 type ProgressContextType = {
   isCompleted: (id: string) => boolean;
@@ -29,24 +30,28 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     }
     
     setLoading(true);
-    const { data, error } = await supabase
-      .from('user_lesson_progress')
-      .select('*')
-      .eq('user_id', user.id);
-    
-    if (!error && data) {
-      setProgress(data);
+    try {
+      const { data, error } = await supabase
+        .from('user_lesson_progress')
+        .select('*')
+        .eq('user_id', user.id);
+      
+      if (error) throw error;
+      if (data) setProgress(data);
+    } catch (err: any) {
+      console.error('Erro ao carregar progresso:', err.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, [user]);
 
   useEffect(() => {
     fetchProgress();
   }, [fetchProgress]);
 
-  const isCompleted = (id: string) => {
-    return progress.some(p => p.lesson_id === id && p.completed === true);
-  };
+  const isCompleted = useCallback((id: string) => {
+    return progress.some(p => p.lesson_id === id && (p.completed === true || p.completed === 1));
+  }, [progress]);
 
   const checkAndIssueCertificate = async (userId: string, levelId: number) => {
     const level = modules.find(m => m.id === levelId);
@@ -62,7 +67,6 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
 
     const completedInLevel = progress.filter(p => p.level_id === levelId && p.completed === true).length;
     
-    // Se completou 100% do nível, emite certificado
     if (totalItems > 0 && completedInLevel >= totalItems) {
       const { data: existing } = await supabase
         .from('certificates')
@@ -72,13 +76,14 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
         .maybeSingle();
 
       if (!existing) {
-        await supabase.from('certificates').insert({
+        const { error } = await supabase.from('certificates').insert({
           user_id: userId,
           level_id: levelId,
           level_title: level.title,
           certificate_url: '#',
           issued_at: new Date().toISOString()
         });
+        if (!error) toast.success(`🏆 Parabéns! Certificado de Nível ${levelId} desbloqueado!`);
       }
     }
   };
@@ -93,26 +98,43 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   ) => {
     if (!user) return;
 
-    const { error } = await supabase
-      .from('user_lesson_progress')
-      .upsert({
-        user_id: user.id,
-        level_id: levelId,
-        ka_id: kaId,
-        lesson_id: id,
-        lesson_type: type,
-        completed: true,
-        completed_at: new Date().toISOString(),
-        quiz_score: score,
-        quiz_passed: score >= 70,
-        last_code: code
-      }, { onConflict: 'user_id,lesson_id' });
+    try {
+      const { error } = await supabase
+        .from('user_lesson_progress')
+        .upsert({
+          user_id: user.id,
+          level_id: levelId,
+          ka_id: kaId,
+          lesson_id: id,
+          lesson_type: type,
+          completed: true,
+          completed_at: new Date().toISOString(),
+          quiz_score: score,
+          quiz_passed: score >= 70,
+          last_code: code
+        }, { onConflict: 'user_id,lesson_id' });
 
-    if (!error) {
-      await supabase.rpc('calculate_total_points', { p_user_id: user.id });
-      await fetchProgress();
-      await refreshProfile();
-      await checkAndIssueCertificate(user.id, levelId);
+      if (error) throw error;
+
+      // Atualiza o estado local imediatamente para feedback visual instantâneo
+      setProgress(prev => {
+        const existingIndex = prev.findIndex(p => p.lesson_id === id);
+        const newItem = { lesson_id: id, completed: true, level_id: levelId };
+        if (existingIndex > -1) {
+          const updated = [...prev];
+          updated[existingIndex] = { ...updated[existingIndex], ...newItem };
+          return updated;
+        }
+        return [...prev, newItem];
+      });
+
+      // Operações de fundo
+      supabase.rpc('calculate_total_points', { p_user_id: user.id }).then(() => refreshProfile());
+      checkAndIssueCertificate(user.id, levelId);
+      
+    } catch (err: any) {
+      toast.error('Erro ao salvar progresso: ' + err.message);
+      console.error(err);
     }
   };
 
