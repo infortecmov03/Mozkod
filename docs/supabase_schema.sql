@@ -1,14 +1,16 @@
--- Codworks Moz - Final Schema (Production Ready)
--- Suporta Níveis 1 a 8 e sincronizado com o frontend
 
--- Habilitar extensões necessárias
+-- 🏗️ CONFIGURAÇÃO DE INFRAESTRUTURA - CODWORKS MOZ
+-- Este script cria a estrutura necessária para autenticação, progresso e comunidade.
+
+-- 1. EXTENSÕES
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
--- 1. TABELA DE PERFIS (Sincronizada com AuthContext e ProgressContext)
+-- 2. TABELA DE PERFIS (ESTENDE AUTH.USERS)
 CREATE TABLE public.profiles (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-    username TEXT UNIQUE NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    username TEXT UNIQUE,
     display_name TEXT,
     full_name TEXT,
     avatar_url TEXT,
@@ -24,86 +26,46 @@ CREATE TABLE public.profiles (
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 2. TABELA DE CURRÍCULO (Knowledge Areas)
-CREATE TABLE public.acm_curriculum (
-    id TEXT PRIMARY KEY, -- ex: 'ka-cs-core'
-    ka_code TEXT NOT NULL,
-    ka_name TEXT NOT NULL,
-    description TEXT,
-    level INTEGER NOT NULL CHECK (level BETWEEN 1 AND 8),
-    required_hours TEXT,
-    iconName TEXT, -- compatível com lucide-react
-    order_index INTEGER DEFAULT 0
-);
-
--- 3. TABELA DE LIÇÕES (Teoria)
-CREATE TABLE public.lessons (
-    id TEXT PRIMARY KEY, -- ex: 'cs-t1'
-    ka_id TEXT REFERENCES public.acm_curriculum(id) ON DELETE CASCADE,
-    title TEXT NOT NULL,
-    content_mdx TEXT, -- HTML/Markdown para renderização
-    youtube_video_id TEXT,
-    duration_minutes INTEGER DEFAULT 30,
-    order_index INTEGER DEFAULT 0
-);
-
--- 4. TABELA DE EXERCÍCIOS (Laboratório)
-CREATE TABLE public.exercises (
-    id TEXT PRIMARY KEY, -- ex: 'js-p1'
-    ka_id TEXT REFERENCES public.acm_curriculum(id) ON DELETE CASCADE,
-    lesson_id TEXT REFERENCES public.lessons(id) ON DELETE SET NULL,
-    title TEXT NOT NULL,
-    description TEXT,
-    language TEXT NOT NULL, -- 'javascript', 'python', 'html', etc
-    template_code TEXT,
-    test_cases JSONB DEFAULT '[]', -- Objetivos e validações
-    is_project_part BOOLEAN DEFAULT false,
-    order_index INTEGER DEFAULT 0
-);
-
--- 5. TABELA DE QUIZZES
-CREATE TABLE public.quizzes (
-    id TEXT PRIMARY KEY, -- ex: 'quiz-cs-t1'
-    ka_id TEXT REFERENCES public.acm_curriculum(id) ON DELETE CASCADE,
-    title TEXT NOT NULL,
-    questions JSONB NOT NULL DEFAULT '[]',
-    passing_score INTEGER DEFAULT 70
-);
-
--- 6. TABELA DE PROGRESSO (Utilizada pelo ProgressContext)
+-- 3. TABELA DE PROGRESSO (SINCRONIZADA COM O MOTOR ESTÁTICO)
+-- Os IDs das lições vêm dos ficheiros .ts no Git.
 CREATE TABLE public.user_lesson_progress (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    level_id INTEGER,
-    ka_id TEXT,
+    level_id INTEGER NOT NULL,
+    ka_id TEXT NOT NULL,
     lesson_id TEXT NOT NULL,
-    lesson_type TEXT, -- 'theory' ou 'exercise'
-    completed BOOLEAN DEFAULT false,
-    completed_at TIMESTAMPTZ DEFAULT NOW(),
-    quiz_passed BOOLEAN DEFAULT false,
-    quiz_score INTEGER DEFAULT 0,
-    last_code TEXT, -- Persistência do código do aluno
+    lesson_type TEXT CHECK (lesson_type IN ('theory', 'exercise')),
+    completed BOOLEAN DEFAULT FALSE,
+    completed_at TIMESTAMPTZ,
+    quiz_passed BOOLEAN DEFAULT FALSE,
+    quiz_score INTEGER,
+    quiz_attempts INTEGER DEFAULT 0,
+    last_code TEXT, -- Guarda o último código submetido no laboratório
+    progress_percentage INTEGER DEFAULT 0,
     UNIQUE(user_id, lesson_id)
 );
 
--- 7. TABELA DE CERTIFICADOS
+-- 4. TABELA DE CERTIFICADOS
 CREATE TABLE public.certificates (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    level_id INTEGER,
-    level_title TEXT,
+    level_id INTEGER NOT NULL,
+    level_title TEXT NOT NULL,
+    ka_id TEXT, -- Opcional, para certificados de área específica
     certificate_url TEXT,
+    verification_code TEXT UNIQUE DEFAULT encode(gen_random_bytes(16), 'hex'),
     issued_at TIMESTAMPTZ DEFAULT NOW(),
-    verification_code TEXT UNIQUE DEFAULT encode(gen_random_bytes(16), 'hex')
+    metadata JSONB DEFAULT '{}'
 );
 
--- 8. COMUNIDADE (Fórum)
+-- 5. TABELA DE FÓRUM DA COMUNIDADE
 CREATE TABLE public.community_posts (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    exercise_id TEXT,
+    exercise_id TEXT, -- Vincula a dúvida a um laboratório estático
     title TEXT NOT NULL,
     content TEXT NOT NULL,
+    is_resolved BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -112,34 +74,34 @@ CREATE TABLE public.community_comments (
     post_id UUID REFERENCES public.community_posts(id) ON DELETE CASCADE,
     user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
+    is_solution BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- FUNÇÃO: Cálculo de Pontos Automático
-CREATE OR REPLACE FUNCTION calculate_total_points(p_user_id UUID)
-RETURNS void AS $$
-DECLARE
-    points_total INTEGER;
-BEGIN
-    SELECT COUNT(*) * 10 INTO points_total
-    FROM public.user_lesson_progress
-    WHERE user_id = p_user_id AND completed = true;
+-- 6. FUNÇÕES E TRIGGERS AUTOMÁTICOS
 
-    UPDATE public.profiles
-    SET total_points = points_total, total_xp = points_total
-    WHERE id = p_user_id;
+-- Função para atualizar o timestamp de alteração
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
--- TRIGGER: Criar Perfil ao Registar
+CREATE TRIGGER tr_update_profiles_at
+    BEFORE UPDATE ON public.profiles
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Função para criar perfil automaticamente após o registo no Auth
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO public.profiles (id, username, display_name, avatar_url)
+    INSERT INTO public.profiles (id, email, display_name, avatar_url)
     VALUES (
         NEW.id,
-        COALESCE(NEW.raw_user_meta_data->>'user_name', NEW.email),
-        COALESCE(NEW.raw_user_meta_data->>'display_name', NEW.raw_user_meta_data->>'full_name', 'Estudante Moz'),
+        NEW.email,
+        COALESCE(NEW.raw_user_meta_data->>'display_name', NEW.raw_user_meta_data->>'full_name', SPLIT_PART(NEW.email, '@', 1)),
         NEW.raw_user_meta_data->>'avatar_url'
     );
     RETURN NEW;
@@ -150,16 +112,42 @@ CREATE TRIGGER on_auth_user_created
     AFTER INSERT ON auth.users
     FOR EACH ROW EXECUTE FUNCTION handle_new_user();
 
--- ATIVAR RLS (Segurança)
+-- Função para calcular pontos baseada no progresso
+CREATE OR REPLACE FUNCTION calculate_total_points(p_user_id UUID)
+RETURNS void AS $$
+DECLARE
+    v_total_points INT;
+BEGIN
+    -- 10 pontos por lição concluída
+    SELECT COUNT(*) * 10 INTO v_total_points
+    FROM public.user_lesson_progress
+    WHERE user_id = p_user_id AND completed = true;
+
+    UPDATE public.profiles
+    SET total_points = v_total_points,
+        total_xp = v_total_points
+    WHERE id = p_user_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 7. POLÍTICAS DE SEGURANÇA (RLS)
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_lesson_progress ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.certificates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.community_posts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.acm_curriculum ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.community_comments ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Perfis visíveis para todos" ON public.profiles FOR SELECT USING (true);
-CREATE POLICY "Utilizadores editam seu perfil" ON public.profiles FOR UPDATE USING (auth.uid() = id);
-CREATE POLICY "Progresso privado" ON public.user_lesson_progress FOR ALL USING (auth.uid() = user_id);
-CREATE POLICY "Currículo público" ON public.acm_curriculum FOR SELECT USING (true);
-CREATE POLICY "Lições públicas" ON public.lessons FOR SELECT USING (true);
-CREATE POLICY "Comunidade pública" ON public.community_posts FOR SELECT USING (true);
-CREATE POLICY "Postar na comunidade" ON public.community_posts FOR INSERT WITH CHECK (auth.uid() = user_id);
+-- Políticas: Perfis
+CREATE POLICY "Leitura pública de perfis" ON public.profiles FOR SELECT USING (true);
+CREATE POLICY "Utilizadores editam o próprio perfil" ON public.profiles FOR UPDATE USING (auth.uid() = id);
+
+-- Políticas: Progresso
+CREATE POLICY "Progresso privado" ON public.user_lesson_progress FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Inserção de progresso próprio" ON public.user_lesson_progress FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Atualização de progresso próprio" ON public.user_lesson_progress FOR UPDATE USING (auth.uid() = user_id);
+
+-- Políticas: Comunidade
+CREATE POLICY "Leitura pública do fórum" ON public.community_posts FOR SELECT USING (true);
+CREATE POLICY "Criação de posts autorizada" ON public.community_posts FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Comentários públicos" ON public.community_comments FOR SELECT USING (true);
+CREATE POLICY "Criação de comentários autorizada" ON public.community_comments FOR INSERT WITH CHECK (auth.uid() = user_id);

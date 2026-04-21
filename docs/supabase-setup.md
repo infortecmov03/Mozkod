@@ -1,34 +1,31 @@
+
 # 🗄️ Configuração do Supabase - Codworks Moz
 
-Para configurar a infraestrutura de dados da plataforma, segue os passos abaixo no teu painel do Supabase.
+A plataforma utiliza um modelo de **Currículo Híbrido**:
+- **Conteúdo (Aulas/Labs/Quizzes):** Estático, versionado no Git em `src/lib/curriculum/`.
+- **Estado (Perfis/Progresso/Comunidade):** Dinâmico, armazenado no Supabase.
 
-## 1. Execução do Script Principal
+## 🚀 Passo a Passo
+
+### 1. Criar a Estrutura (Script Imperioso)
 Acede ao **SQL Editor** no painel do Supabase e executa o conteúdo do ficheiro:
 👉 `docs/supabase_schema.sql`
 
-Este script irá criar:
-- Extensões de segurança (UUID, Crypto).
-- Tabela de Perfis com integração automática ao Auth.
-- Tabelas do Currículo (ACM/IEEE).
-- Sistema de Progresso e Submissões.
-- Fórum da Comunidade.
-- Políticas de Segurança (RLS).
+Este script configura:
+- Criação automática de perfis no registo.
+- Tabela de progresso compatível com os níveis 1 a 8.
+- Sistema de pontos e rankings.
+- Fórum de ajuda para os laboratórios.
+- Políticas de Segurança (RLS) para proteção de dados dos alunos.
 
-## 2. Tabelas Criadas
-A plataforma utiliza as seguintes tabelas principais:
-- `profiles`: Dados do utilizador, pontos e streaks.
-- `user_lesson_progress`: Registo de lições e exercícios concluídos.
-- `community_posts` / `community_comments`: Motor do fórum de ajuda.
-- `certificates`: Registo de certificações emitidas.
-
-## 3. Variáveis de Ambiente
-Certifica-te que o teu ficheiro `.env.local` contém as credenciais corretas:
+### 2. Variáveis de Ambiente
+Verifica se o teu ficheiro `.env.local` (ou as definições de deploy) contém:
 ```env
-NEXT_PUBLIC_SUPABASE_URL=teu-projeto.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=https://teu-projeto.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=tua-chave-anon
 ```
 
-## 4. Notas de Engenharia
-- **Triggers:** O perfil do utilizador é criado automaticamente assim que ele confirma o email ou faz login via Google/GitHub.
-- **Segurança:** O RLS (Row Level Security) está ativo. Utilizadores só podem editar o seu próprio progresso e perfil.
-- **Pontos:** O cálculo de pontos é feito via função SQL `calculate_total_points` para garantir integridade.
+### 3. Notas Técnicas
+- **IDs de Lição:** O campo `lesson_id` na base de dados deve coincidir com o `id` definido nos ficheiros `.ts` do currículo.
+- **Segurança:** O RLS está ativo. Alunos não podem ver o progresso detalhado de outros, mas o `total_points` é público para o Ranking.
+- **Redefinição de Senha:** O fluxo está integrado na página de login e utiliza os emails nativos do Supabase Auth.
