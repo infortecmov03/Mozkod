@@ -10,28 +10,20 @@ import { exercise as p6 } from './laboratory/05-forms-lab';
 import { exercise as p7 } from './laboratory/06-multimedia-lab';
 import { exercise as p8 } from './laboratory/07-performance-lab';
 
-// Implementando labs mockados mas seguros para os restantes tópicos do Nível 8
-const advancedLabs = Array.from({ length: 13 }, (_, i) => {
-  const index = i + 9;
-  return {
-    id: `html-p${index}`,
-    language: "html",
-    title: `Lab Master: Exploração Técnica #${index}`,
-    description: "Desafio de engenharia focado no funcionamento interno do motor do browser.",
-    statement: "Implemente a solução técnica validando as regras de performance discutidas na teoria.",
-    isProjectPart: true,
-    template: `<!-- Continue o seu projeto master aqui -->\n`,
-    detailedExplanation: `<p>Este laboratório valida a sua capacidade de aplicar conceitos de elite no código real.</p>`,
-    objectives: [
-      {
-        id: `obj_p${index}`,
-        description: "Adicione o elemento técnico correspondente à lição.",
-        hint: "Consulte a teoria se tiver dúvidas.",
-        test: "<" // Teste genérico para permitir progresso enquanto os testes específicos são definidos
-      }
-    ]
-  };
-});
+// Labs de Elite (9-21)
+import { exercise as p9 } from './laboratory/09-shadow-dom-lab';
+import { exercise as p10 } from './laboratory/10-focus-trap-lab';
+import { exercise as p11 } from './laboratory/11-svg-master-lab';
+import { exercise as p12 } from './laboratory/12-custom-validation-lab';
+import { exercise as p13 } from './laboratory/13-subtitles-lab';
+import { exercise as p14 } from './laboratory/14-canvas-loop-lab';
+import { exercise as p15 } from './laboratory/15-wasm-loader-lab';
+import { exercise as p16 } from './laboratory/16-resource-hints-lab';
+import { exercise as p17 } from './laboratory/17-csp-nonce-lab';
+import { exercise as p18 } from './laboratory/18-sw-cache-lab';
+import { exercise as p19 } from './laboratory/19-webgpu-init-lab';
+import { exercise as p20 } from './laboratory/20-json-ld-lab';
+import { exercise as p21 } from './laboratory/21-secure-cookies-lab';
 
 export const htmlKA: KnowledgeArea = {
   id: 'lang-html',
@@ -41,7 +33,7 @@ export const htmlKA: KnowledgeArea = {
   iconName: 'Code',
   theory: lessons,
   practice: {
-    html: [p1, p2, p3, p4, p5, p6, p7, p8, ...advancedLabs]
+    html: [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21]
   },
   quizzes: quizzes
 };
