@@ -1,3 +1,4 @@
+
 import { lesson as l1 } from './theory/01-selectors';
 import { lesson as l2 } from './theory/02-cascade-layers';
 import { lesson as l3 } from './theory/03-custom-properties';
@@ -21,6 +22,32 @@ import { lesson as l20 } from './theory/20-anchor-positioning';
 import { lesson as l21 } from './theory/21-color-spaces-oklch';
 
 export const lessons = [
-  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10,
-  l11, l12, l13, l14, l15, l16, l17, l18, l19, l20, l21
+  // FASE 1: Fundamentos (1-4)
+  { ...l1, title: "Fase 1: Sintaxe, Seletores e Especificidade" },
+  { id: "css-f1-2", title: "Fase 1: Box Model e Box Sizing", content: "<p>Margens, bordas, preenchimento e o cálculo real de tamanho dos elementos.</p>", quizId: "css-mq2" },
+  { id: "css-f1-3", title: "Fase 1: Cores e Unidades (px, em, rem, %)", content: "<p>Sistemas de cores (HEX, RGB, HSL) e unidades relativas para layouts elásticos.</p>", quizId: "css-mq3" },
+  { id: "css-f1-4", title: "Fase 1: Tipografia e Backgrounds", content: "<p>Controlo de fontes, altura de linha e camadas de fundos complexos.</p>", quizId: "css-mq4" },
+
+  // FASE 2: Layouts (5-8)
+  { ...l5, title: "Fase 2: Flexbox Mastery" },
+  { ...l6, title: "Fase 2: Grid Layout e Geometria" },
+  { id: "css-f2-7", title: "Fase 2: Position: Fixed, Sticky e Absolute", content: "<p>Dominando o fluxo do documento e elementos flutuantes.</p>", quizId: "css-mq7" },
+  { ...l4, title: "Fase 2: Propriedades Lógicas Globais" },
+
+  // FASE 3: Intermediário (9-13)
+  { id: "css-f3-9", title: "Fase 3: Transições e Transformações", content: "<p>Movimentos suaves e manipulação de espaço 2D/3D.</p>", quizId: "css-mq9" },
+  { ...l10, title: "Fase 3: Animações @keyframes de Alta Performance" },
+  { ...l18, title: "Fase 3: Pseudo-classes e Pseudo-elementos" },
+  { ...l3, title: "Fase 3: Variáveis CSS e Design Systems" },
+  { id: "css-f3-13", title: "Fase 3: Media Queries e Mobile First", content: "<p>Estratégias de adaptação de ecrã do telemóvel para o desktop.</p>", quizId: "css-mq13" },
+
+  // FASE 4: Avançado (14-21)
+  { ...l7, title: "Fase 4: Container Queries e Contexto" },
+  { ...l20, title: "Fase 4: Anchor Positioning e Popovers" },
+  { ...l14, title: "Fase 4: Arquiteturas: BEM e ITCSS" },
+  { ...l15, title: "Fase 4: Tooling: PostCSS e Sass" },
+  { ...l16, title: "Fase 4: Performance: Critical CSS e GPU" },
+  { ...l19, title: "Fase 4: Scroll-driven Animations" },
+  { ...l21, title: "Fase 4: OKLCH e Espaços de Cor de Próxima Geração" },
+  { ...l17, title: "Fase 4: Capstone: Design System de Elite" }
 ];

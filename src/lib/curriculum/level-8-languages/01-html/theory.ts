@@ -1,3 +1,4 @@
+
 import { lesson as l1 } from './theory/01-structure';
 import { lesson as l2 } from './theory/01-semantics';
 import { lesson as l3 } from './theory/02-seo-metadata';
@@ -21,6 +22,30 @@ import { lesson as l20 } from './theory/20-structured-data-seo';
 import { lesson as l21 } from './theory/21-security-storage';
 
 export const lessons = [
-  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10,
-  l11, l12, l13, l14, l15, l16, l17, l18, l19, l20, l21
+  // FASE 1: Fundamentos (1-6)
+  { ...l1, title: "Fase 1: Estrutura Master e DOCTYPE" },
+  { ...l3, title: "Fase 1: Meta Tags e SEO Técnico" },
+  { ...l2, title: "Fase 1: Tags Semânticas e Acessibilidade" },
+  { id: "html-f1-4", title: "Fase 1: Listas e Hierarquia de Texto", content: "<p>Domínio de ol, ul, dl e a importância da ordem lógica de h1-h6.</p>", quizId: "html-mq4" },
+  { id: "html-f1-5", title: "Fase 1: Links, Âncora e Alvos", content: "<p>Navegação profunda, atributos target e segurança em links externos.</p>", quizId: "html-mq5" },
+  { id: "html-f1-6", title: "Fase 1: Imagens, Picture e Figcaption", content: "<p>Otimização de imagens responsivas e legendagem semântica.</p>", quizId: "html-mq6" },
+  
+  // FASE 2: Intermediário (7-11)
+  { id: "html-f2-7", title: "Fase 2: Tabelas de Alta Complexidade", content: "<p>Estruturação de dados massivos com thead, tbody e colgroup.</p>", quizId: "html-mq7" },
+  { ...l6, title: "Fase 2: Formulários e Tipos de Input" },
+  { ...l12, title: "Fase 2: Validação HTML5 e Constraint API" },
+  { ...l7, title: "Fase 2: Multimédia: Áudio e Vídeo Nativo" },
+  { ...l11, title: "Fase 2: SVG Básico e Manipulação XML" },
+
+  // FASE 3: Avançado (12-21)
+  { ...l10, title: "Fase 3: Acessibilidade: ARIA e Roles" },
+  { ...l20, title: "Fase 3: Microdata e Schema.org" },
+  { ...l14, title: "Fase 3: Canvas API e Desenho no Browser" },
+  { ...l5, title: "Fase 3: Web Components e Custom Elements" },
+  { ...l9, title: "Fase 3: Shadow DOM e Encapsulamento" },
+  { id: "html-f3-17", title: "Fase 3: Drag and Drop API", content: "<p>Implementação de interfaces interativas de arrastar e soltar.</p>", quizId: "html-mq17" },
+  { id: "html-f3-18", title: "Fase 3: Web Storage (Local vs Session)", content: "<p>Persistência de dados no cliente sem cookies.</p>", quizId: "html-mq18" },
+  { ...l18, title: "Fase 3: Web Workers e Service Workers" },
+  { id: "html-f3-20", title: "Fase 3: History API e SPA Routing", content: "<p>Criação de rotas dinâmicas sem frameworks.</p>", quizId: "html-mq20" },
+  { ...l21, title: "Fase 3: Capstone: Auditoria de Segurança e Cookies" }
 ];
