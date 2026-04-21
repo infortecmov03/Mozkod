@@ -5,7 +5,7 @@ import { Navigation } from "@/components/Navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Award, Download, Share2, ShieldCheck, CheckCircle, ExternalLink, Loader2 } from "lucide-react";
+import { Award, Download, Share2, ShieldCheck, ExternalLink, Loader2, QrCode } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -28,7 +28,8 @@ export default function CertificationsPage() {
       const { data, error } = await supabase
         .from('certificates')
         .select('*')
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
+        .order('issued_at', { ascending: false });
       
       if (!error && data) {
         setCertificates(data);
@@ -45,55 +46,82 @@ export default function CertificationsPage() {
       format: "a4"
     });
 
-    doc.setFillColor(20, 24, 33);
+    // Fundo Escuro de Luxo
+    doc.setFillColor(15, 23, 42); // slate-900
     doc.rect(0, 0, 297, 210, "F");
     
-    doc.setDrawColor(59, 130, 246);
-    doc.setLineWidth(2);
-    doc.rect(10, 10, 277, 190);
+    // Bordas de Ouro/Primárias
+    doc.setDrawColor(59, 130, 246); // primary
+    doc.setLineWidth(1);
+    doc.rect(5, 5, 287, 200);
+    doc.setDrawColor(30, 41, 59);
+    doc.rect(8, 8, 281, 194);
 
+    // Texto Cabeçalho
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(40);
-    doc.text("CERTIFICADO DE CONCLUSÃO", 148.5, 60, { align: "center" });
+    doc.setFontSize(12);
+    doc.text("CODWORKS MOÇAMBIQUE", 148.5, 25, { align: "center" });
 
+    doc.setFontSize(42);
+    doc.setTextColor(59, 130, 246);
+    doc.text("CERTIFICADO", 148.5, 60, { align: "center" });
+    doc.setFontSize(16);
+    doc.setTextColor(255, 255, 255);
+    doc.text("DE CONCLUSÃO TÉCNICA", 148.5, 72, { align: "center" });
+
+    // Nome do Aluno
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "normal");
+    doc.text("Esta certifica que o Engenheiro(a)", 148.5, 95, { align: "center" });
+
+    doc.setFontSize(36);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(255, 255, 255);
+    doc.text(profile?.display_name || "Estudante Codworks", 148.5, 115, { align: "center" });
+
+    // Módulo
     doc.setFontSize(16);
     doc.setFont("helvetica", "normal");
-    doc.text("Esta certifica que", 148.5, 85, { align: "center" });
+    doc.text(`Completou com distinção o módulo de especialização:`, 148.5, 135, { align: "center" });
 
-    doc.setFontSize(30);
+    doc.setFontSize(26);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(59, 130, 246);
-    doc.text(profile?.display_name || "Estudante Codworks", 148.5, 105, { align: "center" });
+    doc.text(cert.level_title.toUpperCase(), 148.5, 155, { align: "center" });
 
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(16);
-    doc.setFont("helvetica", "normal");
-    doc.text(`Completou com sucesso o módulo:`, 148.5, 125, { align: "center" });
+    // Footer de Verificação
+    doc.setFontSize(9);
+    doc.setTextColor(148, 163, 184); // slate-400
+    const verifyUrl = `${window.location.origin}/verify/${cert.id}`;
+    doc.text(`Emitido em: ${new Date(cert.issued_at).toLocaleDateString()}`, 40, 185);
+    doc.text(`ID de Verificação: ${cert.id}`, 40, 192);
+    
+    doc.setTextColor(59, 130, 246);
+    doc.text(`Validar autenticidade em: ${verifyUrl}`, 40, 199);
 
-    doc.setFontSize(24);
-    doc.setFont("helvetica", "bold");
-    doc.text(cert.level_title || "Modern Web Architecture", 148.5, 145, { align: "center" });
+    // Selo de Qualidade (Canto Direito)
+    doc.setDrawColor(59, 130, 246);
+    doc.setLineWidth(0.5);
+    doc.circle(250, 180, 15, 'S');
+    doc.setFontSize(8);
+    doc.text("VERIFIED", 250, 181, { align: "center" });
+    doc.text("ELITE", 250, 184, { align: "center" });
 
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "italic");
-    doc.text(`Emitido em: ${new Date(cert.issued_at || Date.now()).toLocaleDateString()}`, 148.5, 175, { align: "center" });
-    doc.text(`ID: ${cert.id || "CWM-PRO-VERIFIED"}`, 148.5, 185, { align: "center" });
-
-    doc.save(`certificado-codworks-${cert.level_title}.pdf`);
+    doc.save(`certificado-codworks-${cert.level_id}.pdf`);
   };
 
   return (
     <div className="min-h-screen bg-background pb-12">
       <Navigation />
       <main className="container mx-auto px-4 py-12 max-w-5xl">
-        <header className="mb-12 text-center animate-in fade-in slide-in-from-top-4 duration-700">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/10 mb-6 border-2 border-accent/20">
-            <Award className="w-10 h-10 text-accent" />
+        <header className="mb-12 text-center">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-primary/10 mb-6 border-2 border-primary/20">
+            <Award className="w-10 h-10 text-primary" />
           </div>
-          <h1 className="font-headline text-4xl font-bold mb-4">Seu Portfólio Profissional</h1>
+          <h1 className="font-headline text-5xl font-bold mb-4">Suas Conquistas de Engenharia</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Cada certificado é um selo de qualidade verificado pela Codworks Moz.
+            Cada certificado possui um ID de verificação único e cumpre os padrões internacionais de competência técnica.
           </p>
         </header>
 
@@ -105,48 +133,42 @@ export default function CertificationsPage() {
           <div className="grid gap-8">
             {certificates.length > 0 ? (
               certificates.map((cert) => (
-                <Card key={cert.id} className="bg-card/50 border-none shadow-xl overflow-hidden group hover:shadow-primary/5 transition-all">
+                <Card key={cert.id} className="bg-card/50 border-none shadow-2xl overflow-hidden group hover:ring-2 ring-primary/20 transition-all">
                   <div className="flex flex-col md:flex-row">
-                    <div className="md:w-1/3 bg-secondary/30 p-8 flex items-center justify-center relative">
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 pointer-events-none" />
+                    <div className="md:w-1/3 bg-primary/5 p-12 flex items-center justify-center relative border-r border-white/5">
                       {certAsset && (
                         <Image 
                           src={certAsset.imageUrl} 
                           alt={certAsset.description}
-                          width={200}
-                          height={200}
-                          className="drop-shadow-2xl group-hover:scale-110 transition-transform duration-500"
-                          data-ai-hint={certAsset.imageHint}
+                          width={180}
+                          height={180}
+                          className="drop-shadow-[0_20px_50px_rgba(59,130,246,0.3)] group-hover:scale-110 transition-transform duration-500"
                         />
                       )}
                     </div>
-                    <CardContent className="md:w-2/3 p-8 flex flex-col justify-between">
+                    <CardContent className="md:w-2/3 p-10 flex flex-col justify-between">
                       <div>
-                        <div className="flex items-center gap-2 text-green-500 font-bold text-xs mb-3">
+                        <div className="flex items-center gap-2 text-green-500 font-black text-[10px] uppercase tracking-[0.2em] mb-4">
                           <ShieldCheck className="w-4 h-4" />
-                          CERTIFICADO VERIFICADO
+                          Credencial Verificada
                         </div>
-                        <h2 className="font-headline text-2xl font-bold mb-2">{cert.level_title}</h2>
-                        <p className="text-muted-foreground mb-6 leading-relaxed text-sm">
-                          Este certificado valida o conhecimento profundo e prático adquirido no módulo.
-                        </p>
-                        <div className="flex flex-wrap gap-4 mb-8">
-                          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary text-[10px] font-bold">
-                            <ExternalLink className="w-3 h-3" />
-                            ID: {cert.id.substring(0, 8).toUpperCase()}
-                          </div>
+                        <h2 className="font-headline text-3xl font-bold mb-3">{cert.level_title}</h2>
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-8">
+                           <span className="flex items-center gap-1.5"><QrCode className="w-4 h-4" /> ID: {cert.id.substring(0,8)}...</span>
+                           <span>•</span>
+                           <span>Emitido em {new Date(cert.issued_at).toLocaleDateString()}</span>
                         </div>
                       </div>
                       <div className="flex flex-col sm:flex-row gap-4">
                         <Button 
                           onClick={() => downloadCertificate(cert)}
-                          className="flex-1 rounded-full font-bold shadow-lg shadow-primary/20"
+                          className="flex-1 rounded-2xl h-14 font-bold shadow-lg shadow-primary/20 text-lg"
                         >
-                          <Download className="w-4 h-4 mr-2" />
-                          {t.downloadCert}
+                          <Download className="w-5 h-5 mr-2" />
+                          Descarregar PDF
                         </Button>
-                        <Button variant="outline" className="flex-1 rounded-full font-bold">
-                          <Share2 className="w-4 h-4 mr-2" />
+                        <Button variant="outline" className="flex-1 rounded-2xl h-14 font-bold border-white/10 hover:bg-white/5">
+                          <Share2 className="w-5 h-5 mr-2" />
                           {t.sharePortfolio}
                         </Button>
                       </div>
@@ -155,10 +177,10 @@ export default function CertificationsPage() {
                 </Card>
               ))
             ) : (
-              <div className="text-center py-20 bg-card/20 rounded-3xl border-dashed border-2">
-                <Award className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
-                <h3 className="text-xl font-bold mb-2 opacity-60">Nenhum certificado ainda</h3>
-                <p className="text-muted-foreground text-sm">Complete os módulos para desbloquear suas certificações.</p>
+              <div className="text-center py-24 bg-card/20 rounded-[3rem] border-dashed border-2 border-white/5">
+                <Award className="w-16 h-16 text-muted-foreground mx-auto mb-6 opacity-10" />
+                <h3 className="text-2xl font-bold opacity-40 mb-2">Nenhuma certificação emitida</h3>
+                <p className="text-muted-foreground max-w-xs mx-auto">Conclui os níveis para desbloquear os teus certificados de engenheiro de elite.</p>
               </div>
             )}
           </div>
