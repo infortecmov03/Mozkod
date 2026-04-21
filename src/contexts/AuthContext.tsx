@@ -1,3 +1,4 @@
+
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -66,7 +67,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .eq('id', user.id);
     
     if (!error) {
-      setProfile(prev => prev ? { ...prev, ...data } : null);
+      await fetchProfile(user.id);
+    } else {
+      throw error;
     }
   };
 
@@ -138,7 +141,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (identity) {
       const { error } = await supabase.auth.unlinkIdentity(identity);
       if (error) throw error;
-      // Refresh session
       const { data: { user: newUser } } = await supabase.auth.getUser();
       setUser(newUser);
     }
@@ -146,7 +148,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    router.push('/');
+    setUser(null);
+    setProfile(null);
+    setSession(null);
+    router.replace('/login');
   };
 
   useEffect(() => {
@@ -176,14 +181,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         
         setLoading(false);
-        if (event === 'SIGNED_IN') {
-           router.push('/dashboard');
-        }
       }
     );
 
     return () => subscription.unsubscribe();
-  }, [router]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{

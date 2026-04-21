@@ -106,13 +106,13 @@ export function Navigation() {
                     />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile" className="flex items-center gap-2 w-full cursor-pointer">
+                <DropdownMenuContent align="end" className="w-48 rounded-2xl border-primary/10 shadow-2xl">
+                  <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+                    <Link href="/profile" className="flex items-center gap-2 w-full">
                       <User className="w-4 h-4" /> {t.profile}
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={signOut} className="gap-2 text-destructive cursor-pointer">
+                  <DropdownMenuItem onClick={() => signOut()} className="gap-2 text-destructive cursor-pointer rounded-xl font-bold">
                     <LogOut className="w-4 h-4" /> Sair
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -165,13 +165,13 @@ export function Navigation() {
                           </div>
                           <span className="font-medium">{profile?.display_name || 'Usuário'}</span>
                         </Link>
-                        <Button variant="ghost" className="w-full justify-start text-destructive p-0" onClick={signOut}>
+                        <Button variant="ghost" className="w-full justify-start text-destructive p-0 font-bold" onClick={() => signOut()}>
                           <LogOut className="w-4 h-4 mr-2" /> Sair
                         </Button>
                      </div>
                    ) : (
                      <Link href="/login" className="w-full">
-                       <Button className="w-full font-bold">Entrar</Button>
+                       <Button className="w-full font-bold rounded-xl h-12">Entrar</Button>
                      </Link>
                    )}
                 </div>

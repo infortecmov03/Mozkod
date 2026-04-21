@@ -1,9 +1,12 @@
+
 "use client";
 
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import { useProgress } from "@/contexts/ProgressContext";
 import { useLanguage } from "@/components/LanguageContext";
@@ -11,36 +14,58 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Zap, Star, Trophy, Calendar, MapPin, Edit2, Loader2, 
   MessageSquare, Award, ShieldCheck, Flame, Lock, 
-  Fingerprint, Github, Chrome, Bell, LogOut, Trash2
+  Fingerprint, Github, Chrome, Bell, LogOut, Check
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { useMemo, useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function ProfilePage() {
-  const { user, profile, loading: authLoading, signOut, unlinkIdentity } = useAuth();
+  const { user, profile, loading: authLoading, signOut, unlinkIdentity, updateProfile } = useAuth();
   const { progress, loading: progressLoading } = useProgress();
   const { t } = useLanguage();
   const { toast } = useToast();
   const [mounted, setMounted] = useState(false);
+  
+  // Edit Profile States
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [newDisplayName, setNewDisplayName] = useState("");
+  const [newAvatarUrl, setNewAvatarUrl] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+    if (profile) {
+      setNewDisplayName(profile.display_name || "");
+      setNewAvatarUrl(profile.avatar_url || "");
+    }
+  }, [profile]);
 
   const completedInL1 = useMemo(() => {
     return progress.filter(p => p.level_id === 1 && p.completed).length;
   }, [progress]);
 
-  const level1Total = 147; 
+  const level1Total = 21 * 7; // Aproximação baseada nas KAs
 
-  const identities = useMemo(() => {
-    return user?.identities || [];
-  }, [user]);
-
-  const hasMFA = useMemo(() => {
-    return (user as any)?.factors?.length > 0;
-  }, [user]);
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsUpdating(true);
+    try {
+      await updateProfile({
+        display_name: newDisplayName,
+        avatar_url: newAvatarUrl
+      });
+      toast({ title: "Perfil Atualizado", description: "Suas alterações foram guardadas com sucesso." });
+      setIsEditDialogOpen(false);
+    } catch (err: any) {
+      toast({ variant: "destructive", title: "Erro ao atualizar", description: err.message });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   const handleUnlink = async (provider: string) => {
     try {
@@ -79,9 +104,47 @@ export default function ProfilePage() {
                 <p className="text-muted-foreground text-sm mb-6">{user?.email}</p>
                 
                 <div className="flex justify-center gap-3">
-                  <Button variant="outline" size="sm" className="rounded-full font-bold gap-2 px-6">
-                    <Edit2 className="w-3.5 h-3.5" /> Editar Perfil
-                  </Button>
+                  <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm" className="rounded-full font-bold gap-2 px-6">
+                        <Edit2 className="w-3.5 h-3.5" /> Editar Perfil
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="rounded-[2.5rem]">
+                      <DialogHeader>
+                        <DialogTitle>Editar Perfil de Engenheiro</DialogTitle>
+                        <DialogDescription>Altere suas informações de exibição na plataforma.</DialogDescription>
+                      </DialogHeader>
+                      <form onSubmit={handleUpdateProfile} className="space-y-4 pt-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="displayName">Nome de Exibição</Label>
+                          <Input 
+                            id="displayName" 
+                            value={newDisplayName} 
+                            onChange={e => setNewDisplayName(e.target.value)} 
+                            placeholder="Seu nome completo"
+                            className="rounded-xl"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="avatarUrl">URL do Avatar</Label>
+                          <Input 
+                            id="avatarUrl" 
+                            value={newAvatarUrl} 
+                            onChange={e => setNewAvatarUrl(e.target.value)} 
+                            placeholder="Link da imagem (HTTPS)"
+                            className="rounded-xl"
+                          />
+                        </div>
+                        <DialogFooter className="pt-4">
+                          <Button type="submit" disabled={isUpdating} className="rounded-xl gap-2">
+                            {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                            Guardar Alterações
+                          </Button>
+                        </DialogFooter>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </CardContent>
               <Separator className="opacity-10" />
@@ -177,27 +240,6 @@ export default function ProfilePage() {
               <TabsContent value="security" className="space-y-6 animate-in slide-in-from-right-4 duration-500">
                 <div className="grid gap-6">
                   <Card className="bg-card/40 border-none shadow-xl overflow-hidden rounded-3xl">
-                    <CardHeader className="bg-primary/5">
-                      <div className="flex items-center justify-between">
-                         <div className="flex items-center gap-3">
-                            <Fingerprint className="w-6 h-6 text-primary" />
-                            <div>
-                               <CardTitle className="text-lg">MFA</CardTitle>
-                               <CardDescription>Segurança de dois factores.</CardDescription>
-                            </div>
-                         </div>
-                         <span className="text-[10px] font-black uppercase px-3 py-1 rounded-full border">
-                            {hasMFA ? "ATIVADO" : "DESATIVADO"}
-                         </span>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <p className="text-sm text-muted-foreground mb-4">Adicione uma camada extra de proteção à sua conta de engenheiro.</p>
-                      <Button variant="secondary" className="rounded-xl font-bold">Configurar MFA</Button>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="bg-card/40 border-none shadow-xl overflow-hidden rounded-3xl">
                     <CardHeader><CardTitle className="text-lg flex items-center gap-2"><Lock className="w-5 h-5 text-primary" /> Contas Vinculadas</CardTitle></CardHeader>
                     <CardContent className="p-6 space-y-4">
                        <div className="flex items-center justify-between p-4 bg-background/40 rounded-2xl">
@@ -221,9 +263,12 @@ export default function ProfilePage() {
 
               <TabsContent value="settings" className="space-y-6">
                 <Card className="bg-card/40 border-none shadow-xl rounded-3xl p-8">
-                   <h4 className="text-lg font-bold mb-4">Definições</h4>
-                   <div className="pt-4 border-t border-white/5">
-                      <Button variant="destructive" className="h-12 rounded-xl font-bold" onClick={signOut}>Encerrar Sessão</Button>
+                   <h4 className="text-lg font-bold mb-4">Definições da Conta</h4>
+                   <div className="pt-4 border-t border-white/5 space-y-4">
+                      <p className="text-sm text-muted-foreground">Encerrar a sessão removerá o acesso temporário deste dispositivo.</p>
+                      <Button variant="destructive" className="h-12 rounded-xl font-bold w-full md:w-auto" onClick={signOut}>
+                        <LogOut className="w-4 h-4 mr-2" /> Encerrar Sessão
+                      </Button>
                    </div>
                 </Card>
               </TabsContent>
