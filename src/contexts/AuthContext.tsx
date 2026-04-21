@@ -1,3 +1,4 @@
+
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -26,7 +27,10 @@ type AuthContextType = {
   signInWithGoogle: () => Promise<void>;
   signInWithGithub: () => Promise<void>;
   signInWithEmail: (email: string) => Promise<void>;
+  signInWithPassword: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, displayName: string) => Promise<void>;
   signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
   updateProfile: (data: Partial<Profile>) => Promise<void>;
   refreshProfile: () => Promise<void>;
 };
@@ -98,6 +102,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) throw error;
   };
 
+  const signInWithPassword = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) throw error;
+  };
+
+  const signUp = async (email: string, password: string, displayName: string) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          display_name: displayName,
+        },
+      },
+    });
+    if (error) throw error;
+    return;
+  };
+
+  const resetPassword = async (email: string) => {
+    const redirectTo = `${window.location.origin}/auth/callback?next=/profile`;
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo,
+    });
+    if (error) throw error;
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
     router.push('/');
@@ -119,7 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initializeAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, newSession) => {
+      async (event, newSession) => {
         setSession(newSession);
         setUser(newSession?.user ?? null);
         
@@ -130,7 +164,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         
         setLoading(false);
-        router.refresh();
+        if (event === 'SIGNED_IN') {
+           router.push('/dashboard');
+        }
       }
     );
 
@@ -146,7 +182,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signInWithGoogle,
       signInWithGithub,
       signInWithEmail,
+      signInWithPassword,
+      signUp,
       signOut,
+      resetPassword,
       updateProfile,
       refreshProfile
     }}>

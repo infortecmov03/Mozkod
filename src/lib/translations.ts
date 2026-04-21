@@ -41,7 +41,18 @@ export const translations = {
     solutions: "Solutions & Comments",
     leaderboard: "Ranking",
     rank: "Rank",
-    user: "Developer"
+    user: "Developer",
+    createAccount: "Create Account",
+    login: "Login",
+    forgotPassword: "Forgot Password?",
+    email: "Email",
+    password: "Password",
+    signUp: "Sign Up",
+    resetPassword: "Reset Password",
+    backToLogin: "Back to Login",
+    terms: "Terms of Service",
+    privacy: "Privacy Policy",
+    agreeToTerms: "By continuing, you agree to our"
   },
   pt: {
     heroTitle: "Codifica o Teu Futuro em Qualquer Língua",
@@ -82,6 +93,17 @@ export const translations = {
     solutions: "Soluções e Comentários",
     leaderboard: "Ranking",
     rank: "Posição",
-    user: "Desenvolvedor"
+    user: "Desenvolvedor",
+    createAccount: "Criar Conta",
+    login: "Entrar",
+    forgotPassword: "Esqueceu a senha?",
+    email: "Email",
+    password: "Senha",
+    signUp: "Registar",
+    resetPassword: "Recuperar Senha",
+    backToLogin: "Voltar ao Login",
+    terms: "Termos de Serviço",
+    privacy: "Política de Privacidade",
+    agreeToTerms: "Ao continuar, você concorda com os nossos"
   }
 };

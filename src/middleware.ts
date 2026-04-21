@@ -1,7 +1,8 @@
+
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-const publicRoutes = ['/', '/login', '/register', '/auth/callback'];
+const publicRoutes = ['/', '/login', '/register', '/auth/callback', '/terms', '/privacy'];
 const protectedRoutes = ['/dashboard', '/learn', '/certifications', '/settings'];
 
 export async function middleware(request: NextRequest) {
@@ -14,8 +15,6 @@ export async function middleware(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  // Se as variáveis de ambiente não existirem, pula a verificação do Supabase
-  // para evitar erro 500 no middleware durante o setup inicial.
   if (!supabaseUrl || !supabaseAnonKey) {
     return response;
   }
@@ -63,7 +62,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  if (session && isPublicRoute && pathWithoutLocale !== '/') {
+  if (session && isPublicRoute && pathWithoutLocale === '/login') {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
