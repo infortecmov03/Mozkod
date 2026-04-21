@@ -6,18 +6,20 @@ export const lesson: TheoryLesson = {
   title: "Seletores de Elite e Especificidade",
   content: `
     <div class="space-y-6">
-      <div class="bg-accent/5 p-6 rounded-2xl border border-accent/10">
-        <h2 class="text-2xl font-bold mb-4">🎯 Domínio da Cascata</h2>
+      <div class="bg-primary/5 p-6 rounded-2xl border border-primary/10">
+        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">🎯 O Domínio da Cascata</h2>
         <p class="text-lg leading-relaxed">
-          Entender como o navegador resolve conflitos de estilo é o que separa um iniciante de um engenheiro de CSS.
+          Um Engenheiro CSS não luta contra a especificidade; ele desenha-a. Entenda como o browser resolve conflitos usando seletores modernos como <code>:is()</code>, <code>:where()</code> e <code>:has()</code>.
         </p>
       </div>
       <div class="prose prose-invert max-w-none">
-        <h3>Seletores Modernos</h3>
+        <h3>1. :has() - O Seletor de Parentesco</h3>
+        <p>Finalmente, podemos selecionar um elemento pai baseado no seu filho. Ex: <code>div:has(img)</code> seleciona apenas as divs que contêm imagens.</p>
+        
+        <h3>2. :where() vs :is()</h3>
         <ul>
-          <li><strong>:has():</strong> O seletor "pai" que revolucionou o CSS.</li>
-          <li><strong>:is() / :where():</strong> Agrupamento eficiente com controlo de especificidade.</li>
-          <li><strong>Container Queries:</strong> Estilos baseados no tamanho do pai, não da viewport.</li>
+          <li><strong>:is():</strong> Aumenta a especificidade para a do seletor mais forte dentro dele.</li>
+          <li><strong>:where():</strong> Tem sempre especificidade ZERO, independentemente do que estiver lá dentro. Perfeito para resets e frameworks.</li>
         </ul>
       </div>
     </div>

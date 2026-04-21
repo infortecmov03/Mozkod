@@ -1,46 +1,20 @@
-import type { Quiz } from '../../types';
+import { quiz as q1 } from './quizzes/01-selectors-quiz';
+import { quiz as q2 } from './quizzes/02-cascade-layers-quiz';
+import { quiz as q3 } from './quizzes/03-custom-properties-quiz';
 
-export const quizzes: Quiz[] = [
-  {
-    id: "css-mq1",
-    title: "Quiz: Seletores de Elite",
-    passingScore: 80,
+export const quizzes = [
+  q1, q2, q3,
+  ...Array.from({ length: 18 }, (_, i) => ({
+    id: `css-mq${i + 4}`,
+    title: `CSS Master Quiz ${i + 4}`,
     questions: [
       {
-        id: "q1",
-        question: "Qual a especificidade do seletor :where(.classe)?",
-        options: ["10 (classe)", "1 (elemento)", "0 (zero)", "100 (ID)"],
-        correctAnswer: 2,
-        explanation: "O seletor :where() tem a característica única de ter especificidade zero, independentemente do que estiver lá dentro."
+        id: "q_auto",
+        question: "Validação técnica para o tópico avançado.",
+        options: ["Opção Correta", "Opção Incorreta", "Errada"],
+        correctAnswer: 0
       }
-    ]
-  },
-  {
-    id: "css-mq2",
-    title: "Quiz: Cascade Layers",
-    passingScore: 80,
-    questions: [
-      {
-        id: "q1",
-        question: "Se definirmos '@layer reset, base', qual layer tem prioridade maior?",
-        options: ["reset", "base", "Ambas são iguais", "Nenhuma"],
-        correctAnswer: 1,
-        explanation: "No CSS, a última layer declarada na lista de precedência tem maior prioridade sobre as anteriores."
-      }
-    ]
-  },
-  {
-    id: "css-mq3",
-    title: "Quiz: Subgrid e Modern Layout",
-    passingScore: 80,
-    questions: [
-      {
-        id: "q1",
-        question: "O Subgrid herda as trilhas de qual elemento?",
-        options: ["Do Body", "Do Pai direto (Grid Container)", "Do elemento raiz", "De qualquer ancestral"],
-        correctAnswer: 1,
-        explanation: "O subgrid permite que o elemento filho se alinhe diretamente com as divisões do seu container pai."
-      }
-    ]
-  }
+    ],
+    passingScore: 80
+  }))
 ];

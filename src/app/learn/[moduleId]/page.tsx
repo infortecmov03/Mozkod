@@ -17,7 +17,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescri
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { 
   findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
-  findQuizById, findNextLessonId, findPreviousLessonId 
+  findQuizById, findNextLessonId, findPreviousLessonId, findOrderedLessons 
 } from "@/lib/curriculum";
 import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
@@ -61,11 +61,21 @@ export default function LearnPage() {
       setSelectedLang(practice.language);
       
       if (practice.isProjectPart) {
-        const prevId = findPreviousLessonId(lessonId);
-        const prevProgress = progress.find(p => p.lesson_id === prevId);
+        // Lógica de herança melhorada: busca o código do último laboratório completado
+        const ordered = findOrderedLessons();
+        const currentIndex = ordered.indexOf(lessonId);
         
-        if (prevProgress?.last_code) {
-          setCode(prevProgress.last_code);
+        let lastFoundCode = "";
+        for (let i = currentIndex - 1; i >= 0; i--) {
+          const prevLessonProgress = progress.find(p => p.lesson_id === ordered[i]);
+          if (prevLessonProgress?.last_code) {
+            lastFoundCode = prevLessonProgress.last_code;
+            break;
+          }
+        }
+
+        if (lastFoundCode) {
+          setCode(lastFoundCode);
           return;
         }
       }
@@ -115,11 +125,12 @@ export default function LearnPage() {
             <title>Codworks Preview</title>
             <meta charset="UTF-8">
             <style>
-              body { font-family: sans-serif; padding: 20px; }
+              body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; padding: 2rem; }
+              ${practice?.language === 'css' ? code : ''}
             </style>
           </head>
           <body>
-            ${code}
+            ${practice?.language === 'html' ? code : (practice?.language === 'css' ? '<!-- Renderizando estilos sobre o conteúdo anterior -->' : '')}
           </body>
         </html>
       `);
