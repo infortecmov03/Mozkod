@@ -1,4 +1,3 @@
-
 import { lesson as l1 } from './theory/01-vscode';
 import { lesson as l2 } from './theory/02-terminal';
 import { lesson as l3 } from './theory/03-devtools';
@@ -10,18 +9,26 @@ import { lesson as l8 } from './theory/08-postman';
 import { lesson as l9 } from './theory/09-docker-basico';
 import { lesson as l10 } from './theory/10-github-actions';
 import { lesson as l11 } from './theory/11-ssh-keys-remote-dev';
-import { lesson as l12 } from './theory/12-bash-scripting-basics';
-import { lesson as l13 } from './theory/13-browser-performance-tab';
-import { lesson as l14 } from './theory/14-npm-scripts-automation';
-import { lesson as l15 } from './theory/15-lighthouse-audits';
-import { lesson as l16 } from './theory/16-ngrok-local-tunneling';
-import { lesson as l17 } from './theory/17-database-gui-clients';
-import { lesson as l18 } from './theory/18-markdown-documentation';
-import { lesson as l19 } from './theory/19-regular-expressions-tools';
-import { lesson as l20 } from './theory/20-cloud-cli-basics';
-import { lesson as l21 } from './theory/21-tooling-productivity-stack';
+
+const devToolsTitles = [
+  "Bash Scripting para Automação",
+  "DevTools: Performance e Memory Tab",
+  "Virtualização de Ambiente (Containers)",
+  "Proxy Reverso e Local Tunneling (Ngrok)",
+  "Lighthouse e Auditorias de Qualidade",
+  "Regex Testers e IDE Tools",
+  "Gestão de Chaves e Secrets (Env Vars)",
+  "CI/CD: Pipelines de Integração Contínua",
+  "Monitorização de API e Logs",
+  "Stack de Produtividade de Elite"
+];
 
 export const lessons = [
-  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10,
-  l11, l12, l13, l14, l15, l16, l17, l18, l19, l20, l21
+  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11,
+  ...devToolsTitles.map((title, i) => ({
+    id: `dt-t${i + 12}`,
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🛠️ Dev Tools: ${title}</h2><p>Domine as ferramentas que aceleram o desenvolvimento e garantem a qualidade do código em produção.</p></div>`,
+    quizId: `dt-q${i + 12}`
+  }))
 ];

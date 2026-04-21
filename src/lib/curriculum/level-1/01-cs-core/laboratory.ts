@@ -10,16 +10,29 @@ import { exercise as e9 } from './laboratory/09-floating-point';
 import { exercise as e10 } from './laboratory/10-cache-hierarchy';
 import { exercise as e11 } from './laboratory/11-isa-architecture';
 
+const labTitles = [
+  "Lab: Simulação de Pipeline",
+  "Lab: Análise de Barramento",
+  "Lab: Programação orientada a Eventos/Interrupções",
+  "Lab: Paginação e Memória Virtual",
+  "Lab: Estrutura de Inodes",
+  "Lab: Codificação de Sinais",
+  "Lab: Parsing de Tokens",
+  "Lab: Implementação de Hash",
+  "Lab: Condições de Corrida Simples",
+  "Lab: Dilemas Éticos na Engenharia"
+];
+
 export const exercises = [
   e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11,
-  ...Array.from({ length: 10 }, (_, i) => ({
+  ...labTitles.map((title, i) => ({
     id: `cs-p${i + 12}`,
     language: "concept",
-    title: `Lab: Tópico ${i + 12}`,
-    description: "Prática conceitual de engenharia.",
-    statement: "Valide o conceito técnico do tópico.",
-    template: "// Escreve a tua conclusão técnica",
-    detailedExplanation: "<p>Exercício de consolidação de arquitetura.</p>",
-    objectives: [{ id: "obj1", description: "Completar análise", test: "conclusao" }]
+    title: title,
+    description: "Aplicação prática dos fundamentos de hardware e arquitetura.",
+    statement: `Validar o conceito de ${title.replace('Lab: ', '')}.`,
+    template: "// Escreve a tua conclusão técnica aqui",
+    detailedExplanation: "<p>Laboratório de consolidação de arquitetura.</p>",
+    objectives: [{ id: "obj1", description: "Completar análise técnica", test: "conclusao" }]
   }))
 ];
