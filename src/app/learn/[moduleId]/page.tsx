@@ -12,10 +12,12 @@ import {
   Trophy, Zap, Loader2, Menu, ListChecks, 
   ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2,
   AlertCircle, MessageSquare, XCircle, Eye, ExternalLink,
-  PanelRightClose, PanelRightOpen, Lightbulb, ChevronDown, ChevronUp, GripHorizontal
+  PanelRightClose, PanelRightOpen, Lightbulb, ChevronDown, ChevronUp, GripHorizontal,
+  FileCode, Palette, Braces
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
   findQuizById, findNextLessonId, findPreviousLessonId, findOrderedLessons 
@@ -45,7 +47,15 @@ export default function LearnPage() {
   const practice = useMemo(() => findPracticeExercise(lessonId), [lessonId]);
   const quiz = useMemo(() => theory?.quizId ? findQuizById(theory.quizId) : null, [theory]);
 
+  // Multi-file state for Web Projects
+  const [htmlCode, setHtmlCode] = useState("<!-- Adicione o HTML aqui -->");
+  const [cssCode, setCssCode] = useState("/* Adicione o CSS aqui */");
+  const [jsCode, setJsCode] = useState("// Adicione o JS aqui");
+  
+  // Single code state for non-web languages
   const [code, setCode] = useState("");
+  
+  const [activeTab, setActiveTab] = useState<string>("code");
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
   const [selectedLang, setSelectedLang] = useState<string>("");
@@ -61,33 +71,64 @@ export default function LearnPage() {
   const [consoleHeight, setConsoleHeight] = useState(160);
   const [isConsoleOpen, setIsConsoleOpen] = useState(true);
 
+  const isWebLang = useMemo(() => 
+    ['html', 'css', 'javascript'].includes(practice?.language.toLowerCase() || ''), 
+    [practice]
+  );
+
   useEffect(() => {
     setMounted(true);
     if (practice) {
       setSelectedLang(practice.language);
       
+      // Initialize code
+      if (isWebLang) {
+        setActiveTab(practice.language === 'javascript' ? 'js' : practice.language);
+      } else {
+        setActiveTab('code');
+      }
+
+      // Project logic: Load cumulative code
       if (practice.isProjectPart) {
         const ordered = findOrderedLessons();
         const currentIndex = ordered.indexOf(lessonId);
         
-        let lastFoundCode = "";
+        let foundHtml = "";
+        let foundCss = "";
+        let foundJs = "";
+
+        // Scan backwards for each type of code
         for (let i = currentIndex - 1; i >= 0; i--) {
           const prevLessonProgress = progress.find(p => p.lesson_id === ordered[i]);
-          if (prevLessonProgress?.last_code) {
-            lastFoundCode = prevLessonProgress.last_code;
-            break;
-          }
+          if (!prevLessonProgress?.last_code) continue;
+
+          const prevEx = findPracticeExercise(ordered[i]);
+          if (!prevEx) continue;
+
+          if (prevEx.language === 'html' && !foundHtml) foundHtml = prevLessonProgress.last_code;
+          if (prevEx.language === 'css' && !foundCss) foundCss = prevLessonProgress.last_code;
+          if (prevEx.language === 'javascript' && !foundJs) foundJs = prevLessonProgress.last_code;
         }
 
-        if (lastFoundCode) {
-          setCode(lastFoundCode);
-          return;
-        }
+        if (foundHtml) setHtmlCode(foundHtml);
+        if (foundCss) setCssCode(foundCss);
+        if (foundJs) setJsCode(foundJs);
+
+        // Current lesson code
+        const currentCode = practice.template || "";
+        if (practice.language === 'html') setHtmlCode(currentCode);
+        else if (practice.language === 'css') setCssCode(currentCode);
+        else if (practice.language === 'javascript') setJsCode(currentCode);
+        else setCode(currentCode);
+      } else {
+        const template = practice.template || "";
+        if (practice.language === 'html') setHtmlCode(template);
+        else if (practice.language === 'css') setCssCode(template);
+        else if (practice.language === 'javascript') setJsCode(template);
+        else setCode(template);
       }
-      
-      setCode(practice.template || "");
     }
-  }, [practice, lessonId, progress]);
+  }, [practice, lessonId, progress, isWebLang]);
 
   // Resizing logic for console
   const handleMouseMove = useCallback((e: MouseEvent) => {
@@ -121,6 +162,21 @@ export default function LearnPage() {
 
   const { ka, level } = data;
 
+  const getActiveCode = () => {
+    if (activeTab === 'html') return htmlCode;
+    if (activeTab === 'css') return cssCode;
+    if (activeTab === 'js') return jsCode;
+    return code;
+  };
+
+  const handleCodeChange = (value: string | undefined) => {
+    const val = value || "";
+    if (activeTab === 'html') setHtmlCode(val);
+    else if (activeTab === 'css') setCssCode(val);
+    else if (activeTab === 'js') setJsCode(val);
+    else setCode(val);
+  };
+
   const handleRunCode = async () => {
     setIsRunning(true);
     if (!isConsoleOpen) setIsConsoleOpen(true);
@@ -129,8 +185,12 @@ export default function LearnPage() {
       setIsRunning(false);
       if (!practice) return;
 
+      const currentLangCode = practice.language === 'html' ? htmlCode : 
+                             practice.language === 'css' ? cssCode : 
+                             practice.language === 'javascript' ? jsCode : code;
+
       const newCompleted = practice.objectives
-        .filter(obj => code.includes(obj.test))
+        .filter(obj => currentLangCode.includes(obj.test))
         .map(obj => obj.id);
 
       setCompletedObjectives(newCompleted);
@@ -155,11 +215,18 @@ export default function LearnPage() {
             <meta charset="UTF-8">
             <style>
               body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; padding: 2rem; }
-              ${practice?.language === 'css' ? code : ''}
+              ${cssCode}
             </style>
           </head>
           <body>
-            ${practice?.language === 'html' ? code : (practice?.language === 'css' ? '<!-- Renderizando estilos sobre o conteúdo anterior -->' : '')}
+            ${htmlCode}
+            <script>
+              try {
+                ${jsCode}
+              } catch (e) {
+                document.body.innerHTML += '<div style="color: #f87171; background: #450a0a; padding: 1rem; margin-top: 2rem; border-radius: 0.5rem; border: 1px solid #991b1b; font-family: monospace;"><b>JS Error:</b> ' + e.message + '</div>';
+              }
+            </script>
           </body>
         </html>
       `);
@@ -202,7 +269,11 @@ export default function LearnPage() {
     if (!profile) return;
     setIsSaving(true);
     try {
-      await markAsCompleted(lessonId, level.id, ka.id, 'exercise', 100, code);
+      const finalCode = practice?.language === 'html' ? htmlCode : 
+                        practice?.language === 'css' ? cssCode : 
+                        practice?.language === 'javascript' ? jsCode : code;
+
+      await markAsCompleted(lessonId, level.id, ka.id, 'exercise', 100, finalCode);
       toast({ title: t.wellDone, description: "Laboratório concluído! Seguindo para o próximo tópico..." });
       
       setTimeout(() => {
@@ -217,21 +288,23 @@ export default function LearnPage() {
     }
   };
 
-  const getMonacoLanguage = (lang: string) => {
+  const getMonacoLanguage = (tab: string) => {
+    if (tab === 'html') return 'html';
+    if (tab === 'css') return 'css';
+    if (tab === 'js') return 'javascript';
+    
     const map: Record<string, string> = { 
       javascript: "javascript", 
       typescript: "typescript", 
       python: "python", 
       java: "java", 
       cpp: "cpp", 
-      html: "html", 
-      css: "css", 
       sql: "sql", 
       bash: "shell", 
       concept: "markdown",
       english: "plaintext"
     };
-    return map[lang] || "plaintext";
+    return map[selectedLang] || "plaintext";
   };
 
   return (
@@ -417,14 +490,43 @@ export default function LearnPage() {
             </div>
           ) : practice ? (
             <div className="flex-1 flex flex-col bg-[#1e1e1e] overflow-hidden">
-               <div className="p-3 border-b border-white/5 flex items-center justify-between bg-black/20 shrink-0">
-                  <div className="flex gap-2">
-                    <span className="px-3 py-1 rounded-md bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/20">
-                      {practice.language}
-                    </span>
+               <div className="p-2 border-b border-white/5 flex items-center justify-between bg-black/20 shrink-0">
+                  <div className="flex gap-1 overflow-x-auto">
+                    {isWebLang ? (
+                      <div className="flex bg-white/5 p-1 rounded-lg gap-1">
+                        <Button 
+                          variant={activeTab === 'html' ? 'secondary' : 'ghost'} 
+                          size="sm" 
+                          onClick={() => setActiveTab('html')}
+                          className="h-8 gap-2 rounded-md text-[10px] font-bold"
+                        >
+                          <FileCode className="w-3 h-3 text-orange-400" /> HTML
+                        </Button>
+                        <Button 
+                          variant={activeTab === 'css' ? 'secondary' : 'ghost'} 
+                          size="sm" 
+                          onClick={() => setActiveTab('css')}
+                          className="h-8 gap-2 rounded-md text-[10px] font-bold"
+                        >
+                          <Palette className="w-3 h-3 text-blue-400" /> CSS
+                        </Button>
+                        <Button 
+                          variant={activeTab === 'js' ? 'secondary' : 'ghost'} 
+                          size="sm" 
+                          onClick={() => setActiveTab('js')}
+                          className="h-8 gap-2 rounded-md text-[10px] font-bold"
+                        >
+                          <Braces className="w-3 h-3 text-yellow-400" /> JS
+                        </Button>
+                      </div>
+                    ) : (
+                      <span className="px-3 py-1 rounded-md bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/20">
+                        {practice.language}
+                      </span>
+                    )}
                   </div>
                   <div className="flex gap-2">
-                    {['html', 'css', 'javascript'].includes(practice.language.toLowerCase()) && (
+                    {isWebLang && (
                        <Button variant="outline" size="sm" onClick={handlePreview} className="border-white/20 bg-white/5 hover:bg-white/10 h-8 rounded-full text-xs font-bold px-6 gap-2">
                           PRÉ-VISUALIZAR
                           <Eye className="w-3 h-3" />
@@ -440,10 +542,10 @@ export default function LearnPage() {
                <div className="flex-1 relative">
                  <Editor
                    height="100%"
-                   language={getMonacoLanguage(selectedLang)}
+                   language={getMonacoLanguage(activeTab)}
                    theme="vs-dark"
-                   value={code}
-                   onChange={(value) => setCode(value || "")}
+                   value={getActiveCode()}
+                   onChange={handleCodeChange}
                    options={{ 
                      minimap: { enabled: false }, 
                      fontSize: 14, 
