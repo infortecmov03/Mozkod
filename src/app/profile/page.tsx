@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Zap, Star, Trophy, Calendar, MapPin, Edit2, Loader2, MessageSquare, Award, ShieldCheck, Flame } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
+import { modules } from "@/lib/curriculum";
 import { useMemo } from "react";
 
 export default function ProfilePage() {
@@ -20,6 +20,39 @@ export default function ProfilePage() {
   const { t } = useLanguage();
 
   const completedLessons = useMemo(() => progress.filter(p => p.completed).length, [progress]);
+  
+  // Cálculo dinâmico do total de lições no currículo
+  const totalAvailableLessons = useMemo(() => {
+    let total = 0;
+    modules.forEach(level => {
+      level.knowledgeAreas.forEach(ka => {
+        total += (ka.theory?.length || 0);
+        if (ka.practice) {
+          Object.values(ka.practice).forEach(list => {
+            total += list.length;
+          });
+        }
+      });
+    });
+    return total;
+  }, []);
+
+  // Total específico do Nível 1 para o widget de domínio
+  const level1Total = useMemo(() => {
+    let total = 0;
+    const l1 = modules.find(m => m.id === 1);
+    l1?.knowledgeAreas.forEach(ka => {
+      total += (ka.theory?.length || 0);
+      if (ka.practice) {
+        Object.values(ka.practice).forEach(list => total += list.length);
+      }
+    });
+    return total || 147;
+  }, []);
+
+  const completedInL1 = useMemo(() => {
+    return progress.filter(p => p.level_id === 1 && p.completed).length;
+  }, [progress]);
 
   // Lógica de Badges Dinâmicos
   const badges = useMemo(() => {
@@ -30,15 +63,14 @@ export default function ProfilePage() {
     if ((profile?.streak || 0) >= 7) {
       list.push({ id: 'streak', name: 'Maratonista', icon: Flame, color: 'text-orange-500', bg: 'bg-orange-500/10', desc: '7 dias de streak' });
     }
-    const level1Completed = progress.filter(p => p.level_id === 1 && p.completed).length >= 147;
-    if (level1Completed) {
+    if (completedInL1 >= level1Total) {
       list.push({ id: 'level1', name: 'Engenheiro Nível 1', icon: ShieldCheck, color: 'text-green-500', bg: 'bg-green-500/10', desc: 'Nível 1 Concluído' });
     }
     if ((profile?.total_points || 0) >= 1000) {
       list.push({ id: 'mestre', name: 'Mestre Moz', icon: Trophy, color: 'text-yellow-500', bg: 'bg-yellow-500/10', desc: '1000+ pontos acumulados' });
     }
     return list;
-  }, [profile, progress]);
+  }, [profile, completedInL1, level1Total]);
 
   if (authLoading || progressLoading) {
     return (
@@ -150,14 +182,13 @@ export default function ProfilePage() {
                             <p className="text-[10px] uppercase font-bold text-primary tracking-tighter">Progresso Atual</p>
                             <h4 className="text-lg font-bold">Nível 1: Fundamentos</h4>
                           </div>
-                          <span className="text-2xl font-bold text-primary">{Math.min(100, Math.round((completedLessons / 147) * 100))}%</span>
+                          <span className="text-2xl font-bold text-primary">{Math.min(100, Math.round((completedInL1 / level1Total) * 100))}%</span>
                        </div>
-                       <Progress value={(completedLessons / 147) * 100} className="h-4 bg-secondary" />
-                       <p className="text-xs text-muted-foreground">Faltam {147 - completedLessons} tópicos para completar o Nível 1.</p>
+                       <Progress value={(completedInL1 / level1Total) * 100} className="h-4 bg-secondary" />
+                       <p className="text-xs text-muted-foreground">Faltam {Math.max(0, level1Total - completedInL1)} tópicos para completar o Nível 1.</p>
                     </div>
                   </div>
-                </Card>
-             </section>
+                </section>
 
              <section className="space-y-4">
                 <h3 className="font-headline text-xl font-bold flex items-center gap-2">
