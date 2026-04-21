@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, GraduationCap, Languages, Menu, LogOut, User, Sun, Moon, Users, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { useLanguage } from "./LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -38,20 +38,31 @@ export function Navigation() {
 
   const NavLinks = ({ className = "", mobile = false }: { className?: string; mobile?: boolean }) => (
     <div className={cn("flex items-center gap-6", className)}>
-      {visibleItems.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          className={cn(
-            "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
-            pathname.startsWith(item.href) ? "text-primary font-bold" : "text-muted-foreground",
-            mobile && "text-lg p-2 w-full"
-          )}
-        >
-          <item.icon className={cn("w-4 h-4", mobile && "w-5 h-5")} />
-          <span>{item.label}</span>
-        </Link>
-      ))}
+      {visibleItems.map((item) => {
+        const linkContent = (
+          <Link
+            href={item.href}
+            className={cn(
+              "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
+              pathname.startsWith(item.href) ? "text-primary font-bold" : "text-muted-foreground",
+              mobile && "text-lg p-3 w-full rounded-xl hover:bg-secondary"
+            )}
+          >
+            <item.icon className={cn("w-4 h-4", mobile && "w-6 h-6")} />
+            <span>{item.label}</span>
+          </Link>
+        );
+
+        if (mobile) {
+          return (
+            <SheetClose asChild key={item.href}>
+              {linkContent}
+            </SheetClose>
+          );
+        }
+
+        return <div key={item.href}>{linkContent}</div>;
+      })}
     </div>
   );
 
@@ -142,38 +153,67 @@ export function Navigation() {
                 <Menu className="w-6 h-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] bg-background p-6">
-              <SheetHeader className="mb-6">
-                <SheetTitle className="text-left font-headline font-bold">
+            <SheetContent side="right" className="w-[300px] bg-background p-6">
+              <SheetHeader className="mb-8 border-b pb-4">
+                <SheetTitle className="text-left font-headline font-bold text-2xl">
                   CodWorks <span className="text-primary">Moz</span>
                 </SheetTitle>
                 <SheetDescription className="sr-only">Menu de navegação móvel</SheetDescription>
               </SheetHeader>
-              <div className="flex flex-col gap-6 mt-4">
-                <NavLinks className="flex-col items-start gap-4" mobile />
-                <div className="border-t pt-6 mt-2">
+              
+              <div className="flex flex-col h-[calc(100vh-180px)] justify-between">
+                <div className="flex flex-col gap-2">
+                  <NavLinks className="flex-col items-start gap-1" mobile />
+                </div>
+
+                <div className="border-t pt-6">
                    {user ? (
                      <div className="space-y-4">
-                        <Link href="/profile" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
-                          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center overflow-hidden border">
-                            <Image 
-                              src={profile?.avatar_url || avatarFallback || ""} 
-                              alt="Avatar" 
-                              width={40}
-                              height={40}
-                            />
-                          </div>
-                          <span className="font-medium">{profile?.display_name || 'Usuário'}</span>
-                        </Link>
-                        <Button variant="ghost" className="w-full justify-start text-destructive p-0 font-bold" onClick={() => signOut()}>
-                          <LogOut className="w-4 h-4 mr-2" /> Sair
+                        <SheetClose asChild>
+                          <Link href="/profile" className="flex items-center gap-4 p-3 rounded-2xl hover:bg-secondary transition-colors">
+                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden border-2 border-primary/20">
+                              <Image 
+                                src={profile?.avatar_url || avatarFallback || ""} 
+                                alt="Avatar" 
+                                width={48}
+                                height={48}
+                                className="object-cover"
+                              />
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="font-bold text-sm">{profile?.display_name || 'Usuário'}</span>
+                              <span className="text-[10px] text-muted-foreground">Ver meu perfil</span>
+                            </div>
+                          </Link>
+                        </SheetClose>
+                        
+                        <Button 
+                          variant="ghost" 
+                          className="w-full justify-start text-destructive rounded-xl h-12 font-bold hover:bg-destructive/10" 
+                          onClick={() => signOut()}
+                        >
+                          <LogOut className="w-5 h-5 mr-3" /> Sair da Conta
                         </Button>
                      </div>
                    ) : (
-                     <Link href="/login" className="w-full">
-                       <Button className="w-full font-bold rounded-xl h-12">Entrar</Button>
-                     </Link>
+                     <SheetClose asChild>
+                       <Link href="/login" className="w-full">
+                         <Button className="w-full font-bold rounded-2xl h-14 text-lg">Entrar</Button>
+                       </Link>
+                     </SheetClose>
                    )}
+
+                   <div className="mt-6 flex justify-center gap-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 gap-2 rounded-xl h-10 font-bold"
+                        onClick={() => setLang(lang === 'en' ? 'pt' : 'en')}
+                      >
+                        <Languages className="w-4 h-4" />
+                        <span>{lang === 'en' ? 'Português' : 'English'}</span>
+                      </Button>
+                   </div>
                 </div>
               </div>
             </SheetContent>
