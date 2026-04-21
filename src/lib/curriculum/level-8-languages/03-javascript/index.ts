@@ -11,6 +11,17 @@ import { exercise as p7 } from './laboratory/07-intl-api-lab';
 import { exercise as p8 } from './laboratory/08-intersection-observer-lab';
 import { exercise as p9 } from './laboratory/09-sanitizer-api-lab';
 import { exercise as p10 } from './laboratory/10-streams-api-lab';
+import { exercise as p11 } from './laboratory/11-web-crypto-lab';
+import { exercise as p12 } from './laboratory/12-navigation-state-lab';
+import { exercise as p13 } from './laboratory/13-drag-drop-lab';
+import { exercise as p14 } from './laboratory/14-hardware-apis-lab';
+import { exercise as p15 } from './laboratory/15-web-audio-feedback-lab';
+import { exercise as p16 } from './laboratory/16-permissions-api-lab';
+import { exercise as p17 } from './laboratory/17-atomics-buffer-lab';
+import { exercise as p18 } from './laboratory/18-wasm-interop-lab';
+import { exercise as p19 } from './laboratory/19-beacon-telemetry-lab';
+import { exercise as p20 } from './laboratory/20-trusted-types-lab';
+import { exercise as p21 } from './laboratory/21-indexeddb-persistent-lab';
 
 export const javascriptKA: KnowledgeArea = {
   id: 'lang-javascript',
@@ -22,17 +33,7 @@ export const javascriptKA: KnowledgeArea = {
   practice: {
     html: [
       p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,
-      ...Array.from({ length: 11 }, (_, i) => ({
-        id: `js-p${i + 11}`,
-        language: "html",
-        title: `Lab JS Master #${i + 11}`,
-        description: "Evolução da lógica do projeto com padrões avançados.",
-        statement: "Implemente a solução técnica validando as regras de JavaScript discutidas na teoria.",
-        isProjectPart: true,
-        template: ``,
-        detailedExplanation: `<p>Continue a desenvolver a inteligência do seu Projeto Master.</p>`,
-        objectives: [{ id: `obj_p${i + 11}`, description: "Adicione a lógica JavaScript solicitada.", test: "(" }]
-      }))
+      p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21
     ]
   },
   quizzes: quizzes
