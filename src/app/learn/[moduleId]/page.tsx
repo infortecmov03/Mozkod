@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -12,7 +12,7 @@ import {
   Trophy, Zap, Loader2, Menu, ListChecks, 
   ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2,
   AlertCircle, MessageSquare, XCircle, Eye, ExternalLink,
-  PanelRightClose, PanelRightOpen, Lightbulb
+  PanelRightClose, PanelRightOpen, Lightbulb, ChevronDown, ChevronUp, GripHorizontal
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
@@ -56,6 +56,10 @@ export default function LearnPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [showSidebar, setShowSidebar] = useState(true);
+  
+  // Console States
+  const [consoleHeight, setConsoleHeight] = useState(160);
+  const [isConsoleOpen, setIsConsoleOpen] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -85,6 +89,29 @@ export default function LearnPage() {
     }
   }, [practice, lessonId, progress]);
 
+  // Resizing logic for console
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    const newHeight = window.innerHeight - e.clientY;
+    // Limit height between 40px (header) and 70% of the screen
+    if (newHeight > 40 && newHeight < window.innerHeight * 0.7) {
+      setConsoleHeight(newHeight);
+      if (newHeight > 60 && !isConsoleOpen) setIsConsoleOpen(true);
+    }
+  }, [isConsoleOpen]);
+
+  const handleMouseUp = useCallback(() => {
+    window.removeEventListener("mousemove", handleMouseMove);
+    window.removeEventListener("mouseup", handleMouseUp);
+    document.body.style.cursor = "default";
+  }, [handleMouseMove]);
+
+  const startResizing = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    document.body.style.cursor = "ns-resize";
+  }, [handleMouseMove, handleMouseUp]);
+
   const allAnswersCorrect = useMemo(() => {
     if (!quiz) return false;
     return quiz.questions.length > 0 && quiz.questions.every(q => quizAnswers[q.id] === q.correctAnswer);
@@ -97,6 +124,8 @@ export default function LearnPage() {
 
   const handleRunCode = async () => {
     setIsRunning(true);
+    if (!isConsoleOpen) setIsConsoleOpen(true);
+    
     setTimeout(() => {
       setIsRunning(false);
       if (!practice) return;
@@ -301,9 +330,9 @@ export default function LearnPage() {
       </div>
 
       <main className="flex-1 flex flex-col md:flex-row overflow-hidden">
-        <div className={cn("flex-1 overflow-y-auto bg-background transition-all duration-300", (practice && showSidebar) && "md:w-3/5 border-r")}>
+        <div className={cn("flex-1 overflow-y-auto bg-background transition-all duration-300 flex flex-col", (practice && showSidebar) && "md:w-3/5 border-r")}>
           {theory ? (
-            <div className="max-w-3xl mx-auto p-8 md:p-16 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="max-w-3xl mx-auto p-8 md:p-16 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 overflow-y-auto flex-1">
                <div className="space-y-6">
                   <h1 className="font-headline text-3xl md:text-5xl font-bold">{theory.title}</h1>
                   {theory.youtubeVideoId && (
@@ -402,8 +431,8 @@ export default function LearnPage() {
                )}
             </div>
           ) : practice ? (
-            <div className="h-full flex flex-col bg-[#1e1e1e]">
-               <div className="p-3 border-b border-white/5 flex items-center justify-between bg-black/20">
+            <div className="flex-1 flex flex-col bg-[#1e1e1e] overflow-hidden">
+               <div className="p-3 border-b border-white/5 flex items-center justify-between bg-black/20 shrink-0">
                   <div className="flex gap-2">
                     <span className="px-3 py-1 rounded-md bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/20">
                       {practice.language}
@@ -427,6 +456,7 @@ export default function LearnPage() {
                     </Button>
                   </div>
                </div>
+               
                <div className="flex-1 relative">
                  <Editor
                    height="100%"
@@ -445,13 +475,45 @@ export default function LearnPage() {
                    }}
                  />
                </div>
-               <div className="h-40 border-t border-white/5 bg-black/40 p-4 font-code text-xs">
-                  <div className="text-muted-foreground mb-2 flex items-center gap-2 uppercase tracking-widest font-bold text-[10px]">
-                    <Terminal className="w-3 h-3" /> Consola
-                  </div>
-                  <div className={cn("whitespace-pre overflow-y-auto h-24", output.includes('✅') ? 'text-green-400' : 'text-blue-300')}>
-                    {output || `> Simulador de ${selectedLang} pronto.`}
-                  </div>
+
+               {/* Console Area with Resize Logic */}
+               <div 
+                 style={{ height: isConsoleOpen ? `${consoleHeight}px` : "40px" }}
+                 className="border-t border-white/10 bg-black/60 flex flex-col transition-[height] duration-200 ease-in-out relative group/console"
+               >
+                 {/* Resize Handle */}
+                 {isConsoleOpen && (
+                   <div 
+                     onMouseDown={startResizing}
+                     className="absolute top-0 left-0 right-0 h-1 cursor-ns-resize bg-primary/0 hover:bg-primary/50 transition-colors z-20"
+                   />
+                 )}
+                 
+                 {/* Console Header */}
+                 <div className="flex items-center justify-between px-4 h-10 border-b border-white/5 shrink-0 bg-black/40">
+                    <div className="text-muted-foreground flex items-center gap-2 uppercase tracking-widest font-bold text-[10px]">
+                      <Terminal className="w-3 h-3" /> Consola
+                    </div>
+                    <div className="flex items-center gap-1">
+                       <Button 
+                         variant="ghost" 
+                         size="icon" 
+                         className="h-6 w-6 text-muted-foreground hover:text-white"
+                         onClick={() => setIsConsoleOpen(!isConsoleOpen)}
+                       >
+                         {isConsoleOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                       </Button>
+                    </div>
+                 </div>
+
+                 {/* Console Body */}
+                 {isConsoleOpen && (
+                   <div className="flex-1 p-4 font-code text-xs overflow-y-auto">
+                      <div className={cn("whitespace-pre", output.includes('✅') ? 'text-green-400' : 'text-blue-300')}>
+                        {output || `> Simulador de ${selectedLang} pronto.`}
+                      </div>
+                   </div>
+                 )}
                </div>
             </div>
           ) : null}
