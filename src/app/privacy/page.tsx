@@ -1,10 +1,10 @@
-
 "use client";
 
 import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ShieldCheck, Eye, Database, Lock } from "lucide-react";
+import { ArrowLeft, ShieldCheck, Database, Lock } from "lucide-react";
 import { useLanguage } from "@/components/LanguageContext";
 
 export default function PrivacyPage() {
@@ -12,9 +12,9 @@ export default function PrivacyPage() {
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-background pb-20 font-body">
+    <div className="min-h-screen flex flex-col bg-background font-body">
       <Navigation />
-      <main className="container mx-auto px-4 py-12 max-w-3xl">
+      <main className="container mx-auto px-4 py-12 max-w-3xl flex-1">
         <Button 
           variant="ghost" 
           onClick={() => router.push('/login')} 
@@ -31,7 +31,7 @@ export default function PrivacyPage() {
           <p className="text-muted-foreground text-lg italic">A tua privacidade é a nossa prioridade de engenharia.</p>
         </header>
 
-        <div className="prose prose-neutral dark:prose-invert max-w-none space-y-12">
+        <div className="prose prose-neutral dark:prose-invert max-w-none space-y-12 mb-20">
           <section className="space-y-4">
             <div className="flex items-center gap-3 text-green-500 mb-2">
               <Database className="w-6 h-6" />
@@ -61,11 +61,12 @@ export default function PrivacyPage() {
 
           <div className="text-center pt-10">
             <p className="text-xs text-muted-foreground">
-              © 2024 Codworks Moz. <br/> Respeitamos integralmente a lei moçambicana de proteção de dados.
+              © 2026 Codworks Moz. <br/> Respeitamos integralmente a lei moçambicana de proteção de dados.
             </p>
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

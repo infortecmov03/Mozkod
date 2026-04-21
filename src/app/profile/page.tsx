@@ -1,6 +1,7 @@
 "use client";
 
 import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -15,7 +16,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { modules } from "@/lib/curriculum";
 import { useMemo, useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -32,7 +32,7 @@ export default function ProfilePage() {
     return progress.filter(p => p.level_id === 1 && p.completed).length;
   }, [progress]);
 
-  const level1Total = 147; // Valor estático base para o nível 1
+  const level1Total = 147; 
 
   const identities = useMemo(() => {
     return user?.identities || [];
@@ -60,9 +60,9 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-12 font-body">
+    <div className="min-h-screen flex flex-col bg-background font-body">
       <Navigation />
-      <main className="container mx-auto px-4 py-12 max-w-6xl">
+      <main className="container mx-auto px-4 py-12 max-w-6xl flex-1">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           <div className="lg:col-span-4 space-y-6">
@@ -231,6 +231,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

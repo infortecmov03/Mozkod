@@ -1,6 +1,7 @@
 "use client";
 
 import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -45,18 +46,15 @@ export default function CertificationsPage() {
       format: "a4"
     });
 
-    // Fundo Escuro de Luxo
-    doc.setFillColor(15, 23, 42); // slate-900
+    doc.setFillColor(15, 23, 42); 
     doc.rect(0, 0, 297, 210, "F");
     
-    // Bordas Primárias
-    doc.setDrawColor(59, 130, 246); // primary
+    doc.setDrawColor(59, 130, 246); 
     doc.setLineWidth(1);
     doc.rect(5, 5, 287, 200);
     doc.setDrawColor(30, 41, 59);
     doc.rect(8, 8, 281, 194);
 
-    // Texto Cabeçalho
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
@@ -69,7 +67,6 @@ export default function CertificationsPage() {
     doc.setTextColor(255, 255, 255);
     doc.text("DE CONCLUSÃO TÉCNICA", 148.5, 72, { align: "center" });
 
-    // Nome do Aluno
     doc.setFontSize(18);
     doc.setFont("helvetica", "normal");
     doc.text("Esta certifica que o Engenheiro(a)", 148.5, 95, { align: "center" });
@@ -79,7 +76,6 @@ export default function CertificationsPage() {
     doc.setTextColor(255, 255, 255);
     doc.text(profile?.display_name || "Estudante Codworks", 148.5, 115, { align: "center" });
 
-    // Módulo
     doc.setFontSize(16);
     doc.setFont("helvetica", "normal");
     doc.text(`Completou com distinção o módulo de especialização:`, 148.5, 135, { align: "center" });
@@ -89,9 +85,8 @@ export default function CertificationsPage() {
     doc.setTextColor(59, 130, 246);
     doc.text(cert.level_title.toUpperCase(), 148.5, 155, { align: "center" });
 
-    // Footer de Verificação
     doc.setFontSize(9);
-    doc.setTextColor(148, 163, 184); // slate-400
+    doc.setTextColor(148, 163, 184); 
     const verifyUrl = `${window.location.origin}/verify/${cert.id}`;
     doc.text(`Emitido em: ${new Date(cert.issued_at).toLocaleDateString()}`, 40, 185);
     doc.text(`ID de Verificação: ${cert.id}`, 40, 192);
@@ -99,7 +94,6 @@ export default function CertificationsPage() {
     doc.setTextColor(59, 130, 246);
     doc.text(`Validar autenticidade em: ${verifyUrl}`, 40, 199);
 
-    // Selo de Qualidade
     doc.setDrawColor(59, 130, 246);
     doc.setLineWidth(0.5);
     doc.circle(250, 180, 15, 'S');
@@ -111,9 +105,9 @@ export default function CertificationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-12">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navigation />
-      <main className="container mx-auto px-4 py-12 max-w-5xl">
+      <main className="container mx-auto px-4 py-12 max-w-5xl flex-1">
         <header className="mb-12 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-primary/10 mb-6 border-2 border-primary/20">
             <Award className="w-10 h-10 text-primary" />
@@ -129,7 +123,7 @@ export default function CertificationsPage() {
             <Loader2 className="w-10 h-10 animate-spin text-primary" />
           </div>
         ) : (
-          <div className="grid gap-8">
+          <div className="grid gap-8 mb-20">
             {certificates.length > 0 ? (
               certificates.map((cert) => (
                 <Card key={cert.id} className="bg-card/50 border-none shadow-2xl overflow-hidden group hover:ring-2 ring-primary/20 transition-all rounded-[2.5rem]">
@@ -185,6 +179,7 @@ export default function CertificationsPage() {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   );
 }

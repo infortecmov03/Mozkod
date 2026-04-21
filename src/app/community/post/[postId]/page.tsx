@@ -1,9 +1,9 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,7 +34,6 @@ export default function PostDetailPage() {
     async function fetchPostAndComments() {
       setLoading(true);
       
-      // 1. Buscar Post
       const { data: postData } = await supabase
         .from('community_posts')
         .select(`*, profiles:user_id (display_name, avatar_url)`)
@@ -43,7 +42,6 @@ export default function PostDetailPage() {
       
       if (postData) setPost(postData);
 
-      // 2. Buscar Comentários
       const { data: commentsData } = await supabase
         .from('community_comments')
         .select(`*, profiles:user_id (display_name, avatar_url)`)
@@ -98,14 +96,13 @@ export default function PostDetailPage() {
   if (!post) return <div className="p-20 text-center">Discussão não encontrada.</div>;
 
   return (
-    <div className="min-h-screen bg-background font-body pb-20">
+    <div className="min-h-screen flex flex-col bg-background font-body">
       <Navigation />
-      <main className="container mx-auto px-4 py-12 max-w-4xl">
+      <main className="container mx-auto px-4 py-12 max-w-4xl flex-1">
         <Button variant="ghost" onClick={() => router.back()} className="mb-8 gap-2 rounded-full">
           <ArrowLeft className="w-4 h-4" /> Voltar ao Fórum
         </Button>
 
-        {/* OP (Original Poster) Card */}
         <Card className="bg-card/40 border-primary/20 shadow-2xl rounded-[2.5rem] overflow-hidden mb-12">
           <CardContent className="p-10 space-y-6">
             <div className="flex items-center justify-between">
@@ -133,8 +130,7 @@ export default function PostDetailPage() {
           </CardContent>
         </Card>
 
-        {/* Comments Section */}
-        <div className="space-y-8">
+        <div className="space-y-8 mb-20">
           <h3 className="font-headline text-xl font-bold flex items-center gap-3">
             <MessageSquare className="w-5 h-5 text-primary" />
             Respostas ({comments.length})
@@ -166,7 +162,6 @@ export default function PostDetailPage() {
             )}
           </div>
 
-          {/* Add Comment Form */}
           {user ? (
             <Card className="bg-primary/5 border-primary/20 rounded-[2rem] mt-12">
               <CardHeader>
@@ -195,6 +190,7 @@ export default function PostDetailPage() {
           )}
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

@@ -1,7 +1,7 @@
-
 "use client";
 
 import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Scale, ShieldAlert, FileText, Globe } from "lucide-react";
@@ -12,9 +12,9 @@ export default function TermsPage() {
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-background pb-20 font-body">
+    <div className="min-h-screen flex flex-col bg-background font-body">
       <Navigation />
-      <main className="container mx-auto px-4 py-12 max-w-3xl">
+      <main className="container mx-auto px-4 py-12 max-w-3xl flex-1">
         <Button 
           variant="ghost" 
           onClick={() => router.push('/login')} 
@@ -28,10 +28,10 @@ export default function TermsPage() {
             <Scale className="w-10 h-10" />
           </div>
           <h1 className="text-5xl font-headline font-bold tracking-tight">{t.terms}</h1>
-          <p className="text-muted-foreground text-lg italic">Última atualização: Março de 2024</p>
+          <p className="text-muted-foreground text-lg italic">Última atualização: Março de 2026</p>
         </header>
 
-        <div className="prose prose-neutral dark:prose-invert max-w-none space-y-12">
+        <div className="prose prose-neutral dark:prose-invert max-w-none space-y-12 mb-20">
           <section className="space-y-4">
             <div className="flex items-center gap-3 text-primary">
               <FileText className="w-6 h-6" />
@@ -68,6 +68,7 @@ export default function TermsPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

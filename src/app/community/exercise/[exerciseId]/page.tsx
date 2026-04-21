@@ -1,9 +1,9 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Navigation } from "@/components/Navigation";
+import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -96,9 +96,9 @@ export default function ExerciseCommunityPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen flex flex-col bg-background">
       <Navigation />
-      <main className="container mx-auto px-4 py-12 max-w-4xl">
+      <main className="container mx-auto px-4 py-12 max-w-4xl flex-1">
         <Button variant="ghost" onClick={() => router.back()} className="mb-8 gap-2 rounded-full">
           <ArrowLeft className="w-4 h-4" /> Voltar ao Laboratório
         </Button>
@@ -115,8 +115,7 @@ export default function ExerciseCommunityPage() {
           </div>
         </header>
 
-        <div className="space-y-12">
-          {/* Post Form - Só visível se logado */}
+        <div className="space-y-12 mb-20">
           {user ? (
             <Card className="bg-card/50 border-primary/20 shadow-2xl overflow-hidden rounded-[2rem]">
               <CardHeader className="bg-primary/5">
@@ -155,7 +154,6 @@ export default function ExerciseCommunityPage() {
             </Alert>
           )}
 
-          {/* Posts List */}
           <div className="space-y-6">
              <h3 className="font-headline text-xl font-bold flex items-center gap-3">
                 Discussões Ativas
@@ -187,8 +185,8 @@ export default function ExerciseCommunityPage() {
                        <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{post.content}</p>
                        <Separator className="opacity-10" />
                        <div className="flex justify-end">
-                         <Button variant="link" className="p-0 h-auto text-primary text-xs font-bold hover:no-underline">
-                            Ver Soluções e 0 Respostas →
+                         <Button variant="link" onClick={() => router.push(`/community/post/${post.id}`)} className="p-0 h-auto text-primary text-xs font-bold hover:no-underline">
+                            Ver Soluções e Respostas →
                          </Button>
                        </div>
                     </CardContent>
@@ -204,6 +202,7 @@ export default function ExerciseCommunityPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
