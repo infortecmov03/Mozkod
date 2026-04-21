@@ -1,8 +1,7 @@
-
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
-  id: "html-m3",
+  id: "html-m4",
   title: "SSR, SSG e a Hidratação do DOM",
   content: `
     <div class="space-y-6">
@@ -22,5 +21,5 @@ export const lesson: TheoryLesson = {
       </div>
     </div>
   `,
-  quizId: "html-mq3"
+  quizId: "html-mq4"
 };

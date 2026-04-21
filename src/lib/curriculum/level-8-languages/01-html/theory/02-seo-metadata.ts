@@ -1,8 +1,7 @@
-
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
-  id: "html-m2",
+  id: "html-m3",
   title: "SEO Técnico: Metadados e Open Graph",
   content: `
     <div class="space-y-6">
@@ -25,5 +24,5 @@ export const lesson: TheoryLesson = {
       </div>
     </div>
   `,
-  quizId: "html-mq2"
+  quizId: "html-mq3"
 };

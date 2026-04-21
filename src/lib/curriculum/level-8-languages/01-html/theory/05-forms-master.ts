@@ -1,7 +1,7 @@
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
-  id: "html-m5",
+  id: "html-m6",
   title: "Formulários Master: Validação e UX Profissional",
   content: `
     <div class="space-y-6">
@@ -24,5 +24,5 @@ export const lesson: TheoryLesson = {
       </div>
     </div>
   `,
-  quizId: "html-mq5"
+  quizId: "html-mq6"
 };

@@ -1,8 +1,7 @@
-
 import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
-  id: "html-mq1",
+  id: "html-mq2",
   title: "Quiz: Semântica e ARIA",
   passingScore: 80,
   questions: [

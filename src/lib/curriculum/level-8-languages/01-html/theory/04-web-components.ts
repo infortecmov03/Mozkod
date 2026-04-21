@@ -1,8 +1,7 @@
-
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
-  id: "html-m4",
+  id: "html-m5",
   title: "Web Components e Shadow DOM",
   content: `
     <div class="space-y-6">
@@ -20,5 +19,5 @@ export const lesson: TheoryLesson = {
       </div>
     </div>
   `,
-  quizId: "html-mq4"
+  quizId: "html-mq5"
 };
