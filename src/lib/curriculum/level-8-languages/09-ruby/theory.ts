@@ -1,30 +1,33 @@
 
-import { lesson as l1 } from './theory/01-blocks-procs-lambdas';
-import { lesson as l2 } from './theory/02-metaprogramming-magic';
-import { lesson as l8 } from './theory/08-fibers-concurrency';
-import { lesson as l9 } from './theory/09-ractors-parallelism';
-import { lesson as l15 } from './theory/15-singleton-classes';
+import type { TheoryLesson } from '../../types';
 
-export const lessons = [
-  l1, l2,
-  ...Array.from({ length: 5 }, (_, i) => ({
-    id: `rb-m${i + 3}`,
-    title: ["Object Model: Eigenclass", "Enumerable & Streams", "Memory: Compacting GC", "YJIT Internals", "DSL Construction"][i],
-    content: "<p>A arte do código Ruby.</p>",
-    quizId: `rb-mq${i + 3}`
-  })),
-  l8, l9,
-  ...Array.from({ length: 5 }, (_, i) => ({
-    id: `rb-m${i + 10}`,
-    title: ["ActiveSupport Internals", "RSpec Patterns", "C-Extensions", "Security Best Practices", "Profiling"][i],
-    content: "<p>Metaprogramação e performance.</p>",
-    quizId: `rb-mq${i + 10}`
-  })),
-  l15,
-  ...Array.from({ length: 6 }, (_, i) => ({
-    id: `rb-m${i + 16}`,
-    title: ["GraalVM Ruby", "Gem Ecosystem", "Regex Master", "Refinements", "KISS Principles", "Capstone Milestone"][i],
-    content: "<p>Software centrado no humano.</p>",
-    quizId: `rb-mq${i + 16}`
-  }))
+const rubyTitles = [
+  "Fase 1: Tudo é Objeto e Sintaxe Flexível",
+  "Fase 1: Symbols, Blocos e Interpolação",
+  "Fase 2: Módulos, Mixins e Namespacing",
+  "Fase 2: Enumerables Poderosos (Map, Reduce)",
+  "Fase 2: Metaprogramação: method_missing",
+  "Fase 2: Metaprogramação: define_method e eval",
+  "Fase 2: Blocks, Procs e Lambdas",
+  "Fase 3: Concorrência: Threads e Ractors (Ruby 3)",
+  "Fase 3: Fibers e Async Event Loops",
+  "Fase 3: Ruby Internals: Garbage Collection",
+  "Fase 3: Object Model: Eigenclasses",
+  "Fase 3: Testing com RSpec (BDD)",
+  "Fase 3: DSL Creation e Chaining",
+  "Fase 4: Ruby on Rails: MVC e ActiveRecord",
+  "Fase 4: Rails APIs e Serializers",
+  "Fase 4: Frontends com Hotwire e Turbo",
+  "Fase 4: Background Jobs e Caching",
+  "Fase 4: Performance e YJIT Otimização",
+  "Fase 4: Segurança em Apps Rails",
+  "Fase 4: Gem Ecosystem e Publicação",
+  "Fase 4: Capstone: Deploy de E-commerce com Rails"
 ];
+
+export const lessons: TheoryLesson[] = rubyTitles.map((title, i) => ({
+  id: `rb-m${i + 1}`,
+  title: title,
+  content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>💎 Ruby Master: ${title}</h2><p>Elegância e produtividade extrema para o desenvolvedor moderno.</p></div>`,
+  quizId: `rb-mq${i + 1}`
+}));

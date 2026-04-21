@@ -1,29 +1,33 @@
 
-import { lesson as l1 } from './theory/01-null-safety-internals';
-import { lesson as l2 } from './theory/02-extensions-delegates';
-import { lesson as l8 } from './theory/08-coroutines-suspension';
-import { lesson as l15 } from './theory/15-compiler-plugins-ksp';
+import type { TheoryLesson } from '../../types';
 
-export const lessons = [
-  l1, l2,
-  ...Array.from({ length: 5 }, (_, i) => ({
-    id: `kt-m${i + 3}`,
-    title: ["Structured Concurrency", "Flows: Cold vs Hot", "Channels IPC", "Kotlin Multiplatform (KMP)", "Inline Classes"][i],
-    content: "<p>Desenvolvimento moderno com Kotlin.</p>",
-    quizId: `kt-mq${i + 3}`
-  })),
-  l8,
-  ...Array.from({ length: 6 }, (_, i) => ({
-    id: `kt-m${i + 9}`,
-    title: ["K2 Compiler Architecture", "Compose Internals", "Sealed Interfaces", "Generics: Reified", "DSL Construction", "MockK Patterns"][i],
-    content: "<p>Engenharia de software de elite.</p>",
-    quizId: `kt-mq${i + 9}`
-  })),
-  l15,
-  ...Array.from({ length: 6 }, (_, i) => ({
-    id: `kt-m${i + 16}`,
-    title: ["Memory: JVM vs Native", "Reflection API", "Java Interop Analysis", "Gradle DSL", "Serialization", "Capstone Milestone"][i],
-    content: "<p>Domínio total do ecossistema Kotlin.</p>",
-    quizId: `kt-mq${i + 16}`
-  }))
+const kotlinTitles = [
+  "Fase 1: Sintaxe Concisa e Null Safety",
+  "Fase 1: Data Classes e When Expressions",
+  "Fase 2: Extension Functions e Operator Overloading",
+  "Fase 2: Higher-order Functions e Inline Classes",
+  "Fase 2: POO: Sealed Classes e Companion Objects",
+  "Fase 2: Delegation (by) e Property Wrappers",
+  "Fase 2: Collections e Sequences (Lazy Evaluation)",
+  "Fase 3: Coroutines: Fundamentos e Suspensão",
+  "Fase 3: Structured Concurrency e Scopes",
+  "Fase 3: Channels e Flow (Cold vs Hot Streams)",
+  "Fase 3: Generics: Reified e Variance (In/Out)",
+  "Fase 3: Building DSLs e Scope Functions",
+  "Fase 3: Kotlin Multiplatform (KMP) Mobile",
+  "Fase 4: Android Lifecycle e ViewModel",
+  "Fase 4: Jetpack Compose: UI Declarativa",
+  "Fase 4: Persistência com Room e Networking com Retrofit",
+  "Fase 4: Injeção de Dependência com Hilt/Koin",
+  "Fase 4: Android Clean Architecture e MVI",
+  "Fase 4: Unit Testing com MockK e Turbine",
+  "Fase 4: Performance e Profiling em Android",
+  "Fase 4: Capstone: Deploy de App Multiplataforma"
 ];
+
+export const lessons: TheoryLesson[] = kotlinTitles.map((title, i) => ({
+  id: `kt-m${i + 1}`,
+  title: title,
+  content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>📱 Kotlin Master: ${title}</h2><p>Da sintaxe moderna ao desenvolvimento Android e multiplataforma de alta performance.</p></div>`,
+  quizId: `kt-mq${i + 1}`
+}));

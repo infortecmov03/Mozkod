@@ -14,7 +14,7 @@ import { phpMaster } from './10-php/index';
 export const level8: Level = {
   id: 8,
   title: 'Nível 8: Domínio de Linguagens (Mastery)',
-  description: 'Especialização profunda baseada no tripé: Paradigma, Concorrência e Internals. Torne-se parte do 1% dos engenheiros globais.',
+  description: 'Jornadas completas do Zero ao Avançado em 4-5 Fases. Torne-se parte do 1% dos engenheiros globais.',
   knowledgeAreas: [
     htmlKA, 
     cssKA, 

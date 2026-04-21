@@ -1,33 +1,33 @@
 
-import { lesson as l1 } from './theory/01-jvm-architecture';
-import { lesson as l2 } from './theory/02-garbage-collection';
-import { lesson as l3 } from './theory/03-virtual-threads';
-import { lesson as l11 } from './theory/11-jmm-internals';
+import type { TheoryLesson } from '../../types';
 
-export const lessons = [
-  l1, l2, l3,
-  ...Array.from({ length: 7 }, (_, i) => ({
-    id: `jv-m${i + 4}`,
-    title: [
-      "Spring Boot 3 & GraalVM Native", "Hibernate Performance & L2 Cache",
-      "Reactive Streams com Project Reactor", "Security: JWT & OAuth2 Internals",
-      "Microserviços com Spring Cloud", "Kubernetes para Desenvolvedores Java",
-      "Testing: JUnit 5 & Testcontainers"
-    ][i],
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>☕ Java Master: Especialização Técnica</h2><p>Tópico avançado sobre arquitetura corporativa e sistemas distribuídos.</p></div>`,
-    quizId: `jv-mq${i + 4}`
-  })),
-  l11,
-  ...Array.from({ length: 10 }, (_, i) => ({
-    id: `jv-m${i + 12}`,
-    title: [
-      "Bytecode Manipulation com ASM", "Reflexão e MethodHandles",
-      "Design Patterns Modernos em Java", "Gestão de Memória Off-heap",
-      "NIO & Netty Architecture", "API Design com OpenApi 3",
-      "Observabilidade: Micrometer & Prometheus", "Arquitetura Hexagonal em Java",
-      "Concurrency: Locks, Atomics e Mutexes", "Capstone: Deploy de Sistema Bancário"
-    ][i],
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>☕ Java Master: Engenharia de Baixo Nível</h2><p>Foco em performance de runtime e manipulação de recursos do sistema.</p></div>`,
-    quizId: `jv-mq${i + 12}`
-  }))
+const javaTitles = [
+  "Fase 1: Sintaxe, Tipos e Controle de Fluxo",
+  "Fase 1: Arrays, StringBuilder e Métodos",
+  "Fase 2: POO - Encapsulamento e Herança",
+  "Fase 2: Polimorfismo e Abstração",
+  "Fase 2: Interfaces e Enums Modernos",
+  "Fase 2: Records (Java 14+) e Sealed Classes (Java 17+)",
+  "Fase 3: Collections Framework Deep Dive",
+  "Fase 3: Generics e Type Erasure",
+  "Fase 3: Exceptions e Try-with-resources",
+  "Fase 3: Streams API e Lambdas (Programação Funcional)",
+  "Fase 4: Concorrência, Threads e Locks",
+  "Fase 4: CompletableFuture e Executores",
+  "Fase 4: Java I/O vs NIO (Channels & Buffers)",
+  "Fase 4: Reflection e Runtime Annotations",
+  "Fase 4: JVM Internals: GC (G1/ZGC) e JIT",
+  "Fase 5: Spring Core (IoC e DI)",
+  "Fase 5: Spring Boot e Persistence (JPA/Hibernate)",
+  "Fase 5: Spring Security (JWT e OAuth2)",
+  "Fase 5: Microserviços e Spring Cloud",
+  "Fase 5: Testing: JUnit 5, Mockito e Testcontainers",
+  "Fase 5: Capstone: Deploy de Sistema Bancário de Elite"
 ];
+
+export const lessons: TheoryLesson[] = javaTitles.map((title, i) => ({
+  id: `jv-m${i + 1}`,
+  title: title,
+  content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>☕ Java Master: ${title}</h2><p>Domínio da linguagem que move o mundo enterprise, focado em performance, escala e robustez.</p></div>`,
+  quizId: `jv-mq${i + 1}`
+}));

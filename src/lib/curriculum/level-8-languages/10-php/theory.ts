@@ -1,31 +1,33 @@
 
-import { lesson as l1 } from './theory/01-php8-attributes';
-import { lesson as l2 } from './theory/02-strong-typing-union-types';
-import { lesson as l3 } from './theory/03-constructor-promotion';
-import { lesson as l4 } from './theory/04-oop-advanced';
-import { lesson as l8 } from './theory/08-swoole-concurrency';
-import { lesson as l15 } from './theory/15-zend-engine-internals';
+import type { TheoryLesson } from '../../types';
 
-export const lessons = [
-  l1, l2, l3, l4,
-  ...Array.from({ length: 3 }, (_, i) => ({
-    id: `php-m${i + 5}`,
-    title: ["Enums & Match", "Readonly Properties", "Advanced Traits"][i],
-    content: "<p>PHP Moderno de alta performance.</p>",
-    quizId: `php-mq${i + 5}`
-  })),
-  l8,
-  ...Array.from({ length: 6 }, (_, i) => ({
-    id: `php-m${i + 9}`,
-    title: ["Fibers Concurrency", "Generators Memory", "OpCache JIT", "Streams & Sockets", "DI Containers", "Reflection Master"][i],
-    content: "<p>Arquitetura de sistemas web.</p>",
-    quizId: `php-mq${i + 9}`
-  })),
-  l15,
-  ...Array.from({ length: 6 }, (_, i) => ({
-    id: `php-m${i + 16}`,
-    title: ["Security: SQLi/XSS", "Hexagonal Arch", "Pest Testing", "Static Analysis", "FFI with C", "Capstone Milestone"][i],
-    content: "<p>Desenvolvimento Backend de Elite.</p>",
-    quizId: `php-mq${i + 16}`
-  }))
+const phpTitles = [
+  "Fase 1: Variáveis, Superglobals e Arrays",
+  "Fase 1: Funções e Tratamento de Formulários",
+  "Fase 2: POO: Visibilidade, Herança e Interfaces",
+  "Fase 2: Traits e Magic Methods",
+  "Fase 2: PDO e Prepared Statements (Segurança)",
+  "Fase 2: Gestão de Sessões e Cookies",
+  "Fase 2: Advanced Array Functions",
+  "Fase 3: Modern PHP: Type Declarations e JIT",
+  "Fase 3: PHP 8: Match, Promotion e Attributes",
+  "Fase 3: Enums (8.1) e Readonly (8.2)",
+  "Fase 3: Fibers e Concorrência Reativa",
+  "Fase 3: Generators e Iteradores de Memória",
+  "Fase 3: Composer: Autoloading e PSRs",
+  "Fase 4: Laravel: Eloquent, Blade e Artisan",
+  "Fase 4: Laravel: Queues, Events e Livewire",
+  "Fase 4: Symfony: Componentes e Service Container",
+  "Fase 4: Testing: PHPUnit e Pest",
+  "Fase 4: Static Analysis com PHPStan (Level 9)",
+  "Fase 4: Performance: OpCache e Swoole",
+  "Fase 4: Arquitetura Hexagonal em PHP",
+  "Fase 4: Capstone: Deploy de Framework MVC Custom"
 ];
+
+export const lessons: TheoryLesson[] = phpTitles.map((title, i) => ({
+  id: `php-m${i + 1}`,
+  title: title,
+  content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐘 PHP Master: ${title}</h2><p>A força motriz da web, escalada para o nível de elite corporativa.</p></div>`,
+  quizId: `php-mq${i + 1}`
+}));
