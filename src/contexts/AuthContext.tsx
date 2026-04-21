@@ -1,4 +1,3 @@
-
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -33,6 +32,7 @@ type AuthContextType = {
   resetPassword: (email: string) => Promise<void>;
   updateProfile: (data: Partial<Profile>) => Promise<void>;
   refreshProfile: () => Promise<void>;
+  unlinkIdentity: (provider: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -132,6 +132,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) throw error;
   };
 
+  const unlinkIdentity = async (provider: string) => {
+    if (!user) return;
+    const identity = user.identities?.find(i => i.provider === provider);
+    if (identity) {
+      const { error } = await supabase.auth.unlinkIdentity(identity);
+      if (error) throw error;
+      // Refresh session
+      const { data: { user: newUser } } = await supabase.auth.getUser();
+      setUser(newUser);
+    }
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
     router.push('/');
@@ -187,7 +199,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signOut,
       resetPassword,
       updateProfile,
-      refreshProfile
+      refreshProfile,
+      unlinkIdentity
     }}>
       {children}
     </AuthContext.Provider>
