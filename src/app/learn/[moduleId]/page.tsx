@@ -11,7 +11,8 @@ import {
   Terminal, BookOpen, Play, CheckCircle2, ChevronLeft, 
   Trophy, Zap, Loader2, Menu, ListChecks, 
   ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2,
-  AlertCircle, MessageSquare, XCircle, Eye, ExternalLink
+  AlertCircle, MessageSquare, XCircle, Eye, ExternalLink,
+  PanelRightClose, PanelRightOpen
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
@@ -54,6 +55,7 @@ export default function LearnPage() {
   const [completedObjectives, setCompletedObjectives] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -224,15 +226,26 @@ export default function LearnPage() {
         
         <div className="flex gap-2">
            {practice && (
-             <Button 
-               variant="outline" 
-               size="sm" 
-               onClick={() => router.push(`/community/exercise/${lessonId}`)}
-               className="gap-2 rounded-full border-accent/20 bg-accent/5 text-accent hover:bg-accent/10"
-             >
-               <MessageSquare className="w-4 h-4" />
-               <span className="hidden sm:inline">{t.requestHelp}</span>
-             </Button>
+             <>
+               <Button 
+                 variant="outline" 
+                 size="sm" 
+                 onClick={() => setShowSidebar(!showSidebar)}
+                 className="gap-2 rounded-full border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"
+               >
+                 {showSidebar ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
+                 <span className="hidden sm:inline">{showSidebar ? "Ocultar Missão" : "Ver Missão"}</span>
+               </Button>
+               <Button 
+                 variant="outline" 
+                 size="sm" 
+                 onClick={() => router.push(`/community/exercise/${lessonId}`)}
+                 className="gap-2 rounded-full border-accent/20 bg-accent/5 text-accent hover:bg-accent/10"
+               >
+                 <MessageSquare className="w-4 h-4" />
+                 <span className="hidden sm:inline">{t.requestHelp}</span>
+               </Button>
+             </>
            )}
            <Sheet>
              <SheetTrigger asChild>
@@ -289,7 +302,7 @@ export default function LearnPage() {
       </div>
 
       <main className="flex-1 flex flex-col md:flex-row overflow-hidden">
-        <div className={cn("flex-1 overflow-y-auto bg-background", practice && "md:w-3/5 border-r")}>
+        <div className={cn("flex-1 overflow-y-auto bg-background transition-all duration-300", (practice && showSidebar) && "md:w-3/5 border-r")}>
           {theory ? (
             <div className="max-w-3xl mx-auto p-8 md:p-16 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
                <div className="space-y-6">
@@ -445,8 +458,8 @@ export default function LearnPage() {
           ) : null}
         </div>
 
-        {practice && (
-          <div className="md:w-2/5 bg-card/20 flex flex-col border-l border-white/5 overflow-hidden">
+        {practice && showSidebar && (
+          <div className="md:w-2/5 bg-card/20 flex flex-col border-l border-white/5 overflow-hidden animate-in slide-in-from-right duration-300">
             <div className="p-6 h-full flex flex-col">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
