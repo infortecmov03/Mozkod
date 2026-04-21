@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Navigation } from "@/components/Navigation";
-import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,15 +33,22 @@ export default function ExerciseCommunityPage() {
 
   useEffect(() => {
     async function fetchPosts() {
+      if (!exerciseId) return;
       setLoading(true);
-      const { data, error } = await supabase
-        .from('community_posts')
-        .select(`*, profiles:user_id (display_name, avatar_url)`)
-        .eq('exercise_id', exerciseId)
-        .order('created_at', { ascending: false });
-      
-      if (!error && data) setPosts(data);
-      setLoading(false);
+      try {
+        const { data, error } = await supabase
+          .from('community_posts')
+          .select(`*, profiles(display_name, avatar_url)`)
+          .eq('exercise_id', exerciseId)
+          .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        if (data) setPosts(data);
+      } catch (err: any) {
+        console.error('Erro ao buscar posts:', err.message);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchPosts();
   }, [exerciseId]);
@@ -58,7 +64,10 @@ export default function ExerciseCommunityPage() {
       return;
     }
 
-    if (!newTitle || !newContent) return;
+    if (!newTitle.trim() || !newContent.trim()) {
+      toast({ variant: "destructive", title: "Campos vazios", description: "Preenche o título e a mensagem." });
+      return;
+    }
 
     setIsPosting(true);
     try {
@@ -67,16 +76,16 @@ export default function ExerciseCommunityPage() {
         .insert({
           user_id: user.id,
           exercise_id: exerciseId,
-          title: newTitle,
-          content: newContent
+          title: newTitle.trim(),
+          content: newContent.trim()
         })
-        .select(`*, profiles:user_id (display_name, avatar_url)`)
+        .select(`*, profiles(display_name, avatar_url)`)
         .single();
 
       if (error) throw error;
 
       if (data) {
-        setPosts([data, ...posts]);
+        setPosts(prev => [data, ...prev]);
         setNewTitle("");
         setNewContent("");
         toast({ 
@@ -85,10 +94,11 @@ export default function ExerciseCommunityPage() {
         });
       }
     } catch (err: any) {
+      console.error('Erro ao publicar:', err);
       toast({ 
         variant: "destructive", 
         title: "Erro ao publicar", 
-        description: err.message 
+        description: err.message || "Ocorreu um erro inesperado." 
       });
     } finally {
       setIsPosting(false);
@@ -96,9 +106,9 @@ export default function ExerciseCommunityPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background font-body">
       <Navigation />
-      <main className="container mx-auto px-4 py-12 max-w-4xl flex-1">
+      <main className="container mx-auto px-4 py-12 max-w-4xl flex-1 scroll-container">
         <Button variant="ghost" onClick={() => router.back()} className="mb-8 gap-2 rounded-full">
           <ArrowLeft className="w-4 h-4" /> Voltar ao Laboratório
         </Button>
@@ -131,6 +141,7 @@ export default function ExerciseCommunityPage() {
                       value={newTitle}
                       onChange={(e) => setNewTitle(e.target.value)}
                       required
+                      disabled={isPosting}
                     />
                     <Textarea 
                       placeholder="Explica o que estás a tentar fazer e qual é o erro específico que encontraste..." 
@@ -138,6 +149,7 @@ export default function ExerciseCommunityPage() {
                       value={newContent}
                       onChange={(e) => setNewContent(e.target.value)}
                       required
+                      disabled={isPosting}
                     />
                     <Button type="submit" className="w-full rounded-xl h-12 font-bold gap-2 shadow-lg shadow-primary/20" disabled={isPosting}>
                       {isPosting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
@@ -202,7 +214,6 @@ export default function ExerciseCommunityPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

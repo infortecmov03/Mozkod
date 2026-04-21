@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Navigation } from "@/components/Navigation";
-import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -32,25 +31,31 @@ export default function PostDetailPage() {
 
   useEffect(() => {
     async function fetchPostAndComments() {
+      if (!postId) return;
       setLoading(true);
-      
-      const { data: postData } = await supabase
-        .from('community_posts')
-        .select(`*, profiles:user_id (display_name, avatar_url)`)
-        .eq('id', postId)
-        .single();
-      
-      if (postData) setPost(postData);
+      try {
+        const { data: postData, error: postError } = await supabase
+          .from('community_posts')
+          .select(`*, profiles(display_name, avatar_url)`)
+          .eq('id', postId)
+          .single();
+        
+        if (postError) throw postError;
+        if (postData) setPost(postData);
 
-      const { data: commentsData } = await supabase
-        .from('community_comments')
-        .select(`*, profiles:user_id (display_name, avatar_url)`)
-        .eq('post_id', postId)
-        .order('created_at', { ascending: true });
-      
-      if (commentsData) setComments(commentsData);
-      
-      setLoading(false);
+        const { data: commentsData, error: commentsError } = await supabase
+          .from('community_comments')
+          .select(`*, profiles(display_name, avatar_url)`)
+          .eq('post_id', postId)
+          .order('created_at', { ascending: true });
+        
+        if (commentsError) throw commentsError;
+        if (commentsData) setComments(commentsData);
+      } catch (err: any) {
+        console.error('Erro ao carregar post:', err.message);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchPostAndComments();
   }, [postId]);
@@ -66,19 +71,20 @@ export default function PostDetailPage() {
         .insert({
           post_id: postId,
           user_id: user.id,
-          content: newComment
+          content: newComment.trim()
         })
-        .select(`*, profiles:user_id (display_name, avatar_url)`)
+        .select(`*, profiles(display_name, avatar_url)`)
         .single();
 
       if (error) throw error;
 
       if (data) {
-        setComments([...comments, data]);
+        setComments(prev => [...prev, data]);
         setNewComment("");
         toast({ title: "Resposta enviada!", description: "Obrigado por ajudar a comunidade." });
       }
     } catch (err: any) {
+      console.error('Erro ao comentar:', err);
       toast({ variant: "destructive", title: "Erro ao comentar", description: err.message });
     } finally {
       setIsCommenting(false);
@@ -93,13 +99,23 @@ export default function PostDetailPage() {
     );
   }
 
-  if (!post) return <div className="p-20 text-center">Discussão não encontrada.</div>;
+  if (!post) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Navigation />
+        <div className="flex-1 flex flex-col items-center justify-center p-20 text-center gap-4">
+          <p className="text-xl font-bold opacity-50">Discussão não encontrada.</p>
+          <Button onClick={() => router.push('/community')}>Voltar ao Fórum</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-background font-body">
       <Navigation />
-      <main className="container mx-auto px-4 py-12 max-w-4xl flex-1">
-        <Button variant="ghost" onClick={() => router.back()} className="mb-8 gap-2 rounded-full">
+      <main className="container mx-auto px-4 py-12 max-w-4xl flex-1 scroll-container">
+        <Button variant="ghost" onClick={() => router.push('/community')} className="mb-8 gap-2 rounded-full">
           <ArrowLeft className="w-4 h-4" /> Voltar ao Fórum
         </Button>
 
@@ -175,6 +191,7 @@ export default function PostDetailPage() {
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     required
+                    disabled={isCommenting}
                   />
                   <Button type="submit" className="w-full h-12 rounded-xl font-bold gap-2" disabled={isCommenting}>
                     {isCommenting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
@@ -190,7 +207,6 @@ export default function PostDetailPage() {
           )}
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
