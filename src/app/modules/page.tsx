@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { modules } from "@/lib/curriculum";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ArrowRight, BookOpen, Code2, CheckCircle2, Circle, GraduationCap, ChevronRight, Laptop } from "lucide-react";
+import { ArrowRight, BookOpen, Code2, CheckCircle2, Circle, GraduationCap, ChevronRight, Laptop, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageContext";
 import { useProgress } from "@/contexts/ProgressContext";
