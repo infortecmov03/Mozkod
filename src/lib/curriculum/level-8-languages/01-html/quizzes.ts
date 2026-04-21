@@ -52,9 +52,40 @@ const q4 = {
   ]
 };
 
-// Gerando quizzes automáticos para os restantes tópicos de HTML Master (5 a 21)
-const remainingQuizzes = Array.from({ length: 17 }, (_, i) => {
-  const index = i + 5;
+const q5 = {
+  id: "html-mq5",
+  title: "Quiz: Web Components e Shadow DOM",
+  passingScore: 80,
+  questions: [
+    {
+      id: "q_wc_1",
+      question: "Por que os nomes de Custom Elements devem obrigatoriamente conter um hífen?",
+      options: [
+        "É apenas uma convenção estética",
+        "Para evitar conflitos com futuras tags nativas do HTML Standard",
+        "Porque o JavaScript não aceita nomes sem hífen",
+        "Para indicar que o componente é assíncrono"
+      ],
+      correctAnswer: 1,
+      explanation: "Tags como <video> ou <audio> não têm hífen. Ao usar <meu-video>, garantes que nunca haverá uma tag nativa com esse nome."
+    },
+    {
+      id: "q_wc_2",
+      question: "Qual a principal função do Shadow DOM 'mode: closed'?",
+      options: [
+        "Esconder o componente do Google",
+        "Tornar a árvore Shadow inacessível via JavaScript externo (encapsulamento total)",
+        "Impedir que o componente use CSS",
+        "Aumentar o brilho do monitor"
+      ],
+      correctAnswer: 1
+    }
+  ]
+};
+
+// Gerando quizzes automáticos para os restantes tópicos de HTML Master (6 a 21)
+const remainingQuizzes = Array.from({ length: 16 }, (_, i) => {
+  const index = i + 6;
   return {
     id: `html-mq${index}`,
     title: `Quiz: Validação Técnica HTML Master ${index}`,
@@ -76,5 +107,6 @@ export const quizzes = [
   q2,
   q3,
   q4,
+  q5,
   ...remainingQuizzes
 ];
