@@ -10,12 +10,10 @@ import {
   Terminal, BookOpen, Play, CheckCircle2, ChevronLeft, 
   Trophy, Zap, Loader2, Menu, ListChecks, 
   ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2,
-  ExternalLink, MonitorSmartphone, AlertCircle, MessageSquare,
-  XCircle, RotateCcw
+  AlertCircle, MessageSquare, XCircle
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, findQuizById, findNextLessonId } from "@/lib/curriculum";
 import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
@@ -23,8 +21,11 @@ import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useProgress } from "@/contexts/ProgressContext";
 import { cn } from "@/lib/utils";
-import Editor from "@monaco-editor/react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
+
+// Carregamento dinâmico do editor para evitar erros de hidratação
+const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
 export default function LearnPage() {
   const params = useParams();
@@ -49,20 +50,22 @@ export default function LearnPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [completedObjectives, setCompletedObjectives] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     if (practice) {
       setSelectedLang(practice.language);
       setCode(practice.template || "");
     }
   }, [practice, lessonId]);
 
-  // Calcula se todas as respostas estão corretas em tempo real
   const allAnswersCorrect = useMemo(() => {
     if (!quiz) return false;
-    return quiz.questions.every(q => quizAnswers[q.id] === q.correctAnswer);
+    return quiz.questions.length > 0 && quiz.questions.every(q => quizAnswers[q.id] === q.correctAnswer);
   }, [quiz, quizAnswers]);
 
+  if (!mounted) return null;
   if (!data) return <div className="p-20 text-center font-headline text-2xl">Conteúdo não encontrado</div>;
 
   const { ka, level } = data;
@@ -100,15 +103,11 @@ export default function LearnPage() {
       return;
     }
 
-    // Se estiver tudo correto, finaliza
     setIsSaving(true);
     try {
       await markAsCompleted(lessonId, level.id, ka.id, 'theory', 100);
       setIsSuccess(true);
-      toast({ 
-        title: "Perfeito! 🏆", 
-        description: "Excelente trabalho! Redirecionando em 3 segundos..." 
-      });
+      toast({ title: "Perfeito! 🏆", description: "Excelente trabalho! Redirecionando em 3 segundos..." });
 
       setTimeout(() => {
         const nextId = findNextLessonId(lessonId);
@@ -271,8 +270,6 @@ export default function LearnPage() {
                               disabled={isSuccess}
                               onValueChange={(val) => {
                                 setQuizAnswers(prev => ({...prev, [q.id]: parseInt(val)}));
-                                // Opcional: Se quiseres esconder a dica mal o user mude a resposta
-                                // setShowQuizFeedback(false); 
                               }} 
                               value={quizAnswers[q.id]?.toString()}
                               className="grid gap-4 ml-10"

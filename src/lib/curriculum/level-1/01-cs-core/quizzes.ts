@@ -14,11 +14,11 @@ export const quizzes = [
   q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11,
   ...Array.from({ length: 10 }, (_, i) => ({
     id: `cs-q${i + 12}`,
-    title: `Quiz: Tópico ${i + 12}`,
+    title: `Quiz: Validação Técnica ${i + 12}`,
     questions: [
       {
         id: "q_auto",
-        question: "Validação técnica para o tópico " + (i + 12),
+        question: "Pergunta de validação para o tópico avançado.",
         options: ["Opção A (Correta)", "Opção B", "Opção C"],
         correctAnswer: 0
       }
