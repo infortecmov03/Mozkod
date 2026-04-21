@@ -1,28 +1,29 @@
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
-  id: "html-p7",
+  id: "html-p8",
   language: "html",
-  title: "Laboratório Master: Otimização de Rede",
-  description: "Implemente técnicas de pre-connect.",
-  statement: "Adicione um link de pre-connect para o domínio 'https://fonts.googleapis.com' para acelerar o carregamento de fontes externas.",
-  template: `<head>
-  <!-- Adicione o resource hint aqui -->
-</head>`,
+  title: "Projeto Master: Finalização e Redes",
+  description: "Toques finais de otimização de rede.",
+  statement: "Instrua o browser a preparar conexões para domínios de terceiros.",
+  isProjectPart: true,
+  template: ``,
   detailedExplanation: `
-    <h3>⚡ Antecipação de Latência</h3>
-    <p>O <code>rel="preconnect"</code> informa ao browser que vamos precisar de recursos daquele domínio em breve, permitindo que ele inicie o handshake de rede em paralelo com o parsing do HTML.</p>
+    <h3>⚡ Acelerando a Entrega</h3>
+    <p>O <code>preconnect</code> e o <code>dns-prefetch</code> são ferramentas de elite para reduzir a latência percebida pelo usuário.</p>
   `,
   objectives: [
     {
-      id: "obj1",
-      description: "Usar tag link com rel preconnect",
+      id: "preconnect",
+      description: "Adicione um link preconnect para a API do Google Fonts.",
+      hint: "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">",
       test: "rel=\"preconnect\""
     },
     {
-      id: "obj2",
-      description: "Apontar para o domínio correto",
-      test: "href=\"https://fonts.googleapis.com\""
+      id: "dns",
+      description: "Adicione um dns-prefetch para um domínio de CDN.",
+      hint: "<link rel=\"dns-prefetch\" href=\"https://cdn.exemplo.com\">",
+      test: "rel=\"dns-prefetch\""
     }
   ]
 };

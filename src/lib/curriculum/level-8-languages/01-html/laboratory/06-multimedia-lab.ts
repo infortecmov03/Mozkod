@@ -1,32 +1,29 @@
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
-  id: "html-p6",
+  id: "html-p7",
   language: "html",
-  title: "Laboratório Master: Renderização Programática",
-  description: "Configure uma superfície de desenho Canvas.",
-  statement: "Crie um elemento <canvas> com o id 'game-viewport' e defina explicitamente a sua largura para 800 e altura para 600.",
-  template: `<!-- Defina a área do canvas aqui -->
-`,
+  title: "Projeto Master: Media e Gráficos",
+  description: "Integre elementos visuais de alta performance.",
+  statement: "Adicione uma área de desenho Canvas e um vídeo acessível ao seu projeto.",
+  isProjectPart: true,
+  template: ``,
   detailedExplanation: `
-    <h3>🎮 Contexto de Desenho</h3>
-    <p>Diferente de outros elementos, a largura e altura do canvas devem ser definidas nos atributos da tag para evitar distorções de escala que acontecem se usares apenas CSS.</p>
+    <h3>🎮 Contexto Visual</h3>
+    <p>Vamos preparar o site para gráficos dinâmicos e garantir que o conteúdo de vídeo pode ser entendido por todos.</p>
   `,
   objectives: [
     {
-      id: "obj1",
-      description: "Usar tag canvas",
-      test: "<canvas"
+      id: "canvas",
+      description: "No <main>, adicione um <canvas> com id 'dashboard-chart'.",
+      hint: "<canvas id=\"dashboard-chart\"></canvas>",
+      test: "id=\"dashboard-chart\""
     },
     {
-      id: "obj2",
-      description: "Definir id game-viewport",
-      test: "id=\"game-viewport\""
-    },
-    {
-      id: "obj3",
-      description: "Definir dimensões 800x600",
-      test: "width=\"800\" height=\"600\""
+      id: "track",
+      description: "Adicione um elemento <track> dentro de uma tag <video> para legendas.",
+      hint: "<track kind=\"subtitles\" ...>",
+      test: "kind=\"subtitles\""
     }
   ]
 };

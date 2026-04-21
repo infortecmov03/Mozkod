@@ -1,33 +1,35 @@
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
-  id: "html-p5",
+  id: "html-p6",
   language: "html",
-  title: "Laboratório Master: Formulário de Alta Conversão",
-  description: "Crie um formulário com validação nativa e UX mobile.",
-  statement: "Crie um input de texto que aceite apenas números de 9 dígitos e exiba o teclado numérico em telemóveis.",
-  template: `<form>
-  <label for="tel">Telefone:</label>
-  <input type="text" id="tel" name="tel" 
-    pattern="" 
-    inputmode="" 
-    required>
-  <button type="submit">Enviar</button>
-</form>`,
+  title: "Projeto Master: Formulário de Inscrição",
+  description: "Crie um ponto de entrada de dados profissional.",
+  statement: "No <main>, adicione um formulário com validação nativa e labels acessíveis.",
+  isProjectPart: true,
+  template: ``,
   detailedExplanation: `
-    <h3>📱 Otimização Mobile</h3>
-    <p>O atributo <code>inputmode="numeric"</code> garante que o teclado numérico abra imediatamente, enquanto o <code>pattern="[0-9]{9}"</code> valida a entrada sem precisar de JS.</p>
+    <h3>📝 Conversão e Acessibilidade</h3>
+    <p>Formulários são a parte mais importante de uma aplicação. Vamos garantir que funcionam bem em mobile e para leitores de ecrã.</p>
   `,
   objectives: [
     {
-      id: "obj1",
-      description: "Definir pattern para 9 dígitos numéricos",
-      test: "pattern=\"[0-9]{9}\""
+      id: "form",
+      description: "Abra a tag <form> com método 'POST'.",
+      hint: "<form method=\"POST\"></form>",
+      test: "method=\"POST\""
     },
     {
-      id: "obj2",
-      description: "Definir inputmode como numeric",
-      test: "inputmode=\"numeric\""
+      id: "label",
+      description: "Adicione um <label> com o atributo 'for' ligado ao input de nome.",
+      hint: "<label for=\"username\">Nome:</label>",
+      test: "for=\"username\""
+    },
+    {
+      id: "input",
+      description: "Crie um input com o id 'username' e o atributo 'required'.",
+      hint: "<input id=\"username\" required>",
+      test: "required"
     }
   ]
 };

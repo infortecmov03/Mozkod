@@ -1,28 +1,35 @@
-
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
-  id: "html-p2",
+  id: "html-p3",
   language: "html",
-  title: "Lab Master: Configurando Open Graph",
-  description: "Otimize a partilha social da sua página.",
-  statement: "Adicione a meta tag de imagem do Open Graph (og:image) apontando para 'logo.png'.",
-  template: `<!-- Adicione os metadados abaixo -->
-<head>
-  <meta property="og:title" content="Codworks Moz" />
-  
-</head>`,
-  detailedExplanation: `<h3>🖼️ Visual Social</h3><p>A tag <code>og:image</code> garante que, quando o teu link for partilhado, uma imagem atrativa apareça, aumentando o CTR (Click-Through Rate).</p>`,
+  title: "Projeto Master: Metadados de Elite",
+  description: "Prepare a sua página para ser indexada e partilhada.",
+  statement: "Adicione metadados avançados na seção <head> do seu projeto.",
+  isProjectPart: true,
+  template: ``,
+  detailedExplanation: `
+    <h3>🚀 Visibilidade Máxima</h3>
+    <p>Para o Google e as redes sociais entenderem o seu projeto, precisamos de tags específicas. Vamos configurar a descrição e os cartões de partilha.</p>
+  `,
   objectives: [
     {
-      id: "obj1",
-      description: "Inserir meta tag og:image",
-      test: "og:image"
+      id: "desc",
+      description: "Adicione uma meta description com uma chamada atrativa.",
+      hint: "<meta name=\"description\" content=\"...\">",
+      test: "name=\"description\""
     },
     {
-      id: "obj2",
-      description: "Apontar para logo.png",
-      test: "logo.png"
+      id: "og_title",
+      description: "Adicione a tag og:title para o Open Graph.",
+      hint: "<meta property=\"og:title\" content=\"Codworks Master\">",
+      test: "property=\"og:title\""
+    },
+    {
+      id: "canonical",
+      description: "Adicione o link canonical para evitar conteúdo duplicado.",
+      hint: "<link rel=\"canonical\" href=\"https://codworks.mz\">",
+      test: "rel=\"canonical\""
     }
   ]
 };

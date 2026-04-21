@@ -1,19 +1,29 @@
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
-  id: "html-p3",
+  id: "html-p4",
   language: "html",
-  title: "Lab Master: Otimização de Script",
-  description: "Aprenda a carregar recursos sem bloquear o render.",
-  statement: "Adicione o atributo correto à tag script para garantir que ela não bloqueie o carregamento do HTML e execute após o parse.",
-  template: `<!-- Otimize este carregamento -->
-<script src="analytics.js" ></script>`,
-  detailedExplanation: `<h3>⚡ Defer vs Async</h3><p>O atributo <code>defer</code> é ideal para scripts que dependem do DOM completo, pois descarrega em paralelo mas executa apenas após o parsing, mantendo a ordem dos scripts.</p>`,
+  title: "Projeto Master: Performance de Script",
+  description: "Otimize como o JavaScript interage com o seu HTML.",
+  statement: "Adicione scripts externos de forma otimizada para não bloquear o render.",
+  isProjectPart: true,
+  template: ``,
+  detailedExplanation: `
+    <h3>⚡ Non-blocking DOM</h3>
+    <p>No nível Master, nunca carregamos scripts que travam o processamento do HTML. Vamos usar os atributos modernos de carregamento.</p>
+  `,
   objectives: [
     {
-      id: "obj1",
-      description: "Usar o atributo defer",
+      id: "defer",
+      description: "Adicione um script principal com o atributo 'defer' no <head>.",
+      hint: "<script src=\"main.js\" defer></script>",
       test: "defer"
+    },
+    {
+      id: "async",
+      description: "Adicione um script de analytics com 'async' para execução independente.",
+      hint: "<script src=\"analytics.js\" async></script>",
+      test: "async"
     }
   ]
 };
