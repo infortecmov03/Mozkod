@@ -1,3 +1,4 @@
+
 import { level1 } from './level-1/index';
 import { level2 } from './level-2/index';
 import { level3 } from './level-3/index';
@@ -77,11 +78,7 @@ export function findQuizById(quizId: string): Quiz | null {
   return null;
 }
 
-/**
- * Encontra a próxima lição na sequência lógica.
- * A lógica agora intercala Teoria e Prática dentro de cada Área de Conhecimento.
- */
-export function findNextLessonId(currentId: string): string | null {
+export function findOrderedLessons(): string[] {
   const allLessons: string[] = [];
   
   modules.forEach(level => {
@@ -89,9 +86,11 @@ export function findNextLessonId(currentId: string): string | null {
       const theory = ka.theory || [];
       const practiceList: PracticeExercise[] = [];
       if (ka.practice) {
+        // Obter todas as práticas mantendo a ordem dos IDs para consistência
         Object.values(ka.practice).forEach(list => practiceList.push(...list));
       }
       
+      // Intercalar: T1, P1, T2, P2...
       const max = Math.max(theory.length, practiceList.length);
       for (let i = 0; i < max; i++) {
         if (theory[i]) allLessons.push(theory[i].id);
@@ -99,10 +98,24 @@ export function findNextLessonId(currentId: string): string | null {
       }
     });
   });
+  
+  return allLessons;
+}
 
+export function findNextLessonId(currentId: string): string | null {
+  const allLessons = findOrderedLessons();
   const currentIndex = allLessons.indexOf(currentId);
   if (currentIndex !== -1 && currentIndex < allLessons.length - 1) {
     return allLessons[currentIndex + 1];
+  }
+  return null;
+}
+
+export function findPreviousLessonId(currentId: string): string | null {
+  const allLessons = findOrderedLessons();
+  const currentIndex = allLessons.indexOf(currentId);
+  if (currentIndex > 0) {
+    return allLessons[currentIndex - 1];
   }
   return null;
 }

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
@@ -14,7 +15,10 @@ import {
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
-import { findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, findQuizById, findNextLessonId } from "@/lib/curriculum";
+import { 
+  findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
+  findQuizById, findNextLessonId, findPreviousLessonId 
+} from "@/lib/curriculum";
 import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/components/LanguageContext";
@@ -24,7 +28,6 @@ import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
-// Carregamento dinâmico do editor para evitar erros de hidratação
 const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
 export default function LearnPage() {
@@ -34,7 +37,7 @@ export default function LearnPage() {
   const { toast } = useToast();
   const { t } = useLanguage();
   const { profile } = useAuth();
-  const { markAsCompleted, isCompleted } = useProgress();
+  const { markAsCompleted, isCompleted, progress } = useProgress();
 
   const data = useMemo(() => findKnowledgeAreaByLessonId(lessonId), [lessonId]);
   const theory = useMemo(() => findTheoryLesson(lessonId), [lessonId]);
@@ -52,13 +55,26 @@ export default function LearnPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  // Lógica de herança de código do projeto anterior
   useEffect(() => {
     setMounted(true);
     if (practice) {
       setSelectedLang(practice.language);
+      
+      // Verificar se este laboratório deve herdar o código do anterior
+      if (practice.isProjectPart) {
+        const prevId = findPreviousLessonId(lessonId);
+        const prevProgress = progress.find(p => p.lesson_id === prevId);
+        
+        if (prevProgress?.last_code) {
+          setCode(prevProgress.last_code);
+          return;
+        }
+      }
+      
       setCode(practice.template || "");
     }
-  }, [practice, lessonId]);
+  }, [practice, lessonId, progress]);
 
   const allAnswersCorrect = useMemo(() => {
     if (!quiz) return false;
@@ -85,7 +101,7 @@ export default function LearnPage() {
       if (newCompleted.length === practice.objectives.length) {
         setOutput("> ✅ Simulação concluída com sucesso!\n> Todos os objetivos alcançados.\n> Pronto para submeter.");
       } else {
-        setOutput(`> ⚠️ Simulação: ${newCompleted.length}/${practice.objectives.length} objetivos alcançados.\n> Verifique a sintaxe e os requisitos.`);
+        setOutput(`> ⚠️ Simulação: ${newCompleted.length}/${practice.objectives.length} objetivos alcançados.\n> Verifique os requisitos.`);
       }
     }, 800);
   };
@@ -107,13 +123,13 @@ export default function LearnPage() {
     try {
       await markAsCompleted(lessonId, level.id, ka.id, 'theory', 100);
       setIsSuccess(true);
-      toast({ title: "Perfeito! 🏆", description: "Excelente trabalho! Redirecionando em 3 segundos..." });
+      toast({ title: "Perfeito! 🏆", description: "Excelente trabalho! Redirecionando para a prática..." });
 
       setTimeout(() => {
         const nextId = findNextLessonId(lessonId);
         if (nextId) router.push(`/learn/${nextId}`);
         else router.push('/dashboard');
-      }, 3000);
+      }, 2000);
     } catch (err: any) {
       toast({ variant: "destructive", title: "Erro ao guardar progresso", description: err.message });
     } finally {
@@ -126,7 +142,8 @@ export default function LearnPage() {
     setIsSaving(true);
     try {
       await markAsCompleted(lessonId, level.id, ka.id, 'exercise', 100, code);
-      toast({ title: t.wellDone, description: "Laboratório concluído com sucesso!" });
+      toast({ title: t.wellDone, description: "Laboratório concluído! Seguindo para o próximo tópico..." });
+      
       setTimeout(() => {
         const nextId = findNextLessonId(lessonId);
         if (nextId) router.push(`/learn/${nextId}`);
@@ -140,7 +157,19 @@ export default function LearnPage() {
   };
 
   const getMonacoLanguage = (lang: string) => {
-    const map: Record<string, string> = { javascript: "javascript", typescript: "typescript", python: "python", java: "java", cpp: "cpp", html: "html", css: "css", sql: "sql", bash: "shell", go: "go", rust: "rust", kotlin: "kotlin", ruby: "ruby", php: "php", concept: "markdown" };
+    const map: Record<string, string> = { 
+      javascript: "javascript", 
+      typescript: "typescript", 
+      python: "python", 
+      java: "java", 
+      cpp: "cpp", 
+      html: "html", 
+      css: "css", 
+      sql: "sql", 
+      bash: "shell", 
+      concept: "markdown",
+      english: "plaintext"
+    };
     return map[lang] || "plaintext";
   };
 
@@ -248,7 +277,7 @@ export default function LearnPage() {
                         <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center"><HelpCircle className="w-6 h-6 text-primary" /></div>
                         <div>
                           <h3 className="font-headline font-bold text-2xl">{quiz.title}</h3>
-                          <p className="text-sm text-muted-foreground">Valida o teu conhecimento para avançar.</p>
+                          <p className="text-sm text-muted-foreground">Valida o teu conhecimento para avançar para a prática.</p>
                         </div>
                       </div>
                     </div>
@@ -323,7 +352,7 @@ export default function LearnPage() {
                       disabled={isSaving || isSuccess || Object.keys(quizAnswers).length < quiz.questions.length}
                     >
                       {isSaving ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : <ShieldCheck className="w-6 h-6 mr-2" />}
-                      {allAnswersCorrect ? "Finalizar Lição" : "Verificar Respostas"}
+                      {allAnswersCorrect ? "Finalizar Teoria e Praticar" : "Verificar Respostas"}
                     </Button>
                  </div>
                )}
@@ -331,9 +360,16 @@ export default function LearnPage() {
           ) : practice ? (
             <div className="h-full flex flex-col bg-[#1e1e1e]">
                <div className="p-3 border-b border-white/5 flex items-center justify-between bg-black/20">
-                  <span className="px-3 py-1 rounded-md bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/20">
-                    {practice.language}
-                  </span>
+                  <div className="flex gap-2">
+                    <span className="px-3 py-1 rounded-md bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/20">
+                      {practice.language}
+                    </span>
+                    {practice.isProjectPart && (
+                      <span className="px-3 py-1 rounded-md bg-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest border border-accent/20">
+                        Projeto Master
+                      </span>
+                    )}
+                  </div>
                   <Button size="sm" onClick={handleRunCode} disabled={isRunning} className="bg-green-600 hover:bg-green-700 h-8 rounded-full text-xs font-bold px-6">
                     {isRunning ? "VALIDANDO..." : "EXECUTAR"}
                     <Play className="w-3 h-3 ml-2 fill-current" />
@@ -346,7 +382,15 @@ export default function LearnPage() {
                    theme="vs-dark"
                    value={code}
                    onChange={(value) => setCode(value || "")}
-                   options={{ minimap: { enabled: false }, fontSize: 14, lineNumbers: 'on', scrollBeyondLastLine: false, automaticLayout: true, padding: { top: 20 } }}
+                   options={{ 
+                     minimap: { enabled: false }, 
+                     fontSize: 14, 
+                     lineNumbers: 'on', 
+                     scrollBeyondLastLine: false, 
+                     automaticLayout: true, 
+                     padding: { top: 20 },
+                     wordWrap: "on"
+                   }}
                  />
                </div>
                <div className="h-40 border-t border-white/5 bg-black/40 p-4 font-code text-xs">

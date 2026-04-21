@@ -38,6 +38,7 @@ export type PracticeExercise = {
   template: string;
   detailedExplanation: string;
   objectives: Objective[];
+  isProjectPart?: boolean; // Define se este exercício herda código do anterior
 };
 
 export type KnowledgeArea = {

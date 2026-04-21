@@ -1,3 +1,4 @@
+
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
@@ -6,12 +7,15 @@ export const exercise: PracticeExercise = {
   title: "Laboratório Master: Estrutura Sem Bloqueio",
   description: "Crie a fundação de um documento otimizado.",
   statement: "Crie a estrutura básica de um documento HTML, definindo a língua como 'pt-MZ' e garantindo que o título seja 'Codworks Elite'.",
-  template: `<!-- Inicie o documento aqui -->
+  isProjectPart: true, // Início do projeto master
+  template: `<!DOCTYPE html>
 <html lang="">
   <head>
+    <meta charset="UTF-8">
     <title></title>
   </head>
   <body>
+    <!-- O teu projeto começa aqui -->
   </body>
 </html>`,
   detailedExplanation: `
