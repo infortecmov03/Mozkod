@@ -36,7 +36,21 @@ export async function middleware(request: NextRequest) {
     {
       cookies: {
         get(name: string) {
-          return request.cookies.get(name)?.value;
+          const cookie = request.cookies.get(name);
+          if (!cookie) return;
+
+          const { value } = cookie;
+
+          try {
+            const parsed = JSON.parse(value);
+            if (typeof parsed === 'string') {
+              return parsed;
+            }
+          } catch (e) {
+            // ignore
+          }
+
+          return value;
         },
         set(name: string, value: string, options: any) {
           response.cookies.set({
@@ -57,29 +71,15 @@ export async function middleware(request: NextRequest) {
   );
 
   const { data: { session } } = await supabase.auth.getSession();
-  const { pathname } = request.nextUrl;
-  
-  // Limpar a barra final para consistência
-  const path = pathname === '/' ? '/' : pathname.replace(/\/$/, '');
-  
-  const isPublicRoute = publicRoutes.includes(path) || 
-                        path.startsWith('/auth/callback') ||
-                        path.startsWith('/verify'); // Verificação de certificados é sempre pública
-                        
-  const isProtectedRoute = protectedRoutes.some(route => 
-    path.startsWith(route)
-  );
 
-  // Redirecionar para login se tentar aceder a rota protegida sem sessão
-  if (!session && isProtectedRoute) {
-    const redirectUrl = new URL(`/login`, request.url);
-    redirectUrl.searchParams.set('redirect', pathname);
-    return NextResponse.redirect(redirectUrl);
+  const { pathname } = request.nextUrl;
+
+  if (session && publicRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
-  // Redirecionar utilizadores logados para o dashboard se tentarem ir para o login
-  if (session && path === '/login') {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+  if (!session && protectedRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
   return response;
@@ -87,6 +87,22 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/',
+    '/login',
+    '/register',
+    '/auth/callback',
+    '/terms',
+    '/privacy',
+    '/security',
+    '/modules',
+    '/leaderboard',
+    '/documentation',
+    '/partners',
+    '/dashboard',
+    '/learn/:path*',
+    '/certifications/:path*',
+    '/settings',
+    '/profile',
+    '/community/:path*',
   ],
 };
