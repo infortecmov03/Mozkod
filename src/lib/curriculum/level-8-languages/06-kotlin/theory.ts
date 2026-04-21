@@ -1,22 +1,29 @@
+
 import { lesson as l1 } from './theory/01-null-safety-internals';
 import { lesson as l2 } from './theory/02-extensions-delegates';
-
-const titles = [
-  "Coroutines: Suspension Points", "Structured Concurrency & Scopes",
-  "Flows: Cold vs Hot Streams", "Channels & Inter-process Comm", "Kotlin Multiplatform (KMP) Arch",
-  "KSP: Symbol Processing Master", "K2 Compiler Architecture", "Compose Internals & Recomposition",
-  "Inline Classes & Value Types", "Sealed Interfaces & ADTs", "Generics: Reified & Variance",
-  "DSL Construction Patterns", "Testing: MockK & Coroutine Test", "Memory: JVM vs Native GC",
-  "Reflection & Metadata API", "Java Interop: Bytecode Analysis", "Gradle Kotlin DSL & Tooling",
-  "Serialization & ProtoBuf", "Capstone: Cloud Native Kotlin"
-];
+import { lesson as l8 } from './theory/08-coroutines-suspension';
+import { lesson as l15 } from './theory/15-compiler-plugins-ksp';
 
 export const lessons = [
   l1, l2,
-  ...titles.map((title, i) => ({
+  ...Array.from({ length: 5 }, (_, i) => ({
     id: `kt-m${i + 3}`,
-    title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🚀 Kotlin Master: ${title}</h2><p>Especialização técnica em desenvolvimento moderno e multiplataforma.</p></div>`,
+    title: ["Structured Concurrency", "Flows: Cold vs Hot", "Channels IPC", "Kotlin Multiplatform (KMP)", "Inline Classes"][i],
+    content: "<p>Desenvolvimento moderno com Kotlin.</p>",
     quizId: `kt-mq${i + 3}`
+  })),
+  l8,
+  ...Array.from({ length: 6 }, (_, i) => ({
+    id: `kt-m${i + 9}`,
+    title: ["K2 Compiler Architecture", "Compose Internals", "Sealed Interfaces", "Generics: Reified", "DSL Construction", "MockK Patterns"][i],
+    content: "<p>Engenharia de software de elite.</p>",
+    quizId: `kt-mq${i + 9}`
+  })),
+  l15,
+  ...Array.from({ length: 6 }, (_, i) => ({
+    id: `kt-m${i + 16}`,
+    title: ["Memory: JVM vs Native", "Reflection API", "Java Interop Analysis", "Gradle DSL", "Serialization", "Capstone Milestone"][i],
+    content: "<p>Domínio total do ecossistema Kotlin.</p>",
+    quizId: `kt-mq${i + 16}`
   }))
 ];

@@ -1,25 +1,31 @@
+
 import { lesson as l1 } from './theory/01-php8-attributes';
 import { lesson as l2 } from './theory/02-strong-typing-union-types';
-
-const titles = [
-  "Constructor Property Promotion & DTOs", "Enums & Pattern Matching (Match Expression)",
-  "Readonly Properties & Classes", "Advanced Traits & Horizontal Reuse",
-  "Fibers: Concorrência Cooperativa em PHP", "Generators & Memory Efficient Processing",
-  "OpCache, Preloading & JIT Compilation", "Swoole: Corrotinas e Concorrência Real",
-  "Zend Engine: Opcodes e Ciclo de Vida", "Streams, Sockets e Low-level I/O",
-  "Dependency Injection Containers (DIC) Internals", "Reflection API & Metaprogramação",
-  "Security: Proteção contra SQLi, XSS e CSRF", "Arquitetura Hexagonal & Clean Architecture",
-  "Testing: PHPUnit & Pest Design Patterns", "Static Analysis com PHPStan & Psalm",
-  "FFI (Foreign Function Interface) com C", "Memory Management & Garbage Collection",
-  "Dockerização de Apps PHP de Elite", "Capstone: High-Scale Event Server"
-];
+import { lesson as l3 } from './theory/03-constructor-promotion';
+import { lesson as l4 } from './theory/04-oop-advanced';
+import { lesson as l8 } from './theory/08-swoole-concurrency';
+import { lesson as l15 } from './theory/15-zend-engine-internals';
 
 export const lessons = [
-  l1, l2,
-  ...titles.map((title, i) => ({
-    id: `php-m${i + 3}`,
-    title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐘 PHP Master: ${title}</h2><p>Desenvolvimento moderno de backend e sistemas de larga escala.</p></div>`,
-    quizId: `php-mq${i + 3}`
+  l1, l2, l3, l4,
+  ...Array.from({ length: 3 }, (_, i) => ({
+    id: `php-m${i + 5}`,
+    title: ["Enums & Match", "Readonly Properties", "Advanced Traits"][i],
+    content: "<p>PHP Moderno de alta performance.</p>",
+    quizId: `php-mq${i + 5}`
+  })),
+  l8,
+  ...Array.from({ length: 6 }, (_, i) => ({
+    id: `php-m${i + 9}`,
+    title: ["Fibers Concurrency", "Generators Memory", "OpCache JIT", "Streams & Sockets", "DI Containers", "Reflection Master"][i],
+    content: "<p>Arquitetura de sistemas web.</p>",
+    quizId: `php-mq${i + 9}`
+  })),
+  l15,
+  ...Array.from({ length: 6 }, (_, i) => ({
+    id: `php-m${i + 16}`,
+    title: ["Security: SQLi/XSS", "Hexagonal Arch", "Pest Testing", "Static Analysis", "FFI with C", "Capstone Milestone"][i],
+    content: "<p>Desenvolvimento Backend de Elite.</p>",
+    quizId: `php-mq${i + 16}`
   }))
 ];

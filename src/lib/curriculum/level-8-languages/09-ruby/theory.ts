@@ -1,24 +1,30 @@
+
 import { lesson as l1 } from './theory/01-blocks-procs-lambdas';
 import { lesson as l2 } from './theory/02-metaprogramming-magic';
-
-const titles = [
-  "Object Model: Eigenclass & Singleton Classes", "Ruby 3.x: Ractors & Parallelism",
-  "Fibers & Cooperative Concurrency", "Enumerable Deep Dive & Lazy Streams",
-  "Memory Management: Compacting GC", "YJIT Internals & Optimization",
-  "DSL Construction: A Arte do Ruby", "ActiveSupport: Por dentro da Magia",
-  "Testing: RSpec & Minitest Design Patterns", "C-Extensions: Ligando Ruby ao C",
-  "Security: SQLi e Sanitização em Ruby", "Profiling & Benchmarking",
-  "GraalVM & TruffleRuby Future", "Gem Ecosystem & Dependency Resolvers",
-  "Advanced Regex in Ruby", "Refinements & Monkey Patching Seguro",
-  "Capstone: Expressive DSL Engine"
-];
+import { lesson as l8 } from './theory/08-fibers-concurrency';
+import { lesson as l9 } from './theory/09-ractors-parallelism';
+import { lesson as l15 } from './theory/15-singleton-classes';
 
 export const lessons = [
   l1, l2,
-  ...titles.map((title, i) => ({
+  ...Array.from({ length: 5 }, (_, i) => ({
     id: `rb-m${i + 3}`,
-    title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>💎 Ruby Master: ${title}</h2><p>Especialização técnica em elegância e metaprogramação avançada.</p></div>`,
+    title: ["Object Model: Eigenclass", "Enumerable & Streams", "Memory: Compacting GC", "YJIT Internals", "DSL Construction"][i],
+    content: "<p>A arte do código Ruby.</p>",
     quizId: `rb-mq${i + 3}`
+  })),
+  l8, l9,
+  ...Array.from({ length: 5 }, (_, i) => ({
+    id: `rb-m${i + 10}`,
+    title: ["ActiveSupport Internals", "RSpec Patterns", "C-Extensions", "Security Best Practices", "Profiling"][i],
+    content: "<p>Metaprogramação e performance.</p>",
+    quizId: `rb-mq${i + 10}`
+  })),
+  l15,
+  ...Array.from({ length: 6 }, (_, i) => ({
+    id: `rb-m${i + 16}`,
+    title: ["GraalVM Ruby", "Gem Ecosystem", "Regex Master", "Refinements", "KISS Principles", "Capstone Milestone"][i],
+    content: "<p>Software centrado no humano.</p>",
+    quizId: `rb-mq${i + 16}`
   }))
 ];

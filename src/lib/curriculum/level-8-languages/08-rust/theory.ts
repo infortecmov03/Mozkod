@@ -1,22 +1,30 @@
+
 import { lesson as l1 } from './theory/01-ownership-master';
 import { lesson as l2 } from './theory/02-borrow-checker-lifetimes';
-
-const titles = [
-  "Smart Pointers: Box, Rc, Arc, RefCell", "Concurrency: Fearless Multithreading",
-  "Traits & Generic Metaprogramming", "Macro System: Declarative vs Procedural", "Async/Await & Futures Internals",
-  "Tokio Runtime & Non-blocking I/O", "Unsafe Rust & FFI Boundaries", "Memory Layout & Data Alignment",
-  "Error Handling: Result & Error Trait", "Pattern Matching & Exhaustiveness", "Building WASM with Rust",
-  "Compiler: MIR, HIR and LLVM IR", "Zero-cost Abstractions Analysis", "Optimization: LTO & SIMD",
-  "Cargo Internals & Dependency Graph", "Design Patterns: Typestate & Newtype", "Embedded Rust & Bare Metal",
-  "Security: Auditing & Sanity Checks", "Capstone: Zero-GC Storage Engine"
-];
+import { lesson as l3 } from './theory/03-lifetimes-variance';
+import { lesson as l8 } from './theory/08-async-await-wakers';
+import { lesson as l15 } from './theory/15-mir-compilation';
 
 export const lessons = [
-  l1, l2,
-  ...titles.map((title, i) => ({
-    id: `rs-m${i + 3}`,
-    title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🦀 Rust Master: ${title}</h2><p>Sistemas críticos com foco em segurança de memória e performance extrema.</p></div>`,
-    quizId: `rs-mq${i + 3}`
+  l1, l2, l3,
+  ...Array.from({ length: 4 }, (_, i) => ({
+    id: `rs-m${i + 4}`,
+    title: ["Smart Pointers (Box/Rc/Arc)", "Traits & Static Dispatch", "Macro System", "Fearless Concurrency"][i],
+    content: "<p>Engenharia de sistemas com Rust.</p>",
+    quizId: `rs-mq${i + 4}`
+  })),
+  l8,
+  ...Array.from({ length: 6 }, (_, i) => ({
+    id: `rs-m${i + 9}`,
+    title: ["Tokio Runtime", "Unsafe Rust", "Memory Layout", "Error Handling (Result/Error)", "Pattern Matching", "WASM with Rust"][i],
+    content: "<p>Especialização técnica profunda.</p>",
+    quizId: `rs-mq${i + 9}`
+  })),
+  l15,
+  ...Array.from({ length: 6 }, (_, i) => ({
+    id: `rs-m${i + 16}`,
+    title: ["Zero-cost Abstractions", "Optimization: LTO", "Cargo Internals", "Bare Metal Rust", "Auditing & Security", "Capstone Milestone"][i],
+    content: "<p>O 1% da engenharia global.</p>",
+    quizId: `rs-mq${i + 16}`
   }))
 ];
