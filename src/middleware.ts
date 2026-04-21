@@ -2,8 +2,18 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-const publicRoutes = ['/', '/login', '/register', '/auth/callback', '/terms', '/privacy'];
-const protectedRoutes = ['/dashboard', '/learn', '/certifications', '/settings'];
+const publicRoutes = [
+  '/', 
+  '/login', 
+  '/register', 
+  '/auth/callback', 
+  '/terms', 
+  '/privacy', 
+  '/security', 
+  '/modules', 
+  '/leaderboard'
+];
+const protectedRoutes = ['/dashboard', '/learn', '/certifications', '/settings', '/profile', '/community'];
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -48,21 +58,26 @@ export async function middleware(request: NextRequest) {
   const { data: { session } } = await supabase.auth.getSession();
   const { pathname } = request.nextUrl;
   
-  const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}/, '') || '/';
+  // Limpar a barra final para consistência
+  const path = pathname === '/' ? '/' : pathname.replace(/\/$/, '');
   
-  const isPublicRoute = publicRoutes.includes(pathWithoutLocale) || 
-                        pathWithoutLocale.startsWith('/auth/callback');
+  const isPublicRoute = publicRoutes.includes(path) || 
+                        path.startsWith('/auth/callback') ||
+                        path.startsWith('/verify'); // Verificação de certificados é sempre pública
+                        
   const isProtectedRoute = protectedRoutes.some(route => 
-    pathWithoutLocale.startsWith(route)
+    path.startsWith(route)
   );
 
+  // Redirecionar para login se tentar aceder a rota protegida sem sessão
   if (!session && isProtectedRoute) {
     const redirectUrl = new URL(`/login`, request.url);
     redirectUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
-  if (session && isPublicRoute && pathWithoutLocale === '/login') {
+  // Redirecionar utilizadores logados para o dashboard se tentarem ir para o login
+  if (session && path === '/login') {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
