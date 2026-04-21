@@ -92,7 +92,6 @@ export default function LearnPage() {
   // Resizing logic for console
   const handleMouseMove = useCallback((e: MouseEvent) => {
     const newHeight = window.innerHeight - e.clientY;
-    // Limit height between 40px (header) and 70% of the screen
     if (newHeight > 40 && newHeight < window.innerHeight * 0.7) {
       setConsoleHeight(newHeight);
       if (newHeight > 60 && !isConsoleOpen) setIsConsoleOpen(true);
@@ -191,7 +190,7 @@ export default function LearnPage() {
         const nextId = findNextLessonId(lessonId);
         if (nextId) router.push(`/learn/${nextId}`);
         else router.push('/dashboard');
-      }, 2000);
+      }, 1000);
     } catch (err: any) {
       toast({ variant: "destructive", title: "Erro ao guardar progresso", description: err.message });
     } finally {
@@ -210,7 +209,7 @@ export default function LearnPage() {
         const nextId = findNextLessonId(lessonId);
         if (nextId) router.push(`/learn/${nextId}`);
         else router.push('/dashboard');
-      }, 2000);
+      }, 1000);
     } catch (err: any) {
       toast({ variant: "destructive", title: "Erro ao guardar progresso", description: err.message });
     } finally {
@@ -236,7 +235,7 @@ export default function LearnPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background overflow-hidden">
+    <div className="flex flex-col h-screen bg-background overflow-hidden font-body">
       <Navigation />
       
       <div className="bg-card/50 border-b px-6 py-3 flex items-center justify-between gap-4">
@@ -253,6 +252,11 @@ export default function LearnPage() {
         </div>
         
         <div className="flex gap-2">
+           {isCompleted(lessonId) && (
+             <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-500/10 text-green-500 border border-green-500/20 text-[10px] font-black uppercase">
+                <CheckCircle2 className="w-3 h-3" /> Concluído
+             </div>
+           )}
            {practice && (
              <>
                <Button 
@@ -263,15 +267,6 @@ export default function LearnPage() {
                >
                  {showSidebar ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
                  <span className="hidden sm:inline">{showSidebar ? "Ocultar Missão" : "Ver Missão"}</span>
-               </Button>
-               <Button 
-                 variant="outline" 
-                 size="sm" 
-                 onClick={() => router.push(`/community/exercise/${lessonId}`)}
-                 className="gap-2 rounded-full border-accent/20 bg-accent/5 text-accent hover:bg-accent/10"
-               >
-                 <MessageSquare className="w-4 h-4" />
-                 <span className="hidden sm:inline">{t.requestHelp}</span>
                </Button>
              </>
            )}
@@ -369,7 +364,7 @@ export default function LearnPage() {
                             </div>
                             
                             <RadioGroup 
-                              disabled={isSuccess}
+                              disabled={isSuccess || isCompleted(lessonId)}
                               onValueChange={(val) => {
                                 setQuizAnswers(prev => ({...prev, [q.id]: parseInt(val)}));
                               }} 
@@ -381,7 +376,7 @@ export default function LearnPage() {
                                 
                                 let variantClass = "border bg-background/50 hover:border-primary/30";
                                 if (isOptionSelected) {
-                                  if (showQuizFeedback) {
+                                  if (showQuizFeedback || isCompleted(lessonId)) {
                                     variantClass = isCorrect ? "border-green-500 bg-green-500/10" : "border-red-500 bg-red-500/10";
                                   } else {
                                     variantClass = "border-primary bg-primary/5";
@@ -393,7 +388,7 @@ export default function LearnPage() {
                                     <RadioGroupItem value={i.toString()} id={`${q.id}-${i}`} className="text-primary" />
                                     <Label htmlFor={`${q.id}-${i}`} className="flex-1 cursor-pointer font-normal text-base flex items-center justify-between">
                                       {opt}
-                                      {showQuizFeedback && isOptionSelected && (
+                                      {(showQuizFeedback || isCompleted(lessonId)) && isOptionSelected && (
                                         isCorrect ? <CheckCircle2 className="w-5 h-5 text-green-500" /> : <XCircle className="w-5 h-5 text-red-500" />
                                       )}
                                     </Label>
@@ -401,16 +396,6 @@ export default function LearnPage() {
                                 );
                               })}
                             </RadioGroup>
-                            
-                            {showHint && q.explanation && (
-                              <div className="ml-10 p-5 rounded-2xl border bg-blue-500/5 border-blue-500/20 flex gap-4 animate-in fade-in slide-in-from-top-2">
-                                <Info className="w-5 h-5 text-blue-500 shrink-0" />
-                                <div>
-                                  <p className="text-sm font-bold mb-1 text-blue-500">Dica Pedagógica:</p>
-                                  <p className="text-sm text-muted-foreground leading-relaxed">{q.explanation}</p>
-                                </div>
-                              </div>
-                            )}
                           </div>
                         );
                       })}
@@ -420,12 +405,12 @@ export default function LearnPage() {
                       onClick={handleQuizAction} 
                       className={cn(
                         "w-full h-16 rounded-2xl font-bold text-xl transition-all mt-10 shadow-xl",
-                        allAnswersCorrect ? "bg-green-600 hover:bg-green-700 shadow-green-500/20" : "bg-primary shadow-primary/20"
+                        (allAnswersCorrect || isCompleted(lessonId)) ? "bg-green-600 hover:bg-green-700 shadow-green-500/20" : "bg-primary shadow-primary/20"
                       )} 
                       disabled={isSaving || isSuccess || Object.keys(quizAnswers).length < quiz.questions.length}
                     >
                       {isSaving ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : <ShieldCheck className="w-6 h-6 mr-2" />}
-                      {allAnswersCorrect ? "Finalizar Teoria e Praticar" : "Verificar Respostas"}
+                      {isCompleted(lessonId) ? "Próxima Lição" : (allAnswersCorrect ? "Finalizar Teoria e Praticar" : "Verificar Respostas")}
                     </Button>
                  </div>
                )}
@@ -437,11 +422,6 @@ export default function LearnPage() {
                     <span className="px-3 py-1 rounded-md bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/20">
                       {practice.language}
                     </span>
-                    {practice.isProjectPart && (
-                      <span className="px-3 py-1 rounded-md bg-accent/20 text-accent text-[10px] font-bold uppercase tracking-widest border border-accent/20">
-                        Projeto Master
-                      </span>
-                    )}
                   </div>
                   <div className="flex gap-2">
                     {['html', 'css', 'javascript'].includes(practice.language.toLowerCase()) && (
@@ -476,37 +456,21 @@ export default function LearnPage() {
                  />
                </div>
 
-               {/* Console Area with Resize Logic */}
                <div 
                  style={{ height: isConsoleOpen ? `${consoleHeight}px` : "40px" }}
                  className="border-t border-white/10 bg-black/60 flex flex-col transition-[height] duration-200 ease-in-out relative group/console"
                >
-                 {/* Resize Handle */}
                  {isConsoleOpen && (
-                   <div 
-                     onMouseDown={startResizing}
-                     className="absolute top-0 left-0 right-0 h-1 cursor-ns-resize bg-primary/0 hover:bg-primary/50 transition-colors z-20"
-                   />
+                   <div onMouseDown={startResizing} className="absolute top-0 left-0 right-0 h-1 cursor-ns-resize bg-primary/0 hover:bg-primary/50 transition-colors z-20" />
                  )}
-                 
-                 {/* Console Header */}
                  <div className="flex items-center justify-between px-4 h-10 border-b border-white/5 shrink-0 bg-black/40">
                     <div className="text-muted-foreground flex items-center gap-2 uppercase tracking-widest font-bold text-[10px]">
                       <Terminal className="w-3 h-3" /> Consola
                     </div>
-                    <div className="flex items-center gap-1">
-                       <Button 
-                         variant="ghost" 
-                         size="icon" 
-                         className="h-6 w-6 text-muted-foreground hover:text-white"
-                         onClick={() => setIsConsoleOpen(!isConsoleOpen)}
-                       >
+                    <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-white" onClick={() => setIsConsoleOpen(!isConsoleOpen)}>
                          {isConsoleOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
-                       </Button>
-                    </div>
+                    </Button>
                  </div>
-
-                 {/* Console Body */}
                  {isConsoleOpen && (
                    <div className="flex-1 p-4 font-code text-xs overflow-y-auto">
                       <div className={cn("whitespace-pre", output.includes('✅') ? 'text-green-400' : 'text-blue-300')}>
@@ -577,11 +541,6 @@ export default function LearnPage() {
                               <span className={cn("text-xs font-bold leading-tight block", completedObjectives.includes(obj.id) && "text-green-500")}>
                                 {obj.description}
                               </span>
-                              {obj.hint && !completedObjectives.includes(obj.id) && (
-                                <div className="p-2 bg-primary/5 rounded-lg border border-primary/10 mt-2">
-                                  <code className="text-[9px] font-code text-primary/80 break-all">{obj.hint}</code>
-                                </div>
-                              )}
                             </div>
                           </div>
                         </div>
@@ -591,10 +550,10 @@ export default function LearnPage() {
                 </Accordion>
               </div>
 
-              {completedObjectives.length === practice.objectives.length && (
+              {(completedObjectives.length === practice.objectives.length || isCompleted(lessonId)) && (
                 <Button onClick={handleCompletePractice} className="w-full mt-6 h-14 rounded-2xl font-bold text-lg bg-primary shadow-xl shadow-primary/20" disabled={isSaving}>
                   {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Trophy className="w-5 h-5 mr-2" />}
-                  Finalizar Laboratório
+                  {isCompleted(lessonId) ? "Finalizar e Seguir" : "Finalizar Laboratório"}
                 </Button>
               )}
             </div>

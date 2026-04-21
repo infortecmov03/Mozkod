@@ -37,7 +37,14 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
         .eq('user_id', user.id);
       
       if (error) throw error;
-      if (data) setProgress(data);
+      if (data) {
+        // Normalizamos os dados para garantir que booleanos sejam booleanos
+        const normalizedData = data.map(p => ({
+          ...p,
+          completed: p.completed === true || p.completed === 1 || p.completed === "true"
+        }));
+        setProgress(normalizedData);
+      }
     } catch (err: any) {
       console.error('Erro ao carregar progresso:', err.message);
     } finally {
@@ -50,7 +57,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   }, [fetchProgress]);
 
   const isCompleted = useCallback((id: string) => {
-    return progress.some(p => p.lesson_id === id && (p.completed === true || p.completed === 1));
+    return progress.some(p => p.lesson_id === id && p.completed === true);
   }, [progress]);
 
   const checkAndIssueCertificate = async (userId: string, levelId: number) => {
@@ -98,6 +105,27 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   ) => {
     if (!user) return;
 
+    // Atualiza o estado local imediatamente para feedback visual instantâneo
+    const newItem = { 
+      lesson_id: id, 
+      completed: true, 
+      level_id: levelId,
+      ka_id: kaId,
+      lesson_type: type,
+      last_code: code,
+      completed_at: new Date().toISOString()
+    };
+
+    setProgress(prev => {
+      const existingIndex = prev.findIndex(p => p.lesson_id === id);
+      if (existingIndex > -1) {
+        const updated = [...prev];
+        updated[existingIndex] = { ...updated[existingIndex], ...newItem };
+        return updated;
+      }
+      return [...prev, newItem];
+    });
+
     try {
       const { error } = await supabase
         .from('user_lesson_progress')
@@ -116,18 +144,6 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
 
       if (error) throw error;
 
-      // Atualiza o estado local imediatamente para feedback visual instantâneo
-      setProgress(prev => {
-        const existingIndex = prev.findIndex(p => p.lesson_id === id);
-        const newItem = { lesson_id: id, completed: true, level_id: levelId };
-        if (existingIndex > -1) {
-          const updated = [...prev];
-          updated[existingIndex] = { ...updated[existingIndex], ...newItem };
-          return updated;
-        }
-        return [...prev, newItem];
-      });
-
       // Operações de fundo
       supabase.rpc('calculate_total_points', { p_user_id: user.id }).then(() => refreshProfile());
       checkAndIssueCertificate(user.id, levelId);
@@ -135,6 +151,8 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     } catch (err: any) {
       toast.error('Erro ao salvar progresso: ' + err.message);
       console.error(err);
+      // Reverte o estado se falhar no servidor
+      fetchProgress();
     }
   };
 
