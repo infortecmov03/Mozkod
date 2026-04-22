@@ -12,7 +12,7 @@ import {
   ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2,
   AlertCircle, MessageSquare, XCircle, Eye, ExternalLink,
   PanelRightClose, PanelRightOpen, Lightbulb, ChevronDown, ChevronUp, GripHorizontal,
-  FileCode, Palette, Braces, RefreshCcw, EyeOff, Layout
+  FileCode, Palette, Braces, RefreshCcw, EyeOff, Layout, Brain
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
@@ -76,6 +76,8 @@ export default function LearnPage() {
     ['html', 'css', 'javascript'].includes(practice?.language.toLowerCase() || ''), 
     [practice]
   );
+
+  const isConceptLab = useMemo(() => practice?.language.toLowerCase() === 'concept', [practice]);
 
   // Persistence keys
   const getStorageKey = (lang: string) => `cwm_code_${lessonId}_${lang}`;
@@ -214,7 +216,7 @@ export default function LearnPage() {
 
       if (newCompleted.length === practice.objectives.length) {
         setOutput("> ✅ Validação: SUCESSO\n> Todos os requisitos satisfeitos.\n> Pronto para submeter.");
-        if (isMobile) setActiveTab("mission"); // Sugere ir para a missão submeter no mobile
+        if (isMobile) setActiveTab("mission"); 
       } else {
         const nextObjective = practice.objectives.find(obj => !newCompleted.includes(obj.id));
         setOutput(`> ⚠️ Validação: ${newCompleted.length}/${practice.objectives.length}\n> Pendente: ${nextObjective?.description || 'Verifique os requisitos.'}`);
@@ -290,6 +292,7 @@ export default function LearnPage() {
     if (tab === 'html') return 'html';
     if (tab === 'css') return 'css';
     if (tab === 'js') return 'javascript';
+    if (isConceptLab) return 'markdown';
     const map: Record<string, string> = { 
       javascript: "javascript", python: "python", java: "java", 
       cpp: "cpp", bash: "shell", concept: "markdown"
@@ -307,14 +310,24 @@ export default function LearnPage() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-            <ListChecks className="w-4 h-4 text-primary" />
+            {isConceptLab ? <Brain className="w-4 h-4 text-primary" /> : <ListChecks className="w-4 h-4 text-primary" />}
           </div>
-          <h3 className="font-headline font-bold text-xs uppercase tracking-widest">Missão Técnica</h3>
+          <h3 className="font-headline font-bold text-xs uppercase tracking-widest">
+            {isConceptLab ? "Missão Conceptual" : "Missão Técnica"}
+          </h3>
         </div>
         <div className="text-[9px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">
           {completedObjectives.length}/{practice.objectives.length} OK
         </div>
       </div>
+
+      {isConceptLab && (
+        <div className="mb-6 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
+          <p className="text-[10px] text-blue-400 font-bold leading-tight">
+            💡 Este é um desafio de lógica. O editor serve para escreveres a tua resposta conceptual conforme as instruções.
+          </p>
+        </div>
+      )}
       
       <Accordion type="single" collapsible className="w-full mb-6">
         <AccordionItem value="explanation" className="border-none">
@@ -375,7 +388,6 @@ export default function LearnPage() {
     <div className="flex flex-col h-[100dvh] bg-background overflow-hidden font-body">
       <Navigation />
       
-      {/* HEADER COMPACTO E RESPONSIVO */}
       <div className="bg-card/50 border-b px-4 md:px-6 py-2 md:py-3 flex items-center justify-between gap-4 shrink-0">
         <div className="flex items-center gap-2 md:gap-4 min-w-0">
           <Button variant="ghost" size="icon" onClick={() => router.push('/modules')} className="rounded-full shrink-0">
@@ -539,10 +551,8 @@ export default function LearnPage() {
           ) : practice ? (
             <div className="flex-1 flex flex-col bg-[#1e1e1e] overflow-hidden relative">
                
-               {/* TABS E BOTÕES DE AÇÃO - MOBILE FIRST */}
                <div className="px-2 md:px-4 py-1 md:py-2 border-b border-white/5 flex items-center justify-between bg-black/40 shrink-0">
                   <div className="flex-1 flex items-center gap-1.5 overflow-x-auto scrollbar-hide py-1 no-scrollbar">
-                    {/* TABS DE CÓDIGO E RESULTADO */}
                     <div className="flex bg-white/5 p-1 rounded-lg gap-0.5 shrink-0">
                       {isWebLang && (
                         <>
@@ -562,7 +572,7 @@ export default function LearnPage() {
                       )}
                       {!isWebLang && (
                         <Button variant={activeTab === 'code' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('code')} className="h-7 gap-1.5 rounded-md text-[9px] font-bold px-3 uppercase">
-                          {practice.language}
+                          {isConceptLab ? <span className="flex items-center gap-1.5"><Brain className="w-3 h-3" /> LÓGICA</span> : practice.language}
                         </Button>
                       )}
                       <Button variant={activeTab === 'mission' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('mission')} className="lg:hidden h-7 gap-1 rounded-md text-[8px] md:text-[9px] font-bold px-2 md:px-3">
@@ -574,13 +584,12 @@ export default function LearnPage() {
                   <div className="flex gap-2 ml-2 shrink-0">
                     <Button size="sm" onClick={handleRunCode} disabled={isRunning} className="bg-green-600 hover:bg-green-700 h-7 md:h-8 rounded-full text-[8px] md:text-[10px] font-black px-3 md:px-6 gap-1.5">
                       {isRunning ? <RefreshCcw className="w-2.5 h-2.5 animate-spin" /> : <Play className="w-2.5 h-2.5 fill-current" />}
-                      <span>EXECUTAR</span>
+                      <span>{isConceptLab ? "VALIDAR" : "EXECUTAR"}</span>
                     </Button>
                   </div>
                </div>
                
                <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
-                 {/* EDITOR PRINCIPAL */}
                  <div className={cn(
                     "flex-1 relative flex flex-col min-h-0",
                     (activeTab === 'preview' || activeTab === 'mission') && isMobile ? "hidden" : "flex",
@@ -603,12 +612,12 @@ export default function LearnPage() {
                         scrollBeyondLastLine: false, automaticLayout: true, 
                         padding: { top: 20 }, wordWrap: "on", fontFamily: "Source Code Pro",
                         fixedOverflowWidgets: true,
+                        renderLineHighlight: "all",
                         scrollbar: { verticalScrollbarSize: 8, horizontalScrollbarSize: 8 }
                       }}
                     />
                  </div>
                  
-                 {/* LIVE PREVIEW - VISÍVEL EM TABS NO MOBILE OU LADO A LADO NO DESKTOP */}
                  {isWebLang && (
                    <div className={cn(
                       "lg:w-1/2 bg-white flex flex-col min-h-0",
@@ -628,7 +637,6 @@ export default function LearnPage() {
                    </div>
                  )}
 
-                 {/* CONTEÚDO DA MISSÃO NO MOBILE (COMO TAB) */}
                  {isMobile && activeTab === 'mission' && (
                    <div className="flex-1 overflow-hidden">
                       {MissionContent}
@@ -636,7 +644,6 @@ export default function LearnPage() {
                  )}
                </div>
 
-               {/* CONSOLA DO ENGENHEIRO - FLUTUANTE OU FIXA */}
                <div 
                  style={{ height: isConsoleOpen ? `${consoleHeight}px` : "32px" }}
                  className="border-t border-white/10 bg-[#121212] flex flex-col transition-[height] duration-200 relative shrink-0 z-20"
@@ -661,7 +668,6 @@ export default function LearnPage() {
           ) : null}
         </div>
 
-        {/* SIDEBAR DE MISSÃO - VISÍVEL APENAS EM DESKTOP */}
         {practice && showSidebar && !isMobile && (
           <div className="w-[320px] xl:w-[400px] bg-[#0d1117] hidden lg:flex flex-col border-l border-white/5 overflow-hidden shrink-0">
             {MissionContent}
