@@ -37,7 +37,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       if (!error && data) {
         setProgress(data.map(p => ({
           ...p,
-          completed: p.completed === true || p.completed === 1 || p.completed === "true"
+          completed: p.completed === true || p.completed === 1 || String(p.completed) === "true"
         })));
       }
     } catch (err: any) {
@@ -81,13 +81,15 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       quiz_passed: score >= 70
     };
 
-    // UI Optimista
+    // UI Otimista - Atualiza o estado local imediatamente para a UI reagir
     const oldProgress = [...progress];
-    const idx = oldProgress.findIndex(p => p.lesson_id === id);
-    const newProgress = [...oldProgress];
-    if (idx > -1) newProgress[idx] = { ...newProgress[idx], ...newItem };
-    else newProgress.push(newItem);
-    setProgress(newProgress);
+    setProgress(prev => {
+      const idx = prev.findIndex(p => p.lesson_id === id);
+      const updated = [...prev];
+      if (idx > -1) updated[idx] = { ...updated[idx], ...newItem };
+      else updated.push(newItem);
+      return updated;
+    });
 
     try {
       const { error } = await supabase
@@ -96,7 +98,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
 
       if (error) throw error;
 
-      // Chama função RPC para recalcular pontos
+      // Sincroniza estatísticas de perfil
       await supabase.rpc('calculate_total_points', { p_user_id: user.id });
       await refreshProfile();
       

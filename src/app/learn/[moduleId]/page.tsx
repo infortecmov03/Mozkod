@@ -146,7 +146,7 @@ export default function LearnPage() {
 
       <div className="mt-auto pt-6 border-t border-white/5">
         {isCompleted(lessonId) ? (
-          <div className="space-y-3">
+          <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
             <div className="bg-green-500/10 border border-green-500/30 p-3 rounded-xl flex items-center gap-3 text-green-500">
               <CheckCircle2 className="w-5 h-5" />
               <span className="text-[11px] font-bold uppercase tracking-tight">Missão Cumprida!</span>
@@ -223,7 +223,7 @@ export default function LearnPage() {
               <div className="prose prose-invert max-w-none mb-16 text-sm md:text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: theory.content }} />
               
               {isCompleted(lessonId) ? (
-                <div className="p-6 md:p-10 border-green-500/20 bg-green-500/5 backdrop-blur-sm rounded-[2rem] shadow-2xl mb-10 text-center space-y-6">
+                <div className="p-6 md:p-10 border-green-500/20 bg-green-500/5 backdrop-blur-sm rounded-[2rem] shadow-2xl mb-10 text-center space-y-6 animate-in zoom-in duration-500">
                   <div className="flex items-center justify-center gap-3">
                     <CheckCircle2 className="w-10 h-10 text-green-500" />
                     <h3 className="text-xl md:text-2xl font-bold text-green-500">Teoria Concluída!</h3>
