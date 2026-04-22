@@ -62,7 +62,7 @@ export default function LearnPage() {
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const [quizStarted, setQuizStarted] = useState(false);
+  // Quiz States
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
   const [validated, setValidated] = useState(false);
 
@@ -88,8 +88,8 @@ export default function LearnPage() {
     setJsCode(practice.jsTemplate || "");
   }, [practice, lessonId, isWebLang]);
 
+  // Reset quiz state when switching lessons
   useEffect(() => {
-    setQuizStarted(false);
     setSelectedAnswers({});
     setValidated(false);
   }, [lessonId]);
@@ -130,7 +130,7 @@ export default function LearnPage() {
         setOutput(`> ⚠️ Validação: PENDENTE (${newDone.length}/${practice?.objectives.length || 0} objetivos).`);
         toast.error("Alguns objetivos ainda não foram atingidos.");
       }
-    }, 800);
+    }, 400); // Reduced delay
   };
 
   const handleVerifyQuiz = async () => {
@@ -156,17 +156,14 @@ export default function LearnPage() {
     }
   };
 
-  const resetQuizStatus = () => {
-    setValidated(false);
-  };
-
   const selectAnswer = (questionId: string, optionIndex: number) => {
-    if (validated && isCompleted(lessonId)) return;
+    if (isCompleted(lessonId)) return;
     setSelectedAnswers(prev => ({
       ...prev,
       [questionId]: optionIndex
     }));
-    if (validated) setValidated(false); // Reset validation state if user changes answer to retry
+    // If user changes an answer after validation, we reset validation status so they can verify again
+    if (validated) setValidated(false); 
   };
 
   if (!mounted || !data) return null;
@@ -305,137 +302,124 @@ export default function LearnPage() {
 
               <div className="prose prose-invert max-w-none mb-16 text-sm md:text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: theory.content }} />
               
-              {isCompleted(lessonId) ? (
-                <div className="p-6 md:p-10 border-green-500/20 bg-green-500/5 backdrop-blur-sm rounded-[2rem] shadow-2xl mb-10 text-center space-y-6 animate-in zoom-in duration-500">
-                  <div className="flex items-center justify-center gap-3">
-                    <CheckCircle2 className="w-10 h-10 text-green-500" />
-                    <h3 className="text-xl md:text-2xl font-bold text-green-500">Teoria Validada!</h3>
+              {quiz && (
+                <div className="mb-20 space-y-8 animate-in slide-in-from-bottom-4 duration-700">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-xl">
+                      <Sparkles className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl md:text-2xl font-bold font-headline">{quiz.title}</h3>
+                      <p className="text-xs text-muted-foreground">Valida o teu conhecimento para avançar (Min: {quiz.passingScore}%).</p>
+                    </div>
                   </div>
-                  {nextLessonId ? (
-                    <Button 
-                      onClick={() => router.push(`/learn/${nextLessonId}`)} 
-                      className="w-full max-w-sm h-12 md:h-14 rounded-2xl font-black text-lg bg-green-600 hover:bg-green-700 shadow-xl gap-2"
-                    >
-                      PRÓXIMA LIÇÃO <ChevronRight className="w-6 h-6" />
-                    </Button>
-                  ) : (
-                    <Button onClick={() => router.push('/dashboard')} className="w-full max-w-sm h-12 md:h-14 rounded-2xl font-black text-lg bg-primary">
-                      VOLTAR AO PAINEL
-                    </Button>
-                  )}
-                </div>
-              ) : (
-                quiz && (
-                  <div className="mb-20 space-y-8">
-                    {!quizStarted ? (
-                      <Card className="p-6 md:p-10 border-primary/20 bg-card/40 backdrop-blur-sm rounded-[2rem] shadow-2xl">
-                        <div className="flex items-center gap-3 mb-6">
-                          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                            <Sparkles className="w-6 h-6" />
-                          </div>
-                          <h3 className="text-lg md:text-xl font-bold">{quiz.title}</h3>
-                        </div>
-                        <p className="text-muted-foreground mb-8 text-sm">Valida o teu conhecimento para avançar. Precisas de acertar pelo menos {quiz.passingScore}% das questões.</p>
-                        <Button 
-                          onClick={() => setQuizStarted(true)} 
-                          className="w-full h-12 md:h-14 rounded-2xl font-black text-base shadow-lg shadow-primary/20"
-                        >
-                          INICIAR VALIDAÇÃO
-                        </Button>
-                      </Card>
-                    ) : (
-                      <div className="space-y-6">
-                         <div className="flex items-center justify-between px-2">
-                            <h3 className="text-xl font-bold flex items-center gap-2">
-                               <ListChecks className="w-6 h-6 text-primary" /> {quiz.title}
-                            </h3>
-                         </div>
 
-                         {quiz.questions.map((q, qIdx) => {
-                            const isIncorrect = validated && selectedAnswers[q.id] !== q.correctAnswer;
-                            const isCorrect = validated && selectedAnswers[q.id] === q.correctAnswer;
-                            
-                            return (
-                            <Card key={q.id} className={cn(
-                              "border-none bg-card/40 backdrop-blur-sm rounded-3xl overflow-hidden transition-all duration-300",
-                              isCorrect && "ring-2 ring-green-500/50 bg-green-500/5",
-                              isIncorrect && "ring-2 ring-destructive/50 bg-destructive/5"
-                            )}>
-                               <CardContent className="p-6 md:p-8 space-y-6">
-                                  <div className="flex justify-between items-start gap-4">
-                                     <h4 className="text-base md:text-lg font-bold leading-tight">
-                                        <span className="text-primary mr-2">{qIdx + 1}.</span> {q.question}
-                                     </h4>
-                                     {validated && (
-                                        isCorrect 
-                                          ? <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
-                                          : <XCircle className="w-6 h-6 text-destructive shrink-0" />
-                                     )}
+                  <div className="space-y-6">
+                    {quiz.questions.map((q, qIdx) => {
+                      const isIncorrect = validated && selectedAnswers[q.id] !== q.correctAnswer;
+                      const isCorrect = validated && selectedAnswers[q.id] === q.correctAnswer;
+                      
+                      return (
+                      <Card key={q.id} className={cn(
+                        "border-none bg-card/40 backdrop-blur-sm rounded-3xl overflow-hidden transition-all duration-300",
+                        isCorrect && "ring-2 ring-green-500/50 bg-green-500/5",
+                        isIncorrect && "ring-2 ring-destructive/50 bg-destructive/5"
+                      )}>
+                         <CardContent className="p-6 md:p-8 space-y-6">
+                            <div className="flex justify-between items-start gap-4">
+                               <h4 className="text-base md:text-lg font-bold leading-tight">
+                                  <span className="text-primary mr-2">{qIdx + 1}.</span> {q.question}
+                               </h4>
+                               {validated && (
+                                  isCorrect 
+                                    ? <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
+                                    : <XCircle className="w-6 h-6 text-destructive shrink-0" />
+                               )}
+                            </div>
+
+                            <RadioGroup 
+                              value={selectedAnswers[q.id]?.toString()} 
+                              onValueChange={(v) => selectAnswer(q.id, parseInt(v))}
+                              className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                            >
+                              {q.options.map((opt, idx) => {
+                                const isSelected = selectedAnswers[q.id] === idx;
+                                const showOptionCorrect = validated && isSelected && isCorrect;
+                                const showOptionError = validated && isSelected && isIncorrect;
+                                
+                                return (
+                                  <div key={idx} className={cn(
+                                    "flex items-center space-x-3 p-4 rounded-2xl border transition-all cursor-pointer",
+                                    isSelected ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" : "border-white/5 bg-background/20",
+                                    showOptionCorrect && "border-green-500/50 bg-green-500/10",
+                                    showOptionError && "border-destructive/50 bg-destructive/10"
+                                  )} onClick={() => selectAnswer(q.id, idx)}>
+                                    <RadioGroupItem value={idx.toString()} id={`q-${q.id}-opt-${idx}`} className="sr-only" />
+                                    <div className={cn(
+                                      "w-6 h-6 rounded-full border-2 flex items-center justify-center text-[10px] font-bold shrink-0",
+                                      isSelected ? "bg-primary border-primary text-white" : "border-white/20 text-muted-foreground"
+                                    )}>
+                                      {String.fromCharCode(65 + idx)}
+                                    </div>
+                                    <Label htmlFor={`q-${q.id}-opt-${idx}`} className="flex-1 cursor-pointer font-medium text-sm leading-snug">{opt}</Label>
                                   </div>
+                                );
+                              })}
+                            </RadioGroup>
 
-                                  <RadioGroup 
-                                    value={selectedAnswers[q.id]?.toString()} 
-                                    onValueChange={(v) => selectAnswer(q.id, parseInt(v))}
-                                    className="space-y-3"
-                                  >
-                                    {q.options.map((opt, idx) => {
-                                      const isSelected = selectedAnswers[q.id] === idx;
-                                      const showOptionCorrect = validated && isSelected && isCorrect;
-                                      const showOptionError = validated && isSelected && isIncorrect;
-                                      
-                                      return (
-                                        <div key={idx} className={cn(
-                                          "flex items-center space-x-3 p-4 rounded-2xl border transition-all cursor-pointer",
-                                          isSelected ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" : "border-white/5 bg-background/20",
-                                          showOptionCorrect && "border-green-500/50 bg-green-500/10",
-                                          showOptionError && "border-destructive/50 bg-destructive/10"
-                                        )} onClick={() => selectAnswer(q.id, idx)}>
-                                          <RadioGroupItem value={idx.toString()} id={`q-${q.id}-opt-${idx}`} className="sr-only" />
-                                          <div className={cn(
-                                            "w-6 h-6 rounded-full border-2 flex items-center justify-center text-[10px] font-bold shrink-0",
-                                            isSelected ? "bg-primary border-primary text-white" : "border-white/20 text-muted-foreground"
-                                          )}>
-                                            {String.fromCharCode(65 + idx)}
-                                          </div>
-                                          <Label htmlFor={`q-${q.id}-opt-${idx}`} className="flex-1 cursor-pointer font-medium text-sm md:text-base leading-snug">{opt}</Label>
-                                        </div>
-                                      );
-                                    })}
-                                  </RadioGroup>
+                            {isIncorrect && q.explanation && (
+                               <div className="bg-destructive/10 border border-destructive/20 p-4 rounded-2xl flex gap-3 animate-in slide-in-from-top-2 duration-300">
+                                  <AlertCircle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
+                                  <div className="space-y-1">
+                                     <p className="text-[10px] font-black uppercase text-destructive tracking-widest">Dica Técnica</p>
+                                     <p className="text-xs text-muted-foreground leading-relaxed italic">{q.explanation}</p>
+                                  </div>
+                                </div>
+                            )}
+                         </CardContent>
+                      </Card>
+                      );
+                    })}
 
-                                  {isIncorrect && q.explanation && (
-                                     <div className="bg-destructive/10 border border-destructive/20 p-4 rounded-2xl flex gap-3 animate-in slide-in-from-top-2 duration-300">
-                                        <AlertCircle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
-                                        <div className="space-y-1">
-                                           <p className="text-[10px] font-black uppercase text-destructive tracking-widest">Dica Técnica</p>
-                                           <p className="text-xs text-muted-foreground leading-relaxed italic">{q.explanation}</p>
-                                        </div>
-                                     </div>
-                                  )}
-                               </CardContent>
-                            </Card>
-                            );
-                         })}
-
-                         <div className="pt-8 flex flex-col items-center gap-4">
+                    <div className="pt-8 flex flex-col items-center gap-4">
+                       {isCompleted(lessonId) ? (
+                          <div className="text-center space-y-6 w-full">
+                            <div className="bg-green-600/10 border border-green-600/30 p-6 rounded-[2rem] flex flex-col items-center gap-3">
+                               <CheckCircle2 className="w-12 h-12 text-green-500" />
+                               <h3 className="text-2xl font-black text-green-500 uppercase tracking-tighter">Conhecimento Validado!</h3>
+                            </div>
+                            {nextLessonId ? (
+                              <Button 
+                                onClick={() => router.push(`/learn/${nextLessonId}`)} 
+                                className="w-full max-w-md h-16 rounded-[2.5rem] font-black text-xl bg-green-600 hover:bg-green-700 shadow-2xl shadow-green-900/30 gap-2"
+                              >
+                                PRÓXIMA LIÇÃO <ChevronRight className="w-6 h-6" />
+                              </Button>
+                            ) : (
+                              <Button onClick={() => router.push('/dashboard')} className="w-full max-w-md h-16 rounded-[2.5rem] font-black text-xl bg-primary">
+                                VOLTAR AO PAINEL
+                              </Button>
+                            )}
+                          </div>
+                       ) : (
+                         <>
                             <Button 
                               onClick={handleVerifyQuiz} 
                               disabled={Object.keys(selectedAnswers).length < quiz.questions.length}
-                              className="w-full max-w-md h-14 md:h-16 rounded-[2rem] font-black text-lg shadow-xl shadow-primary/20"
+                              className="w-full max-w-md h-16 rounded-[2.5rem] font-black text-lg shadow-2xl shadow-primary/30"
                             >
                               {validated ? 'REAVALIAR RESPOSTAS' : 'VERIFICAR RESPOSTAS'}
                             </Button>
-
-                            {!validated && Object.keys(selectedAnswers).length < quiz.questions.length && (
+                            {Object.keys(selectedAnswers).length < quiz.questions.length && (
                                <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest animate-pulse">
                                   Responde a todas as {quiz.questions.length} questões para validar
                                </p>
                             )}
-                         </div>
-                      </div>
-                    )}
+                         </>
+                       )}
+                    </div>
                   </div>
-                )
+                </div>
               )}
             </div>
           ) : (
