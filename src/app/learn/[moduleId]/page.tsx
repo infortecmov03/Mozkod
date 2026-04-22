@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
@@ -159,14 +158,21 @@ export default function LearnPage() {
         await markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', Math.round(scorePercent));
       }
     } else {
-      toast.error(`Ainda não chegaste lá. Acertaste ${correctCount}/${quiz.questions.length}. Analise as dicas e tente novamente.`);
+      toast.error(`Ainda existem erros. Acertaste ${correctCount}/${quiz.questions.length}. Analisa as dicas e tenta novamente.`);
     }
   };
 
-  const resetQuiz = () => {
-    setSelectedAnswers({});
+  const resetQuizStatus = () => {
     setValidated(false);
     setShowHints({});
+  };
+
+  const selectAnswer = (questionId: string, optionIndex: number) => {
+    if (validated) return;
+    setSelectedAnswers(prev => ({
+      ...prev,
+      [questionId]: optionIndex
+    }));
   };
 
   if (!mounted || !data) return null;
@@ -361,8 +367,8 @@ export default function LearnPage() {
                                <ListChecks className="w-6 h-6 text-primary" /> {quiz.title}
                             </h3>
                             {validated && (
-                               <Button variant="ghost" size="sm" onClick={resetQuiz} className="text-muted-foreground text-xs gap-2">
-                                  <RefreshCcw className="w-3.5 h-3.5" /> RECOMEÇAR
+                               <Button variant="ghost" size="sm" onClick={resetQuizStatus} className="text-muted-foreground text-xs gap-2">
+                                  <RefreshCcw className="w-3.5 h-3.5" /> CORRIGIR ERROS
                                </Button>
                             )}
                          </div>
@@ -387,28 +393,31 @@ export default function LearnPage() {
 
                                   <RadioGroup 
                                     value={selectedAnswers[q.id]?.toString()} 
-                                    onValueChange={(v) => {
-                                      if(!validated) setSelectedAnswers(prev => ({ ...prev, [q.id]: parseInt(v) }));
-                                    }}
+                                    onValueChange={(v) => selectAnswer(q.id, parseInt(v))}
                                     className="space-y-3"
                                   >
-                                    {q.options.map((opt, idx) => (
-                                      <div key={idx} className={cn(
-                                        "flex items-center space-x-3 p-4 rounded-2xl border transition-all cursor-pointer",
-                                        selectedAnswers[q.id] === idx ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" : "border-white/5 bg-background/20",
-                                        validated && q.correctAnswer === idx && "border-green-500/50 bg-green-500/10",
-                                        validated && selectedAnswers[q.id] === idx && q.correctAnswer !== idx && "border-destructive/50 bg-destructive/10"
-                                      )} onClick={() => !validated && setSelectedAnswers(prev => ({ ...prev, [q.id]: idx }))}>
-                                        <RadioGroupItem value={idx.toString()} id={`q-${q.id}-opt-${idx}`} className="sr-only" />
-                                        <div className={cn(
-                                          "w-6 h-6 rounded-full border-2 flex items-center justify-center text-[10px] font-bold shrink-0",
-                                          selectedAnswers[q.id] === idx ? "bg-primary border-primary text-white" : "border-white/20 text-muted-foreground"
-                                        )}>
-                                          {String.fromCharCode(65 + idx)}
+                                    {q.options.map((opt, idx) => {
+                                      const isSelected = selectedAnswers[q.id] === idx;
+                                      const isCorrect = q.correctAnswer === idx;
+                                      
+                                      return (
+                                        <div key={idx} className={cn(
+                                          "flex items-center space-x-3 p-4 rounded-2xl border transition-all cursor-pointer",
+                                          isSelected ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" : "border-white/5 bg-background/20",
+                                          validated && isSelected && isCorrect && "border-green-500/50 bg-green-500/10",
+                                          validated && isSelected && !isCorrect && "border-destructive/50 bg-destructive/10"
+                                        )} onClick={() => selectAnswer(q.id, idx)}>
+                                          <RadioGroupItem value={idx.toString()} id={`q-${q.id}-opt-${idx}`} className="sr-only" />
+                                          <div className={cn(
+                                            "w-6 h-6 rounded-full border-2 flex items-center justify-center text-[10px] font-bold shrink-0",
+                                            isSelected ? "bg-primary border-primary text-white" : "border-white/20 text-muted-foreground"
+                                          )}>
+                                            {String.fromCharCode(65 + idx)}
+                                          </div>
+                                          <Label htmlFor={`q-${q.id}-opt-${idx}`} className="flex-1 cursor-pointer font-medium text-sm md:text-base leading-snug">{opt}</Label>
                                         </div>
-                                        <Label htmlFor={`q-${q.id}-opt-${idx}`} className="flex-1 cursor-pointer font-medium text-sm md:text-base leading-snug">{opt}</Label>
-                                      </div>
-                                    ))}
+                                      );
+                                    })}
                                   </RadioGroup>
 
                                   {validated && selectedAnswers[q.id] !== q.correctAnswer && q.explanation && (
@@ -434,8 +443,8 @@ export default function LearnPage() {
                             </Button>
                             
                             {validated && Object.values(showHints).length > 0 && (
-                               <Button variant="outline" onClick={resetQuiz} className="rounded-full px-8 h-12 font-bold border-destructive/30 text-destructive hover:bg-destructive/5">
-                                  CORRIGIR ERROS E TENTAR NOVAMENTE
+                               <Button variant="outline" onClick={resetQuizStatus} className="rounded-full px-8 h-12 font-bold border-destructive/30 text-destructive hover:bg-destructive/5">
+                                  ANALISAR DICAS E CORRIGIR
                                </Button>
                             )}
 
