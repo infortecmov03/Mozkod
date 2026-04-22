@@ -2,71 +2,82 @@ import type { TheoryLesson } from '../../types';
 
 export const lesson: TheoryLesson = {
   id: "cs-t3",
-  title: "Álgebra Booleana: A Matemática dos Circuitos",
+  title: "Álgebra Booleana: A Matemática da Lógica",
   youtubeVideoId: "95v88Oit0H8",
   content: `
-    <div class="space-y-6">
+    <div class="space-y-8">
       <div class="bg-accent/5 p-6 rounded-2xl border border-accent/10 shadow-lg">
         <h2 class="text-2xl font-bold mb-4 flex items-center gap-2 text-accent">
-          ⚡ A Base da Simplificação
+          ⚡ O Que é a Álgebra Booleana?
         </h2>
         <p class="text-lg leading-relaxed">
-          A Álgebra Booleana é o sistema matemático que permite simplificar expressões lógicas complexas. Para um engenheiro, menos portas lógicas significam circuitos mais rápidos, mais baratos e que consomem menos energia.
+          Na matemática comum, usamos números de 0 a infinito. Na <strong>Álgebra Booleana</strong>, o nosso universo tem apenas dois valores: <strong>0 (Falso)</strong> e <strong>1 (Verdadeiro)</strong>.
         </p>
       </div>
 
-      <div class="space-y-4">
-        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">1. Leis Fundamentais</h3>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="bg-card p-4 rounded-xl border border-white/5">
-            <h4 class="font-bold text-primary mb-2">Identidade e Nulo</h4>
-            <ul class="text-xs space-y-1 font-code">
-              <li>A AND 1 = A</li>
-              <li>A OR 0 = A</li>
-              <li>A AND 0 = 0</li>
-              <li>A OR 1 = 1</li>
-            </ul>
-          </div>
-          <div class="bg-card p-4 rounded-xl border border-white/5">
-            <h4 class="font-bold text-primary mb-2">Idempotência e Inversão</h4>
-            <ul class="text-xs space-y-1 font-code">
-              <li>A AND A = A</li>
-              <li>A OR A = A</li>
-              <li>NOT (NOT A) = A</li>
-              <li>A AND (NOT A) = 0</li>
-            </ul>
-          </div>
+      <div class="space-y-6">
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">1. A Lei da Identidade (Por que A AND 1 = A?)</h3>
+        <p class="text-sm">Imagina que o <b>1</b> é uma porta sempre aberta. O resultado final depende apenas de ti (<b>A</b>):</p>
+        
+        <div class="bg-black/40 p-6 rounded-xl border border-white/5 space-y-4">
+          <p class="font-bold text-primary italic">Prova linha por linha:</p>
+          <ul class="space-y-3 text-sm font-mono">
+            <li class="flex gap-4 border-b border-white/5 pb-2">
+              <span class="text-accent">Se A = 1:</span>
+              <span>1 AND 1 = <b class="text-green-400">1</b> (O resultado foi igual ao valor de A)</span>
+            </li>
+            <li class="flex gap-4 pb-2">
+              <span class="text-accent">Se A = 0:</span>
+              <span>0 AND 1 = <b class="text-red-400">0</b> (O resultado foi igual ao valor de A)</span>
+            </li>
+          </ul>
+          <p class="text-xs text-muted-foreground mt-4">
+            <b>Conclusão:</b> Não importa o valor de A, o resultado da operação <code>A AND 1</code> será sempre o próprio <code>A</code>. Por isso, 1 é chamado de "Elemento Neutro" no AND.
+          </p>
         </div>
-      </div>
 
-      <div class="space-y-4">
-        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">2. Leis de De Morgan</h3>
-        <p class="text-sm text-muted-foreground italic">Estas são as leis mais importantes para simplificação de lógica digital.</p>
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">2. A Lei da Identidade no OR (A OR 0 = A)</h3>
+        <p class="text-sm">No OR (OU), o <b>0</b> é o elemento neutro. Se tens uma opção que é sempre falsa, o sucesso depende apenas da outra opção (A).</p>
+        <div class="bg-black/40 p-6 rounded-xl border border-white/5 space-y-4">
+           <ul class="space-y-3 text-sm font-mono">
+            <li class="flex gap-4 border-b border-white/5 pb-2">
+              <span class="text-accent">Se A = 1:</span>
+              <span>1 OR 0 = <b class="text-green-400">1</b></span>
+            </li>
+            <li class="flex gap-4">
+              <span class="text-accent">Se A = 0:</span>
+              <span>0 OR 0 = <b class="text-red-400">0</b></span>
+            </li>
+          </ul>
+        </div>
+
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2 text-red-400">3. A Lei do Nulo (O "Buraco Negro")</h3>
+        <p class="text-sm">Existem valores que "engolem" a variável:</p>
+        <ul class="grid md:grid-cols-2 gap-4">
+          <li class="bg-card p-4 rounded-xl border border-white/5">
+            <h4 class="font-bold text-primary mb-1">A AND 0 = 0</h4>
+            <p class="text-xs opacity-70">Não importa o que A seja, se precisas que AMBOS sejam verdadeiros e um é 0, o resultado será sempre 0.</p>
+          </li>
+          <li class="bg-card p-4 rounded-xl border border-white/5">
+            <h4 class="font-bold text-primary mb-1">A OR 1 = 1</h4>
+            <p class="text-xs opacity-70">Se pelo menos UM precisa de ser verdadeiro e já tens o 1, o resultado será sempre 1.</p>
+          </li>
+        </ul>
+
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">4. As Leis de De Morgan (A Lógica da Negação)</h3>
+        <p class="text-sm">Augustus De Morgan descobriu que negar uma escolha conjunta muda a natureza da operação:</p>
         <div class="bg-primary/5 p-5 rounded-xl border border-primary/20 space-y-4">
-          <div class="flex flex-col md:flex-row gap-4 justify-between">
-            <div class="flex-1">
-              <p class="font-bold text-xs uppercase text-primary mb-1">Lei 1:</p>
-              <code class="text-sm">NOT (A AND B) = (NOT A) OR (NOT B)</code>
-            </div>
-            <div class="flex-1 border-l border-white/10 pl-4">
-              <p class="font-bold text-xs uppercase text-primary mb-1">Lei 2:</p>
-              <code class="text-sm">NOT (A OR B) = (NOT A) AND (NOT B)</code>
-            </div>
+          <p class="text-xs italic">"Dizer que NÃO (está sol E tenho tempo) é o mesmo que dizer (NÃO está sol) OU (NÃO tenho tempo)."</p>
+          <div class="bg-black/60 p-4 rounded-lg font-code text-xs text-accent">
+            NOT (A AND B) = (NOT A) OR (NOT B)
           </div>
         </div>
       </div>
 
-      <div class="space-y-4">
-        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">3. Distributividade</h3>
-        <p class="text-sm">Tal como na álgebra comum, podes "distribuir" os operadores:</p>
-        <div class="bg-black/40 p-4 rounded-xl font-code text-sm text-center">
-          A AND (B OR C) = (A AND B) OR (A AND C)
-        </div>
-      </div>
-
-      <div class="bg-yellow-500/5 p-4 rounded-xl border border-yellow-500/20 mt-6">
+      <div class="bg-yellow-500/5 p-6 rounded-2xl border border-yellow-500/20">
+        <h4 class="font-bold text-yellow-500 mb-2">🚀 Por que aprender isto?</h4>
         <p class="text-sm leading-relaxed">
-          <strong>🚀 Nota de Engenharia:</strong> Ao programar um <code>if</code> complexo, usa De Morgan para tornar a condição mais legível. Um <code>if (!(a && b))</code> é o mesmo que <code>if (!a || !b)</code>.
+          Como engenheiro, o teu código terá milhares de condições <code>if</code>. Saber álgebra booleana permite-te escrever <code>if (!a || !b)</code> em vez de <code>if (!(a && b))</code>, tornando o sistema mais rápido de processar e mais fácil para outros humanos lerem.
         </p>
       </div>
     </div>
