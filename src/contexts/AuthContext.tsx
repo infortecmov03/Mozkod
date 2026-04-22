@@ -23,6 +23,7 @@ type AuthContextType = {
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
+  isBypassMode: boolean;
   signInWithGoogle: () => Promise<void>;
   signInWithGithub: () => Promise<void>;
   signInWithEmail: (email: string) => Promise<void>;
@@ -41,16 +42,14 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 const DEV_USER: User = {
   id: 'dev-user-123',
   email: 'engenheiro@codworks.mz',
-  app_metadata: {},
-  user_metadata: { display_name: 'Dev Master' },
+  user_metadata: { display_name: 'Engenheiro de Elite' },
   aud: 'authenticated',
-  created_at: new Date().toISOString(),
 } as any;
 
 const DEV_PROFILE: Profile = {
   id: 'dev-user-123',
   email: 'engenheiro@codworks.mz',
-  display_name: 'Engenheiro de Elite (Dev)',
+  display_name: 'Engenheiro de Elite',
   avatar_url: 'https://picsum.photos/seed/dev/200',
   preferred_language: 'pt',
   preferred_theme: 'dark',
@@ -68,7 +67,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   const isSupabaseConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && 
-                               process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
                                !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
   
   const isDevBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true' || !isSupabaseConfigured;
@@ -76,55 +74,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchProfile = async (userId: string) => {
     if (isDevBypass) {
       setProfile(DEV_PROFILE);
-      return DEV_PROFILE;
+      return;
     }
-
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-      
-      if (!error && data) {
-        setProfile(data);
-      }
-      return data;
-    } catch (e) {
-      console.warn("Middleware: Perfil não encontrado.");
-      return null;
-    }
+    const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
+    if (data) setProfile(data);
   };
 
   const signInWithPassword = async (email: string, password: string) => {
     if (isDevBypass) {
+      localStorage.setItem('cwm_logged_in', 'true');
       setUser(DEV_USER);
       setProfile(DEV_PROFILE);
-      setSession({ user: DEV_USER, access_token: 'dev-token' } as any);
-      setLoading(false);
+      setSession({ user: DEV_USER, access_token: 'fake-token' } as any);
+      router.push('/dashboard');
       return;
     }
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
   };
 
   const signOut = async () => {
     if (isDevBypass) {
+      localStorage.removeItem('cwm_logged_in');
       setUser(null);
       setProfile(null);
       setSession(null);
-      setLoading(false);
       router.replace('/login');
       return;
     }
     await supabase.auth.signOut();
-    setUser(null);
-    setProfile(null);
-    setSession(null);
     router.replace('/login');
+  };
+
+  const signUp = async (email: string, password: string, displayName: string) => {
+    if (isDevBypass) return;
+    const { error } = await supabase.auth.signUp({
+      email, password, options: { data: { display_name: displayName } }
+    });
+    if (error) throw error;
   };
 
   const updateProfile = async (data: Partial<Profile>) => {
@@ -134,134 +121,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     if (!user) return;
     const { error } = await supabase.from('profiles').update(data).eq('id', user.id);
-    if (!error) await fetchProfile(user.id);
-    else throw error;
-  };
-
-  const refreshProfile = async () => {
-    if (user) await fetchProfile(user.id);
-  };
-
-  const signInWithGoogle = async () => {
-    if (isDevBypass) {
-      await signInWithPassword('', '');
-      router.push('/dashboard');
-      return;
-    }
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback` }
-    });
-  };
-
-  const signInWithGithub = async () => {
-    if (isDevBypass) {
-      await signInWithPassword('', '');
-      router.push('/dashboard');
-      return;
-    }
-    await supabase.auth.signInWithOAuth({
-      provider: 'github',
-      options: { redirectTo: `${window.location.origin}/auth/callback` }
-    });
-  };
-
-  const signInWithEmail = async (email: string) => {
-    if (isDevBypass) return;
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` }
-    });
     if (error) throw error;
-  };
-
-  const signUp = async (email: string, password: string, displayName: string) => {
-    if (isDevBypass) return;
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { display_name: displayName } },
-    });
-    if (error) throw error;
-  };
-
-  const resetPassword = async (email: string) => {
-    if (isDevBypass) return;
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/callback?next=/profile#password-reset`,
-    });
-    if (error) throw error;
-  };
-
-  const updatePassword = async (newPassword: string) => {
-    if (isDevBypass) return;
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
-    if (error) throw error;
-  };
-
-  const unlinkIdentity = async (provider: string) => {
-    if (isDevBypass) return;
-    if (!user) return;
-    const identity = user.identities?.find(i => i.provider === provider);
-    if (identity) {
-      const { error } = await supabase.auth.unlinkIdentity(identity);
-      if (error) throw error;
-      const { data: { user: newUser } } = await supabase.auth.getUser();
-      setUser(newUser);
-    }
+    await fetchProfile(user.id);
   };
 
   useEffect(() => {
-    const initializeAuth = async () => {
+    const init = async () => {
       if (isDevBypass) {
-        setUser(DEV_USER);
-        setProfile(DEV_PROFILE);
-        setSession({ user: DEV_USER } as any);
+        const wasLoggedIn = localStorage.getItem('cwm_logged_in') === 'true';
+        if (wasLoggedIn) {
+          setUser(DEV_USER);
+          setProfile(DEV_PROFILE);
+        }
         setLoading(false);
         return;
       }
 
-      try {
-        const { data: { session: currentSession } } = await supabase.auth.getSession();
-        setSession(currentSession);
-        setUser(currentSession?.user ?? null);
-        if (currentSession?.user) await fetchProfile(currentSession.user.id);
-      } catch (e) {
-        console.warn("Falha ao inicializar Supabase.");
-      } finally {
-        setLoading(false);
-      }
-    };
+      const { data: { session: s } } = await supabase.auth.getSession();
+      setSession(s);
+      setUser(s?.user ?? null);
+      if (s?.user) await fetchProfile(s.user.id);
+      setLoading(false);
 
-    initializeAuth();
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (session?.user) fetchProfile(session.user.id);
+      });
 
-    if (!isDevBypass) {
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(
-        async (event, newSession) => {
-          setSession(newSession);
-          setUser(newSession?.user ?? null);
-          if (newSession?.user) await fetchProfile(newSession.user.id);
-          else setProfile(null);
-          setLoading(false);
-        }
-      );
       return () => subscription.unsubscribe();
-    }
+    };
+    init();
   }, [isDevBypass]);
 
   return (
     <AuthContext.Provider value={{
-      user, profile, session, loading,
-      signInWithGoogle, signInWithGithub, signInWithEmail, signInWithPassword,
-      signUp, signOut, resetPassword, updatePassword, updateProfile, refreshProfile, unlinkIdentity
+      user, profile, session, loading, isBypassMode: isDevBypass,
+      signInWithGoogle: async () => {}, signInWithGithub: async () => {},
+      signInWithEmail: async () => {}, signInWithPassword, signUp, signOut,
+      resetPassword: async () => {}, updatePassword: async () => {}, 
+      updateProfile, refreshProfile: async () => { if(user) fetchProfile(user.id) },
+      unlinkIdentity: async () => {}
     }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);
