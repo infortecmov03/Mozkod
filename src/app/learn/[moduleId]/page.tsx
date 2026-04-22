@@ -1,13 +1,14 @@
+
 'use client';
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Terminal, Play, CheckCircle2, ChevronLeft, 
   ListChecks, Loader2, Brain, Eye, Sparkles, ChevronDown, ChevronUp,
-  Info, ChevronRight, XCircle
+  Info, ChevronRight, XCircle, AlertCircle, RefreshCcw
 } from "lucide-react";
 import { 
   findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
@@ -29,6 +30,7 @@ import {
 } from "@/components/ui/sheet";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
@@ -60,12 +62,11 @@ export default function LearnPage() {
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Quiz States
+  // New Multi-Question Quiz States
   const [quizStarted, setQuizStarted] = useState(false);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [quizScore, setQuizScore] = useState(0);
-  const [quizFinished, setQuizFinished] = useState(false);
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
+  const [validated, setValidated] = useState(false);
+  const [showHints, setShowHints] = useState<Record<string, boolean>>({});
 
   const isWebLang = useMemo(() => ['html', 'css', 'javascript'].includes(practice?.language.toLowerCase() || ''), [practice]);
   const isConceptLab = useMemo(() => practice?.language.toLowerCase() === 'concept', [practice]);
@@ -89,13 +90,12 @@ export default function LearnPage() {
     setJsCode(practice.jsTemplate || "");
   }, [practice, lessonId, isWebLang]);
 
-  // Reset quiz when lesson changes
+  // Reset states when lesson changes
   useEffect(() => {
     setQuizStarted(false);
-    setCurrentQuestionIndex(0);
-    setSelectedOption(null);
-    setQuizScore(0);
-    setQuizFinished(false);
+    setSelectedAnswers({});
+    setValidated(false);
+    setShowHints({});
   }, [lessonId]);
 
   const updatePreview = useCallback(() => {
@@ -125,46 +125,54 @@ export default function LearnPage() {
 
       if (newDone.length === (practice?.objectives.length || 0)) {
         setOutput("> ✅ Validação: SUCESSO. Missão concluída.");
+        toast.success("Excelente! Missão concluída.");
         if (data && !isCompleted(lessonId)) {
           const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
           await markAsCompleted(lessonId, data.level.id, data.ka.id, 'exercise', 100, finalCode);
         }
       } else {
         setOutput(`> ⚠️ Validação: PENDENTE (${newDone.length}/${practice?.objectives.length || 0} objetivos).`);
+        toast.error("Alguns objetivos ainda não foram atingidos.");
       }
     }, 800);
   };
 
-  const handleNextQuestion = () => {
-    if (!quiz || selectedOption === null) return;
+  const handleVerifyQuiz = async () => {
+    if (!quiz) return;
     
-    const isCorrect = selectedOption === quiz.questions[currentQuestionIndex].correctAnswer;
-    const newScore = isCorrect ? quizScore + 1 : quizScore;
+    let correctCount = 0;
+    const newHints: Record<string, boolean> = {};
     
-    if (isCorrect) setQuizScore(newScore);
-
-    if (currentQuestionIndex < quiz.questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-      setSelectedOption(null);
-    } else {
-      const finalScorePercent = (newScore / quiz.questions.length) * 100;
-      setQuizFinished(true);
-      if (finalScorePercent >= (quiz.passingScore || 70)) {
-        if (data) markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', Math.round(finalScorePercent));
+    quiz.questions.forEach((q) => {
+      if (selectedAnswers[q.id] === q.correctAnswer) {
+        correctCount++;
+      } else {
+        newHints[q.id] = true;
       }
+    });
+
+    const scorePercent = (correctCount / quiz.questions.length) * 100;
+    setValidated(true);
+    setShowHints(newHints);
+
+    if (scorePercent >= quiz.passingScore) {
+      toast.success(`Parabéns! Acertaste ${correctCount}/${quiz.questions.length} questões.`);
+      if (data && !isCompleted(lessonId)) {
+        await markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', Math.round(scorePercent));
+      }
+    } else {
+      toast.error(`Ainda não chegaste lá. Acertaste ${correctCount}/${quiz.questions.length}. Analise as dicas e tente novamente.`);
     }
   };
 
   const resetQuiz = () => {
-    setQuizStarted(false);
-    setQuizFinished(false);
-    setQuizScore(0);
-    setCurrentQuestionIndex(0);
-    setSelectedOption(null);
+    setSelectedAnswers({});
+    setValidated(false);
+    setShowHints({});
   };
 
   if (!mounted || !data) return null;
-  const { ka, level } = data;
+  const { ka } = data;
 
   const MissionContent = (
     <div className="p-5 h-full flex flex-col bg-card/30 overflow-y-auto scroll-container">
@@ -191,10 +199,10 @@ export default function LearnPage() {
       <div className="space-y-2 mb-10">
         <p className="text-[10px] font-black uppercase text-muted-foreground/60 mb-2 tracking-widest">Objetivos</p>
         {practice?.objectives.map((obj, i) => (
-          <div key={obj.id} className={cn("p-3 md:p-4 rounded-xl border transition-all", completedObjectives.includes(obj.id) ? "bg-green-500/10 border-green-500/30" : "bg-background/40 border-white/5 shadow-sm")}>
+          <div key={obj.id} className={cn("p-3 md:p-4 rounded-xl border transition-all", (completedObjectives.includes(obj.id) || isCompleted(lessonId)) ? "bg-green-500/10 border-green-500/30" : "bg-background/40 border-white/5 shadow-sm")}>
             <div className="flex gap-3 items-start">
-              <div className={cn("w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] font-bold mt-0.5", completedObjectives.includes(obj.id) ? "bg-green-500 text-white" : "bg-white/10 text-muted-foreground")}>
-                {completedObjectives.includes(obj.id) ? <CheckCircle2 className="w-3.5 h-3.5" /> : i + 1}
+              <div className={cn("w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] font-bold mt-0.5", (completedObjectives.includes(obj.id) || isCompleted(lessonId)) ? "bg-green-500 text-white" : "bg-white/10 text-muted-foreground")}>
+                {(completedObjectives.includes(obj.id) || isCompleted(lessonId)) ? <CheckCircle2 className="w-3.5 h-3.5" /> : i + 1}
               </div>
               <p className="text-[11px] md:text-xs leading-tight font-medium">{obj.description}</p>
             </div>
@@ -315,7 +323,7 @@ export default function LearnPage() {
                 </div>
               ) : (
                 quiz && (
-                  <div className="mb-20">
+                  <div className="mb-20 space-y-8">
                     {!quizStarted ? (
                       <Card className="p-6 md:p-10 border-primary/20 bg-card/40 backdrop-blur-sm rounded-[2rem] shadow-2xl">
                         <div className="flex items-center gap-3 mb-6">
@@ -329,67 +337,101 @@ export default function LearnPage() {
                           onClick={() => setQuizStarted(true)} 
                           className="w-full h-12 md:h-14 rounded-2xl font-black text-base shadow-lg shadow-primary/20"
                         >
-                          VALIDAR CONHECIMENTO
+                          INICIAR VALIDAÇÃO
                         </Button>
-                      </Card>
-                    ) : quizFinished ? (
-                      <Card className="p-6 md:p-10 border-white/5 bg-card/20 rounded-[2rem] text-center space-y-6">
-                        {Math.round((quizScore / quiz.questions.length) * 100) >= quiz.passingScore ? (
-                          <>
-                            <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto" />
-                            <h3 className="text-2xl font-bold">Aprovado! 🎓</h3>
-                            <p className="text-muted-foreground">Atingiste {Math.round((quizScore / quiz.questions.length) * 100)}% de acerto.</p>
-                          </>
-                        ) : (
-                          <>
-                            <XCircle className="w-16 h-16 text-destructive mx-auto" />
-                            <h3 className="text-2xl font-bold">Tenta Novamente 🔄</h3>
-                            <p className="text-muted-foreground">Precisas de {quiz.passingScore}% para passar. Obtiveste {Math.round((quizScore / quiz.questions.length) * 100)}%.</p>
-                            <Button onClick={resetQuiz} variant="outline" className="rounded-xl px-8 h-12 font-bold">RECOMEÇAR QUIZ</Button>
-                          </>
-                        )}
                       </Card>
                     ) : (
-                      <Card className="p-6 md:p-10 border-primary/20 bg-card/40 rounded-[2.5rem] shadow-2xl">
-                        <div className="flex justify-between items-center mb-8">
-                          <span className="text-[10px] font-black uppercase text-primary tracking-widest">Questão {currentQuestionIndex + 1} de {quiz.questions.length}</span>
-                          <div className="h-1.5 w-32 bg-secondary rounded-full overflow-hidden">
-                            <div className="h-full bg-primary transition-all" style={{ width: `${((currentQuestionIndex + 1) / quiz.questions.length) * 100}%` }} />
-                          </div>
-                        </div>
-                        
-                        <h3 className="text-xl md:text-2xl font-bold mb-8 leading-tight">{quiz.questions[currentQuestionIndex].question}</h3>
-                        
-                        <RadioGroup 
-                          value={selectedOption?.toString()} 
-                          onValueChange={(v) => setSelectedOption(parseInt(v))}
-                          className="space-y-4 mb-10"
-                        >
-                          {quiz.questions[currentQuestionIndex].options.map((opt, idx) => (
-                            <div key={idx} className={cn(
-                              "flex items-center space-x-3 p-4 rounded-2xl border transition-all cursor-pointer hover:bg-primary/5",
-                              selectedOption === idx ? "border-primary bg-primary/10" : "border-white/5 bg-background/20"
-                            )} onClick={() => setSelectedOption(idx)}>
-                              <RadioGroupItem value={idx.toString()} id={`opt-${idx}`} className="sr-only" />
-                              <div className={cn(
-                                "w-6 h-6 rounded-full border-2 flex items-center justify-center text-[10px] font-bold",
-                                selectedOption === idx ? "border-primary bg-primary text-white" : "border-white/20 text-muted-foreground"
-                              )}>
-                                {String.fromCharCode(65 + idx)}
-                              </div>
-                              <Label htmlFor={`opt-${idx}`} className="flex-1 cursor-pointer font-medium text-sm md:text-base">{opt}</Label>
-                            </div>
-                          ))}
-                        </RadioGroup>
+                      <div className="space-y-6">
+                         <div className="flex items-center justify-between px-2">
+                            <h3 className="text-xl font-bold flex items-center gap-2">
+                               <ListChecks className="w-6 h-6 text-primary" /> {quiz.title}
+                            </h3>
+                            {validated && (
+                               <Button variant="ghost" size="sm" onClick={resetQuiz} className="text-muted-foreground text-xs gap-2">
+                                  <RefreshCcw className="w-3.5 h-3.5" /> RECOMEÇAR
+                               </Button>
+                            )}
+                         </div>
 
-                        <Button 
-                          onClick={handleNextQuestion} 
-                          disabled={selectedOption === null}
-                          className="w-full h-12 md:h-14 rounded-2xl font-black text-base"
-                        >
-                          {currentQuestionIndex === quiz.questions.length - 1 ? 'FINALIZAR' : 'PRÓXIMA PERGUNTA'}
-                        </Button>
-                      </Card>
+                         {quiz.questions.map((q, qIdx) => (
+                            <Card key={q.id} className={cn(
+                              "border-none bg-card/40 backdrop-blur-sm rounded-3xl overflow-hidden transition-all duration-500",
+                              validated && selectedAnswers[q.id] === q.correctAnswer && "ring-2 ring-green-500/50 bg-green-500/5",
+                              validated && selectedAnswers[q.id] !== q.correctAnswer && "ring-2 ring-destructive/50 bg-destructive/5"
+                            )}>
+                               <CardContent className="p-6 md:p-8 space-y-6">
+                                  <div className="flex justify-between items-start gap-4">
+                                     <h4 className="text-base md:text-lg font-bold leading-tight">
+                                        <span className="text-primary mr-2">{qIdx + 1}.</span> {q.question}
+                                     </h4>
+                                     {validated && (
+                                        selectedAnswers[q.id] === q.correctAnswer 
+                                          ? <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
+                                          : <XCircle className="w-6 h-6 text-destructive shrink-0" />
+                                     )}
+                                  </div>
+
+                                  <RadioGroup 
+                                    value={selectedAnswers[q.id]?.toString()} 
+                                    onValueChange={(v) => {
+                                      if(!validated) setSelectedAnswers(prev => ({ ...prev, [q.id]: parseInt(v) }));
+                                    }}
+                                    className="space-y-3"
+                                  >
+                                    {q.options.map((opt, idx) => (
+                                      <div key={idx} className={cn(
+                                        "flex items-center space-x-3 p-4 rounded-2xl border transition-all cursor-pointer",
+                                        selectedAnswers[q.id] === idx ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" : "border-white/5 bg-background/20",
+                                        validated && q.correctAnswer === idx && "border-green-500/50 bg-green-500/10",
+                                        validated && selectedAnswers[q.id] === idx && q.correctAnswer !== idx && "border-destructive/50 bg-destructive/10"
+                                      )} onClick={() => !validated && setSelectedAnswers(prev => ({ ...prev, [q.id]: idx }))}>
+                                        <RadioGroupItem value={idx.toString()} id={`q-${q.id}-opt-${idx}`} className="sr-only" />
+                                        <div className={cn(
+                                          "w-6 h-6 rounded-full border-2 flex items-center justify-center text-[10px] font-bold shrink-0",
+                                          selectedAnswers[q.id] === idx ? "bg-primary border-primary text-white" : "border-white/20 text-muted-foreground"
+                                        )}>
+                                          {String.fromCharCode(65 + idx)}
+                                        </div>
+                                        <Label htmlFor={`q-${q.id}-opt-${idx}`} className="flex-1 cursor-pointer font-medium text-sm md:text-base leading-snug">{opt}</Label>
+                                      </div>
+                                    ))}
+                                  </RadioGroup>
+
+                                  {validated && selectedAnswers[q.id] !== q.correctAnswer && q.explanation && (
+                                     <div className="bg-destructive/10 border border-destructive/20 p-4 rounded-2xl flex gap-3 animate-in slide-in-from-top-2 duration-300">
+                                        <AlertCircle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
+                                        <div className="space-y-1">
+                                           <p className="text-[10px] font-black uppercase text-destructive tracking-widest">Dica Técnica</p>
+                                           <p className="text-xs text-muted-foreground leading-relaxed italic">{q.explanation}</p>
+                                        </div>
+                                     </div>
+                                  )}
+                               </CardContent>
+                            </Card>
+                         ))}
+
+                         <div className="pt-8 flex flex-col items-center gap-4">
+                            <Button 
+                              onClick={handleVerifyQuiz} 
+                              disabled={Object.keys(selectedAnswers).length < quiz.questions.length || validated}
+                              className="w-full max-w-md h-14 md:h-16 rounded-[2rem] font-black text-lg shadow-xl shadow-primary/20"
+                            >
+                              {validated ? 'VERIFICAÇÃO CONCLUÍDA' : 'VERIFICAR RESPOSTAS'}
+                            </Button>
+                            
+                            {validated && Object.values(showHints).length > 0 && (
+                               <Button variant="outline" onClick={resetQuiz} className="rounded-full px-8 h-12 font-bold border-destructive/30 text-destructive hover:bg-destructive/5">
+                                  CORRIGIR ERROS E TENTAR NOVAMENTE
+                               </Button>
+                            )}
+
+                            {!validated && Object.keys(selectedAnswers).length < quiz.questions.length && (
+                               <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest animate-pulse">
+                                  Responde a todas as {quiz.questions.length} questões para validar
+                               </p>
+                            )}
+                         </div>
+                      </div>
                     )}
                   </div>
                 )
