@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Terminal, Play, CheckCircle2, ChevronLeft, 
   ListChecks, Loader2, Brain, Eye, Sparkles, ChevronDown, ChevronUp,
-  Info, ChevronRight, XCircle, AlertCircle, RefreshCcw
+  Info, ChevronRight, XCircle, AlertCircle, RefreshCcw, Youtube
 } from "lucide-react";
 import { 
   findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
@@ -62,7 +62,6 @@ export default function LearnPage() {
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // New Multi-Question Quiz States
   const [quizStarted, setQuizStarted] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
   const [validated, setValidated] = useState(false);
@@ -90,7 +89,6 @@ export default function LearnPage() {
     setJsCode(practice.jsTemplate || "");
   }, [practice, lessonId, isWebLang]);
 
-  // Reset states when lesson changes
   useEffect(() => {
     setQuizStarted(false);
     setSelectedAnswers({});
@@ -300,6 +298,22 @@ export default function LearnPage() {
           {theory ? (
             <div className="flex-1 overflow-y-auto p-5 md:p-16 max-w-4xl mx-auto w-full scroll-container">
               <h1 className="text-2xl md:text-5xl font-headline font-bold mb-6 md:mb-10 leading-tight">{theory.title}</h1>
+              
+              {theory.youtubeVideoId && (
+                <div className="mb-12 aspect-video w-full overflow-hidden rounded-[2.5rem] shadow-2xl border border-white/5 bg-black/40 group relative">
+                   <iframe 
+                    src={`https://www.youtube.com/embed/${theory.youtubeVideoId}`}
+                    title={theory.title}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                  <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-600/90 text-white text-[10px] font-black uppercase tracking-widest shadow-lg">
+                    <Youtube className="w-3.5 h-3.5" /> Video Aula
+                  </div>
+                </div>
+              )}
+
               <div className="prose prose-invert max-w-none mb-16 text-sm md:text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: theory.content }} />
               
               {isCompleted(lessonId) ? (
