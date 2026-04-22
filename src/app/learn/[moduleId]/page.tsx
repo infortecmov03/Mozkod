@@ -7,11 +7,11 @@ import { Card } from "@/components/ui/card";
 import { 
   Terminal, Play, CheckCircle2, ChevronLeft, 
   ListChecks, Loader2, Brain, Eye, Sparkles, ChevronDown, ChevronUp,
-  Info
+  Info, ChevronRight
 } from "lucide-react";
 import { 
   findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
-  findQuizById
+  findQuizById, findNextLessonId
 } from "@/lib/curriculum";
 import { useParams, useRouter } from "next/navigation";
 import { useLanguage } from "@/components/LanguageContext";
@@ -43,6 +43,7 @@ export default function LearnPage() {
   const theory = useMemo(() => findTheoryLesson(lessonId), [lessonId]);
   const practice = useMemo(() => findPracticeExercise(lessonId), [lessonId]);
   const quiz = useMemo(() => theory?.quizId ? findQuizById(theory.quizId) : null, [theory]);
+  const nextLessonId = useMemo(() => findNextLessonId(lessonId), [lessonId]);
 
   const [htmlCode, setHtmlCode] = useState("");
   const [cssCode, setCssCode] = useState("");
@@ -143,11 +144,40 @@ export default function LearnPage() {
         ))}
       </div>
 
-      {(completedObjectives.length === (practice?.objectives.length || 0) || isCompleted(lessonId)) && (
-        <Button onClick={() => markAsCompleted(lessonId, level.id, ka.id, 'exercise', 100, code)} className="w-full h-12 md:h-14 rounded-xl md:rounded-2xl font-black bg-primary shadow-lg shadow-primary/20">
-          CONCLUIR LABORATÓRIO
-        </Button>
-      )}
+      <div className="mt-auto pt-6 border-t border-white/5">
+        {isCompleted(lessonId) ? (
+          <div className="space-y-3">
+            <div className="bg-green-500/10 border border-green-500/30 p-3 rounded-xl flex items-center gap-3 text-green-500">
+              <CheckCircle2 className="w-5 h-5" />
+              <span className="text-[11px] font-bold uppercase tracking-tight">Missão Cumprida!</span>
+            </div>
+            {nextLessonId ? (
+              <Button 
+                onClick={() => router.push(`/learn/${nextLessonId}`)} 
+                className="w-full h-12 md:h-14 rounded-xl md:rounded-2xl font-black bg-green-600 hover:bg-green-700 shadow-lg shadow-green-900/20 text-white gap-2"
+              >
+                PRÓXIMA LIÇÃO <ChevronRight className="w-5 h-5" />
+              </Button>
+            ) : (
+              <Button 
+                onClick={() => router.push('/dashboard')} 
+                className="w-full h-12 md:h-14 rounded-xl md:rounded-2xl font-black bg-primary"
+              >
+                VOLTAR AO PAINEL
+              </Button>
+            )}
+          </div>
+        ) : (
+          (completedObjectives.length === (practice?.objectives.length || 0)) && (
+            <Button 
+              onClick={() => markAsCompleted(lessonId, level.id, ka.id, 'exercise', 100, code)} 
+              className="w-full h-12 md:h-14 rounded-xl md:rounded-2xl font-black bg-primary shadow-lg shadow-primary/20 animate-in fade-in zoom-in duration-500"
+            >
+              CONCLUIR LABORATÓRIO
+            </Button>
+          )
+        )}
+      </div>
     </div>
   );
 
@@ -155,7 +185,6 @@ export default function LearnPage() {
     <div className="flex flex-col h-[100dvh] bg-background overflow-hidden font-body">
       <Navigation />
       
-      {/* Mini-Header Responsivo */}
       <div className="bg-card/50 border-b px-4 h-12 md:h-14 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3 min-w-0">
           <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-full h-8 w-8"><ChevronLeft className="w-4 h-4" /></Button>
@@ -165,7 +194,6 @@ export default function LearnPage() {
           </div>
         </div>
         
-        {/* Botão de Missão Flutuante/Header para Mobile */}
         {isMobile && practice && (
           <Sheet>
             <SheetTrigger asChild>
@@ -188,29 +216,52 @@ export default function LearnPage() {
       </div>
 
       <main className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        {/* Editor Area */}
         <div className="flex-1 flex flex-col bg-[#1e1e1e] relative overflow-hidden">
           {theory ? (
             <div className="flex-1 overflow-y-auto p-5 md:p-16 max-w-4xl mx-auto w-full scroll-container">
               <h1 className="text-2xl md:text-5xl font-headline font-bold mb-6 md:mb-10 leading-tight">{theory.title}</h1>
               <div className="prose prose-invert max-w-none mb-16 text-sm md:text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: theory.content }} />
-              {quiz && (
-                <Card className="p-6 md:p-10 border-primary/20 bg-card/40 backdrop-blur-sm rounded-[2rem] shadow-2xl mb-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                      <Sparkles className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-lg md:text-xl font-bold">{quiz.title}</h3>
+              
+              {isCompleted(lessonId) ? (
+                <div className="p-6 md:p-10 border-green-500/20 bg-green-500/5 backdrop-blur-sm rounded-[2rem] shadow-2xl mb-10 text-center space-y-6">
+                  <div className="flex items-center justify-center gap-3">
+                    <CheckCircle2 className="w-10 h-10 text-green-500" />
+                    <h3 className="text-xl md:text-2xl font-bold text-green-500">Teoria Concluída!</h3>
                   </div>
-                  <Button onClick={() => markAsCompleted(lessonId, level.id, ka.id, 'theory')} className="w-full h-12 md:h-14 rounded-2xl font-black text-base shadow-lg shadow-primary/20">
-                    VALIDAR CONHECIMENTO
-                  </Button>
-                </Card>
+                  {nextLessonId ? (
+                    <Button 
+                      onClick={() => router.push(`/learn/${nextLessonId}`)} 
+                      className="w-full max-w-sm h-12 md:h-14 rounded-2xl font-black text-lg bg-green-600 hover:bg-green-700 shadow-xl gap-2"
+                    >
+                      PRÓXIMA LIÇÃO <ChevronRight className="w-6 h-6" />
+                    </Button>
+                  ) : (
+                    <Button onClick={() => router.push('/dashboard')} className="w-full max-w-sm h-12 md:h-14 rounded-2xl font-black text-lg bg-primary">
+                      VOLTAR AO PAINEL
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                quiz && (
+                  <Card className="p-6 md:p-10 border-primary/20 bg-card/40 backdrop-blur-sm rounded-[2rem] shadow-2xl mb-10">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                        <Sparkles className="w-6 h-6" />
+                      </div>
+                      <h3 className="text-lg md:text-xl font-bold">{quiz.title}</h3>
+                    </div>
+                    <Button 
+                      onClick={() => markAsCompleted(lessonId, level.id, ka.id, 'theory')} 
+                      className="w-full h-12 md:h-14 rounded-2xl font-black text-base shadow-lg shadow-primary/20"
+                    >
+                      VALIDAR CONHECIMENTO
+                    </Button>
+                  </Card>
+                )
               )}
             </div>
           ) : (
             <>
-              {/* Editor Toolbar */}
               <div className="flex items-center justify-between px-3 md:px-4 h-10 md:h-11 bg-black/60 border-b border-white/5 shrink-0">
                 <div className="flex gap-1 overflow-x-auto no-scrollbar scroll-smooth">
                   {isWebLang ? (
@@ -231,9 +282,7 @@ export default function LearnPage() {
                 </Button>
               </div>
 
-              {/* Multi-Tab Viewer */}
               <div className="flex-1 flex relative overflow-hidden">
-                {/* Editor Surface - Never hidden in Mobile now unless Preview is active */}
                 <div className={cn("flex-1 h-full", activeTab === 'preview' && isMobile ? "hidden" : "block")}>
                   <Editor
                     height="100%"
@@ -262,7 +311,6 @@ export default function LearnPage() {
                   />
                 </div>
                 
-                {/* Mobile Preview */}
                 {activeTab === 'preview' && isMobile && (
                    <div className="flex-1 flex flex-col bg-white">
                       <div className="h-6 bg-muted text-[8px] font-bold flex items-center px-3 text-muted-foreground uppercase"><Eye className="w-2.5 h-2.5 mr-1.5" /> Live Preview</div>
@@ -270,7 +318,6 @@ export default function LearnPage() {
                    </div>
                 )}
 
-                {/* Desktop Side-by-side View */}
                 {!isMobile && isWebLang && (
                   <div className="w-1/2 border-l border-white/5 bg-white flex flex-col shadow-2xl">
                     <div className="h-6 bg-muted text-[9px] font-black flex items-center px-3 text-muted-foreground uppercase tracking-widest"><Eye className="w-3 h-3 mr-2" /> Live Interaction View</div>
@@ -279,7 +326,6 @@ export default function LearnPage() {
                 )}
               </div>
 
-              {/* Console / Validation Output */}
               <div className={cn("bg-black/90 border-t border-white/10 transition-all duration-300", isConsoleOpen ? "h-32 md:h-40" : "h-8 md:h-10")}>
                 <div className="flex items-center justify-between px-4 h-8 md:h-10 cursor-pointer hover:bg-white/5 transition-colors" onClick={() => setIsConsoleOpen(!isConsoleOpen)}>
                   <span className="text-[9px] md:text-[10px] font-black text-muted-foreground uppercase flex items-center gap-2 tracking-widest">
@@ -298,7 +344,6 @@ export default function LearnPage() {
           )}
         </div>
 
-        {/* Desktop Side Mission Panel */}
         {!isMobile && practice && (
           <div className="w-80 md:w-96 border-l border-white/5 bg-[#0d1117] shadow-2xl shrink-0">
             {MissionContent}
