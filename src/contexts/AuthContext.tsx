@@ -23,7 +23,6 @@ type AuthContextType = {
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
-  isBypassMode: boolean;
   signInWithGoogle: () => Promise<void>;
   signInWithGithub: () => Promise<void>;
   signInWithEmail: (email: string) => Promise<void>;
@@ -39,26 +38,6 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-const DEV_USER: User = {
-  id: 'dev-user-123',
-  email: 'engenheiro@codworks.mz',
-  user_metadata: { display_name: 'Engenheiro de Elite' },
-  aud: 'authenticated',
-} as any;
-
-const DEV_PROFILE: Profile = {
-  id: 'dev-user-123',
-  email: 'engenheiro@codworks.mz',
-  display_name: 'Engenheiro de Elite',
-  avatar_url: 'https://picsum.photos/seed/dev/200',
-  preferred_language: 'pt',
-  preferred_theme: 'dark',
-  total_points: 1250,
-  streak: 7,
-  last_active: new Date().toISOString(),
-  created_at: new Date().toISOString(),
-};
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -66,102 +45,125 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const isSupabaseConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && 
-                               !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
-  
-  const isDevBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true' || !isSupabaseConfigured;
-
   const fetchProfile = async (userId: string) => {
-    if (isDevBypass) {
-      setProfile(DEV_PROFILE);
-      return;
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      
+      if (error) throw error;
+      if (data) setProfile(data);
+    } catch (err) {
+      console.error('Erro ao buscar perfil:', err);
     }
-    const { data } = await supabase.from('profiles').select('*').eq('id', userId).single();
-    if (data) setProfile(data);
   };
 
   const signInWithPassword = async (email: string, password: string) => {
-    if (isDevBypass) {
-      localStorage.setItem('cwm_logged_in', 'true');
-      setUser(DEV_USER);
-      setProfile(DEV_PROFILE);
-      setSession({ user: DEV_USER, access_token: 'fake-token' } as any);
-      router.push('/dashboard');
-      return;
-    }
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
-  };
-
-  const signOut = async () => {
-    if (isDevBypass) {
-      localStorage.removeItem('cwm_logged_in');
-      setUser(null);
-      setProfile(null);
-      setSession(null);
-      router.replace('/login');
-      return;
-    }
-    await supabase.auth.signOut();
-    router.replace('/login');
+    router.push('/dashboard');
   };
 
   const signUp = async (email: string, password: string, displayName: string) => {
-    if (isDevBypass) return;
     const { error } = await supabase.auth.signUp({
-      email, password, options: { data: { display_name: displayName } }
+      email,
+      password,
+      options: {
+        data: { display_name: displayName },
+        emailRedirectTo: `${window.location.origin}/auth/callback`
+      }
     });
     if (error) throw error;
   };
 
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setProfile(null);
+    setSession(null);
+    router.replace('/login');
+  };
+
+  const signInWithGoogle = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/auth/callback` }
+    });
+  };
+
+  const signInWithGithub = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: { redirectTo: `${window.location.origin}/auth/callback` }
+    });
+  };
+
+  const signInWithEmail = async (email: string) => {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` }
+    });
+    if (error) throw error;
+  };
+
+  const resetPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/profile#password-reset`,
+    });
+    if (error) throw error;
+  };
+
+  const updatePassword = async (newPassword: string) => {
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) throw error;
+  };
+
   const updateProfile = async (data: Partial<Profile>) => {
-    if (isDevBypass) {
-      setProfile(prev => prev ? { ...prev, ...data } : null);
-      return;
-    }
     if (!user) return;
     const { error } = await supabase.from('profiles').update(data).eq('id', user.id);
     if (error) throw error;
     await fetchProfile(user.id);
   };
 
+  const unlinkIdentity = async (provider: string) => {
+    // Nota: O desvínculo de identidades requer lógica específica dependendo da configuração do Supabase
+    console.warn('Unlink solicitado para:', provider);
+  };
+
   useEffect(() => {
     const init = async () => {
-      if (isDevBypass) {
-        const wasLoggedIn = localStorage.getItem('cwm_logged_in') === 'true';
-        if (wasLoggedIn) {
-          setUser(DEV_USER);
-          setProfile(DEV_PROFILE);
-        }
-        setLoading(false);
-        return;
-      }
-
       const { data: { session: s } } = await supabase.auth.getSession();
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) await fetchProfile(s.user.id);
       setLoading(false);
 
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        if (session?.user) fetchProfile(session.user.id);
+        if (session?.user) {
+          await fetchProfile(session.user.id);
+        } else {
+          setProfile(null);
+        }
+        setLoading(false);
       });
 
       return () => subscription.unsubscribe();
     };
     init();
-  }, [isDevBypass]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{
-      user, profile, session, loading, isBypassMode: isDevBypass,
-      signInWithGoogle: async () => {}, signInWithGithub: async () => {},
-      signInWithEmail: async () => {}, signInWithPassword, signUp, signOut,
-      resetPassword: async () => {}, updatePassword: async () => {}, 
+      user, profile, session, loading,
+      signInWithGoogle, signInWithGithub,
+      signInWithEmail, signInWithPassword, signUp, signOut,
+      resetPassword, updatePassword, 
       updateProfile, refreshProfile: async () => { if(user) fetchProfile(user.id) },
-      unlinkIdentity: async () => {}
+      unlinkIdentity
     }}>
       {children}
     </AuthContext.Provider>

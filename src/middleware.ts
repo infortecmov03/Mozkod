@@ -2,17 +2,14 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  const isDevBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true';
   const { pathname } = request.nextUrl;
 
+  // Rotas que exigem autenticação
   const protectedRoutes = ['/dashboard', '/learn', '/certifications', '/profile', '/community'];
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
 
-  // No modo bypass, verificamos o localStorage no cliente, mas no middleware
-  // apenas deixamos passar para evitar loops, exceto se as chaves forem placeholder
-  if (isDevBypass) {
-    return NextResponse.next();
-  }
+  // Rota de autenticação (login/registo)
+  const isAuthRoute = pathname === '/login' || pathname === '/register';
 
   let response = NextResponse.next({
     request: { headers: request.headers },
@@ -21,8 +18,11 @@ export async function middleware(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  if (!supabaseUrl || supabaseUrl.includes('placeholder')) {
-    if (isProtectedRoute) return NextResponse.redirect(new URL('/login', request.url));
+  // Se não houver configuração do Supabase, redirecionamos para uma página de erro ou login
+  if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('placeholder')) {
+    if (isProtectedRoute) {
+      return NextResponse.redirect(new URL('/login?error=no_config', request.url));
+    }
     return response;
   }
 
@@ -38,9 +38,11 @@ export async function middleware(request: NextRequest) {
     },
   });
 
+  // Importante: chamamos getSession para atualizar o token se necessário
   const { data: { session } } = await supabase.auth.getSession();
 
-  if (session && (pathname === '/login' || pathname === '/register')) {
+  // Redirecionamentos lógicos
+  if (session && isAuthRoute) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 

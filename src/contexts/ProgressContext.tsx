@@ -3,7 +3,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase/client';
 import { useAuth } from './AuthContext';
-import { modules } from '@/lib/curriculum';
 import { toast } from 'sonner';
 
 type ProgressContextType = {
@@ -17,7 +16,7 @@ type ProgressContextType = {
 const ProgressContext = createContext<ProgressContextType>({} as ProgressContextType);
 
 export function ProgressProvider({ children }: { children: React.ReactNode }) {
-  const { user, isBypassMode, refreshProfile } = useAuth();
+  const { user, refreshProfile } = useAuth();
   const [progress, setProgress] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,69 +27,89 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     
-    if (isBypassMode) {
-      const localData = localStorage.getItem('cwm_dev_progress');
-      if (localData) {
-        try {
-          setProgress(JSON.parse(localData));
-        } catch (e) {
-          setProgress([]);
-        }
-      }
-      setLoading(false);
-      return;
-    }
-
+    setLoading(true);
     try {
-      const { data, error } = await supabase.from('user_lesson_progress').select('*').eq('user_id', user.id);
+      const { data, error } = await supabase
+        .from('user_lesson_progress')
+        .select('*')
+        .eq('user_id', user.id);
+      
       if (error) throw error;
+      
       if (data) {
+        // Normalizamos o booleano caso venha como string do banco
         setProgress(data.map(p => ({
           ...p,
-          completed: p.completed === true || p.completed === 1 || p.completed === "true"
+          completed: p.completed === true || p.completed === "true" || p.completed === 1
         })));
       }
     } catch (err: any) {
-      console.warn('Usando armazenamento local de fallback para progresso.');
+      console.error('Erro ao carregar progresso real:', err.message);
     } finally {
       setLoading(false);
     }
-  }, [user, isBypassMode]);
+  }, [user]);
 
-  useEffect(() => { fetchProgress(); }, [fetchProgress]);
+  useEffect(() => {
+    fetchProgress();
+  }, [fetchProgress]);
 
   const isCompleted = useCallback((id: string) => {
-    return progress.some(p => p.lesson_id === id && p.completed === true);
+    return progress.some(p => p.lesson_id === id && p.completed);
   }, [progress]);
 
-  const markAsCompleted = async (id: string, levelId: number, kaId: string, type: 'theory' | 'exercise', score: number = 100, code?: string) => {
-    if (!user) return;
+  const markAsCompleted = async (
+    id: string, 
+    levelId: number, 
+    kaId: string, 
+    type: 'theory' | 'exercise', 
+    score: number = 100, 
+    code?: string
+  ) => {
+    if (!user) {
+      toast.error("Precisas de estar logado para guardar o progresso.");
+      return;
+    }
 
     const newItem = { 
-      user_id: user.id, lesson_id: id, completed: true, level_id: levelId,
-      ka_id: kaId, lesson_type: type, last_code: code, completed_at: new Date().toISOString(),
-      quiz_score: score, quiz_passed: score >= 70
+      user_id: user.id, 
+      lesson_id: id, 
+      completed: true, 
+      level_id: levelId,
+      ka_id: kaId, 
+      lesson_type: type, 
+      last_code: code || '', 
+      completed_at: new Date().toISOString(),
+      quiz_score: score, 
+      quiz_passed: score >= 70
     };
 
+    // Atualização optimista na UI
     const newProgress = [...progress];
     const idx = newProgress.findIndex(p => p.lesson_id === id);
     if (idx > -1) newProgress[idx] = { ...newProgress[idx], ...newItem };
     else newProgress.push(newItem);
-
     setProgress(newProgress);
 
-    if (isBypassMode) {
-      localStorage.setItem('cwm_dev_progress', JSON.stringify(newProgress));
-      toast.success("Progresso guardado localmente (Modo DEV)");
-      return;
-    }
-
     try {
-      const { error } = await supabase.from('user_lesson_progress').upsert(newItem, { onConflict: 'user_id,lesson_id' });
+      // Sincronização real com Supabase
+      const { error } = await supabase
+        .from('user_lesson_progress')
+        .upsert(newItem, { onConflict: 'user_id,lesson_id' });
+
       if (error) throw error;
-      supabase.rpc('calculate_total_points', { p_user_id: user.id }).then(() => refreshProfile());
+
+      // Chama a função RPC para recalcular pontos e streak no servidor
+      const { error: rpcError } = await supabase.rpc('calculate_total_points', { p_user_id: user.id });
+      if (rpcError) console.error('Erro ao processar pontos:', rpcError);
+      
+      // Atualiza o perfil local com os novos pontos
+      await refreshProfile();
+      
+      toast.success("Progresso guardado na nuvem!");
     } catch (err: any) {
-      toast.error('Erro ao sincronizar: ' + err.message);
+      console.error('Falha na sincronização:', err);
+      toast.error('Erro ao sincronizar com o servidor: ' + err.message);
     }
   };
 
