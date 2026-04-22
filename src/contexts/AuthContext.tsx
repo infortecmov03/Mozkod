@@ -30,6 +30,7 @@ type AuthContextType = {
   signUp: (email: string, password: string, displayName: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  updatePassword: (newPassword: string) => Promise<void>;
   updateProfile: (data: Partial<Profile>) => Promise<void>;
   refreshProfile: () => Promise<void>;
   unlinkIdentity: (provider: string) => Promise<void>;
@@ -37,7 +38,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-// MOCK DATA PARA DESENVOLVIMENTO (Pode ser removido em produção final)
+// MOCK DATA PARA DESENVOLVIMENTO
 const DEV_USER: User = {
   id: 'dev-user-123',
   email: 'engenheiro@codworks.mz',
@@ -67,7 +68,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Se esta flag for false ou inexistente, o sistema usa o Supabase real
   const isDevBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true';
 
   const fetchProfile = async (userId: string) => {
@@ -163,9 +163,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const resetPassword = async (email: string) => {
-    const redirectTo = `${window.location.origin}/auth/callback?next=/profile`;
+    const redirectTo = `${window.location.origin}/auth/callback?next=/profile#password-reset`;
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo,
+    });
+    if (error) throw error;
+  };
+
+  const updatePassword = async (newPassword: string) => {
+    if (isDevBypass) return;
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
     });
     if (error) throw error;
   };
@@ -251,6 +259,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signUp,
       signOut,
       resetPassword,
+      updatePassword,
       updateProfile,
       refreshProfile,
       unlinkIdentity

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Navigation } from "@/components/Navigation";
@@ -14,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Zap, Star, Trophy, Calendar, MapPin, Edit2, Loader2, 
   MessageSquare, Award, ShieldCheck, Flame, Lock, 
-  Fingerprint, Github, Chrome, Bell, LogOut, Check
+  Fingerprint, Github, Chrome, Bell, LogOut, Check, KeyRound
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
@@ -24,7 +23,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function ProfilePage() {
-  const { user, profile, loading: authLoading, signOut, unlinkIdentity, updateProfile } = useAuth();
+  const { user, profile, loading: authLoading, signOut, unlinkIdentity, updateProfile, updatePassword } = useAuth();
   const { progress, loading: progressLoading } = useProgress();
   const { t } = useLanguage();
   const { toast } = useToast();
@@ -35,6 +34,11 @@ export default function ProfilePage() {
   const [newDisplayName, setNewDisplayName] = useState("");
   const [newAvatarUrl, setNewAvatarUrl] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+
+  // Password States
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -48,7 +52,7 @@ export default function ProfilePage() {
     return progress.filter(p => p.level_id === 1 && p.completed).length;
   }, [progress]);
 
-  const level1Total = 21 * 7; // Aproximação baseada nas KAs
+  const level1Total = 21 * 7; 
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,6 +68,30 @@ export default function ProfilePage() {
       toast({ variant: "destructive", title: "Erro ao atualizar", description: err.message });
     } finally {
       setIsUpdating(false);
+    }
+  };
+
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast({ variant: "destructive", title: "Erro", description: "As senhas não coincidem." });
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast({ variant: "destructive", title: "Erro", description: "A senha deve ter pelo menos 6 caracteres." });
+      return;
+    }
+
+    setIsChangingPassword(true);
+    try {
+      await updatePassword(newPassword);
+      toast({ title: "Senha Alterada", description: "O teu acesso foi atualizado com sucesso." });
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err: any) {
+      toast({ variant: "destructive", title: "Erro", description: err.message });
+    } finally {
+      setIsChangingPassword(false);
     }
   };
 
@@ -87,7 +115,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen flex flex-col bg-background font-body">
       <Navigation />
-      <main className="container mx-auto px-4 py-12 max-w-6xl flex-1">
+      <main className="container mx-auto px-4 py-12 max-w-6xl flex-1 scroll-container">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           <div className="lg:col-span-4 space-y-6">
@@ -237,19 +265,44 @@ export default function ProfilePage() {
                  </section>
               </TabsContent>
 
-              <TabsContent value="security" className="space-y-6 animate-in slide-in-from-right-4 duration-500">
+              <TabsContent value="security" className="space-y-8 animate-in slide-in-from-right-4 duration-500">
                 <div className="grid gap-6">
+                  <Card id="password-reset" className="bg-card/40 border-none shadow-xl overflow-hidden rounded-3xl">
+                    <CardHeader>
+                      <CardTitle className="text-lg flex items-center gap-2"><KeyRound className="w-5 h-5 text-primary" /> Alterar Senha</CardTitle>
+                      <CardDescription>Crie uma nova credencial robusta para a sua conta.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                       <form onSubmit={handleUpdatePassword} className="space-y-4">
+                          <div className="grid md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="new-pass">Nova Senha</Label>
+                              <Input id="new-pass" type="password" placeholder="Mínimo 6 caracteres" value={newPassword} onChange={e => setNewPassword(e.target.value)} required className="rounded-xl" />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="confirm-pass">Confirmar Senha</Label>
+                              <Input id="confirm-pass" type="password" placeholder="Repita a nova senha" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required className="rounded-xl" />
+                            </div>
+                          </div>
+                          <Button type="submit" disabled={isChangingPassword} className="font-bold rounded-xl gap-2">
+                             {isChangingPassword ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                             Atualizar Senha
+                          </Button>
+                       </form>
+                    </CardContent>
+                  </Card>
+
                   <Card className="bg-card/40 border-none shadow-xl overflow-hidden rounded-3xl">
                     <CardHeader><CardTitle className="text-lg flex items-center gap-2"><Lock className="w-5 h-5 text-primary" /> Contas Vinculadas</CardTitle></CardHeader>
                     <CardContent className="p-6 space-y-4">
-                       <div className="flex items-center justify-between p-4 bg-background/40 rounded-2xl">
+                       <div className="flex items-center justify-between p-4 bg-background/40 rounded-2xl border border-white/5">
                           <div className="flex items-center gap-3">
                              <Chrome className="w-5 h-5 text-primary" />
                              <div><p className="text-sm font-bold">Google</p></div>
                           </div>
                           <Button variant="ghost" size="sm" className="text-destructive font-bold" onClick={() => handleUnlink('google')}>Desvincular</Button>
                        </div>
-                       <div className="flex items-center justify-between p-4 bg-background/40 rounded-2xl">
+                       <div className="flex items-center justify-between p-4 bg-background/40 rounded-2xl border border-white/5">
                           <div className="flex items-center gap-3">
                              <Github className="w-5 h-5 text-white" />
                              <div><p className="text-sm font-bold">GitHub</p></div>
