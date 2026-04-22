@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { 
   Terminal, Play, CheckCircle2, ChevronLeft, 
   ListChecks, Loader2, Brain, Eye, Sparkles, ChevronDown, ChevronUp,
-  Info, ChevronRight
+  Info, ChevronRight, XCircle, AlertCircle
 } from "lucide-react";
 import { 
   findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
@@ -27,6 +27,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
@@ -58,6 +60,14 @@ export default function LearnPage() {
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
+  // Quiz States
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [isAnswerChecked, setIsAnswerChecked] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [quizFinished, setQuizResult] = useState(false);
+
   const isWebLang = useMemo(() => ['html', 'css', 'javascript'].includes(practice?.language.toLowerCase() || ''), [practice]);
   const isConceptLab = useMemo(() => practice?.language.toLowerCase() === 'concept', [practice]);
 
@@ -80,6 +90,16 @@ export default function LearnPage() {
     setJsCode(practice.jsTemplate || "");
   }, [practice, lessonId, isWebLang]);
 
+  // Reset quiz when lesson changes
+  useEffect(() => {
+    setQuizStarted(false);
+    setCurrentQuestionIndex(0);
+    setSelectedOption(null);
+    setIsAnswerChecked(false);
+    setQuizScore(0);
+    setQuizResult(false);
+  }, [lessonId]);
+
   const updatePreview = useCallback(() => {
     if (!iframeRef.current || !isWebLang) return;
     const doc = `<html><head><style>${cssCode}</style></head><body style="padding:20px; font-family:sans-serif;">${htmlCode}<script>${jsCode}</script></body></html>`;
@@ -96,7 +116,6 @@ export default function LearnPage() {
     setIsRunning(true);
     setIsConsoleOpen(true);
     
-    // Simular delay de execução/validação
     setTimeout(async () => {
       setIsRunning(false);
       const current = isWebLang 
@@ -108,7 +127,6 @@ export default function LearnPage() {
 
       if (newDone.length === (practice?.objectives.length || 0)) {
         setOutput("> ✅ Validação: SUCESSO. Missão concluída.");
-        // Auto-complete no Supabase se ainda não estiver concluído
         if (data && !isCompleted(lessonId)) {
           const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
           await markAsCompleted(lessonId, data.level.id, data.ka.id, 'exercise', 100, finalCode);
@@ -117,6 +135,24 @@ export default function LearnPage() {
         setOutput(`> ⚠️ Validação: PENDENTE (${newDone.length}/${practice?.objectives.length || 0} objetivos).`);
       }
     }, 800);
+  };
+
+  const handleNextQuestion = () => {
+    if (!quiz) return;
+    const isCorrect = selectedOption === quiz.questions[currentQuestionIndex].correctAnswer;
+    if (isCorrect) setQuizScore(prev => prev + 1);
+
+    if (currentQuestionIndex < quiz.questions.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1);
+      setSelectedOption(null);
+      setIsAnswerChecked(false);
+    } else {
+      const finalScore = ((quizScore + (isCorrect ? 1 : 0)) / quiz.questions.length) * 100;
+      setQuizResult(true);
+      if (finalScore >= (quiz.passingScore || 70)) {
+        if (data) markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', Math.round(finalScore));
+      }
+    }
   };
 
   if (!mounted || !data) return null;
@@ -200,7 +236,6 @@ export default function LearnPage() {
         </div>
         
         <div className="flex items-center gap-2">
-          {/* Botão de Execução Dinâmico no Topo */}
           {!theory && (
             isCompleted(lessonId) ? (
               <Button 
@@ -255,7 +290,7 @@ export default function LearnPage() {
                 <div className="p-6 md:p-10 border-green-500/20 bg-green-500/5 backdrop-blur-sm rounded-[2rem] shadow-2xl mb-10 text-center space-y-6 animate-in zoom-in duration-500">
                   <div className="flex items-center justify-center gap-3">
                     <CheckCircle2 className="w-10 h-10 text-green-500" />
-                    <h3 className="text-xl md:text-2xl font-bold text-green-500">Teoria Concluída!</h3>
+                    <h3 className="text-xl md:text-2xl font-bold text-green-500">Concluído com Sucesso!</h3>
                   </div>
                   {nextLessonId ? (
                     <Button 
@@ -272,20 +307,83 @@ export default function LearnPage() {
                 </div>
               ) : (
                 quiz && (
-                  <Card className="p-6 md:p-10 border-primary/20 bg-card/40 backdrop-blur-sm rounded-[2rem] shadow-2xl mb-10">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                        <Sparkles className="w-6 h-6" />
-                      </div>
-                      <h3 className="text-lg md:text-xl font-bold">{quiz.title}</h3>
-                    </div>
-                    <Button 
-                      onClick={() => markAsCompleted(lessonId, level.id, ka.id, 'theory')} 
-                      className="w-full h-12 md:h-14 rounded-2xl font-black text-base shadow-lg shadow-primary/20"
-                    >
-                      VALIDAR CONHECIMENTO
-                    </Button>
-                  </Card>
+                  <div className="mb-20">
+                    {!quizStarted ? (
+                      <Card className="p-6 md:p-10 border-primary/20 bg-card/40 backdrop-blur-sm rounded-[2rem] shadow-2xl">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                            <Sparkles className="w-6 h-6" />
+                          </div>
+                          <h3 className="text-lg md:text-xl font-bold">{quiz.title}</h3>
+                        </div>
+                        <p className="text-muted-foreground mb-8 text-sm">Valida o teu conhecimento para avançar na trilha de engenharia. Precisas de acertar pelo menos {quiz.passingScore}% das questões.</p>
+                        <Button 
+                          onClick={() => setQuizStarted(true)} 
+                          className="w-full h-12 md:h-14 rounded-2xl font-black text-base shadow-lg shadow-primary/20"
+                        >
+                          VALIDAR CONHECIMENTO
+                        </Button>
+                      </Card>
+                    ) : quizFinished ? (
+                      <Card className="p-6 md:p-10 border-white/5 bg-card/20 rounded-[2rem] text-center space-y-6">
+                        {Math.round((quizScore / quiz.questions.length) * 100) >= quiz.passingScore ? (
+                          <>
+                            <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto" />
+                            <h3 className="text-2xl font-bold">Aprovado! 🎓</h3>
+                            <p className="text-muted-foreground">Atingiste {Math.round((quizScore / quiz.questions.length) * 100)}% de acerto.</p>
+                          </>
+                        ) : (
+                          <>
+                            <XCircle className="w-16 h-16 text-destructive mx-auto" />
+                            <h3 className="text-2xl font-bold">Tenta Novamente 🔄</h3>
+                            <p className="text-muted-foreground">Precisas de {quiz.passingScore}% para passar. Obtiveste {Math.round((quizScore / quiz.questions.length) * 100)}%.</p>
+                            <Button onClick={() => { setQuizStarted(false); setQuizResult(false); setQuizScore(0); setCurrentQuestionIndex(0); }} variant="outline">RECOMEÇAR QUIZ</Button>
+                          </>
+                        )}
+                      </Card>
+                    ) : (
+                      <Card className="p-6 md:p-10 border-primary/20 bg-card/40 rounded-[2.5rem] shadow-2xl">
+                        <div className="flex justify-between items-center mb-8">
+                          <span className="text-[10px] font-black uppercase text-primary tracking-widest">Questão {currentQuestionIndex + 1} de {quiz.questions.length}</span>
+                          <div className="h-1.5 w-32 bg-secondary rounded-full overflow-hidden">
+                            <div className="h-full bg-primary transition-all" style={{ width: `${((currentQuestionIndex + 1) / quiz.questions.length) * 100}%` }} />
+                          </div>
+                        </div>
+                        
+                        <h3 className="text-xl md:text-2xl font-bold mb-8 leading-tight">{quiz.questions[currentQuestionIndex].question}</h3>
+                        
+                        <RadioGroup 
+                          value={selectedOption?.toString()} 
+                          onValueChange={(v) => setSelectedOption(parseInt(v))}
+                          className="space-y-4 mb-10"
+                        >
+                          {quiz.questions[currentQuestionIndex].options.map((opt, idx) => (
+                            <div key={idx} className={cn(
+                              "flex items-center space-x-3 p-4 rounded-2xl border transition-all cursor-pointer hover:bg-primary/5",
+                              selectedOption === idx ? "border-primary bg-primary/10" : "border-white/5 bg-background/20"
+                            )} onClick={() => setSelectedOption(idx)}>
+                              <RadioGroupItem value={idx.toString()} id={`opt-${idx}`} className="sr-only" />
+                              <div className={cn(
+                                "w-6 h-6 rounded-full border-2 flex items-center justify-center text-[10px] font-bold",
+                                selectedOption === idx ? "border-primary bg-primary text-white" : "border-white/20 text-muted-foreground"
+                              )}>
+                                {String.fromCharCode(65 + idx)}
+                              </div>
+                              <Label htmlFor={`opt-${idx}`} className="flex-1 cursor-pointer font-medium text-sm md:text-base">{opt}</Label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+
+                        <Button 
+                          onClick={handleNextQuestion} 
+                          disabled={selectedOption === null}
+                          className="w-full h-12 md:h-14 rounded-2xl font-black text-base"
+                        >
+                          {currentQuestionIndex === quiz.questions.length - 1 ? 'FINALIZAR' : 'PRÓXIMA PERGUNTA'}
+                        </Button>
+                      </Card>
+                    )}
+                  </div>
                 )
               )}
             </div>
