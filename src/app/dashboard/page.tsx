@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { modules, findOrderedLessons } from "@/lib/curriculum";
 import { Button } from "@/components/ui/button";
-import { Zap, ArrowRight, Star, Target, Loader2, CheckCircle2, PlayCircle, Lock } from "lucide-react";
+import { Zap, ArrowRight, Star, Target, Loader2, CheckCircle2, PlayCircle, Lock, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";

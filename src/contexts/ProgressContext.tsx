@@ -37,10 +37,9 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
       
       if (data) {
-        // Normalizamos o booleano caso venha como string do banco
         setProgress(data.map(p => ({
           ...p,
-          completed: p.completed === true || p.completed === "true" || p.completed === 1
+          completed: p.completed === true || p.completed === "true" || p.completed === 1 || p.completed === "1"
         })));
       }
     } catch (err: any) {
@@ -92,24 +91,20 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     setProgress(newProgress);
 
     try {
-      // Sincronização real com Supabase
       const { error } = await supabase
         .from('user_lesson_progress')
         .upsert(newItem, { onConflict: 'user_id,lesson_id' });
 
       if (error) throw error;
 
-      // Chama a função RPC para recalcular pontos e streak no servidor
-      const { error: rpcError } = await supabase.rpc('calculate_total_points', { p_user_id: user.id });
-      if (rpcError) console.error('Erro ao processar pontos:', rpcError);
-      
-      // Atualiza o perfil local com os novos pontos
+      // Sincroniza pontos e streak no servidor via RPC
+      await supabase.rpc('calculate_total_points', { p_user_id: user.id });
       await refreshProfile();
       
       toast.success("Progresso guardado na nuvem!");
     } catch (err: any) {
-      console.error('Falha na sincronização:', err);
-      toast.error('Erro ao sincronizar com o servidor: ' + err.message);
+      console.error('Falha na sincronização real:', err);
+      toast.error('Erro ao sincronizar: ' + err.message);
     }
   };
 

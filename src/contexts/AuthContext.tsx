@@ -10,11 +10,8 @@ export type Profile = {
   email: string;
   display_name: string;
   avatar_url: string | null;
-  preferred_language: string;
-  preferred_theme: string;
   total_points: number;
   streak: number;
-  last_active: string;
   created_at: string;
 };
 
@@ -33,7 +30,6 @@ type AuthContextType = {
   updatePassword: (newPassword: string) => Promise<void>;
   updateProfile: (data: Partial<Profile>) => Promise<void>;
   refreshProfile: () => Promise<void>;
-  unlinkIdentity: (provider: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -56,14 +52,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
       if (data) setProfile(data);
     } catch (err) {
-      console.error('Erro ao buscar perfil:', err);
+      console.error('Erro ao buscar perfil real:', err);
     }
   };
 
   const signInWithPassword = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
-    router.push('/dashboard');
   };
 
   const signUp = async (email: string, password: string, displayName: string) => {
@@ -127,11 +122,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await fetchProfile(user.id);
   };
 
-  const unlinkIdentity = async (provider: string) => {
-    // Nota: O desvínculo de identidades requer lógica específica dependendo da configuração do Supabase
-    console.warn('Unlink solicitado para:', provider);
-  };
-
   useEffect(() => {
     const init = async () => {
       const { data: { session: s } } = await supabase.auth.getSession();
@@ -162,8 +152,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signInWithGoogle, signInWithGithub,
       signInWithEmail, signInWithPassword, signUp, signOut,
       resetPassword, updatePassword, 
-      updateProfile, refreshProfile: async () => { if(user) fetchProfile(user.id) },
-      unlinkIdentity
+      updateProfile, refreshProfile: async () => { if(user) fetchProfile(user.id) }
     }}>
       {children}
     </AuthContext.Provider>
