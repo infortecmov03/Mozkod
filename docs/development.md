@@ -20,6 +20,28 @@ NEXT_PUBLIC_DEV_BYPASS_AUTH=true
 
 ---
 
+## 🚀 Transição para Dados Reais (Produção)
+
+Quando estiveres pronto para usar o Supabase real, segue estes 3 passos:
+
+### 1. Desativar o Bypass
+Muda a variável no `.env.local` para `false` ou remove-a:
+```env
+NEXT_PUBLIC_DEV_BYPASS_AUTH=false
+```
+
+### 2. Configurar chaves do Supabase
+Garante que tens as tuas chaves oficiais configuradas:
+```env
+NEXT_PUBLIC_SUPABASE_URL="https://teu-projeto.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="tua-chave-anonima"
+```
+
+### 3. Preparar a Base de Dados
+Copia o conteúdo de `docs/supabase_schema.sql` e executa-o no **SQL Editor** do painel do Supabase. Isto criará as tabelas de perfis, progresso e ranking necessárias.
+
+---
+
 ## 🏗️ Estrutura do Projeto
 
 - `src/app/`: Rotas e componentes de página.

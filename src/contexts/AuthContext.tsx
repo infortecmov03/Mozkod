@@ -37,7 +37,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-// MOCK DATA PARA DESENVOLVIMENTO
+// MOCK DATA PARA DESENVOLVIMENTO (Pode ser removido em produção final)
 const DEV_USER: User = {
   id: 'dev-user-123',
   email: 'engenheiro@codworks.mz',
@@ -67,6 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  // Se esta flag for false ou inexistente, o sistema usa o Supabase real
   const isDevBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true';
 
   const fetchProfile = async (userId: string) => {
