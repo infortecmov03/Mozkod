@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
@@ -64,7 +65,6 @@ export default function LearnPage() {
   const [quizStarted, setQuizStarted] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
   const [validated, setValidated] = useState(false);
-  const [showHints, setShowHints] = useState<Record<string, boolean>>({});
 
   const isWebLang = useMemo(() => ['html', 'css', 'javascript'].includes(practice?.language.toLowerCase() || ''), [practice]);
   const isConceptLab = useMemo(() => practice?.language.toLowerCase() === 'concept', [practice]);
@@ -92,7 +92,6 @@ export default function LearnPage() {
     setQuizStarted(false);
     setSelectedAnswers({});
     setValidated(false);
-    setShowHints({});
   }, [lessonId]);
 
   const updatePreview = useCallback(() => {
@@ -138,19 +137,14 @@ export default function LearnPage() {
     if (!quiz) return;
     
     let correctCount = 0;
-    const newHints: Record<string, boolean> = {};
-    
     quiz.questions.forEach((q) => {
       if (selectedAnswers[q.id] === q.correctAnswer) {
         correctCount++;
-      } else {
-        newHints[q.id] = true;
       }
     });
 
     const scorePercent = (correctCount / quiz.questions.length) * 100;
     setValidated(true);
-    setShowHints(newHints);
 
     if (scorePercent >= quiz.passingScore) {
       toast.success(`Parabéns! Acertaste ${correctCount}/${quiz.questions.length} questões.`);
@@ -158,21 +152,21 @@ export default function LearnPage() {
         await markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', Math.round(scorePercent));
       }
     } else {
-      toast.error(`Ainda existem erros. Acertaste ${correctCount}/${quiz.questions.length}. Analisa as dicas e tenta novamente.`);
+      toast.error(`Ainda existem erros. Analisa as dicas abaixo e ajusta as tuas respostas.`);
     }
   };
 
   const resetQuizStatus = () => {
     setValidated(false);
-    setShowHints({});
   };
 
   const selectAnswer = (questionId: string, optionIndex: number) => {
-    if (validated) return;
+    if (validated && isCompleted(lessonId)) return;
     setSelectedAnswers(prev => ({
       ...prev,
       [questionId]: optionIndex
     }));
+    if (validated) setValidated(false); // Reset validation state if user changes answer to retry
   };
 
   if (!mounted || !data) return null;
@@ -187,17 +181,6 @@ export default function LearnPage() {
         </h3>
       </div>
       
-      {isConceptLab && (
-        <div className="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-xl mb-6">
-          <p className="text-[11px] font-bold text-yellow-500 flex items-center gap-2">
-            <Sparkles className="w-3 h-3" /> FOCO EM RACIOCÍNIO
-          </p>
-          <p className="text-[10px] text-muted-foreground mt-1 leading-relaxed">
-            Neste laboratório, o objetivo é a lógica pura. O editor aceita respostas conceituais conforme as instruções.
-          </p>
-        </div>
-      )}
-
       <div className="prose prose-invert prose-sm mb-6 text-xs leading-relaxed opacity-90" dangerouslySetInnerHTML={{ __html: practice?.detailedExplanation || "" }} />
       
       <div className="space-y-2 mb-10">
@@ -326,7 +309,7 @@ export default function LearnPage() {
                 <div className="p-6 md:p-10 border-green-500/20 bg-green-500/5 backdrop-blur-sm rounded-[2rem] shadow-2xl mb-10 text-center space-y-6 animate-in zoom-in duration-500">
                   <div className="flex items-center justify-center gap-3">
                     <CheckCircle2 className="w-10 h-10 text-green-500" />
-                    <h3 className="text-xl md:text-2xl font-bold text-green-500">Concluído com Sucesso!</h3>
+                    <h3 className="text-xl md:text-2xl font-bold text-green-500">Teoria Validada!</h3>
                   </div>
                   {nextLessonId ? (
                     <Button 
@@ -352,7 +335,7 @@ export default function LearnPage() {
                           </div>
                           <h3 className="text-lg md:text-xl font-bold">{quiz.title}</h3>
                         </div>
-                        <p className="text-muted-foreground mb-8 text-sm">Valida o teu conhecimento para avançar na trilha de engenharia. Precisas de acertar pelo menos {quiz.passingScore}% das questões.</p>
+                        <p className="text-muted-foreground mb-8 text-sm">Valida o teu conhecimento para avançar. Precisas de acertar pelo menos {quiz.passingScore}% das questões.</p>
                         <Button 
                           onClick={() => setQuizStarted(true)} 
                           className="w-full h-12 md:h-14 rounded-2xl font-black text-base shadow-lg shadow-primary/20"
@@ -366,18 +349,17 @@ export default function LearnPage() {
                             <h3 className="text-xl font-bold flex items-center gap-2">
                                <ListChecks className="w-6 h-6 text-primary" /> {quiz.title}
                             </h3>
-                            {validated && (
-                               <Button variant="ghost" size="sm" onClick={resetQuizStatus} className="text-muted-foreground text-xs gap-2">
-                                  <RefreshCcw className="w-3.5 h-3.5" /> CORRIGIR ERROS
-                               </Button>
-                            )}
                          </div>
 
-                         {quiz.questions.map((q, qIdx) => (
+                         {quiz.questions.map((q, qIdx) => {
+                            const isIncorrect = validated && selectedAnswers[q.id] !== q.correctAnswer;
+                            const isCorrect = validated && selectedAnswers[q.id] === q.correctAnswer;
+                            
+                            return (
                             <Card key={q.id} className={cn(
-                              "border-none bg-card/40 backdrop-blur-sm rounded-3xl overflow-hidden transition-all duration-500",
-                              validated && selectedAnswers[q.id] === q.correctAnswer && "ring-2 ring-green-500/50 bg-green-500/5",
-                              validated && selectedAnswers[q.id] !== q.correctAnswer && "ring-2 ring-destructive/50 bg-destructive/5"
+                              "border-none bg-card/40 backdrop-blur-sm rounded-3xl overflow-hidden transition-all duration-300",
+                              isCorrect && "ring-2 ring-green-500/50 bg-green-500/5",
+                              isIncorrect && "ring-2 ring-destructive/50 bg-destructive/5"
                             )}>
                                <CardContent className="p-6 md:p-8 space-y-6">
                                   <div className="flex justify-between items-start gap-4">
@@ -385,7 +367,7 @@ export default function LearnPage() {
                                         <span className="text-primary mr-2">{qIdx + 1}.</span> {q.question}
                                      </h4>
                                      {validated && (
-                                        selectedAnswers[q.id] === q.correctAnswer 
+                                        isCorrect 
                                           ? <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
                                           : <XCircle className="w-6 h-6 text-destructive shrink-0" />
                                      )}
@@ -398,14 +380,15 @@ export default function LearnPage() {
                                   >
                                     {q.options.map((opt, idx) => {
                                       const isSelected = selectedAnswers[q.id] === idx;
-                                      const isCorrect = q.correctAnswer === idx;
+                                      const showOptionCorrect = validated && isSelected && isCorrect;
+                                      const showOptionError = validated && isSelected && isIncorrect;
                                       
                                       return (
                                         <div key={idx} className={cn(
                                           "flex items-center space-x-3 p-4 rounded-2xl border transition-all cursor-pointer",
                                           isSelected ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" : "border-white/5 bg-background/20",
-                                          validated && isSelected && isCorrect && "border-green-500/50 bg-green-500/10",
-                                          validated && isSelected && !isCorrect && "border-destructive/50 bg-destructive/10"
+                                          showOptionCorrect && "border-green-500/50 bg-green-500/10",
+                                          showOptionError && "border-destructive/50 bg-destructive/10"
                                         )} onClick={() => selectAnswer(q.id, idx)}>
                                           <RadioGroupItem value={idx.toString()} id={`q-${q.id}-opt-${idx}`} className="sr-only" />
                                           <div className={cn(
@@ -420,7 +403,7 @@ export default function LearnPage() {
                                     })}
                                   </RadioGroup>
 
-                                  {validated && selectedAnswers[q.id] !== q.correctAnswer && q.explanation && (
+                                  {isIncorrect && q.explanation && (
                                      <div className="bg-destructive/10 border border-destructive/20 p-4 rounded-2xl flex gap-3 animate-in slide-in-from-top-2 duration-300">
                                         <AlertCircle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
                                         <div className="space-y-1">
@@ -431,22 +414,17 @@ export default function LearnPage() {
                                   )}
                                </CardContent>
                             </Card>
-                         ))}
+                            );
+                         })}
 
                          <div className="pt-8 flex flex-col items-center gap-4">
                             <Button 
                               onClick={handleVerifyQuiz} 
-                              disabled={Object.keys(selectedAnswers).length < quiz.questions.length || validated}
+                              disabled={Object.keys(selectedAnswers).length < quiz.questions.length}
                               className="w-full max-w-md h-14 md:h-16 rounded-[2rem] font-black text-lg shadow-xl shadow-primary/20"
                             >
-                              {validated ? 'VERIFICAÇÃO CONCLUÍDA' : 'VERIFICAR RESPOSTAS'}
+                              {validated ? 'REAVALIAR RESPOSTAS' : 'VERIFICAR RESPOSTAS'}
                             </Button>
-                            
-                            {validated && Object.values(showHints).length > 0 && (
-                               <Button variant="outline" onClick={resetQuizStatus} className="rounded-full px-8 h-12 font-bold border-destructive/30 text-destructive hover:bg-destructive/5">
-                                  ANALISAR DICAS E CORRIGIR
-                               </Button>
-                            )}
 
                             {!validated && Object.keys(selectedAnswers).length < quiz.questions.length && (
                                <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest animate-pulse">

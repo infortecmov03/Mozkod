@@ -2,8 +2,12 @@
 import type { KnowledgeArea } from '../../types';
 import { lessons } from './theory';
 import { quizzes } from './quizzes';
-import { exercises } from './laboratory';
 
+/**
+ * Knowledge Area: CS Core
+ * Removidos laboratórios conceptuais (practice) pois a validação é feita 
+ * via quizzes integrados nas lições teóricas para melhor fluxo UX.
+ */
 export const csCore: KnowledgeArea = {
   id: 'ka-cs-core',
   title: '01. CS Core (Engenharia Base)',
@@ -13,6 +17,6 @@ export const csCore: KnowledgeArea = {
   theory: lessons,
   quizzes: quizzes,
   practice: {
-    concept: exercises
+    // Mantendo vazio para focar no fluxo Teoria + Quiz conforme pedido
   }
 };
