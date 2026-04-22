@@ -34,16 +34,14 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
         .select('*')
         .eq('user_id', user.id);
       
-      if (error) throw error;
-      
-      if (data) {
+      if (!error && data) {
         setProgress(data.map(p => ({
           ...p,
-          completed: p.completed === true || p.completed === "true" || p.completed === 1 || p.completed === "1"
+          completed: p.completed === true || p.completed === 1 || p.completed === "true"
         })));
       }
     } catch (err: any) {
-      console.error('Erro ao carregar progresso real:', err.message);
+      console.error('Erro ao carregar progresso:', err.message);
     } finally {
       setLoading(false);
     }
@@ -83,7 +81,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       quiz_passed: score >= 70
     };
 
-    // Atualização optimista na UI
+    // UI Optimista
     const newProgress = [...progress];
     const idx = newProgress.findIndex(p => p.lesson_id === id);
     if (idx > -1) newProgress[idx] = { ...newProgress[idx], ...newItem };
@@ -97,14 +95,14 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
 
       if (error) throw error;
 
-      // Sincroniza pontos e streak no servidor via RPC
+      // Chama função RPC para recalcular pontos (deve estar definida no Supabase)
       await supabase.rpc('calculate_total_points', { p_user_id: user.id });
       await refreshProfile();
       
-      toast.success("Progresso guardado na nuvem!");
+      toast.success("Progresso sincronizado!");
     } catch (err: any) {
-      console.error('Falha na sincronização real:', err);
-      toast.error('Erro ao sincronizar: ' + err.message);
+      console.error('Falha na sincronização:', err);
+      toast.error('Erro ao sincronizar dados.');
     }
   };
 

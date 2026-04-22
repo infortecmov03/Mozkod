@@ -49,16 +49,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .eq('id', userId)
         .single();
       
-      if (error) throw error;
-      if (data) setProfile(data);
+      if (!error && data) {
+        setProfile(data);
+      }
     } catch (err) {
-      console.error('Erro ao buscar perfil real:', err);
+      console.error('Erro ao buscar perfil:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const signInWithPassword = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
+    router.push('/dashboard');
   };
 
   const signUp = async (email: string, password: string, displayName: string) => {
@@ -123,27 +127,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    const init = async () => {
+    const getInitialSession = async () => {
       const { data: { session: s } } = await supabase.auth.getSession();
       setSession(s);
       setUser(s?.user ?? null);
-      if (s?.user) await fetchProfile(s.user.id);
-      setLoading(false);
-
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          await fetchProfile(session.user.id);
-        } else {
-          setProfile(null);
-        }
+      if (s?.user) {
+        await fetchProfile(s.user.id);
+      } else {
         setLoading(false);
-      });
-
-      return () => subscription.unsubscribe();
+      }
     };
-    init();
+
+    getInitialSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        await fetchProfile(session.user.id);
+      } else {
+        setProfile(null);
+        setLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   return (
