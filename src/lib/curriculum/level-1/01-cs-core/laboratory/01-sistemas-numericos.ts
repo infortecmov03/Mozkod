@@ -5,29 +5,33 @@ export const exercise: PracticeExercise = {
   language: "concept",
   title: "Laboratório: Conversão Binária",
   description: "Pratique a lógica de bits e bytes.",
-  statement: "Escreve apenas o resultado binário para o número decimal 5 usando 4 bits. (Ex: 0000)",
-  template: `// Escreve apenas o número binário de 4 dígitos na linha abaixo
+  statement: "Converta o número decimal 5 para binário usando exatamente 4 bits no editor. (Ex: 0000)",
+  template: `// DESAFIO DE LÓGICA PURA
+// Escreva apenas a sequência de 0s e 1s na linha abaixo:
 `,
   detailedExplanation: `
     <div class="space-y-4">
-      <h3 class="text-xl font-bold">📚 Guia de Conversão</h3>
-      <p>Este é um desafio conceptual. Não é necessário usar uma linguagem de programação, apenas introduzir a sequência lógica de bits.</p>
-      <p>Para converter 5 para binário usando 4 posições:</p>
-      <ol class="list-decimal ml-6 space-y-2">
-        <li>Temos as posições: 8 | 4 | 2 | 1</li>
-        <li>Cabe 8 em 5? Não (0)</li>
-        <li>Cabe 4 em 5? Sim (1). Sobra 1.</li>
-        <li>Cabe 2 em 1? Não (0).</li>
-        <li>Cabe 1 em 1? Sim (1).</li>
-      </ol>
-      <p class="font-bold text-primary">Resultado esperado: 0101</p>
+      <h3 class="text-xl font-bold text-primary">🧠 Raciocínio Binário</h3>
+      <p>Neste desafio, não estamos a programar, estamos a pensar como a máquina. O computador usa posições de potência de 2.</p>
+      <div class="bg-muted p-4 rounded-xl font-mono text-center space-y-2 border border-primary/20">
+        <p class="text-[10px] text-muted-foreground">POSIÇÕES DE 4 BITS:</p>
+        <p class="text-lg">8 | 4 | 2 | 1</p>
+      </div>
+      <p>Para o número <strong>5</strong>:</p>
+      <ul class="list-disc ml-6 space-y-1 text-xs">
+        <li>Cabe 8? Não (0)</li>
+        <li>Cabe 4? Sim (1). Resta 1.</li>
+        <li>Cabe 2? Não (0).</li>
+        <li>Cabe 1? Sim (1).</li>
+      </ul>
+      <p class="font-bold text-green-500">O resultado final deve ser a sequência destes quatro bits no editor.</p>
     </div>
   `,
   objectives: [
     {
       id: "obj1",
-      description: "Escrever o número 0101 no editor",
-      hint: "O resultado para 5 em 4 bits é 0101",
+      description: "Escrever a sequência lógica 0101 no editor",
+      hint: "O número 5 em 4 bits é representado por 0101",
       test: "0101"
     }
   ]

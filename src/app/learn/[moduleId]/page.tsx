@@ -12,7 +12,7 @@ import {
   ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2,
   AlertCircle, MessageSquare, XCircle, Eye, ExternalLink,
   PanelRightClose, PanelRightOpen, Lightbulb, ChevronDown, ChevronUp, GripHorizontal,
-  FileCode, Palette, Braces, RefreshCcw, EyeOff, Layout, Brain
+  FileCode, Palette, Braces, RefreshCcw, EyeOff, Layout, Brain, Sparkles
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
@@ -322,9 +322,11 @@ export default function LearnPage() {
       </div>
 
       {isConceptLab && (
-        <div className="mb-6 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
-          <p className="text-[10px] text-blue-400 font-bold leading-tight">
-            💡 Este é um desafio de lógica. O editor serve para escreveres a tua resposta conceptual conforme as instruções.
+        <div className="mb-6 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 flex gap-3 animate-in zoom-in duration-300">
+          <Sparkles className="w-5 h-5 text-blue-400 shrink-0" />
+          <p className="text-[11px] text-blue-400 font-bold leading-tight">
+            ESTE É UM DESAFIO DE LÓGICA PURA.<br/>
+            <span className="font-normal opacity-80 mt-1 block">O editor serve apenas para escreveres a tua resposta lógica conforme as instruções do briefing abaixo.</span>
           </p>
         </div>
       )}
@@ -572,7 +574,7 @@ export default function LearnPage() {
                       )}
                       {!isWebLang && (
                         <Button variant={activeTab === 'code' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('code')} className="h-7 gap-1.5 rounded-md text-[9px] font-bold px-3 uppercase">
-                          {isConceptLab ? <span className="flex items-center gap-1.5"><Brain className="w-3 h-3" /> LÓGICA</span> : practice.language}
+                          {isConceptLab ? <span className="flex items-center gap-1.5"><Brain className="w-3 h-3 text-blue-400" /> LÓGICA</span> : practice.language}
                         </Button>
                       )}
                       <Button variant={activeTab === 'mission' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('mission')} className="lg:hidden h-7 gap-1 rounded-md text-[8px] md:text-[9px] font-bold px-2 md:px-3">
