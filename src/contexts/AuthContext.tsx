@@ -115,6 +115,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithGoogle = async () => {
+    if (isDevBypass) {
+      setUser(DEV_USER);
+      setProfile(DEV_PROFILE);
+      setSession({ user: DEV_USER } as any);
+      router.push('/dashboard');
+      return;
+    }
     const redirectTo = `${window.location.origin}/auth/callback`;
     await supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -123,6 +130,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithGithub = async () => {
+    if (isDevBypass) {
+      setUser(DEV_USER);
+      setProfile(DEV_PROFILE);
+      setSession({ user: DEV_USER } as any);
+      router.push('/dashboard');
+      return;
+    }
     const redirectTo = `${window.location.origin}/auth/callback`;
     await supabase.auth.signInWithOAuth({
       provider: 'github',
@@ -131,6 +145,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithEmail = async (email: string) => {
+    if (isDevBypass) {
+      return; // Simula envio de email
+    }
     const redirectTo = `${window.location.origin}/auth/callback`;
     const { error } = await supabase.auth.signInWithOtp({
       email,
@@ -141,6 +158,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signInWithPassword = async (email: string, password: string) => {
+    if (isDevBypass) {
+      setUser(DEV_USER);
+      setProfile(DEV_PROFILE);
+      setSession({ user: DEV_USER } as any);
+      return;
+    }
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -149,6 +172,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signUp = async (email: string, password: string, displayName: string) => {
+    if (isDevBypass) {
+      return;
+    }
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -163,6 +189,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const resetPassword = async (email: string) => {
+    if (isDevBypass) return;
     const redirectTo = `${window.location.origin}/auth/callback?next=/profile#password-reset`;
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo,
@@ -179,6 +206,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const unlinkIdentity = async (provider: string) => {
+    if (isDevBypass) return;
     if (!user) return;
     const identity = user.identities?.find(i => i.provider === provider);
     if (identity) {
