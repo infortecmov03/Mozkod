@@ -1,4 +1,3 @@
-
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -38,6 +37,29 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
+// MOCK DATA PARA DESENVOLVIMENTO
+const DEV_USER: User = {
+  id: 'dev-user-123',
+  email: 'engenheiro@codworks.mz',
+  app_metadata: {},
+  user_metadata: { display_name: 'Dev Master' },
+  aud: 'authenticated',
+  created_at: new Date().toISOString(),
+} as any;
+
+const DEV_PROFILE: Profile = {
+  id: 'dev-user-123',
+  email: 'engenheiro@codworks.mz',
+  display_name: 'Engenheiro de Elite (Dev)',
+  avatar_url: 'https://picsum.photos/seed/dev/200',
+  preferred_language: 'pt',
+  preferred_theme: 'dark',
+  total_points: 1250,
+  streak: 7,
+  last_active: new Date().toISOString(),
+  created_at: new Date().toISOString(),
+};
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -45,7 +67,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  const isDevBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true';
+
   const fetchProfile = async (userId: string) => {
+    if (isDevBypass) {
+      setProfile(DEV_PROFILE);
+      return DEV_PROFILE;
+    }
+
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
@@ -59,6 +88,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateProfile = async (data: Partial<Profile>) => {
+    if (isDevBypass) {
+      setProfile(prev => prev ? { ...prev, ...data } : null);
+      return;
+    }
+
     if (!user) return;
     
     const { error } = await supabase
@@ -147,6 +181,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
+    if (isDevBypass) {
+      setUser(null);
+      setProfile(null);
+      setSession(null);
+      router.replace('/login');
+      return;
+    }
     await supabase.auth.signOut();
     setUser(null);
     setProfile(null);
@@ -156,6 +197,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const initializeAuth = async () => {
+      if (isDevBypass) {
+        setUser(DEV_USER);
+        setProfile(DEV_PROFILE);
+        setSession({ user: DEV_USER } as any);
+        setLoading(false);
+        return;
+      }
+
       const { data: { session: currentSession } } = await supabase.auth.getSession();
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
@@ -169,23 +218,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     initializeAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, newSession) => {
-        setSession(newSession);
-        setUser(newSession?.user ?? null);
-        
-        if (newSession?.user) {
-          await fetchProfile(newSession.user.id);
-        } else {
-          setProfile(null);
+    if (!isDevBypass) {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        async (event, newSession) => {
+          setSession(newSession);
+          setUser(newSession?.user ?? null);
+          
+          if (newSession?.user) {
+            await fetchProfile(newSession.user.id);
+          } else {
+            setProfile(null);
+          }
+          
+          setLoading(false);
         }
-        
-        setLoading(false);
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, []);
+      );
+      return () => subscription.unsubscribe();
+    }
+  }, [isDevBypass]);
 
   return (
     <AuthContext.Provider value={{

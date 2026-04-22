@@ -1,4 +1,3 @@
-
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
@@ -18,6 +17,13 @@ const publicRoutes = [
 const protectedRoutes = ['/dashboard', '/learn', '/certifications', '/settings', '/profile', '/community'];
 
 export async function middleware(request: NextRequest) {
+  // BYPASS DE DESENVOLVIMENTO
+  const isDevBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true';
+  
+  if (isDevBypass) {
+    return NextResponse.next();
+  }
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -39,7 +45,6 @@ export async function middleware(request: NextRequest) {
       cookies: {
         get(name: string) {
           const cookie = request.cookies.get(name);
-          // if we have a cookie and it's in the old format, ignore it and request deletion
           if (cookie && cookie.value.startsWith('base64-')) {
             response.cookies.delete(name);
             return undefined;
