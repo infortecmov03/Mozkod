@@ -4,6 +4,7 @@ export const lesson: TheoryLesson = {
   id: "cs-t3",
   title: "Álgebra Booleana: A Matemática da Lógica",
   youtubeVideoId: "95v88Oit0H8",
+  quizId: "cs-t3-quiz",
   content: `
     <div class="space-y-8">
       <div class="bg-accent/5 p-6 rounded-2xl border border-accent/10 shadow-lg">
@@ -56,19 +57,18 @@ export const lesson: TheoryLesson = {
         <ul class="grid md:grid-cols-2 gap-4">
           <li class="bg-card p-4 rounded-xl border border-white/5">
             <h4 class="font-bold text-primary mb-1">A AND 0 = 0</h4>
-            <p class="text-xs opacity-70">Não importa o que A seja, se precisas que AMBOS sejam verdadeiros e um é 0, o resultado será sempre 0.</p>
+            <p class="text-xs opacity-70">Não importa o que A seja, se um dos lados é 0 num AND, o resultado é sempre 0.</p>
           </li>
           <li class="bg-card p-4 rounded-xl border border-white/5">
             <h4 class="font-bold text-primary mb-1">A OR 1 = 1</h4>
-            <p class="text-xs opacity-70">Se pelo menos UM precisa de ser verdadeiro e já tens o 1, o resultado será sempre 1.</p>
+            <p class="text-xs opacity-70">No OR, se já tens o 1, o resultado é garantidamente 1.</p>
           </li>
         </ul>
 
-        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">4. As Leis de De Morgan (A Lógica da Negação)</h3>
-        <p class="text-sm">Augustus De Morgan descobriu que negar uma escolha conjunta muda a natureza da operação:</p>
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">4. As Leis de De Morgan</h3>
+        <p class="text-sm">Negar uma conjunção é o mesmo que a disjunção das negações:</p>
         <div class="bg-primary/5 p-5 rounded-xl border border-primary/20 space-y-4">
-          <p class="text-xs italic">"Dizer que NÃO (está sol E tenho tempo) é o mesmo que dizer (NÃO está sol) OU (NÃO tenho tempo)."</p>
-          <div class="bg-black/60 p-4 rounded-lg font-code text-xs text-accent">
+          <div class="bg-black/60 p-4 rounded-lg font-code text-xs text-accent text-center">
             NOT (A AND B) = (NOT A) OR (NOT B)
           </div>
         </div>
@@ -77,10 +77,9 @@ export const lesson: TheoryLesson = {
       <div class="bg-yellow-500/5 p-6 rounded-2xl border border-yellow-500/20">
         <h4 class="font-bold text-yellow-500 mb-2">🚀 Por que aprender isto?</h4>
         <p class="text-sm leading-relaxed">
-          Como engenheiro, o teu código terá milhares de condições <code>if</code>. Saber álgebra booleana permite-te escrever <code>if (!a || !b)</code> em vez de <code>if (!(a && b))</code>, tornando o sistema mais rápido de processar e mais fácil para outros humanos lerem.
+          Saber álgebra booleana permite-te escrever código mais limpo, como <code>if (!a || !b)</code> em vez de <code>if (!(a && b))</code>, tornando o sistema mais rápido e legível.
         </p>
       </div>
     </div>
-  `,
-  quizId: "cs-t3-quiz"
+  `
 };
