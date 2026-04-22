@@ -9,6 +9,12 @@ import { quiz as q8 } from './quizzes/08-paradigmas-quiz';
 import { quiz as q9 } from './quizzes/09-floating-point-quiz';
 import { quiz as q10 } from './quizzes/10-cache-hierarchy-quiz';
 import { quiz as q11 } from './quizzes/11-isa-architecture-quiz';
+import { quiz as q13 } from './quizzes/13-system-bus-quiz';
+import { quiz as q14 } from './quizzes/14-memory-virtual-quiz';
+import { quiz as q15 } from './quizzes/15-file-systems-quiz';
+import { quiz as q16 } from './quizzes/16-pipelining-quiz';
+import { quiz as q17 } from './quizzes/17-virtualization-quiz';
+import { quiz as q18 } from './quizzes/18-error-correction-quiz';
 
 export const quizzes = [
   q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11,
@@ -18,42 +24,12 @@ export const quizzes = [
     questions: [{ id: "q1", question: "Qual porta é considerada universal?", options: ["AND", "NAND", "OR"], correctAnswer: 1 }],
     passingScore: 70
   },
-  {
-    id: "cs-q13",
-    title: "Quiz: Barramentos",
-    questions: [{ id: "q1", question: "O que define a largura de um barramento?", options: ["Velocidade", "Número de bits paralelos", "Cor do cabo"], correctAnswer: 1 }],
-    passingScore: 70
-  },
-  {
-    id: "cs-q14",
-    title: "Quiz: Memória Virtual",
-    questions: [{ id: "q1", question: "O que é um Page Fault?", options: ["Erro de disco", "Dado não encontrado na RAM", "Falta de energia"], correctAnswer: 1 }],
-    passingScore: 70
-  },
-  {
-    id: "cs-q15",
-    title: "Quiz: Sistemas de Ficheiros",
-    questions: [{ id: "q1", question: "O que guarda um Inode?", options: ["O nome do ficheiro apenas", "Metadados e permissões", "O conteúdo binário"], correctAnswer: 1 }],
-    passingScore: 70
-  },
-  {
-    id: "cs-q16",
-    title: "Quiz: Pipelining",
-    questions: [{ id: "q1", question: "Qual o objetivo do pipeline?", options: ["Gastar menos energia", "Executar múltiplas instruções em paralelo", "Aumentar o disco"], correctAnswer: 1 }],
-    passingScore: 70
-  },
-  {
-    id: "cs-q17",
-    title: "Quiz: Virtualização",
-    questions: [{ id: "q1", question: "O que faz um Hypervisor?", options: ["Acelera o rato", "Gere máquinas virtuais", "Limpa o browser"], correctAnswer: 1 }],
-    passingScore: 70
-  },
-  {
-    id: "cs-q18",
-    title: "Quiz: Erros ECC",
-    questions: [{ id: "q1", question: "O que significa ECC na RAM?", options: ["Energy Control", "Error Correction Code", "Extra Cache Control"], correctAnswer: 1 }],
-    passingScore: 70
-  },
+  q13,
+  q14,
+  q15,
+  q16,
+  q17,
+  q18,
   {
     id: "cs-q19",
     title: "Quiz: Microarquitetura",
