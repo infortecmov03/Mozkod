@@ -77,7 +77,6 @@ export default function DashboardPage() {
     <div className="flex flex-col bg-background font-body min-h-[100dvh]">
       <Navigation />
       <main className="container mx-auto px-4 py-6 md:py-10 max-w-6xl flex-1">
-        {/* Header Responsivo */}
         <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-1">
             <h1 className="font-headline text-2xl md:text-3xl font-bold">
@@ -107,7 +106,6 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        {/* Missão Atual - Mobile First Design */}
         <section className="mb-12">
           <Card className="bg-card/40 border-none shadow-2xl rounded-[2rem] md:rounded-[3rem] relative overflow-hidden group hover:ring-2 ring-primary/20 transition-all">
             <div className="absolute top-0 left-0 w-1 md:w-2 h-full bg-primary" />
@@ -144,7 +142,6 @@ export default function DashboardPage() {
           </Card>
         </section>
 
-        {/* Trilha de Conhecimento */}
         <section className="space-y-6 mb-16">
           <div className="flex items-center justify-between">
             <h2 className="font-headline text-xl md:text-2xl font-bold flex items-center gap-2">

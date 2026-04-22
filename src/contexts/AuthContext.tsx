@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setProfile(data);
       }
     } catch (err) {
-      console.error('Erro ao buscar perfil:', err);
+      console.error('Erro ao buscar perfil real:', err);
     }
   };
 

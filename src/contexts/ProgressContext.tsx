@@ -41,7 +41,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
         })));
       }
     } catch (err: any) {
-      console.error('Erro ao carregar progresso:', err.message);
+      console.error('Erro ao carregar progresso real:', err.message);
     } finally {
       setLoading(false);
     }
@@ -82,8 +82,9 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     };
 
     // UI Optimista
-    const newProgress = [...progress];
-    const idx = newProgress.findIndex(p => p.lesson_id === id);
+    const oldProgress = [...progress];
+    const idx = oldProgress.findIndex(p => p.lesson_id === id);
+    const newProgress = [...oldProgress];
     if (idx > -1) newProgress[idx] = { ...newProgress[idx], ...newItem };
     else newProgress.push(newItem);
     setProgress(newProgress);
@@ -95,14 +96,15 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
 
       if (error) throw error;
 
-      // Chama função RPC para recalcular pontos (deve estar definida no Supabase)
+      // Chama função RPC para recalcular pontos
       await supabase.rpc('calculate_total_points', { p_user_id: user.id });
       await refreshProfile();
       
       toast.success("Progresso sincronizado!");
     } catch (err: any) {
-      console.error('Falha na sincronização:', err);
-      toast.error('Erro ao sincronizar dados.');
+      console.error('Falha na sincronização real:', err);
+      setProgress(oldProgress); // Reverte se falhar
+      toast.error('Erro ao sincronizar dados com o Supabase.');
     }
   };
 

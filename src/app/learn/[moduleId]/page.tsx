@@ -5,8 +5,9 @@ import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { 
-  Terminal, BookOpen, Play, CheckCircle2, ChevronLeft, 
-  ListChecks, Loader2, Brain, Eye, Sparkles, ChevronDown, ChevronUp
+  Terminal, Play, CheckCircle2, ChevronLeft, 
+  ListChecks, Loader2, Brain, Eye, Sparkles, ChevronDown, ChevronUp,
+  Info
 } from "lucide-react";
 import { 
   findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
@@ -19,6 +20,13 @@ import { useProgress } from "@/contexts/ProgressContext";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
@@ -29,7 +37,7 @@ export default function LearnPage() {
   const isMobile = useIsMobile();
   const { t } = useLanguage();
   const { profile } = useAuth();
-  const { markAsCompleted, isCompleted, progress } = useProgress();
+  const { markAsCompleted, isCompleted } = useProgress();
 
   const data = useMemo(() => findKnowledgeAreaByLessonId(lessonId), [lessonId]);
   const theory = useMemo(() => findTheoryLesson(lessonId), [lessonId]);
@@ -156,6 +164,27 @@ export default function LearnPage() {
             <h2 className="font-headline font-bold text-xs md:text-sm truncate opacity-90">{theory?.title || practice?.title}</h2>
           </div>
         </div>
+        
+        {/* Botão de Missão Flutuante/Header para Mobile */}
+        {isMobile && practice && (
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button size="sm" variant="outline" className="rounded-full h-8 gap-1 text-[10px] font-black border-primary/30">
+                <Info className="w-3 h-3" /> MISSÃO
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="bottom" className="h-[80vh] rounded-t-[2rem] p-0 overflow-hidden border-t-primary/20">
+              <SheetHeader className="p-6 pb-2">
+                <SheetTitle className="text-left font-headline font-bold flex items-center gap-2">
+                   <ListChecks className="w-5 h-5 text-primary" /> Briefing da Missão
+                </SheetTitle>
+              </SheetHeader>
+              <div className="h-full">
+                {MissionContent}
+              </div>
+            </SheetContent>
+          </Sheet>
+        )}
       </div>
 
       <main className="flex-1 flex flex-col lg:flex-row overflow-hidden">
@@ -181,7 +210,7 @@ export default function LearnPage() {
             </div>
           ) : (
             <>
-              {/* Editor Toolbar - Tab System for Mobile */}
+              {/* Editor Toolbar */}
               <div className="flex items-center justify-between px-3 md:px-4 h-10 md:h-11 bg-black/60 border-b border-white/5 shrink-0">
                 <div className="flex gap-1 overflow-x-auto no-scrollbar scroll-smooth">
                   {isWebLang ? (
@@ -196,7 +225,6 @@ export default function LearnPage() {
                       {isConceptLab ? "Lógica" : "Código"}
                     </Button>
                   )}
-                  <Button variant={activeTab === 'mission' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('mission')} className="h-7 md:h-8 text-[9px] md:text-[10px] font-bold lg:hidden">MISSÃO</Button>
                 </div>
                 <Button size="sm" onClick={handleRunCode} disabled={isRunning} className="h-7 md:h-8 bg-green-600 hover:bg-green-700 text-[9px] md:text-[10px] font-black px-3 md:px-5 rounded-full shadow-lg shadow-green-900/20">
                   {isRunning ? <Loader2 className="w-3 h-3 animate-spin" /> : <><Play className="w-2.5 h-2.5 md:w-3 md:h-3 mr-1" /> EXECUTAR</>}
@@ -205,8 +233,8 @@ export default function LearnPage() {
 
               {/* Multi-Tab Viewer */}
               <div className="flex-1 flex relative overflow-hidden">
-                {/* Editor Surface */}
-                <div className={cn("flex-1 h-full", (activeTab === 'preview' || activeTab === 'mission') && isMobile ? "hidden" : "block")}>
+                {/* Editor Surface - Never hidden in Mobile now unless Preview is active */}
+                <div className={cn("flex-1 h-full", activeTab === 'preview' && isMobile ? "hidden" : "block")}>
                   <Editor
                     height="100%"
                     theme="vs-dark"
@@ -234,14 +262,13 @@ export default function LearnPage() {
                   />
                 </div>
                 
-                {/* Mobile Preview / Mission */}
+                {/* Mobile Preview */}
                 {activeTab === 'preview' && isMobile && (
                    <div className="flex-1 flex flex-col bg-white">
                       <div className="h-6 bg-muted text-[8px] font-bold flex items-center px-3 text-muted-foreground uppercase"><Eye className="w-2.5 h-2.5 mr-1.5" /> Live Preview</div>
                       <iframe ref={iframeRef} className="flex-1 w-full border-none" title="Preview" />
                    </div>
                 )}
-                {activeTab === 'mission' && isMobile && MissionContent}
 
                 {/* Desktop Side-by-side View */}
                 {!isMobile && isWebLang && (
