@@ -1,81 +1,81 @@
-import type { Quiz } from '../../types';
+import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "cs-t18-quiz",
-  title: "Quiz: Deteção e Correção de Erros",
+  title: "Quiz: Integridade de Dados e ECC",
   passingScore: 75,
   questions: [
     {
       id: "q1",
-      question: "O que é um 'Bit Flip' no contexto de hardware?",
+      question: "Qual o principal perigo de um 'Bit Flip' num servidor sem memória ECC?",
       options: [
-        "Uma técnica para acelerar a CPU",
-        "A inversão acidental de um bit (0 para 1 ou vice-versa) causada por interferência",
-        "Um comando para apagar ficheiros",
-        "Uma funcionalidade de ecrãs tácteis"
+        "O monitor fica sem cor",
+        "Corrupção silenciosa de dados ou crash fatal do sistema",
+        "Aumento da conta de eletricidade",
+        "O rato para de funcionar"
       ],
       correctAnswer: 1,
-      explanation: "Bit flips são erros físicos causados por fatores externos que alteram o estado elétrico ou magnético de um bit na memória ou no processador."
+      explanation: "Um bit flip num valor de ponteiro ou num saldo bancário pode causar danos catastróficos sem aviso prévio."
     },
     {
       id: "q2",
-      question: "Qual a limitação do Bit de Paridade simples?",
+      question: "A paridade simples consegue detetar um erro se 2 bits forem invertidos ao mesmo tempo?",
       options: [
-        "Não consegue detetar nenhum erro",
-        "Consegue detetar que houve um erro, mas não consegue identificar qual bit falhou para o corrigir",
-        "É demasiado lento para computadores modernos",
-        "Só funciona com números pares"
+        "Sim, deteta sempre",
+        "Não, pois a contagem de '1s' voltará a parecer correta para o sistema (Paridade Par/Ímpar)",
+        "Apenas em sistemas de 64 bits",
+        "Sim, mas apenas em dias quentes"
       ],
       correctAnswer: 1,
-      explanation: "A paridade é um método de deteção. Ela avisa que a contagem de '1s' está errada, mas não fornece informação suficiente para saber onde o erro ocorreu."
+      explanation: "A paridade só deteta um número ímpar de erros. Erros duplos anulam-se mutuamente na contagem simples."
     },
     {
       id: "q3",
-      question: "Como o Código de Hamming consegue corrigir um erro?",
+      question: "Qual a diferença fundamental entre Deteção e Correção de erros?",
       options: [
-        "Pedindo ao utilizador para digitar novamente",
-        "Reiniciando o computador",
-        "Utilizando múltiplos bits de verificação que agem como coordenadas para localizar e inverter o bit errado",
-        "Apagando o bloco de dados corrompido"
+        "Deteção é mais rápida",
+        "Deteção apenas avisa que algo está errado; Correção utiliza redundância para identificar e reparar o bit invertido",
+        "Correção não precisa de bits extras",
+        "Nenhuma, são o mesmo conceito"
       ],
-      correctAnswer: 2,
-      explanation: "O Código de Hamming usa redundância inteligente para criar uma 'impressão digital' da posição dos bits, permitindo a auto-correção."
+      correctAnswer: 1,
+      explanation: "Correção exige algoritmos como o de Hamming e mais bits de redundância para 'reconstruir' a verdade."
     },
     {
       id: "q4",
-      question: "Onde é que a memória RAM ECC é estritamente necessária?",
+      question: "Como o Código de Hamming localiza a posição de um erro?",
       options: [
-        "Em computadores de jogos (Gaming)",
-        "Apenas em computadores portáteis antigos",
-        "Em servidores, sistemas financeiros e infraestruturas críticas",
-        "Em qualquer computador que use Windows"
+        "Pedindo ao utilizador para adivinhar",
+        "Através de um 'Síndrome' gerado pela verificação cruzada de múltiplos bits de paridade em posições estratégicas",
+        "Enviando um sinal para a internet",
+        "Comparando o ficheiro com uma cópia no Google Drive"
       ],
-      correctAnswer: 2,
-      explanation: "Sistemas que não podem tolerar paragens ou corrupção de dados invisível (silent data corruption) exigem hardware ECC."
+      correctAnswer: 1,
+      explanation: "O síndrome aponta diretamente para o índice binário do bit que está corrompido."
     },
     {
       id: "q5",
-      question: "O que acontece se o Checksum de um ficheiro descarregado da internet for diferente do original?",
+      question: "Onde é que a tecnologia SECDED (Single Error Correction, Double Error Detection) é mais comum?",
       options: [
-        "O ficheiro abre normalmente",
-        "O browser repara o ficheiro sozinho",
-        "O sistema indica que o ficheiro está corrompido e deve ser descarregado novamente",
-        "A velocidade da internet aumenta"
+        "Em joysticks de videojogos",
+        "Em memórias RAM ECC de servidores e workstations de engenharia",
+        "Em cabos HDMI barátos",
+        "Em pen drives de brinde"
       ],
-      correctAnswer: 2,
-      explanation: "Uma falha no checksum prova que o conteúdo binário mudou durante o transporte, tornando o ficheiro pouco fiável ou perigoso."
+      correctAnswer: 1,
+      explanation: "SECDED permite que o sistema corrija 1 bit errado e, no mínimo, detete (parando o sistema) se 2 bits estiverem errados."
     },
     {
       id: "q6",
-      question: "Qual destes é um método de correção e não apenas deteção?",
+      question: "O que representa o 'Checksum' de um ficheiro que descarregas?",
       options: [
-        "Bit de Paridade",
-        "Código de Hamming",
-        "Checksum Simples",
-        "Echo Request"
+        "O preço do ficheiro",
+        "Uma impressão digital matemática (hash) que garante que o ficheiro não foi alterado ou corrompido durante a viagem",
+        "O nome do autor do ficheiro",
+        "O tempo que falta para o download terminar"
       ],
       correctAnswer: 1,
-      explanation: "Enquanto paridade e checksum apenas detetam a falha, o Código de Hamming tem a capacidade matemática de reparar o dado."
+      explanation: "Se o teu checksum local for diferente do fornecido no site, o ficheiro foi corrompido ou sabotado."
     }
   ]
 };

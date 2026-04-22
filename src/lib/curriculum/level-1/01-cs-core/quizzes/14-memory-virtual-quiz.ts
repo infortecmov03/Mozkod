@@ -3,69 +3,74 @@ import type { Quiz } from '../../../types';
 export const quiz: Quiz = {
   id: "cs-t14-quiz",
   title: "Quiz: Memória Virtual e Paginação",
-  passingScore: 70,
+  passingScore: 75,
   questions: [
     {
       id: "q1",
-      question: "Qual é o principal objetivo de segurança da Memória Virtual?",
-      options: [
-        "Aumentar a velocidade da CPU",
-        "Isolar a memória entre processos, impedindo que um programa aceda aos dados de outro",
-        "Eliminar a necessidade de memória RAM física",
-        "Criptografar todos os ficheiros do disco"
-      ],
-      correctAnswer: 1,
-      explanation: "O isolamento garante que cada processo rode na sua própria 'bolha' de endereços virtuais, protegendo a estabilidade e privacidade do sistema."
+      question: "Qual componente de hardware é responsável por traduzir endereços lógicos em endereços físicos em tempo real?",
+      options: ["ALU", "Control Unit", "MMU (Memory Management Unit)", "L3 Cache"],
+      correctAnswer: 2,
+      explanation: "A MMU faz a ponte entre o endereço que o programa vê e o endereço real nos chips de RAM."
     },
     {
       id: "q2",
-      question: "Qual componente de hardware é responsável por traduzir endereços virtuais em endereços físicos?",
-      options: ["ALU (Unidade Lógica e Aritmética)", "MMU (Memory Management Unit)", "Registrador de Instrução", "BIOS"],
+      question: "O que acontece tecnicamente durante um 'Page Fault'?",
+      options: [
+        "O processador queima por excesso de calor",
+        "A CPU tenta aceder a uma página que não está na RAM física no momento",
+        "O sistema operativo apaga o ficheiro do disco",
+        "O utilizador desliga o monitor"
+      ],
       correctAnswer: 1,
-      explanation: "A MMU faz a tradução instantânea em hardware. Se fosse feita por software, o sistema seria extremamente lento."
+      explanation: "O Page Fault é um sinal de que o dado solicitado está no disco (Swap) e o SO precisa de o carregar para a RAM."
     },
     {
       id: "q3",
-      question: "O que acontece tecnicamente durante um 'Page Fault'?",
+      question: "O fenómeno de 'Thrashing' é causado principalmente por:",
       options: [
-        "O computador desliga por erro de hardware",
-        "A CPU tenta aceder a uma página que não está atualmente na RAM física",
-        "A memória RAM queima por excesso de voltagem",
-        "O utilizador cancela um download"
+        "Muitos cliques no rato",
+        "Falta de memória RAM física para manter o 'Working Set' dos processos ativos",
+        "Um vírus que apaga a BIOS",
+        "Aumento da velocidade da internet"
       ],
       correctAnswer: 1,
-      explanation: "O Page Fault é um sinal para o Sistema Operativo de que os dados solicitados estão no disco (Swap) e precisam de ser trazidos para a RAM."
+      explanation: "Quando a RAM é insuficiente, o sistema gasta mais tempo em I/O de disco (troca de páginas) do que em computação real."
     },
     {
       id: "q4",
-      question: "Como se chama o fenómeno onde o sistema gasta mais tempo a trocar páginas com o disco do que a executar programas?",
-      options: ["Paging", "Caching", "Thrashing", "Bootstrapping"],
-      correctAnswer: 2,
-      explanation: "O Thrashing ocorre quando a RAM está tão saturada que o SO entra num loop infinito de substituição de páginas, paralisando a máquina."
+      question: "Qual o benefício de segurança da Memória Virtual?",
+      options: [
+        "Torna a internet mais rápida",
+        "Impede que um processo aceda ou corrompa a memória de outro processo (Isolamento)",
+        "Criptografa o teclado",
+        "Impede o aquecimento da CPU"
+      ],
+      correctAnswer: 1,
+      explanation: "Cada processo tem a sua própria tabela de páginas, tornando fisicamente impossível 'espreitar' a memória alheia sem permissão do Kernel."
     },
     {
       id: "q5",
-      question: "Qual a diferença entre uma Página (Page) e um Frame?",
+      question: "O que é o TLB (Translation Lookaside Buffer)?",
       options: [
-        "A página é física e o frame é lógico",
-        "Não há diferença, são sinónimos",
-        "A Página é a unidade na memória virtual (lógica) e o Frame é a unidade na RAM física",
-        "O Frame é maior que a Página"
+        "Um tipo de disco rígido",
+        "Uma cache ultra-rápida dentro da CPU para guardar traduções de endereços",
+        "O nome do sistema operativo Linux",
+        "Um cabo de rede"
       ],
-      correctAnswer: 2,
-      explanation: "Pense na Página como a folha de um livro e no Frame como o local na estante onde essa folha (página) é guardada."
+      correctAnswer: 1,
+      explanation: "O TLB evita que a MMU tenha de consultar a Tabela de Páginas na RAM em cada instrução, o que seria muito lento."
     },
     {
       id: "q6",
-      question: "Por que a Memória Virtual permite correr programas maiores do que a RAM instalada?",
+      question: "Um Segmentation Fault ocorre quando:",
       options: [
-        "Porque ela comprime o código para metade do tamanho",
-        "Porque apenas as partes do programa que estão a ser usadas AGORA precisam de estar na RAM",
-        "Porque ela aumenta a voltagem da memória para guardar mais bits",
-        "Porque ela apaga os outros programas automaticamente"
+        "O disco está cheio",
+        "Um programa tenta aceder a um endereço de memória para o qual não tem permissão",
+        "A bateria do portátil acaba",
+        "O browser é fechado"
       ],
       correctAnswer: 1,
-      explanation: "Este é o princípio da localidade: um programa de 10GB pode correr em 4GB de RAM se apenas as funções ativas forem mantidas na memória física."
+      explanation: "O hardware deteta uma violação dos bits de proteção (ex: escrever numa zona Read-Only) e o SO mata o processo para proteger o sistema."
     }
   ]
 };

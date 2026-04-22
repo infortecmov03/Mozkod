@@ -2,80 +2,80 @@ import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "cs-t17-quiz",
-  title: "Quiz: Fundamentos de Virtualização",
-  passingScore: 70,
+  title: "Quiz: Virtualização e Hypervisors",
+  passingScore: 75,
   questions: [
     {
       id: "q1",
-      question: "Qual o papel do Hypervisor num sistema virtualizado?",
+      question: "Qual a função principal de um Hypervisor (VMM)?",
       options: [
-        "Aumentar a velocidade da placa de vídeo",
-        "Gerir as máquinas virtuais e mediar o acesso ao hardware físico",
-        "Substituir o disco rígido por memória RAM",
-        "Proteger o computador contra picos de tensão"
+        "Aumentar a resolução do monitor",
+        "Gerir os recursos físicos e criar a abstração para múltiplas Máquinas Virtuais",
+        "Substituir a placa de vídeo por software",
+        "Fazer o download automático de drivers"
       ],
       correctAnswer: 1,
-      explanation: "O Hypervisor (VMM) é o 'árbitro' do sistema: ele divide os recursos físicos e garante que cada máquina virtual pensa que tem o seu próprio hardware exclusivo."
+      explanation: "O Hypervisor é o 'árbitro' que distribui CPU, RAM e Disco entre as várias instâncias virtuais."
     },
     {
       id: "q2",
-      question: "O que caracteriza um Hypervisor do Tipo 1 (Bare Metal)?",
+      question: "Qual a diferença entre um Hypervisor Tipo 1 e Tipo 2?",
       options: [
-        "Ele corre como uma aplicação dentro do Windows",
-        "Ele corre diretamente sobre o hardware físico, sem necessidade de um SO hospedeiro",
-        "Ele só funciona em computadores portáteis",
-        "Ele é gratuito, enquanto o Tipo 2 é pago"
+        "O Tipo 1 é para Windows e o Tipo 2 para Mac",
+        "O Tipo 1 corre diretamente no hardware (Bare Metal), enquanto o Tipo 2 corre em cima de um SO (Hosted)",
+        "O Tipo 1 é gratuito e o Tipo 2 é pago",
+        "O Tipo 1 não suporta internet"
       ],
       correctAnswer: 1,
-      explanation: "Os Hypervisors Tipo 1 são usados em data centers de elite devido à sua alta performance, pois não têm o overhead de um sistema operativo por baixo."
+      explanation: "Hypervisors Tipo 1 (como o ESXi) são muito mais eficientes para servidores pois não têm o 'peso' de um SO hospedeiro por baixo."
     },
     {
       id: "q3",
-      question: "Qual a principal vantagem do isolamento proporcionado pela virtualização?",
+      question: "O conceito de 'Snapshots' em virtualização permite:",
       options: [
-        "O computador fica mais bonito visualmente",
-        "Permite que um erro ou vírus numa VM não afete as outras VMs nem o hardware físico",
-        "Os ficheiros ficam menores automaticamente",
-        "A internet fica mais rápida em todas as máquinas"
+        "Tirar fotografias do utilizador",
+        "Gravar o estado exato da VM num momento no tempo para poder reverter se algo falhar",
+        "Aumentar a velocidade da CPU em 200%",
+        "Apagar a VM permanentemente"
       ],
       correctAnswer: 1,
-      explanation: "O isolamento garante a resiliência: cada máquina virtual é uma bolha separada. Se uma 'estourar', as outras continuam seguras."
+      explanation: "Snapshots são fundamentais para testes: se uma atualização estragar o sistema, voltas ao estado anterior em segundos."
     },
     {
       id: "q4",
-      question: "O que significa o termo 'Encapsulamento' numa máquina virtual?",
+      question: "Por que dizemos que Containers são mais leves que Máquinas Virtuais?",
       options: [
-        "Que a VM está protegida por uma caixa de metal",
-        "Que a VM e todo o seu estado (disco, memória, config) são representados como um conjunto de ficheiros",
-        "Que a VM não pode ligar-se à internet",
-        "Que os dados são comprimidos em ficheiros .zip"
+        "Porque não suportam imagens",
+        "Porque partilham o Kernel do Sistema Operativo hospedeiro em vez de emularem um hardware completo",
+        "Porque são escritos em binário puro",
+        "Porque só funcionam na nuvem"
       ],
       correctAnswer: 1,
-      explanation: "Como a VM é apenas um ficheiro, podes fazer cópias de segurança (Snapshots) e migrá-la entre servidores com extrema facilidade."
+      explanation: "Várias instâncias de containers usam o mesmo 'núcleo' do SO, enquanto cada VM precisa de carregar o seu próprio Windows ou Linux inteiro."
     },
     {
       id: "q5",
-      question: "Qual a diferença tecnológica fundamental entre uma VM e um Container (Docker)?",
+      question: "O que é 'Resource Overcommitment'?",
       options: [
-        "VMs são para Linux e Containers são para Windows",
-        "VMs virtualizam o hardware e têm o seu próprio Kernel; Containers partilham o Kernel do SO hospedeiro",
-        "Containers são sempre mais seguros que VMs",
-        "Não existe diferença, são apenas nomes diferentes para o mesmo conceito"
+        "Um erro de configuração fatal",
+        "Alocar mais recursos virtuais do que os físicos existentes, baseando-se no facto de nem todas as VMs usarem 100% ao mesmo tempo",
+        "Comprar hardware de reserva",
+        "Prometer velocidade de internet que não existe"
       ],
       correctAnswer: 1,
-      explanation: "VMs oferecem maior isolamento por terem Kernels independentes, enquanto Containers são mais leves e rápidos por partilharem o Kernel do hospedeiro."
+      explanation: "É uma técnica de economia: se tens 64GB de RAM, podes criar 10 VMs de 8GB se souberes que o uso médio delas é baixo."
     },
     {
       id: "q6",
-      question: "O que é um 'Snapshot' no contexto de virtualização?",
+      question: "Qual a importância da virtualização para a Cibersegurança?",
       options: [
-        "Uma fotografia do ecrã do utilizador",
-        "Um registo do estado exato da VM num momento no tempo, permitindo reverter para esse estado se necessário",
-        "Um comando para desligar o servidor",
-        "O log de acessos à base de dados"
+        "Muda as senhas automaticamente",
+        "Permite o isolamento (Sandboxing) de processos perigosos, impedindo que infetem a máquina real",
+        "Torna o teclado imune a líquidos",
+        "Criptografa o monitor"
       ],
       correctAnswer: 1,
-      explanation: "O Snapshot é a 'máquina do tempo' do engenheiro: antes de fazer uma alteração perigosa, crias um snapshot para poderes voltar atrás instantaneamente se algo falhar."
+      explanation: "O isolamento garante que o que acontece na VM morre na VM, protegendo a infraestrutura física de ataques."
     }
   ]
 };

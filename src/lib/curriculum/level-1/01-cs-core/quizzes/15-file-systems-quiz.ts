@@ -2,72 +2,12 @@ import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "cs-t15-quiz",
-  title: "Quiz: Sistemas de Ficheiros e Inodes",
-  passingScore: 70,
+  title: "Quiz: Sistemas de Ficheiros de Elite",
+  passingScore: 75,
   questions: [
     {
       id: "q1",
-      question: "Qual o papel principal do Sistema de Ficheiros?",
-      options: [
-        "Aumentar a velocidade da CPU",
-        "Fornecer uma estrutura lógica e hierárquica para organizar bits no disco",
-        "Substituir a memória RAM",
-        "Limpar o cache do navegador automaticamente"
-      ],
-      correctAnswer: 1,
-      explanation: "O sistema de ficheiros é o 'mapa' que traduz blocos físicos de armazenamento em ficheiros e pastas que podemos usar."
-    },
-    {
-      id: "q2",
-      question: "Em sistemas Linux, o que é um Inode?",
-      options: [
-        "O nome do utilizador logado",
-        "Uma estrutura que guarda metadados sobre um ficheiro, exceto o seu nome",
-        "Um comando para apagar pastas",
-        "Um tipo de memória volátil"
-      ],
-      correctAnswer: 1,
-      explanation: "Inodes guardam permissões, tamanho, datas e localização física, mas o nome do ficheiro é guardado no ficheiro de diretório."
-    },
-    {
-      id: "q3",
-      question: "Tecnicamente, o que é uma 'Pasta' (Diretório) para o Sistema Operativo?",
-      options: [
-        "Um espaço físico vazio no disco",
-        "Um ficheiro especial que mapeia nomes de ficheiros a números de Inode",
-        "Um atalho para a internet",
-        "Uma zona de proteção contra vírus"
-      ],
-      correctAnswer: 1,
-      explanation: "Diretórios são apenas ficheiros de índice. Eles ligam os nomes que humanos usam aos números técnicos que o sistema entende."
-    },
-    {
-      id: "q4",
-      question: "Para que serve a funcionalidade de 'Journaling'?",
-      options: [
-        "Para escrever logs de utilizador",
-        "Para garantir a integridade dos dados e recuperação rápida após falhas de energia",
-        "Para acelerar o download de vídeos",
-        "Para criptografar o disco rígido"
-      ],
-      correctAnswer: 1,
-      explanation: "O Journaling regista a intenção da escrita antes de a realizar. Se houver um crash, o sistema sabe exatamente o que estava a fazer e evita corromper o disco."
-    },
-    {
-      id: "q5",
-      question: "O que acontece durante a 'Fragmentação' de um ficheiro?",
-      options: [
-        "O ficheiro é dividido em partes menores para caber em blocos não contíguos",
-        "O ficheiro é apagado por falta de espaço",
-        "O ficheiro é comprimido automaticamente",
-        "O ficheiro muda de extensão"
-      ],
-      correctAnswer: 0,
-      explanation: "Fragmentação ocorre quando o ficheiro é espalhado pelo disco porque não existe um espaço contíguo grande o suficiente para ele."
-    },
-    {
-      id: "q6",
-      question: "Qual destas informações NÃO é guardada dentro de um Inode típico?",
+      question: "Qual das seguintes informações NÃO é armazenada dentro de um Inode típico?",
       options: [
         "O tamanho do ficheiro",
         "O nome do ficheiro",
@@ -75,7 +15,62 @@ export const quiz: Quiz = {
         "Os ponteiros para os blocos de dados"
       ],
       correctAnswer: 1,
-      explanation: "O nome do ficheiro vive na estrutura do diretório, não no Inode. O Inode é focado nas propriedades técnicas e localização física."
+      explanation: "O nome do ficheiro vive na estrutura do diretório, não no Inode. O Inode foca-se nos metadados e localização física."
+    },
+    {
+      id: "q2",
+      question: "O que é um 'Hard Link' tecnicamente?",
+      options: [
+        "Um atalho de ambiente de trabalho",
+        "Uma entrada de diretório diferente que aponta para o mesmo número de Inode",
+        "Uma cópia física do ficheiro noutro disco",
+        "Um cabo de ligação entre servidores"
+      ],
+      correctAnswer: 1,
+      explanation: "Como o Inode é a identidade real, múltiplos nomes (hard links) podem partilhar o mesmo Inode e os mesmos dados."
+    },
+    {
+      id: "q3",
+      question: "Qual a função primordial do 'Journaling' num sistema de ficheiros?",
+      options: [
+        "Aumentar a velocidade de download",
+        "Prevenir a corrupção de dados após desligamentos inesperados ou falhas de energia",
+        "Compactar ficheiros automaticamente",
+        "Criptografar as pastas do utilizador"
+      ],
+      correctAnswer: 1,
+      explanation: "O Journal regista as operações antes de as executar, permitindo a recuperação rápida da integridade do sistema após um crash."
+    },
+    {
+      id: "q4",
+      question: "Em termos de performance, por que a fragmentação é mais prejudicial em HDDs do que em SSDs?",
+      options: [
+        "Porque o SSD é azul e o HDD é prateado",
+        "Porque o HDD tem peças móveis (agulha) que precisam de saltar fisicamente entre setores distantes",
+        "Porque os SSDs apagam os fragmentos automaticamente",
+        "Não existe diferença de performance"
+      ],
+      correctAnswer: 1,
+      explanation: "Nos HDDs, o tempo de busca (seek time) é alto. Nos SSDs, o acesso é eletrónico e instantâneo em qualquer bloco."
+    },
+    {
+      id: "q5",
+      question: "O que acontece ao Inode e aos blocos de dados quando o 'Link Count' de um ficheiro chega a zero?",
+      options: [
+        "O ficheiro é movido para a reciclagem",
+        "Os blocos são marcados como livres e o Inode é libertado para reutilização",
+        "O computador reinicia",
+        "Nada, o ficheiro permanece lá para sempre"
+      ],
+      correctAnswer: 1,
+      explanation: "Zero links significa que nenhum nome aponta para aquele Inode, logo o sistema pode reutilizar aquele espaço."
+    },
+    {
+      id: "q6",
+      question: "Qual o limite de tamanho de um ficheiro num sistema FAT32?",
+      options: ["100 MB", "2 GB", "4 GB", "1 TB"],
+      correctAnswer: 2,
+      explanation: "FAT32 usa endereçamento de 32 bits, limitando ficheiros individuais a no máximo 4GB, um limite crítico para vídeos modernos."
     }
   ]
 };

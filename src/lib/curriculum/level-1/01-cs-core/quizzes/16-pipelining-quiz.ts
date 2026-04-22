@@ -2,80 +2,80 @@ import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "cs-t16-quiz",
-  title: "Quiz: CPU Pipelining Master",
-  passingScore: 70,
+  title: "Quiz: CPU Pipelining & Performance",
+  passingScore: 75,
   questions: [
     {
       id: "q1",
-      question: "Qual o principal benefício do Pipelining numa CPU moderna?",
+      question: "Qual o principal objetivo do Pipelining numa arquitetura de processador?",
       options: [
-        "Reduzir o tempo que uma única instrução demora a ser executada (latência)",
-        "Aumentar o número de instruções finalizadas por segundo (throughput)",
-        "Diminuir o consumo de energia da bateria",
-        "Aumentar a capacidade de armazenamento do disco rígido"
+        "Reduzir a voltagem do CPU",
+        "Aumentar o Throughput (instruções finalizadas por segundo)",
+        "Diminuir a latência de uma única instrução",
+        "Eliminar a necessidade de memória RAM"
       ],
       correctAnswer: 1,
-      explanation: "O pipelining foca na vazão (throughput). Tal como numa linha de montagem, o objetivo é que instruções terminem mais frequentemente, mesmo que cada uma individualmente leve o mesmo tempo total."
+      explanation: "O pipelining foca na vazão total. Tal como numa fábrica, mais carros saem da linha por hora, embora cada um leve o mesmo tempo a ser feito."
     },
     {
       id: "q2",
-      question: "O que acontece no estágio de 'Decode' (Descodificação) da pipeline?",
+      question: "Um 'Data Hazard' ocorre especificamente quando:",
       options: [
-        "A CPU busca a instrução na memória RAM",
-        "A Unidade de Controlo interpreta o opcode para saber qual operação realizar",
-        "A ALU realiza a soma dos bits",
-        "O resultado final é mostrado no monitor do utilizador"
+        "A ventoinha do PC para de rodar",
+        "Uma instrução depende do resultado de uma instrução anterior que ainda está na pipeline",
+        "O utilizador apaga um ficheiro",
+        "Duas CPUs tentam ligar-se à mesma internet"
       ],
       correctAnswer: 1,
-      explanation: "No estágio Decode, o processador decifra os bits da instrução para entender quais circuitos (como a ALU) devem ser ativados."
+      explanation: "Este conflito de dados exige que a pipeline faça uma 'bolha' (bubble/stall) ou use técnicas como 'Forwarding' para resolver a dependência."
     },
     {
       id: "q3",
-      question: "Um 'Data Hazard' ocorre quando:",
+      question: "O que acontece durante um 'Pipeline Flush' causado por erro de Branch Prediction?",
       options: [
-        "O cabo de rede é desligado durante o processamento",
-        "Uma instrução depende do resultado de uma instrução anterior que ainda não terminou",
-        "A CPU tenta aceder a dois discos rígidos ao mesmo tempo",
-        "O utilizador apaga um ficheiro importante"
+        "O CPU é limpo fisicamente",
+        "As instruções que foram carregadas erroneamente na pipeline são descartadas e o processo recomeça do endereço correto",
+        "A memória RAM é formatada",
+        "O sistema operativo faz o download de uma atualização"
       ],
       correctAnswer: 1,
-      explanation: "Hazards de dados acontecem quando a ordem lógica do programa é quebrada pela execução paralela, exigindo que a pipeline espere (stall) pelo dado correto."
+      explanation: "Erros de predição são caros em performance porque invalidam todo o trabalho paralelo que estava a ser feito no caminho errado."
     },
     {
       id: "q4",
-      question: "O que acontece se a 'Previsão de Desvio' (Branch Prediction) falhar?",
+      question: "No estágio 'ID' (Instruction Decode) de uma pipeline de 5 estágios, o que é que o hardware faz?",
       options: [
-        "O computador reinicia automaticamente",
-        "A pipeline deve ser esvaziada (flushed) e reiniciada, desperdiçando ciclos de clock",
-        "A CPU duplica a sua voltagem para compensar o erro",
-        "O software é apagado do disco"
+        "Busca a instrução na RAM",
+        "Interpreta o opcode e lê os valores dos registradores de origem",
+        "Faz uma conta de somar",
+        "Grava o resultado no disco rígido"
       ],
       correctAnswer: 1,
-      explanation: "Um erro de predição é caro: todo o trabalho em progresso na pipeline para as instruções seguintes é descartado, pois o processador percebe que buscou o código do caminho errado."
+      explanation: "O descodificador 'entende' o que a instrução quer fazer e prepara os operandos para a ALU."
     },
     {
       id: "q5",
-      question: "Pense na analogia da linha de montagem. Se cada instrução leva 4 ciclos e temos 4 estágios, qual a média de instruções terminadas por ciclo após a pipeline estar cheia?",
+      question: "Por que não podemos aumentar infinitamente o número de estágios de uma pipeline (ex: 100 estágios)?",
       options: [
-        "0.25 instruções por ciclo",
-        "1 instrução por ciclo",
-        "4 instruções por ciclo",
-        "16 instruções por ciclo"
+        "Porque o processador ficaria demasiado longo fisicamente",
+        "Devido ao overhead de sincronização entre estágios e ao custo massivo de erros de predição de desvio",
+        "Porque não existem tantas letras para dar nome aos estágios",
+        "Porque o Windows não suporta mais de 10 estágios"
       ],
       correctAnswer: 1,
-      explanation: "Numa pipeline ideal de 4 estágios, após os primeiros 4 ciclos (preenchimento), uma nova instrução termina em cada pulsar do relógio (1 IPC)."
+      explanation: "Pipelines muito longas (superpipelining) sofrem penalizações gigantescas em cada desvio errado, tornando o sistema instável em termos de performance."
     },
     {
       id: "q6",
-      question: "Qual destes componentes é responsável por realizar o cálculo real durante o estágio 'Execute'?",
+      question: "A técnica de 'Forwarding' ou 'Bypassing' serve para resolver qual problema?",
       options: [
-        "Unidade de Controlo (UC)",
-        "Registradores",
-        "Unidade Lógica e Aritmética (ALU)",
-        "Memória Cache L3"
+        "Acesso lento à internet",
+        "Data Hazards, enviando o resultado da ALU diretamente para a próxima instrução sem esperar pela escrita no registrador",
+        "Aquecimento global",
+        "Falta de espaço em disco"
       ],
-      correctAnswer: 2,
-      explanation: "A ALU é o componente que executa as operações matemáticas e lógicas solicitadas pela instrução durante o estágio de execução da pipeline."
+      correctAnswer: 1,
+      explanation: "O Forwarding é um 'atalho' elétrico que envia o dado mal ele sai da ALU para o estágio seguinte que precisa dele, poupando ciclos de espera."
     }
   ]
 };
