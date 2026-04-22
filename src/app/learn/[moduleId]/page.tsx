@@ -95,13 +95,27 @@ export default function LearnPage() {
   const handleRunCode = async () => {
     setIsRunning(true);
     setIsConsoleOpen(true);
-    setTimeout(() => {
+    
+    // Simular delay de execução/validação
+    setTimeout(async () => {
       setIsRunning(false);
-      const current = isWebLang ? (activeTab === 'js' ? jsCode : activeTab === 'css' ? cssCode : htmlCode) : code;
+      const current = isWebLang 
+        ? (activeTab === 'js' ? jsCode : activeTab === 'css' ? cssCode : htmlCode) 
+        : code;
+      
       const newDone = practice?.objectives.filter(obj => current.includes(obj.test)).map(obj => obj.id) || [];
       setCompletedObjectives(newDone);
-      if (newDone.length === (practice?.objectives.length || 0)) setOutput("> ✅ Validação: SUCESSO. Missão concluída.");
-      else setOutput(`> ⚠️ Validação: PENDENTE (${newDone.length}/${practice?.objectives.length || 0} objetivos).`);
+
+      if (newDone.length === (practice?.objectives.length || 0)) {
+        setOutput("> ✅ Validação: SUCESSO. Missão concluída.");
+        // Auto-complete no Supabase se ainda não estiver concluído
+        if (data && !isCompleted(lessonId)) {
+          const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
+          await markAsCompleted(lessonId, data.level.id, data.ka.id, 'exercise', 100, finalCode);
+        }
+      } else {
+        setOutput(`> ⚠️ Validação: PENDENTE (${newDone.length}/${practice?.objectives.length || 0} objetivos).`);
+      }
     }, 800);
   };
 
@@ -145,7 +159,7 @@ export default function LearnPage() {
       </div>
 
       <div className="mt-auto pt-6 border-t border-white/5">
-        {isCompleted(lessonId) ? (
+        {isCompleted(lessonId) && (
           <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
             <div className="bg-green-500/10 border border-green-500/30 p-3 rounded-xl flex items-center gap-3 text-green-500">
               <CheckCircle2 className="w-5 h-5" />
@@ -167,15 +181,6 @@ export default function LearnPage() {
               </Button>
             )}
           </div>
-        ) : (
-          (completedObjectives.length === (practice?.objectives.length || 0)) && (
-            <Button 
-              onClick={() => markAsCompleted(lessonId, level.id, ka.id, 'exercise', 100, code)} 
-              className="w-full h-12 md:h-14 rounded-xl md:rounded-2xl font-black bg-primary shadow-lg shadow-primary/20 animate-in fade-in zoom-in duration-500"
-            >
-              CONCLUIR LABORATÓRIO
-            </Button>
-          )
         )}
       </div>
     </div>
@@ -194,25 +199,49 @@ export default function LearnPage() {
           </div>
         </div>
         
-        {isMobile && practice && (
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button size="sm" variant="outline" className="rounded-full h-8 gap-1 text-[10px] font-black border-primary/30">
-                <Info className="w-3 h-3" /> MISSÃO
+        <div className="flex items-center gap-2">
+          {/* Botão de Execução Dinâmico no Topo */}
+          {!theory && (
+            isCompleted(lessonId) ? (
+              <Button 
+                size="sm" 
+                onClick={() => nextLessonId ? router.push(`/learn/${nextLessonId}`) : router.push('/dashboard')} 
+                className="h-8 md:h-9 bg-green-600 hover:bg-green-700 text-[10px] font-black px-4 md:px-6 rounded-full shadow-lg shadow-green-900/30 animate-in zoom-in duration-300 gap-1.5"
+              >
+                {nextLessonId ? 'PRÓXIMA LIÇÃO' : 'CONCLUÍDO'} <ChevronRight className="w-4 h-4" />
               </Button>
-            </SheetTrigger>
-            <SheetContent side="bottom" className="h-[80vh] rounded-t-[2rem] p-0 overflow-hidden border-t-primary/20">
-              <SheetHeader className="p-6 pb-2">
-                <SheetTitle className="text-left font-headline font-bold flex items-center gap-2">
-                   <ListChecks className="w-5 h-5 text-primary" /> Briefing da Missão
-                </SheetTitle>
-              </SheetHeader>
-              <div className="h-full">
-                {MissionContent}
-              </div>
-            </SheetContent>
-          </Sheet>
-        )}
+            ) : (
+              <Button 
+                size="sm" 
+                onClick={handleRunCode} 
+                disabled={isRunning} 
+                className="h-8 md:h-9 bg-primary hover:bg-primary/90 text-[10px] font-black px-4 md:px-6 rounded-full shadow-lg shadow-primary/20"
+              >
+                {isRunning ? <Loader2 className="w-3 h-3 animate-spin" /> : <><Play className="w-3 h-3 mr-1.5" /> EXECUTAR</>}
+              </Button>
+            )
+          )}
+
+          {isMobile && practice && (
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button size="sm" variant="outline" className="rounded-full h-8 md:h-9 gap-1 text-[10px] font-black border-primary/30">
+                  <Info className="w-3 h-3" /> MISSÃO
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="bottom" className="h-[80vh] rounded-t-[2rem] p-0 overflow-hidden border-t-primary/20">
+                <SheetHeader className="p-6 pb-2">
+                  <SheetTitle className="text-left font-headline font-bold flex items-center gap-2">
+                    <ListChecks className="w-5 h-5 text-primary" /> Briefing da Missão
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="h-full">
+                  {MissionContent}
+                </div>
+              </SheetContent>
+            </Sheet>
+          )}
+        </div>
       </div>
 
       <main className="flex-1 flex flex-col lg:flex-row overflow-hidden">
@@ -220,7 +249,7 @@ export default function LearnPage() {
           {theory ? (
             <div className="flex-1 overflow-y-auto p-5 md:p-16 max-w-4xl mx-auto w-full scroll-container">
               <h1 className="text-2xl md:text-5xl font-headline font-bold mb-6 md:mb-10 leading-tight">{theory.title}</h1>
-              <div className="prose prose-invert max-w-none mb-16 text-sm md:text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: theory.content }} />
+              <div className="prose prose-invert max-none mb-16 text-sm md:text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: theory.content }} />
               
               {isCompleted(lessonId) ? (
                 <div className="p-6 md:p-10 border-green-500/20 bg-green-500/5 backdrop-blur-sm rounded-[2rem] shadow-2xl mb-10 text-center space-y-6 animate-in zoom-in duration-500">
@@ -277,9 +306,9 @@ export default function LearnPage() {
                     </Button>
                   )}
                 </div>
-                <Button size="sm" onClick={handleRunCode} disabled={isRunning} className="h-7 md:h-8 bg-green-600 hover:bg-green-700 text-[9px] md:text-[10px] font-black px-3 md:px-5 rounded-full shadow-lg shadow-green-900/20">
-                  {isRunning ? <Loader2 className="w-3 h-3 animate-spin" /> : <><Play className="w-2.5 h-2.5 md:w-3 md:h-3 mr-1" /> EXECUTAR</>}
-                </Button>
+                <div className="hidden lg:block text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-50">
+                  {isConceptLab ? 'Ambiente de Raciocínio' : 'Ambiente de Programação'}
+                </div>
               </div>
 
               <div className="flex-1 flex relative overflow-hidden">
