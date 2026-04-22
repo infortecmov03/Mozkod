@@ -54,15 +54,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (err) {
       console.error('Erro ao buscar perfil:', err);
-    } finally {
-      setLoading(false);
     }
   };
 
   const signInWithPassword = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
-    router.push('/dashboard');
+    if (data.user) {
+        await fetchProfile(data.user.id);
+        router.replace('/dashboard');
+    }
   };
 
   const signUp = async (email: string, password: string, displayName: string) => {
@@ -127,18 +128,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    const getInitialSession = async () => {
+    const initialize = async () => {
+      setLoading(true);
       const { data: { session: s } } = await supabase.auth.getSession();
       setSession(s);
       setUser(s?.user ?? null);
       if (s?.user) {
         await fetchProfile(s.user.id);
-      } else {
-        setLoading(false);
       }
+      setLoading(false);
     };
 
-    getInitialSession();
+    initialize();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setSession(session);
@@ -147,8 +148,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await fetchProfile(session.user.id);
       } else {
         setProfile(null);
-        setLoading(false);
       }
+      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
