@@ -68,7 +68,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const isDevBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true';
+  // Deteta se deve usar o bypass: ou pela flag env, ou se o Supabase não estiver configurado corretamente
+  const isSupabaseConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && 
+                               process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
+                               !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
+  
+  const isDevBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true' || !isSupabaseConfigured;
 
   const fetchProfile = async (userId: string) => {
     if (isDevBypass) {
@@ -76,16 +81,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return DEV_PROFILE;
     }
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-    
-    if (!error && data) {
-      setProfile(data);
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      
+      if (!error && data) {
+        setProfile(data);
+      }
+      return data;
+    } catch (e) {
+      console.error("Erro ao carregar perfil:", e);
+      return null;
     }
-    return data;
   };
 
   const updateProfile = async (data: Partial<Profile>) => {
@@ -242,15 +252,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      setSession(currentSession);
-      setUser(currentSession?.user ?? null);
-      
-      if (currentSession?.user) {
-        await fetchProfile(currentSession.user.id);
+      try {
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+        
+        if (currentSession?.user) {
+          await fetchProfile(currentSession.user.id);
+        }
+      } catch (e) {
+        console.warn("Falha ao inicializar Supabase. Verifique suas credenciais.");
+      } finally {
+        setLoading(false);
       }
-      
-      setLoading(false);
     };
 
     initializeAuth();
