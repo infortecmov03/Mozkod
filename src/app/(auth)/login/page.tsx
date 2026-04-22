@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
@@ -16,7 +16,7 @@ import { useLanguage } from '@/components/LanguageContext';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signInWithEmail, signInWithPassword, signUp, resetPassword, signInWithGoogle, signInWithGithub, loading } = useAuth();
+  const { user, signInWithEmail, signInWithPassword, signUp, resetPassword, signInWithGoogle, signInWithGithub, loading } = useAuth();
   const { toast } = useToast();
   const { t } = useLanguage();
   
@@ -26,6 +26,13 @@ export default function LoginPage() {
   const [displayName, setDisplayName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSent, setIsSent] = useState(false);
+
+  // Redireciona se o utilizador já estiver logado (útil no modo bypass)
+  useEffect(() => {
+    if (user && !loading) {
+      router.replace('/dashboard');
+    }
+  }, [user, loading, router]);
 
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +54,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
     try {
       await signInWithPassword(email, password);
-      router.push('/dashboard');
+      router.replace('/dashboard');
     } catch (error: any) {
       toast({ variant: "destructive", title: "Erro no login", description: error.message });
     } finally {

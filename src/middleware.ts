@@ -17,10 +17,14 @@ const publicRoutes = [
 const protectedRoutes = ['/dashboard', '/learn', '/certifications', '/settings', '/profile', '/community'];
 
 export async function middleware(request: NextRequest) {
-  // BYPASS DE DESENVOLVIMENTO
   const isDevBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true';
-  
+  const { pathname } = request.nextUrl;
+
+  // BYPASS DE DESENVOLVIMENTO: Redireciona sempre para o dashboard se tentar entrar em rotas de entrada
   if (isDevBypass) {
+    if (pathname === '/' || pathname === '/login' || pathname === '/register') {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
     return NextResponse.next();
   }
 
@@ -33,8 +37,11 @@ export async function middleware(request: NextRequest) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  if (!supabaseUrl || !supabaseAnonKey) {
-    console.error('Middleware: Supabase env vars not set!');
+  if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('placeholder')) {
+    // Se não estiver configurado e não houver bypass, redireciona para o login por segurança
+    if (protectedRoutes.some((route) => pathname.startsWith(route))) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
     return response;
   }
 
@@ -63,11 +70,9 @@ export async function middleware(request: NextRequest) {
 
   const { data: { session } } = await supabase.auth.getSession();
 
-  const { pathname } = request.nextUrl;
-
   const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route));
 
-  if (session && publicRoutes.includes(pathname)) {
+  if (session && (pathname === '/login' || pathname === '/register' || pathname === '/')) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
