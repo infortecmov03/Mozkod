@@ -9,6 +9,7 @@ import { quiz as q8 } from './quizzes/08-paradigmas-quiz';
 import { quiz as q9 } from './quizzes/09-floating-point-quiz';
 import { quiz as q10 } from './quizzes/10-cache-hierarchy-quiz';
 import { quiz as q11 } from './quizzes/11-isa-architecture-quiz';
+import { quiz as q12 } from './quizzes/12-logic-synthesis-quiz';
 import { quiz as q13 } from './quizzes/13-system-bus-quiz';
 import { quiz as q14 } from './quizzes/14-memory-virtual-quiz';
 import { quiz as q15 } from './quizzes/15-file-systems-quiz';
@@ -17,13 +18,7 @@ import { quiz as q17 } from './quizzes/17-virtualization-quiz';
 import { quiz as q18 } from './quizzes/18-error-correction-quiz';
 
 export const quizzes = [
-  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11,
-  {
-    id: "cs-q12",
-    title: "Quiz: Portas Universais",
-    questions: [{ id: "q1", question: "Qual porta é considerada universal?", options: ["AND", "NAND", "OR"], correctAnswer: 1 }],
-    passingScore: 70
-  },
+  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12,
   q13,
   q14,
   q15,
