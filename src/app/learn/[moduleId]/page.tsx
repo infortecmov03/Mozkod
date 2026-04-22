@@ -12,7 +12,7 @@ import {
   ShieldCheck, HelpCircle, Info, ChevronRight, Video, Code2,
   AlertCircle, MessageSquare, XCircle, Eye, ExternalLink,
   PanelRightClose, PanelRightOpen, Lightbulb, ChevronDown, ChevronUp, GripHorizontal,
-  FileCode, Palette, Braces, RefreshCcw, EyeOff
+  FileCode, Palette, Braces, RefreshCcw, EyeOff, Layout
 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
@@ -29,6 +29,7 @@ import { useProgress } from "@/contexts/ProgressContext";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
@@ -36,6 +37,7 @@ export default function LearnPage() {
   const params = useParams();
   const lessonId = params.moduleId as string;
   const router = useRouter();
+  const isMobile = useIsMobile();
   const { toast } = useToast();
   const { t } = useLanguage();
   const { profile } = useAuth();
@@ -67,7 +69,7 @@ export default function LearnPage() {
   
   // Console & Preview States
   const [consoleHeight, setConsoleHeight] = useState(120);
-  const [isConsoleOpen, setIsConsoleOpen] = useState(true);
+  const [isConsoleOpen, setIsConsoleOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const isWebLang = useMemo(() => 
@@ -100,7 +102,6 @@ export default function LearnPage() {
       const local = localStorage.getItem(getStorageKey(langType));
       if (local) return local;
 
-      // Check current lesson progress
       const currentProg = progress.find(p => p.lesson_id === lessonId);
       if (currentProg?.last_code && (
         (langType === 'html' && practice.language === 'html') ||
@@ -111,7 +112,6 @@ export default function LearnPage() {
         return currentProg.last_code;
       }
 
-      // Project Inheritance
       if (practice.isProjectPart && langType !== 'code') {
         for (let i = currentIndex - 1; i >= 0; i--) {
           const prevId = ordered[i];
@@ -127,7 +127,6 @@ export default function LearnPage() {
         }
       }
 
-      // Fallback to Template
       if (langType === 'html') return practice.htmlTemplate || (practice.language === 'html' ? practice.template : "<!-- Estrutura HTML -->");
       if (langType === 'css') return practice.cssTemplate || (practice.language === 'css' ? practice.template : "/* Estilos CSS */");
       if (langType === 'js') return practice.jsTemplate || (practice.language === 'javascript' ? practice.template : "// Lógica JS");
@@ -214,10 +213,11 @@ export default function LearnPage() {
       setCompletedObjectives(newCompleted);
 
       if (newCompleted.length === practice.objectives.length) {
-        setOutput("> ✅ Validação de Engenharia: SUCESSO\n> Todos os requisitos técnicos foram satisfeitos.\n> Código pronto para submissão.");
+        setOutput("> ✅ Validação: SUCESSO\n> Todos os requisitos satisfeitos.\n> Pronto para submeter.");
+        if (isMobile) setActiveTab("mission"); // Sugere ir para a missão submeter no mobile
       } else {
         const nextObjective = practice.objectives.find(obj => !newCompleted.includes(obj.id));
-        setOutput(`> ⚠️ Validação: ${newCompleted.length}/${practice.objectives.length} objetivos alcançados.\n> Pendente: ${nextObjective?.description || 'Verifique os requisitos.'}`);
+        setOutput(`> ⚠️ Validação: ${newCompleted.length}/${practice.objectives.length}\n> Pendente: ${nextObjective?.description || 'Verifique os requisitos.'}`);
       }
     }, 600);
   };
@@ -297,34 +297,13 @@ export default function LearnPage() {
     return map[selectedLang] || "plaintext";
   };
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    const newHeight = window.innerHeight - e.clientY;
-    if (newHeight > 40 && newHeight < window.innerHeight * 0.5) {
-      setConsoleHeight(newHeight);
-      if (newHeight > 60 && !isConsoleOpen) setIsConsoleOpen(true);
-    }
-  }, [isConsoleOpen]);
-
-  const handleMouseUp = useCallback(() => {
-    window.removeEventListener("mousemove", handleMouseMove);
-    window.removeEventListener("mouseup", handleMouseUp);
-    document.body.style.cursor = "default";
-  }, [handleMouseMove]);
-
-  const startResizing = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-    document.body.style.cursor = "ns-resize";
-  }, [handleMouseMove, handleMouseUp]);
-
   if (!mounted) return null;
   if (!data) return <div className="p-20 text-center font-headline text-2xl">Conteúdo não encontrado</div>;
 
   const { ka, level } = data;
 
-  const MissionSidebar = practice ? (
-    <div className="p-6 h-full flex flex-col scroll-container overflow-y-auto">
+  const MissionContent = practice ? (
+    <div className="p-5 h-full flex flex-col scroll-container overflow-y-auto bg-card/30">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -384,7 +363,7 @@ export default function LearnPage() {
       </div>
 
       {(completedObjectives.length === practice.objectives.length || isCompleted(lessonId)) && (
-        <Button onClick={handleCompletePractice} className="w-full mt-auto h-14 rounded-2xl font-black text-sm bg-primary shadow-xl shadow-primary/20 uppercase tracking-widest shrink-0" disabled={isSaving}>
+        <Button onClick={handleCompletePractice} className="w-full mt-auto h-12 md:h-14 rounded-2xl font-black text-sm bg-primary shadow-xl shadow-primary/20 uppercase tracking-widest shrink-0" disabled={isSaving}>
           {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Trophy className="w-5 h-5 mr-2" />}
           {isCompleted(lessonId) ? "Finalizar e Seguir" : "Submeter Solução"}
         </Button>
@@ -396,85 +375,49 @@ export default function LearnPage() {
     <div className="flex flex-col h-[100dvh] bg-background overflow-hidden font-body">
       <Navigation />
       
-      <div className="bg-card/50 border-b px-6 py-3 flex items-center justify-between gap-4 shrink-0">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => router.push('/modules')} className="rounded-full">
+      {/* HEADER COMPACTO E RESPONSIVO */}
+      <div className="bg-card/50 border-b px-4 md:px-6 py-2 md:py-3 flex items-center justify-between gap-4 shrink-0">
+        <div className="flex items-center gap-2 md:gap-4 min-w-0">
+          <Button variant="ghost" size="icon" onClick={() => router.push('/modules')} className="rounded-full shrink-0">
             <ChevronLeft className="w-5 h-5" />
           </Button>
-          <div className="flex flex-col">
-            <span className="text-[10px] text-primary uppercase font-bold tracking-widest">{ka.title}</span>
-            <h2 className="font-headline font-bold text-sm truncate max-w-[150px] md:max-w-md">
+          <div className="flex flex-col min-w-0">
+            <span className="text-[8px] md:text-[10px] text-primary uppercase font-bold tracking-widest truncate">{ka.title}</span>
+            <h2 className="font-headline font-bold text-xs md:text-sm truncate">
               {theory?.title || practice?.title}
             </h2>
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
            {isCompleted(lessonId) && (
-             <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-500/10 text-green-500 border border-green-500/20 text-[10px] font-black uppercase">
-                <CheckCircle2 className="w-3 h-3" /> Concluído
+             <div className="hidden sm:flex items-center gap-2 px-3 md:px-4 py-1.5 rounded-full bg-green-500/10 text-green-500 border border-green-500/20 text-[8px] md:text-[10px] font-black uppercase">
+                <CheckCircle2 className="w-3 h-3" /> <span className="hidden lg:inline">Concluído</span>
              </div>
            )}
+           
            {practice && (
-             <Link href={`/community/exercise/${lessonId}`}>
-               <Button variant="outline" size="sm" className="gap-2 rounded-full border-primary/20 bg-primary/5 text-primary hover:bg-primary/10">
-                 <MessageSquare className="w-4 h-4" />
-                 <span className="hidden sm:inline">Dúvidas</span>
-               </Button>
-             </Link>
-           )}
-
-           <div className="hidden lg:flex items-center gap-2">
-              {practice && isWebLang && (
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setShowPreview(!showPreview)}
-                  className={cn("gap-2 rounded-full border-primary/20 bg-primary/5 text-primary hover:bg-primary/10", !showPreview && "opacity-50")}
-                >
-                  {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  <span className="hidden sm:inline">Preview</span>
-                </Button>
-              )}
-              {practice && (
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setShowSidebar(!showSidebar)}
-                  className="gap-2 rounded-full border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"
-                >
-                  {showSidebar ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
-                  <span className="hidden sm:inline">Missão</span>
-                </Button>
-              )}
-           </div>
-
-           {practice && (
-             <div className="lg:hidden">
-                <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" size="icon" className="rounded-full border-primary/20 bg-primary/5 text-primary">
-                      <ListChecks className="w-4 h-4" />
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="right" className="w-[85vw] sm:w-[400px] bg-[#0d1117] border-l-0 p-0">
-                    {MissionSidebar}
-                  </SheetContent>
-                </Sheet>
+             <div className="flex gap-1.5">
+               <Link href={`/community/exercise/${lessonId}`}>
+                 <Button variant="outline" size="sm" className="h-8 w-8 md:w-auto md:px-4 gap-2 rounded-full border-primary/20 bg-primary/5 text-primary p-0">
+                   <MessageSquare className="w-4 h-4" />
+                   <span className="hidden md:inline">Dúvidas</span>
+                 </Button>
+               </Link>
              </div>
            )}
            
            <Sheet>
              <SheetTrigger asChild>
-               <Button variant="outline" size="sm" className="gap-2 rounded-full border-primary/20 bg-primary/5">
+               <Button variant="outline" size="sm" className="h-8 px-3 gap-2 rounded-full border-primary/20 bg-primary/5">
                  <Menu className="w-4 h-4 text-primary" />
-                 <span className="hidden sm:inline">Sumário</span>
+                 <span className="hidden md:inline">Tópicos</span>
                </Button>
              </SheetTrigger>
-             <SheetContent side="left" className="w-[80vw] sm:w-80 overflow-y-auto">
+             <SheetContent side="left" className="w-[85vw] sm:w-80 overflow-y-auto">
                <SheetHeader className="mb-6">
-                 <SheetTitle>Navegação do Módulo</SheetTitle>
-                 <SheetDescription>Explora os tópicos deste nível.</SheetDescription>
+                 <SheetTitle>Navegação</SheetTitle>
+                 <SheetDescription>Explore este nível.</SheetDescription>
                </SheetHeader>
                <div className="space-y-8">
                  {ka.theory?.length > 0 && (
@@ -519,46 +462,46 @@ export default function LearnPage() {
       </div>
 
       <main className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
-        <div className="flex-1 flex flex-col min-w-0 bg-background overflow-hidden">
+        <div className="flex-1 flex flex-col min-w-0 bg-background overflow-hidden relative">
           {theory ? (
-            <div className="flex-1 overflow-y-auto scroll-container p-6 md:p-16 max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full">
+            <div className="flex-1 overflow-y-auto scroll-container p-5 md:p-16 max-w-4xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full">
                <div className="space-y-6">
-                  <h1 className="font-headline text-3xl md:text-5xl font-bold">{theory.title}</h1>
+                  <h1 className="font-headline text-3xl md:text-5xl font-bold leading-tight">{theory.title}</h1>
                   {theory.youtubeVideoId && (
-                    <div className="aspect-video w-full rounded-3xl overflow-hidden bg-muted border shadow-2xl">
+                    <div className="aspect-video w-full rounded-2xl md:rounded-3xl overflow-hidden bg-muted border shadow-2xl">
                        <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${theory.youtubeVideoId}`} title="Video" allowFullScreen />
                     </div>
                   )}
-                  <div className="prose prose-neutral dark:prose-invert max-w-none text-muted-foreground leading-relaxed text-lg" dangerouslySetInnerHTML={{ __html: theory.content }} />
+                  <div className="prose prose-neutral dark:prose-invert max-w-none text-muted-foreground leading-relaxed text-sm md:text-lg" dangerouslySetInnerHTML={{ __html: theory.content }} />
                </div>
                
                {quiz && (
-                 <div className="bg-card border-2 border-primary/10 rounded-[2.5rem] p-6 md:p-12 space-y-8 shadow-2xl relative overflow-hidden group mb-20">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center"><HelpCircle className="w-6 h-6 text-primary" /></div>
+                 <div className="bg-card border-2 border-primary/10 rounded-[1.5rem] md:rounded-[2.5rem] p-5 md:p-12 space-y-8 shadow-2xl relative overflow-hidden mb-20">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary/10 flex items-center justify-center"><HelpCircle className="w-5 h-5 md:w-6 md:h-6 text-primary" /></div>
                         <div>
-                          <h3 className="font-headline font-bold text-xl md:text-2xl">{quiz.title}</h3>
-                          <p className="text-sm text-muted-foreground">Valida o teu conhecimento.</p>
+                          <h3 className="font-headline font-bold text-lg md:text-2xl">{quiz.title}</h3>
+                          <p className="text-xs text-muted-foreground">Valida o teu conhecimento.</p>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="space-y-12">
+                    <div className="space-y-10">
                       {quiz.questions.map((q, qIndex) => {
                         const isCorrect = quizAnswers[q.id] === q.correctAnswer;
                         const hasSelected = quizAnswers[q.id] !== undefined;
                         return (
-                          <div key={q.id} className="space-y-6">
-                            <div className="flex gap-4">
-                              <span className="text-xl md:text-2xl font-headline font-bold text-primary opacity-20">{String(qIndex + 1).padStart(2, '0')}</span>
-                              <p className="text-base md:text-lg font-medium pt-1">{q.question}</p>
+                          <div key={q.id} className="space-y-4">
+                            <div className="flex gap-3">
+                              <span className="text-lg md:text-2xl font-headline font-bold text-primary opacity-20">{String(qIndex + 1).padStart(2, '0')}</span>
+                              <p className="text-sm md:text-lg font-medium pt-0.5">{q.question}</p>
                             </div>
                             <RadioGroup 
                               disabled={isSuccess || isCompleted(lessonId)}
                               onValueChange={(val) => setQuizAnswers(prev => ({...prev, [q.id]: parseInt(val)}))} 
                               value={quizAnswers[q.id]?.toString()}
-                              className="grid gap-3 md:gap-4 ml-4 md:ml-10"
+                              className="grid gap-2 md:gap-4 ml-2 md:ml-10"
                             >
                               {q.options.map((opt, i) => {
                                 const isSelected = quizAnswers[q.id] === i;
@@ -569,12 +512,12 @@ export default function LearnPage() {
                                   } else variant = "border-primary bg-primary/5";
                                 }
                                 return (
-                                  <div key={i} className={cn("flex items-center space-x-2 p-4 md:p-5 rounded-2xl transition-all cursor-pointer", variant)}>
+                                  <div key={i} className={cn("flex items-center space-x-2 p-3 md:p-5 rounded-xl md:rounded-2xl transition-all cursor-pointer", variant)}>
                                     <RadioGroupItem value={i.toString()} id={`${q.id}-${i}`} className="text-primary" />
-                                    <Label htmlFor={`${q.id}-${i}`} className="flex-1 cursor-pointer font-normal text-sm md:text-base flex items-center justify-between">
+                                    <Label htmlFor={`${q.id}-${i}`} className="flex-1 cursor-pointer font-normal text-xs md:text-base flex items-center justify-between">
                                       {opt}
                                       {(showQuizFeedback || isCompleted(lessonId)) && isSelected && (
-                                        isCorrect ? <CheckCircle2 className="w-5 h-5 text-green-500" /> : <XCircle className="w-5 h-5 text-red-500" />
+                                        isCorrect ? <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-green-500" /> : <XCircle className="w-4 h-4 md:w-5 md:h-5 text-red-500" />
                                       )}
                                     </Label>
                                   </div>
@@ -586,8 +529,8 @@ export default function LearnPage() {
                       })}
                     </div>
                     
-                    <Button onClick={handleQuizAction} className={cn("w-full h-14 md:h-16 rounded-2xl font-bold text-lg md:text-xl transition-all mt-10 shadow-xl", (allAnswersCorrect || isCompleted(lessonId)) ? "bg-green-600 hover:bg-green-700 shadow-green-500/20" : "bg-primary shadow-primary/20")} disabled={isSaving || isSuccess || Object.keys(quizAnswers).length < quiz.questions.length}>
-                      {isSaving ? <Loader2 className="w-6 h-6 animate-spin mr-2" /> : <ShieldCheck className="w-6 h-6 mr-2" />}
+                    <Button onClick={handleQuizAction} className={cn("w-full h-12 md:h-16 rounded-xl md:rounded-2xl font-bold text-sm md:text-xl transition-all mt-6 shadow-xl", (allAnswersCorrect || isCompleted(lessonId)) ? "bg-green-600 hover:bg-green-700 shadow-green-500/20" : "bg-primary shadow-primary/20")} disabled={isSaving || isSuccess || Object.keys(quizAnswers).length < quiz.questions.length}>
+                      {isSaving ? <Loader2 className="w-5 h-5 md:w-6 md:h-6 animate-spin mr-2" /> : <ShieldCheck className="w-5 h-5 md:w-6 md:h-6 mr-2" />}
                       {isCompleted(lessonId) ? "Próxima Lição" : (allAnswersCorrect ? "Finalizar Teoria e Praticar" : "Verificar Respostas")}
                     </Button>
                  </div>
@@ -595,37 +538,54 @@ export default function LearnPage() {
             </div>
           ) : practice ? (
             <div className="flex-1 flex flex-col bg-[#1e1e1e] overflow-hidden relative">
-               <div className="px-4 py-2 border-b border-white/5 flex items-center justify-between bg-black/40 shrink-0">
-                  <div className="flex gap-2">
-                    {isWebLang ? (
-                      <div className="flex bg-white/5 p-1 rounded-lg gap-1">
-                        <Button variant={activeTab === 'html' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('html')} className="h-7 gap-1.5 rounded-md text-[9px] font-bold px-3">
-                          <FileCode className="w-3.5 h-3.5 text-orange-400" /> HTML
+               
+               {/* TABS E BOTÕES DE AÇÃO - MOBILE FIRST */}
+               <div className="px-2 md:px-4 py-1 md:py-2 border-b border-white/5 flex items-center justify-between bg-black/40 shrink-0">
+                  <div className="flex-1 flex items-center gap-1.5 overflow-x-auto scrollbar-hide py-1 no-scrollbar">
+                    {/* TABS DE CÓDIGO E RESULTADO */}
+                    <div className="flex bg-white/5 p-1 rounded-lg gap-0.5 shrink-0">
+                      {isWebLang && (
+                        <>
+                          <Button variant={activeTab === 'html' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('html')} className="h-7 gap-1 rounded-md text-[8px] md:text-[9px] font-bold px-2 md:px-3">
+                            <FileCode className="w-3 h-3 text-orange-400" /> HTML
+                          </Button>
+                          <Button variant={activeTab === 'css' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('css')} className="h-7 gap-1 rounded-md text-[8px] md:text-[9px] font-bold px-2 md:px-3">
+                            <Palette className="w-3 h-3 text-blue-400" /> CSS
+                          </Button>
+                          <Button variant={activeTab === 'js' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('js')} className="h-7 gap-1 rounded-md text-[8px] md:text-[9px] font-bold px-2 md:px-3">
+                            <Braces className="w-3 h-3 text-yellow-400" /> JS
+                          </Button>
+                          <Button variant={activeTab === 'preview' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('preview')} className="lg:hidden h-7 gap-1 rounded-md text-[8px] md:text-[9px] font-bold px-2 md:px-3">
+                            <Eye className="w-3 h-3 text-green-400" /> PREVIEW
+                          </Button>
+                        </>
+                      )}
+                      {!isWebLang && (
+                        <Button variant={activeTab === 'code' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('code')} className="h-7 gap-1.5 rounded-md text-[9px] font-bold px-3 uppercase">
+                          {practice.language}
                         </Button>
-                        <Button variant={activeTab === 'css' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('css')} className="h-7 gap-1.5 rounded-md text-[9px] font-bold px-3">
-                          <Palette className="w-3.5 h-3.5 text-blue-400" /> CSS
-                        </Button>
-                        <Button variant={activeTab === 'js' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('js')} className="h-7 gap-1.5 rounded-md text-[9px] font-bold px-3">
-                          <Braces className="w-3.5 h-3.5 text-yellow-400" /> JS
-                        </Button>
-                      </div>
-                    ) : (
-                      <span className="px-3 py-1.5 rounded-md bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/20">
-                        {practice.language}
-                      </span>
-                    )}
+                      )}
+                      <Button variant={activeTab === 'mission' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('mission')} className="lg:hidden h-7 gap-1 rounded-md text-[8px] md:text-[9px] font-bold px-2 md:px-3">
+                        <ListChecks className="w-3 h-3 text-primary" /> MISSÃO
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button size="sm" onClick={handleRunCode} disabled={isRunning} className="bg-green-600 hover:bg-green-700 h-8 rounded-full text-[10px] font-black px-4 md:px-6 gap-2">
-                      {isRunning ? <RefreshCcw className="w-3 h-3 animate-spin" /> : <Play className="w-3 h-3 fill-current" />}
-                      <span className="hidden sm:inline">EXECUTAR VALIDAÇÃO</span>
-                      <span className="sm:hidden">RODAR</span>
+                  
+                  <div className="flex gap-2 ml-2 shrink-0">
+                    <Button size="sm" onClick={handleRunCode} disabled={isRunning} className="bg-green-600 hover:bg-green-700 h-7 md:h-8 rounded-full text-[8px] md:text-[10px] font-black px-3 md:px-6 gap-1.5">
+                      {isRunning ? <RefreshCcw className="w-2.5 h-2.5 animate-spin" /> : <Play className="w-2.5 h-2.5 fill-current" />}
+                      <span>EXECUTAR</span>
                     </Button>
                   </div>
                </div>
                
                <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
-                 <div className={cn("flex-1 relative flex flex-col", showPreview && isWebLang && "md:w-1/2 md:border-r border-white/5")}>
+                 {/* EDITOR PRINCIPAL */}
+                 <div className={cn(
+                    "flex-1 relative flex flex-col min-h-0",
+                    (activeTab === 'preview' || activeTab === 'mission') && isMobile ? "hidden" : "flex",
+                    showPreview && isWebLang && "lg:w-1/2 lg:border-r border-white/5"
+                 )}>
                     <Editor
                       height="100%"
                       language={getMonacoLanguage(activeTab)}
@@ -642,16 +602,21 @@ export default function LearnPage() {
                         minimap: { enabled: false }, fontSize: 13, lineNumbers: 'on', 
                         scrollBeyondLastLine: false, automaticLayout: true, 
                         padding: { top: 20 }, wordWrap: "on", fontFamily: "Source Code Pro",
-                        fixedOverflowWidgets: true
+                        fixedOverflowWidgets: true,
+                        scrollbar: { verticalScrollbarSize: 8, horizontalScrollbarSize: 8 }
                       }}
                     />
                  </div>
                  
-                 {isWebLang && showPreview && (
-                   <div className="hidden md:flex md:w-1/2 bg-white flex-col">
-                      <div className="h-8 bg-muted flex items-center px-4 justify-between border-b shrink-0">
-                         <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                            <Eye className="w-3 h-3" /> Live View (Projeto Master)
+                 {/* LIVE PREVIEW - VISÍVEL EM TABS NO MOBILE OU LADO A LADO NO DESKTOP */}
+                 {isWebLang && (
+                   <div className={cn(
+                      "lg:w-1/2 bg-white flex flex-col min-h-0",
+                      activeTab === 'preview' ? "flex flex-1" : "hidden lg:flex"
+                   )}>
+                      <div className="h-7 bg-muted flex items-center px-4 justify-between border-b shrink-0">
+                         <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                            <Eye className="w-3 h-3" /> Live View
                          </span>
                          <div className="flex gap-1.5">
                             <div className="w-2 h-2 rounded-full bg-red-400/50" />
@@ -662,27 +627,32 @@ export default function LearnPage() {
                       <iframe ref={iframeRef} title="Live Preview" className="flex-1 w-full border-none" sandbox="allow-scripts" />
                    </div>
                  )}
+
+                 {/* CONTEÚDO DA MISSÃO NO MOBILE (COMO TAB) */}
+                 {isMobile && activeTab === 'mission' && (
+                   <div className="flex-1 overflow-hidden">
+                      {MissionContent}
+                   </div>
+                 )}
                </div>
 
+               {/* CONSOLA DO ENGENHEIRO - FLUTUANTE OU FIXA */}
                <div 
-                 style={{ height: isConsoleOpen ? `${consoleHeight}px` : "40px" }}
+                 style={{ height: isConsoleOpen ? `${consoleHeight}px` : "32px" }}
                  className="border-t border-white/10 bg-[#121212] flex flex-col transition-[height] duration-200 relative shrink-0 z-20"
                >
-                 {isConsoleOpen && (
-                   <div onMouseDown={startResizing} className="absolute top-0 left-0 right-0 h-1 cursor-ns-resize bg-primary/0 hover:bg-primary/50 transition-colors z-30" />
-                 )}
-                 <div className="flex items-center justify-between px-4 h-10 border-b border-white/5 shrink-0 bg-black/20">
-                    <div className="text-muted-foreground flex items-center gap-2 uppercase tracking-widest font-black text-[9px]">
-                      <Terminal className="w-3 h-3" /> Consola do Engenheiro
+                 <div className="flex items-center justify-between px-4 h-8 border-b border-white/5 shrink-0 bg-black/20 cursor-pointer" onClick={() => setIsConsoleOpen(!isConsoleOpen)}>
+                    <div className="text-muted-foreground flex items-center gap-2 uppercase tracking-widest font-black text-[8px]">
+                      <Terminal className="w-3 h-3" /> Consola
                     </div>
-                    <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-white" onClick={() => setIsConsoleOpen(!isConsoleOpen)}>
-                         {isConsoleOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                    <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-white">
+                         {isConsoleOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
                     </Button>
                  </div>
                  {isConsoleOpen && (
-                   <div className="flex-1 p-4 font-code text-xs overflow-y-auto scroll-container">
+                   <div className="flex-1 p-3 font-code text-[10px] md:text-xs overflow-y-auto scroll-container">
                       <div className={cn("whitespace-pre-wrap leading-relaxed", output.includes('✅') ? 'text-green-400' : 'text-blue-300')}>
-                        {output || `> Simulador de ${selectedLang} pronto para depuração.`}
+                        {output || `> Simulador pronto. Utilize as abas acima para navegar.`}
                       </div>
                    </div>
                  )}
@@ -691,9 +661,10 @@ export default function LearnPage() {
           ) : null}
         </div>
 
-        {practice && showSidebar && (
-          <div className="w-[35%] bg-[#0d1117] hidden lg:flex flex-col border-l border-white/5 overflow-hidden animate-in slide-in-from-right duration-300 shrink-0">
-            {MissionSidebar}
+        {/* SIDEBAR DE MISSÃO - VISÍVEL APENAS EM DESKTOP */}
+        {practice && showSidebar && !isMobile && (
+          <div className="w-[320px] xl:w-[400px] bg-[#0d1117] hidden lg:flex flex-col border-l border-white/5 overflow-hidden shrink-0">
+            {MissionContent}
           </div>
         )}
       </main>
