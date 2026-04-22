@@ -8,11 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Terminal, Play, CheckCircle2, ChevronLeft, 
   ListChecks, Loader2, Brain, Eye, Sparkles, ChevronDown, ChevronUp,
-  Info, ChevronRight, XCircle, AlertCircle, RefreshCcw, Youtube
+  Info, ChevronRight, XCircle, AlertCircle, RefreshCcw, Youtube, Menu
 } from "lucide-react";
 import { 
-  findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
-  findQuizById, findNextLessonId
+  modules, findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
+  findQuizById, findNextLessonId, findOrderedLessons
 } from "@/lib/curriculum";
 import { useParams, useRouter } from "next/navigation";
 import { useLanguage } from "@/components/LanguageContext";
@@ -31,6 +31,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import Link from "next/link";
 
 const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
 
@@ -41,7 +42,7 @@ export default function LearnPage() {
   const isMobile = useIsMobile();
   const { t } = useLanguage();
   const { profile } = useAuth();
-  const { markAsCompleted, isCompleted } = useProgress();
+  const { markAsCompleted, isCompleted, progress } = useProgress();
 
   const data = useMemo(() => findKnowledgeAreaByLessonId(lessonId), [lessonId]);
   const theory = useMemo(() => findTheoryLesson(lessonId), [lessonId]);
@@ -88,7 +89,6 @@ export default function LearnPage() {
     setJsCode(practice.jsTemplate || "");
   }, [practice, lessonId, isWebLang]);
 
-  // Reset quiz state when switching lessons
   useEffect(() => {
     setSelectedAnswers({});
     setValidated(false);
@@ -130,7 +130,7 @@ export default function LearnPage() {
         setOutput(`> ⚠️ Validação: PENDENTE (${newDone.length}/${practice?.objectives.length || 0} objetivos).`);
         toast.error("Alguns objetivos ainda não foram atingidos.");
       }
-    }, 400); // Reduced delay
+    }, 400);
   };
 
   const handleVerifyQuiz = async () => {
@@ -162,12 +162,47 @@ export default function LearnPage() {
       ...prev,
       [questionId]: optionIndex
     }));
-    // If user changes an answer after validation, we reset validation status so they can verify again
     if (validated) setValidated(false); 
   };
 
   if (!mounted || !data) return null;
-  const { ka } = data;
+  const { ka, level } = data;
+
+  const LessonList = (
+    <div className="flex flex-col gap-1 p-4 overflow-y-auto max-h-[70vh] scroll-container">
+      {ka.theory.map((l) => (
+        <Link 
+          key={l.id} 
+          href={`/learn/${l.id}`}
+          className={cn(
+            "flex items-center justify-between p-3 rounded-xl text-sm transition-all border",
+            lessonId === l.id ? "bg-primary/20 border-primary/30 text-primary font-bold" : "bg-card/40 border-transparent hover:bg-card/60"
+          )}
+        >
+          <span className="truncate mr-2">{l.title}</span>
+          {isCompleted(l.id) && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />}
+        </Link>
+      ))}
+      {Object.entries(ka.practice).map(([lang, exercises]) => (
+        exercises.map(ex => (
+          <Link 
+            key={ex.id} 
+            href={`/learn/${ex.id}`}
+            className={cn(
+              "flex items-center justify-between p-3 rounded-xl text-sm transition-all border",
+              lessonId === ex.id ? "bg-accent/20 border-accent/30 text-accent font-bold" : "bg-card/40 border-transparent hover:bg-card/60"
+            )}
+          >
+            <span className="truncate mr-2 flex items-center gap-2">
+              <span className="text-[10px] bg-accent/10 px-1.5 py-0.5 rounded text-accent uppercase font-black">{lang}</span>
+              {ex.title}
+            </span>
+            {isCompleted(ex.id) && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />}
+          </Link>
+        ))
+      ))}
+    </div>
+  );
 
   const MissionContent = (
     <div className="p-5 h-full flex flex-col bg-card/30 overflow-y-auto scroll-container">
@@ -227,12 +262,29 @@ export default function LearnPage() {
       <Navigation />
       
       <div className="bg-card/50 border-b px-4 h-12 md:h-14 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-3 min-w-0">
-          <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-full h-8 w-8"><ChevronLeft className="w-4 h-4" /></Button>
-          <div className="truncate">
+        <div className="flex items-center gap-2 md:gap-3 min-w-0">
+          <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-full h-8 w-8 shrink-0"><ChevronLeft className="w-4 h-4" /></Button>
+          
+          <div className="truncate flex-1">
             <span className="text-[9px] md:text-[10px] text-primary font-black block uppercase tracking-tighter">{ka.title}</span>
             <h2 className="font-headline font-bold text-xs md:text-sm truncate opacity-90">{theory?.title || practice?.title}</h2>
           </div>
+
+          {isMobile && (
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full border border-white/5"><Menu className="w-4 h-4" /></Button>
+              </SheetTrigger>
+              <SheetContent side="bottom" className="h-[60vh] rounded-t-[2.5rem] p-0 border-t-primary/20">
+                 <SheetHeader className="p-6 border-b">
+                   <SheetTitle className="text-left font-headline font-bold flex items-center gap-2">
+                     <Brain className="w-5 h-5 text-primary" /> Trilhas do Módulo
+                   </SheetTitle>
+                 </SheetHeader>
+                 {LessonList}
+              </SheetContent>
+            </Sheet>
+          )}
         </div>
         
         <div className="flex items-center gap-2">
