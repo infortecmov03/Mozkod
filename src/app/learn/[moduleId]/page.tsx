@@ -8,7 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Terminal, Play, CheckCircle2, ChevronLeft, 
   ListChecks, Loader2, Brain, Eye, Sparkles, ChevronDown, ChevronUp,
-  Info, ChevronRight, XCircle, AlertCircle, RefreshCcw, Youtube, Menu
+  Info, ChevronRight, XCircle, AlertCircle, RefreshCcw, Youtube, Menu,
+  Library
 } from "lucide-react";
 import { 
   modules, findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
@@ -273,7 +274,14 @@ export default function LearnPage() {
           {isMobile && (
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full border border-white/5"><Menu className="w-4 h-4" /></Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8 rounded-full border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors"
+                  aria-label="Ver todas as lições"
+                >
+                  <Brain className="w-4 h-4 text-primary" />
+                </Button>
               </SheetTrigger>
               <SheetContent side="bottom" className="h-[60vh] rounded-t-[2.5rem] p-0 border-t-primary/20">
                  <SheetHeader className="p-6 border-b">
