@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { 
   Terminal, Play, CheckCircle2, ChevronLeft, 
   ListChecks, Loader2, Brain, Eye, Sparkles, ChevronDown, ChevronUp,
-  Info, ChevronRight, XCircle, AlertCircle
+  Info, ChevronRight, XCircle
 } from "lucide-react";
 import { 
   findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
@@ -64,9 +64,8 @@ export default function LearnPage() {
   const [quizStarted, setQuizStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [isAnswerChecked, setIsAnswerChecked] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
-  const [quizFinished, setQuizResult] = useState(false);
+  const [quizFinished, setQuizFinished] = useState(false);
 
   const isWebLang = useMemo(() => ['html', 'css', 'javascript'].includes(practice?.language.toLowerCase() || ''), [practice]);
   const isConceptLab = useMemo(() => practice?.language.toLowerCase() === 'concept', [practice]);
@@ -95,9 +94,8 @@ export default function LearnPage() {
     setQuizStarted(false);
     setCurrentQuestionIndex(0);
     setSelectedOption(null);
-    setIsAnswerChecked(false);
     setQuizScore(0);
-    setQuizResult(false);
+    setQuizFinished(false);
   }, [lessonId]);
 
   const updatePreview = useCallback(() => {
@@ -138,21 +136,31 @@ export default function LearnPage() {
   };
 
   const handleNextQuestion = () => {
-    if (!quiz) return;
+    if (!quiz || selectedOption === null) return;
+    
     const isCorrect = selectedOption === quiz.questions[currentQuestionIndex].correctAnswer;
-    if (isCorrect) setQuizScore(prev => prev + 1);
+    const newScore = isCorrect ? quizScore + 1 : quizScore;
+    
+    if (isCorrect) setQuizScore(newScore);
 
     if (currentQuestionIndex < quiz.questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedOption(null);
-      setIsAnswerChecked(false);
     } else {
-      const finalScore = ((quizScore + (isCorrect ? 1 : 0)) / quiz.questions.length) * 100;
-      setQuizResult(true);
-      if (finalScore >= (quiz.passingScore || 70)) {
-        if (data) markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', Math.round(finalScore));
+      const finalScorePercent = (newScore / quiz.questions.length) * 100;
+      setQuizFinished(true);
+      if (finalScorePercent >= (quiz.passingScore || 70)) {
+        if (data) markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', Math.round(finalScorePercent));
       }
     }
+  };
+
+  const resetQuiz = () => {
+    setQuizStarted(false);
+    setQuizFinished(false);
+    setQuizScore(0);
+    setCurrentQuestionIndex(0);
+    setSelectedOption(null);
   };
 
   if (!mounted || !data) return null;
@@ -284,7 +292,7 @@ export default function LearnPage() {
           {theory ? (
             <div className="flex-1 overflow-y-auto p-5 md:p-16 max-w-4xl mx-auto w-full scroll-container">
               <h1 className="text-2xl md:text-5xl font-headline font-bold mb-6 md:mb-10 leading-tight">{theory.title}</h1>
-              <div className="prose prose-invert max-none mb-16 text-sm md:text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: theory.content }} />
+              <div className="prose prose-invert max-w-none mb-16 text-sm md:text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: theory.content }} />
               
               {isCompleted(lessonId) ? (
                 <div className="p-6 md:p-10 border-green-500/20 bg-green-500/5 backdrop-blur-sm rounded-[2rem] shadow-2xl mb-10 text-center space-y-6 animate-in zoom-in duration-500">
@@ -337,7 +345,7 @@ export default function LearnPage() {
                             <XCircle className="w-16 h-16 text-destructive mx-auto" />
                             <h3 className="text-2xl font-bold">Tenta Novamente 🔄</h3>
                             <p className="text-muted-foreground">Precisas de {quiz.passingScore}% para passar. Obtiveste {Math.round((quizScore / quiz.questions.length) * 100)}%.</p>
-                            <Button onClick={() => { setQuizStarted(false); setQuizResult(false); setQuizScore(0); setCurrentQuestionIndex(0); }} variant="outline">RECOMEÇAR QUIZ</Button>
+                            <Button onClick={resetQuiz} variant="outline" className="rounded-xl px-8 h-12 font-bold">RECOMEÇAR QUIZ</Button>
                           </>
                         )}
                       </Card>
