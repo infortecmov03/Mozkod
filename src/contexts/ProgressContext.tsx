@@ -22,6 +22,13 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const [progress, setProgress] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Detecção de Bypass (Mesma lógica do AuthContext)
+  const isSupabaseConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && 
+                               process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
+                               !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
+  
+  const isDevBypass = process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true' || !isSupabaseConfigured;
+
   const fetchProgress = useCallback(async () => {
     if (!user) {
       setProgress([]);
@@ -29,6 +36,19 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     
+    if (isDevBypass || user.id === 'dev-user-123') {
+      const localData = localStorage.getItem('cwm_dev_progress');
+      if (localData) {
+        try {
+          setProgress(JSON.parse(localData));
+        } catch (e) {
+          setProgress([]);
+        }
+      }
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -38,7 +58,6 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       
       if (error) throw error;
       if (data) {
-        // Normalizamos os dados para garantir que booleanos sejam booleanos
         const normalizedData = data.map(p => ({
           ...p,
           completed: p.completed === true || p.completed === 1 || p.completed === "true"
@@ -50,7 +69,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, isDevBypass]);
 
   useEffect(() => {
     fetchProgress();
@@ -75,6 +94,11 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     const completedInLevel = progress.filter(p => p.level_id === levelId && p.completed === true).length;
     
     if (totalItems > 0 && completedInLevel >= totalItems) {
+      if (isDevBypass) {
+        toast.success(`🏆 [DEV] Certificado de Nível ${levelId} desbloqueado!`);
+        return;
+      }
+
       const { data: existing } = await supabase
         .from('certificates')
         .select('id')
@@ -105,53 +129,48 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   ) => {
     if (!user) return;
 
-    // Atualiza o estado local imediatamente para feedback visual instantâneo
     const newItem = { 
+      user_id: user.id,
       lesson_id: id, 
       completed: true, 
       level_id: levelId,
       ka_id: kaId,
       lesson_type: type,
       last_code: code,
-      completed_at: new Date().toISOString()
+      completed_at: new Date().toISOString(),
+      quiz_score: score,
+      quiz_passed: score >= 70
     };
 
-    setProgress(prev => {
-      const existingIndex = prev.findIndex(p => p.lesson_id === id);
-      if (existingIndex > -1) {
-        const updated = [...prev];
-        updated[existingIndex] = { ...updated[existingIndex], ...newItem };
-        return updated;
-      }
-      return [...prev, newItem];
-    });
+    const newProgress = [...progress];
+    const existingIndex = newProgress.findIndex(p => p.lesson_id === id);
+    if (existingIndex > -1) {
+      newProgress[existingIndex] = { ...newProgress[existingIndex], ...newItem };
+    } else {
+      newProgress.push(newItem);
+    }
+
+    setProgress(newProgress);
+
+    if (isDevBypass) {
+      localStorage.setItem('cwm_dev_progress', JSON.stringify(newProgress));
+      checkAndIssueCertificate(user.id, levelId);
+      return;
+    }
 
     try {
       const { error } = await supabase
         .from('user_lesson_progress')
-        .upsert({
-          user_id: user.id,
-          level_id: levelId,
-          ka_id: kaId,
-          lesson_id: id,
-          lesson_type: type,
-          completed: true,
-          completed_at: new Date().toISOString(),
-          quiz_score: score,
-          quiz_passed: score >= 70,
-          last_code: code
-        }, { onConflict: 'user_id,lesson_id' });
+        .upsert(newItem, { onConflict: 'user_id,lesson_id' });
 
       if (error) throw error;
 
-      // Operações de fundo
       supabase.rpc('calculate_total_points', { p_user_id: user.id }).then(() => refreshProfile());
       checkAndIssueCertificate(user.id, levelId);
       
     } catch (err: any) {
       toast.error('Erro ao salvar progresso: ' + err.message);
       console.error(err);
-      // Reverte o estado se falhar no servidor
       fetchProgress();
     }
   };
