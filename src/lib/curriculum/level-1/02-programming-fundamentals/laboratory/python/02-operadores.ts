@@ -1,12 +1,16 @@
-import type { PracticeExercise } from '../../../../types';
+import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
   id: "pf-p2-py",
   language: "python",
-  title: "Lab Python: Operadores",
-  description: "Cálculos básicos em Python.",
-  statement: "Calcule a soma de 10 e 20 na variável 'soma'.",
-  template: "soma = 0",
-  detailedExplanation: "<p>Python usa operadores aritméticos padrão.</p>",
-  objectives: [{ id: "obj1", description: "Soma deve ser 30", test: "soma = 10 + 20" }]
+  title: "Lab Python: Operadores de Divisão",
+  description: "Diferença entre divisão real e inteira.",
+  statement: "Calcule a média de 15 e 10 usando o operador de divisão real.",
+  template: `nota1 = 15
+nota2 = 10
+media = `,
+  detailedExplanation: `<p>Em Python, <code>/</code> resulta sempre em float. Use parênteses para precedência.</p>`,
+  objectives: [
+    { id: "obj1", description: "Calcular média", test: "media = (nota1 + nota2) / 2" }
+  ]
 };

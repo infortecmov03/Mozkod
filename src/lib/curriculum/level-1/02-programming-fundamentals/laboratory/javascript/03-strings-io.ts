@@ -1,14 +1,16 @@
-import type { PracticeExercise } from '../../../../types';
+import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
   id: "pf-p3-js",
   language: "javascript",
-  title: "Lab JS: Strings e I/O",
-  description: "Manipulação de texto e saída de dados.",
-  statement: "Concatene 'Olá ' com a variável 'user' na variável 'mensagem'.",
-  template: "let user = 'Dev';\nlet mensagem = '';",
-  detailedExplanation: "<p>Use o operador + ou Template Literals para juntar textos.</p>",
+  title: "Lab JS: Template Literals",
+  description: "Interpolação moderna de texto.",
+  statement: "Crie a string 'O user Edson tem 25 anos' usando template literals com as variáveis fornecidas.",
+  template: `let user = "Edson";
+let idade = 25;
+let mensagem = ;`,
+  detailedExplanation: `<p>Use o acento grave (backtick) e a sintaxe <code>\${variavel}</code> para inserir valores dentro do texto.</p>`,
   objectives: [
-    { id: "obj1", description: "Criar saudação", test: "mensagem =" }
+    { id: "obj1", description: "Usar template literals", test: "`${user}" }
   ]
 };
