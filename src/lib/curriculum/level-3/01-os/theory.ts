@@ -1,4 +1,3 @@
-
 import { lesson as l1 } from './theory/01-kernel-architecture';
 import { lesson as l2 } from './theory/02-processes-threads';
 import { lesson as l3 } from './theory/03-cpu-scheduling';

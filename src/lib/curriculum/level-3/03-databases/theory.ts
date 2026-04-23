@@ -3,19 +3,19 @@ import { lesson as l2 } from './theory/02-er-modeling';
 import { lesson as l3 } from './theory/03-relational-algebra';
 import { lesson as l4 } from './theory/04-sql-ddl';
 import { lesson as l5 } from './theory/05-sql-joins';
-import { lesson as l6 } from './theory/06-transactions-acid';
+import { lesson as l6 } from './theory/06-transactions-acid-deep';
 import { lesson as l7 } from './theory/07-normalization';
 import { lesson as l8 } from './theory/08-indexing-optimization';
-import { lesson as l9 } from './theory/09-nosql-systems';
+import { lesson as l9 } from './theory/09-query-optimization';
 import { lesson as l10 } from './theory/10-data-warehousing';
 
 const titles = [
-  "LSM Trees vs B-Trees", "Execução de Queries Internals",
-  "Sharding & Partitioning", "Replicação & Consistência",
-  "Teorema CAP Deep Dive", "Algoritmos de Consenso (Raft/Paxos)",
-  "Bases de Dados In-Memory (Redis)", "Vector Databases para AI",
-  "Armazenamento Colunar", "Segurança & Data Masking",
-  "Grafos & Teoria Relacional"
+  "LSM Trees vs B-Trees", "Concurrency Control & Isolation Levels",
+  "Sharding & Partitioning", "Replication & High Availability",
+  "CAP Theorem & Distributed Databases", "Consensus Algorithms (Raft/Paxos)",
+  "In-Memory Databases (Redis)", "Vector Databases for AI",
+  "Columnar Storage & Big Data", "Database Security & Data Masking",
+  "Graph Databases & Relational Theory"
 ];
 
 export const lessons = [
@@ -23,7 +23,7 @@ export const lessons = [
   ...titles.map((title, i) => ({
     id: `db-t${i + 11}`,
     title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🗄️ Database Master: ${title}</h2><p>Arquitetura interna e estratégias avançadas de armazenamento e recuperação de dados.</p></div>`,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🗄️ Database Master: ${title}</h2><p>Arquitetura interna e estratégias avançadas de armazenamento e recuperação de dados em larga escala.</p></div>`,
     quizId: `db-q${i + 11}`
   }))
 ];
