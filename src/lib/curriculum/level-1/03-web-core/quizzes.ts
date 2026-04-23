@@ -2,15 +2,10 @@ import { quiz1 as q1 } from './quizzes/01-estrutura-html-quiz';
 import { quiz as q2 } from './quizzes/02-css-selectors-quiz';
 import { quiz as q3 } from './quizzes/03-box-model-quiz';
 import { quiz as q4 } from './quizzes/04-flexbox-quiz';
+import { quiz as q5 } from './quizzes/05-grid-quiz';
 
 export const quizzes = [
-  q1, q2, q3, q4,
-  {
-    id: "web-q5",
-    title: "Quiz: CSS Grid",
-    questions: [{ id: "q1", question: "O Grid é para quantas dimensões?", options: ["Uma (linhas)", "Duas (linhas e colunas)", "Três (3D)"], correctAnswer: 1 }],
-    passingScore: 70
-  },
+  q1, q2, q3, q4, q5,
   {
     id: "web-q6",
     title: "Quiz: Responsividade",
