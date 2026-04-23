@@ -49,11 +49,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .eq('id', userId)
         .single();
       
-      if (!error && data) {
+      if (error && error.code === 'PGRST116') {
+        // Se o perfil não existir, vamos criá-lo (necessário para o ranking)
+        const { data: { user: currentUser } } = await supabase.auth.getUser();
+        if (currentUser) {
+          const newProfile = {
+            id: currentUser.id,
+            email: currentUser.email,
+            display_name: currentUser.user_metadata?.display_name || 'Engenheiro Moz',
+            total_points: 0,
+            streak: 0
+          };
+          const { data: created, error: insError } = await supabase
+            .from('profiles')
+            .insert(newProfile)
+            .select()
+            .single();
+          
+          if (!insError && created) {
+            setProfile(created);
+          }
+        }
+      } else if (!error && data) {
         setProfile(data);
       }
     } catch (err) {
-      console.error('Erro ao buscar perfil real:', err);
+      console.error('Erro ao buscar perfil:', err);
     }
   };
 

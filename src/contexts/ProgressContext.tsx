@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 type ProgressContextType = {
   isCompleted: (id: string) => boolean;
   markAsCompleted: (id: string, levelId: number, kaId: string, type: 'theory' | 'exercise', score?: number, code?: string) => Promise<void>;
+  syncPoints: () => Promise<void>;
   progress: any[];
   loading: boolean;
   refreshProgress: () => Promise<void>;
@@ -55,6 +56,16 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     return progress.some(p => p.lesson_id === id && p.completed);
   }, [progress]);
 
+  const syncPoints = async () => {
+    if (!user) return;
+    try {
+      await supabase.rpc('calculate_total_points', { p_user_id: user.id });
+      await refreshProfile();
+    } catch (err) {
+      console.error('Erro ao sincronizar pontos:', err);
+    }
+  };
+
   const markAsCompleted = async (
     id: string, 
     levelId: number, 
@@ -81,7 +92,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       quiz_passed: score >= 70
     };
 
-    // UI Otimista - Atualiza o estado local imediatamente para a UI reagir
+    // UI Otimista
     const oldProgress = [...progress];
     setProgress(prev => {
       const idx = prev.findIndex(p => p.lesson_id === id);
@@ -99,8 +110,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       if (error) throw error;
 
       // Sincroniza estatísticas de perfil
-      await supabase.rpc('calculate_total_points', { p_user_id: user.id });
-      await refreshProfile();
+      await syncPoints();
       
       toast.success("Progresso sincronizado!");
     } catch (err: any) {
@@ -111,7 +121,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <ProgressContext.Provider value={{ isCompleted, markAsCompleted, progress, loading, refreshProgress: fetchProgress }}>
+    <ProgressContext.Provider value={{ isCompleted, markAsCompleted, syncPoints, progress, loading, refreshProgress: fetchProgress }}>
       {children}
     </ProgressContext.Provider>
   );

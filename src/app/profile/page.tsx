@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Zap, Star, Trophy, Calendar, MapPin, Edit2, Loader2, 
   MessageSquare, Award, ShieldCheck, Flame, Lock, 
-  Fingerprint, Github, Chrome, Bell, LogOut, Check, KeyRound
+  Fingerprint, Github, Chrome, Bell, LogOut, Check, KeyRound, RefreshCcw
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
@@ -24,10 +24,11 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function ProfilePage() {
   const { user, profile, loading: authLoading, signOut, unlinkIdentity, updateProfile, updatePassword } = useAuth();
-  const { progress, loading: progressLoading } = useProgress();
+  const { progress, loading: progressLoading, syncPoints } = useProgress();
   const { t } = useLanguage();
   const { toast } = useToast();
   const [mounted, setMounted] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   
   // Edit Profile States
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -71,6 +72,18 @@ export default function ProfilePage() {
     }
   };
 
+  const handleSync = async () => {
+    setIsSyncing(true);
+    try {
+      await syncPoints();
+      toast({ title: "Sincronizado!", description: "Os teus pontos e posição no ranking foram actualizados." });
+    } catch (err) {
+      toast({ variant: "destructive", title: "Erro na sincronização" });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
@@ -89,7 +102,7 @@ export default function ProfilePage() {
       setNewPassword("");
       setConfirmPassword("");
     } catch (err: any) {
-      toast({ variant: "destructive", title: "Erro", description: err.message });
+      toast({ variant: "destructive", title: "Erro ao atualizar", description: err.message });
     } finally {
       setIsChangingPassword(false);
     }
@@ -131,10 +144,10 @@ export default function ProfilePage() {
                 <h2 className="text-2xl font-headline font-bold">{profile?.display_name}</h2>
                 <p className="text-muted-foreground text-sm mb-6">{user?.email}</p>
                 
-                <div className="flex justify-center gap-3">
+                <div className="flex flex-col gap-3 px-4">
                   <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
                     <DialogTrigger asChild>
-                      <Button variant="outline" size="sm" className="rounded-full font-bold gap-2 px-6">
+                      <Button variant="outline" size="sm" className="rounded-full font-bold gap-2 w-full">
                         <Edit2 className="w-3.5 h-3.5" /> Editar Perfil
                       </Button>
                     </DialogTrigger>
@@ -173,6 +186,17 @@ export default function ProfilePage() {
                       </form>
                     </DialogContent>
                   </Dialog>
+
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    onClick={handleSync}
+                    disabled={isSyncing}
+                    className="rounded-full font-bold gap-2 w-full bg-primary/10 text-primary hover:bg-primary/20"
+                  >
+                    <RefreshCcw className={cn("w-3.5 h-3.5", isSyncing && "animate-spin")} />
+                    {isSyncing ? "Sincronizando..." : "Sincronizar Ranking"}
+                  </Button>
                 </div>
               </CardContent>
               <Separator className="opacity-10" />
