@@ -1,4 +1,3 @@
-
 import type { PracticeExercise } from '../../types';
 
 // JavaScript Variants
@@ -27,27 +26,15 @@ import { exercise as p2cp } from './laboratory/cpp/02-operadores';
 
 export const practice = {
   javascript: [
-    { ...p1js, youtubeVideoId: "8ME9u065vD4" }, 
-    { ...p2js, youtubeVideoId: "95v88Oit0H8" }, 
-    { ...p3js }, 
-    { ...p4js }, 
-    { ...p5js }, 
-    { ...p6js }
+    p1js, p2js, p3js, p4js, p5js, p6js
   ],
   python: [
-    { ...p1py, youtubeVideoId: "8ME9u065vD4" }, 
-    { ...p2py, youtubeVideoId: "95v88Oit0H8" }, 
-    { ...p3py }, 
-    { ...p4py }, 
-    { ...p5py }, 
-    { ...p6py }
+    p1py, p2py, p3py, p4py, p5py, p6py
   ],
   java: [
-    { ...p1jv, youtubeVideoId: "8ME9u065vD4" }, 
-    { ...p2jv, youtubeVideoId: "95v88Oit0H8" }
+    p1jv, p2jv
   ],
   cpp: [
-    { ...p1cp, youtubeVideoId: "8ME9u065vD4" }, 
-    { ...p2cp, youtubeVideoId: "95v88Oit0H8" }
+    p1cp, p2cp
   ]
 };

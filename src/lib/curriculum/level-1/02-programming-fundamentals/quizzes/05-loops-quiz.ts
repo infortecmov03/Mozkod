@@ -7,65 +7,65 @@ export const quiz: Quiz = {
   questions: [
     {
       id: "q1",
-      question: "Qual o loop mais adequado para percorrer todos os 50 elementos de uma lista de compras?",
+      question: "Qual o loop mais adequado quando sabemos exatamente o número de repetições?",
       options: ["While", "For", "If", "Switch"],
       correctAnswer: 1,
-      explanation: "O loop 'For' é ideal quando conhecemos o tamanho da coleção ou o número exato de repetições."
+      explanation: "O loop 'For' é desenhado para percorrer coleções ou repetir ações um número pré-determinado de vezes."
     },
     {
       id: "q2",
-      question: "O que causa um 'Loop Infinito'?",
+      question: "O que caracteriza um 'Loop Infinito'?",
       options: [
-        "Usar muitos comentários no código",
-        "Uma condição que é SEMPRE verdadeira e nunca é alterada",
-        "O computador ficar sem bateria",
-        "Usar a variável 'i' como contador"
+        "Um loop que corre 1 milhão de vezes",
+        "Uma condição que nunca se torna Falsa",
+        "Um erro de sintaxe no nome da variável",
+        "O uso de números negativos"
       ],
       correctAnswer: 1,
-      explanation: "Se o teste lógico do loop nunca falhar, o processador ficará preso executando o mesmo bloco para sempre."
+      explanation: "Se a condição de paragem nunca for atingida, o CPU ficará preso no mesmo bloco para sempre."
     },
     {
       id: "q3",
-      question: "Para que serve a instrução 'continue' dentro de um loop?",
+      question: "Para que serve a instrução 'break' dentro de um loop?",
       options: [
-        "Para parar o programa",
-        "Para saltar apenas a iteração atual e ir para a próxima volta do loop",
+        "Para pausar o programa por 1 segundo",
+        "Para sair imediatamente do loop, ignorando as voltas restantes",
         "Para reiniciar o computador",
-        "Para fechar a base de dados"
+        "Para saltar apenas a volta atual"
       ],
       correctAnswer: 1,
-      explanation: "Diferente do break, o continue não encerra o loop, apenas pula o código que vem depois dele naquela volta específica."
+      explanation: "O break 'quebra' o laço de repetição, movendo o fluxo para a linha logo após o fim do loop."
     },
     {
       id: "q4",
-      question: "Qual o valor final de 'x' após este loop: for(let i=0; i<3; i++) { x += 2 } (assumindo x inicia em 0)?",
-      options: ["2", "4", "6", "8"],
-      correctAnswer: 2,
-      explanation: "O loop roda 3 vezes (i=0, 1, 2). Em cada volta soma 2. Total: 2+2+2 = 6."
-    },
-    {
-      id: "q5",
-      question: "Qual a principal diferença entre o loop While e o Do-While?",
+      question: "Qual a diferença do 'do-while' para o 'while' tradicional?",
       options: [
-        "O While é mais rápido",
-        "O Do-While garante que o código execute pelo menos UMA vez antes de testar a condição",
-        "O While não aceita números",
+        "O do-while é mais rápido",
+        "O do-while garante que o código execute pelo menos uma vez antes de testar a condição",
+        "O while tradicional não aceita números",
         "Não existe diferença real"
       ],
       correctAnswer: 1,
-      explanation: "No Do-While, o teste lógico é feito no fim do bloco, por isso a primeira execução é garantida."
+      explanation: "No do-while, a verificação é feita no fim do bloco, por isso a primeira execução acontece sempre."
+    },
+    {
+      id: "q5",
+      question: "O que a instrução 'continue' faz?",
+      options: [
+        "Encerra o programa",
+        "Salta o resto do código da volta atual e vai direto para a próxima iteração",
+        "Imprime o valor do contador",
+        "Cria um novo loop"
+      ],
+      correctAnswer: 1,
+      explanation: "O continue não para o loop, apenas 'pula' o que falta naquela volta específica."
     },
     {
       id: "q6",
-      question: "Em termos de performance, o que deves evitar fazer dentro de um loop que roda milhões de vezes?",
-      options: [
-        "Fazer somas simples",
-        "Operações pesadas como ler do disco ou fazer pedidos de rede",
-        "Mudar o valor do contador",
-        "Usar chavetas"
-      ],
-      correctAnswer: 1,
-      explanation: "Operações de I/O são lentas. Multiplicar essa lentidão por milhões de vezes pode congelar o sistema por minutos."
+      question: "Qual o valor final de 'x' em: x=0; for(i=0; i<3; i++) { x+=2 }?",
+      options: ["2", "4", "6", "3"],
+      correctAnswer: 2,
+      explanation: "O loop roda 3 vezes (i=0, 1, 2). Em cada volta adiciona 2 ao x. 2 + 2 + 2 = 6."
     }
   ]
 };

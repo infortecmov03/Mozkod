@@ -7,75 +7,75 @@ export const quiz: Quiz = {
   questions: [
     {
       id: "q1",
-      question: "Para que serve a palavra-chave 'return' numa função?",
+      question: "Qual o principal objetivo de usar funções?",
       options: [
-        "Para imprimir algo no ecrã",
-        "Para encerrar a função e devolver um valor para o ponto onde foi chamada",
-        "Para apagar a função da memória",
-        "Para ligar o computador"
+        "Tornar o código mais longo",
+        "Reutilização de lógica e organização do código (DRY)",
+        "Aumentar a velocidade da internet",
+        "Apagar variáveis automaticamente"
       ],
       correctAnswer: 1,
-      explanation: "Sem o return, a função executa a tarefa mas quem a chamou não recebe o resultado de volta."
+      explanation: "O princípio DRY (Don't Repeat Yourself) foca em escrever a lógica uma vez e reutilizá-la em todo o projeto."
     },
     {
       id: "q2",
-      question: "O que acontece se tentares aceder a uma variável definida DENTRO de uma função a partir de fora dela?",
+      question: "Para que serve a palavra-chave 'return'?",
       options: [
-        "O programa funciona normalmente",
-        "Ocorre um erro de 'ReferenceError' porque a variável está no escopo local",
-        "A variável torna-se global automaticamente",
-        "O computador mostra o valor mas com um aviso"
+        "Para imprimir um texto no terminal",
+        "Para encerrar a função e enviar um valor de volta para quem a chamou",
+        "Para reiniciar o loop",
+        "Para apagar a função da memória"
       ],
       correctAnswer: 1,
-      explanation: "Variáveis locais estão encapsuladas. O isolamento de escopo é vital para evitar bugs de colisão de nomes."
+      explanation: "O return é a saída da função. Sem ele, a função realiza a tarefa mas não entrega o resultado final."
     },
     {
       id: "q3",
-      question: "O que são os 'Parâmetros' de uma função?",
+      question: "O que acontece se tentares aceder a uma variável definida DENTRO de uma função a partir de fora dela?",
       options: [
-        "São os erros que a função dá",
-        "São as variáveis de entrada que a função espera receber para trabalhar",
-        "É o nome da função",
-        "São as bibliotecas externas"
+        "O programa funciona normalmente",
+        "Ocorre um erro de referência porque a variável está no escopo local",
+        "O valor é mostrado mas com um aviso",
+        "A variável torna-se global automaticamente"
       ],
       correctAnswer: 1,
-      explanation: "Parâmetros agem como 'placeholders' para os valores reais (argumentos) que serão passados na chamada."
+      explanation: "Variáveis locais 'nascem' e 'morrem' dentro da função. Isto protege o sistema de efeitos colaterais indesejados."
     },
     {
       id: "q4",
-      question: "Qual a principal vantagem de usar funções em vez de escrever código longo e contínuo?",
+      question: "O que são 'Parâmetros' de uma função?",
       options: [
-        "O código corre 100x mais rápido",
-        "Reutilização de código e facilidade de manutenção (DRY - Don't Repeat Yourself)",
-        "O código fica mais colorido",
-        "Não existem vantagens"
+        "São as variáveis de entrada que a função espera receber",
+        "É o nome que damos à função",
+        "São os erros que a função pode dar",
+        "São as bibliotecas que importamos"
       ],
-      correctAnswer: 1,
-      explanation: "Ao modularizar, se precisares de mudar uma lógica, mudas apenas num lugar em vez de em 50 arquivos."
+      correctAnswer: 0,
+      explanation: "Parâmetros funcionam como 'caixas de entrada' para os dados que a função vai processar."
     },
     {
       id: "q5",
-      question: "O que caracteriza uma 'Função Pura'?",
+      question: "Uma 'Função Pura' é aquela que:",
       options: [
-        "Uma função que não tem parâmetros",
-        "Uma função que sempre retorna o mesmo resultado para a mesma entrada e não tem efeitos colaterais",
-        "Uma função que só usa números inteiros",
-        "Uma função que foi escrita sem erros"
+        "Não tem parâmetros",
+        "Não tem retorno",
+        "Sempre retorna o mesmo resultado para a mesma entrada e não altera nada fora dela",
+        "Foi escrita sem usar o teclado"
       ],
-      correctAnswer: 1,
-      explanation: "Funções puras são a base da estabilidade em sistemas complexos, pois são previsíveis e isoladas."
+      correctAnswer: 2,
+      explanation: "Funções puras são a base da estabilidade em engenharia, pois são previsíveis e fáceis de testar."
     },
     {
       id: "q6",
-      question: "O que acontece ao fluxo do programa assim que uma instrução 'return' é executada?",
+      question: "O que acontece ao fluxo do programa assim que o 'return' é executado?",
       options: [
-        "O programa continua a ler as linhas seguintes dentro da função",
-        "A execução da função para imediatamente e o controlo volta para quem a invocou",
+        "O programa continua a ler as linhas abaixo dentro da função",
+        "A execução da função para IMEDIATAMENTE",
         "O programa entra em loop",
-        "O programa fecha todas as abas"
+        "O programa apaga todos os parâmetros"
       ],
       correctAnswer: 1,
-      explanation: "Nada que venha depois do return dentro daquele bloco será executado. O return é o ponto final daquela chamada."
+      explanation: "O return é o ponto final de uma função. Qualquer código abaixo dele dentro do mesmo bloco nunca será executado."
     }
   ]
 };
