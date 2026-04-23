@@ -51,12 +51,9 @@ export default function LearnPage() {
   const quiz = useMemo(() => theory?.quizId ? findQuizById(theory.quizId) : null, [theory]);
   const nextLessonId = useMemo(() => findNextLessonId(lessonId), [lessonId]);
 
-  // Encontrar variantes da mesma lição em outras linguagens
   const availableVariants = useMemo(() => {
     if (!data || !practice) return [];
     const variants: { lang: string; id: string }[] = [];
-    
-    // Pegar o prefixo do ID (ex: "pf-p1") ignorando o sufixo da língua
     const currentBaseId = practice.id.split('-').slice(0, 2).join('-'); 
     
     Object.entries(data.ka.practice).forEach(([lang, exercises]) => {
@@ -81,7 +78,6 @@ export default function LearnPage() {
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Estados do Quiz
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
   const [validated, setValidated] = useState(false);
 
@@ -129,6 +125,7 @@ export default function LearnPage() {
   const handleRunCode = async () => {
     setIsRunning(true);
     setIsConsoleOpen(true);
+    setOutput("> Compilando e analisando estrutura...\n");
     
     setTimeout(async () => {
       setIsRunning(false);
@@ -137,24 +134,33 @@ export default function LearnPage() {
         : code;
       
       const newDone = practice?.objectives.filter(obj => {
-        // Validação simples por inclusão de string ou regex simulado
         return current.includes(obj.test);
       }).map(obj => obj.id) || [];
       
       setCompletedObjectives(newDone);
 
+      // Simulação de Output Realista baseado no conteúdo
+      let logs = "";
+      if (practice?.language === 'javascript' || practice?.language === 'python') {
+        const matches = current.match(/console\.log\((.*)\)|print\((.*)\)/g);
+        if (matches) {
+          logs = matches.map(m => `> OUT: ${m.replace(/console\.log\(|print\(|\)|'|"/g, '')}`).join('\n');
+        }
+      }
+
       if (newDone.length === (practice?.objectives.length || 0)) {
-        setOutput("> ✅ Validação: SUCESSO. Missão concluída.");
+        setOutput(`${logs}\n> ✅ STATUS: 200 OK\n> [AUDITORIA]: Todos os requisitos foram encontrados no código.\n> Missão concluída com sucesso.`);
         toast.success("Excelente! Missão concluída.");
         if (data && !isCompleted(lessonId)) {
           const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
           await markAsCompleted(lessonId, data.level.id, data.ka.id, 'exercise', 100, finalCode);
         }
       } else {
-        setOutput(`> ⚠️ Validação: PENDENTE (${newDone.length}/${practice?.objectives.length || 0} objetivos).`);
-        toast.error("Alguns objetivos ainda não foram atingidos.");
+        const remaining = (practice?.objectives.length || 0) - newDone.length;
+        setOutput(`${logs}\n> ⚠️ STATUS: 412 PRECONDITION FAILED\n> [AUDITORIA]: Faltam ${remaining} componentes essenciais.\n> Verifique o briefing da missão.`);
+        toast.error("Alguns requisitos ainda não foram atingidos.");
       }
-    }, 400);
+    }, 800);
   };
 
   const handleVerifyQuiz = async () => {
@@ -272,14 +278,19 @@ export default function LearnPage() {
       <div className="prose prose-invert prose-sm mb-6 text-xs leading-relaxed opacity-90" dangerouslySetInnerHTML={{ __html: practice?.detailedExplanation || "" }} />
       
       <div className="space-y-2 mb-10">
-        <p className="text-[10px] font-black uppercase text-muted-foreground/60 mb-2 tracking-widest">Objetivos</p>
+        <p className="text-[10px] font-black uppercase text-muted-foreground/60 mb-2 tracking-widest">Requisitos de Construção</p>
         {practice?.objectives.map((obj, i) => (
           <div key={obj.id} className={cn("p-3 md:p-4 rounded-xl border transition-all", (completedObjectives.includes(obj.id) || isCompleted(lessonId)) ? "bg-green-500/10 border-green-500/30" : "bg-background/40 border-white/5 shadow-sm")}>
             <div className="flex gap-3 items-start">
               <div className={cn("w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] font-bold mt-0.5", (completedObjectives.includes(obj.id) || isCompleted(lessonId)) ? "bg-green-500 text-white" : "bg-white/10 text-muted-foreground")}>
                 {(completedObjectives.includes(obj.id) || isCompleted(lessonId)) ? <CheckCircle2 className="w-3.5 h-3.5" /> : i + 1}
               </div>
-              <p className="text-[11px] md:text-xs leading-tight font-medium">{obj.description}</p>
+              <div className="space-y-1">
+                <p className="text-[11px] md:text-xs leading-tight font-medium">{obj.description}</p>
+                {obj.hint && !completedObjectives.includes(obj.id) && !isCompleted(lessonId) && (
+                  <p className="text-[9px] text-muted-foreground italic">Dica: {obj.hint}</p>
+                )}
+              </div>
             </div>
           </div>
         ))}
@@ -290,7 +301,7 @@ export default function LearnPage() {
           <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
             <div className="bg-green-500/10 border border-green-500/30 p-3 rounded-xl flex items-center gap-3 text-green-500">
               <CheckCircle2 className="w-5 h-5" />
-              <span className="text-[11px] font-bold uppercase tracking-tight">Missão Cumprida!</span>
+              <span className="text-[11px] font-bold uppercase tracking-tight">Arquitetura Validada!</span>
             </div>
             {nextLessonId ? (
               <Button 
@@ -525,12 +536,12 @@ export default function LearnPage() {
                     </>
                   ) : (
                     <Button variant={activeTab === 'code' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('code')} className="h-7 md:h-8 text-[9px] md:text-[10px] font-bold uppercase">
-                      {isConceptLab ? "Lógica" : "Código"}
+                      {isConceptLab ? "Lógica" : "Editor Principal"}
                     </Button>
                   )}
                 </div>
                 <div className="hidden lg:block text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-50">
-                   Ambiente {practice?.language.toUpperCase()}
+                   Compilador {practice?.language.toUpperCase()} v1.0
                 </div>
               </div>
 
@@ -558,7 +569,9 @@ export default function LearnPage() {
                       wordWrap: "on",
                       padding: { top: 15 },
                       scrollBeyondLastLine: false,
-                      fontFamily: "'Source Code Pro', monospace"
+                      fontFamily: "'Source Code Pro', monospace",
+                      lineNumbers: "on",
+                      renderLineHighlight: "all"
                     }}
                   />
                 </div>
@@ -578,17 +591,19 @@ export default function LearnPage() {
                 )}
               </div>
 
-              <div className={cn("bg-black/90 border-t border-white/10 transition-all duration-300", isConsoleOpen ? "h-32 md:h-40" : "h-8 md:h-10")}>
-                <div className="flex items-center justify-between px-4 h-8 md:h-10 cursor-pointer hover:bg-white/5 transition-colors" onClick={() => setIsConsoleOpen(!isConsoleOpen)}>
+              <div className={cn("bg-[#0f0f0f] border-t border-white/10 transition-all duration-300", isConsoleOpen ? "h-40 md:h-56" : "h-8 md:h-10")}>
+                <div className="flex items-center justify-between px-4 h-8 md:h-10 cursor-pointer hover:bg-white/5 transition-colors border-b border-white/5" onClick={() => setIsConsoleOpen(!isConsoleOpen)}>
                   <span className="text-[9px] md:text-[10px] font-black text-muted-foreground uppercase flex items-center gap-2 tracking-widest">
-                    <Terminal className="w-3 h-3 text-green-500" /> Sistema de Validação
+                    <Terminal className="w-3 h-3 text-green-500" /> Terminal de Debugging
                   </span>
                   {isConsoleOpen ? <ChevronDown className="w-4 h-4 opacity-40" /> : <ChevronUp className="w-4 h-4 opacity-40" />}
                 </div>
                 {isConsoleOpen && (
-                  <div className="p-4 text-[11px] md:text-xs font-code text-green-400 overflow-y-auto h-24 md:h-30 custom-scrollbar bg-black/40">
-                    <div className="opacity-40 mb-1 font-sans text-[9px]">[ENGINE LOG: {new Date().toLocaleTimeString()}]</div>
-                    <div className="leading-relaxed">{output || "> Aguardando execução do código..."}</div>
+                  <div className="p-4 text-[11px] md:text-xs font-code text-green-400 overflow-y-auto h-32 md:h-44 custom-scrollbar bg-black/40">
+                    <div className="opacity-40 mb-2 font-sans text-[9px] border-b border-green-900/30 pb-1">
+                      [LOG SYSTEM READY: {new Date().toLocaleTimeString()}]
+                    </div>
+                    <pre className="leading-relaxed whitespace-pre-wrap">{output || "> Pronto para execução. Aguardando input..."}</pre>
                   </div>
                 )}
               </div>
@@ -605,3 +620,4 @@ export default function LearnPage() {
     </div>
   );
 }
+
