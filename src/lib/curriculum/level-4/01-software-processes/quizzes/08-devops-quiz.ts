@@ -2,44 +2,79 @@ import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "se-q8-master",
-  title: "Quiz: Cultura e Filosofia DevOps",
-  passingScore: 70,
+  title: "Quiz: Cultura DevOps e o Modelo CAMS",
+  passingScore: 75,
   questions: [
     {
-      id: "q1",
-      question: "Qual o principal objetivo da cultura DevOps?",
-      options: ["Mudar de linguagem de programação", "Quebrar os silos entre Dev e Ops para entregas mais rápidas e estáveis", "Contratar apenas engenheiros de infraestrutura", "Comprar servidores mais caros"],
-      correctAnswer: 1
+      id: "q8_1",
+      question: "No modelo CAMS, o que representa o pilar 'Culture' no dia-a-dia de uma equipa de elite?",
+      options: [
+        "A obrigatoriedade de usar o Jira para todas as tarefas.",
+        "A quebra de silos e a responsabilidade partilhada pela saúde do sistema em produção.",
+        "A contratação de uma equipa externa de operações.",
+        "O uso exclusivo de ferramentas open-source."
+      ],
+      correctAnswer: 1,
+      explanation: "A cultura DevOps foca na colaboração radical e no fim do jogo de culpas entre quem escreve o código e quem o mantém vivo."
     },
     {
-      id: "q2",
-      question: "No modelo CAMS, o que representa o 'A'?",
-      options: ["Arquitetura", "Automação (Automation)", "Análise", "Acessibilidade"],
-      correctAnswer: 1
+      id: "q8_2",
+      question: "Qual o objetivo primordial de um 'Post-mortem' numa cultura de 'Blame-free'?",
+      options: [
+        "Identificar o desenvolvedor que causou o bug para punição.",
+        "Identificar as falhas sistémicas no processo que permitiram que o erro ocorresse.",
+        "Esconder a falha dos clientes e stakeholders.",
+        "Calcular o bónus financeiro da equipa."
+      ],
+      correctAnswer: 1,
+      explanation: "Focar no processo e não na pessoa garante que a equipa aprenda com o erro e implemente defesas automáticas para que ele não se repita."
     },
     {
-      id: "q3",
-      question: "O que significa o termo 'Blame-free culture'?",
-      options: ["Ninguém é responsável por nada", "Focar na correção do processo e não em culpar indivíduos após uma falha", "Apagar os logs de erro", "Não ter chefes"],
-      correctAnswer: 1
+      id: "q8_3",
+      question: "O conceito de 'Shift Left' sugere que:",
+      options: [
+        "O monitor deve ser colocado à esquerda da mesa.",
+        "Preocupações com testes, segurança e performance devem começar o mais cedo possível no SDLC.",
+        "As tarefas mais difíceis devem ser feitas apenas no final do projeto.",
+        "A equipa deve usar apenas a mão esquerda para digitar."
+      ],
+      correctAnswer: 1,
+      explanation: "Quanto mais cedo um problema é detetado, menor é o seu custo de correção e menor o risco para o negócio."
     },
     {
-      id: "q4",
-      question: "DevOps é uma ferramenta ou uma ferramenta?",
-      options: ["Sim, é o nome de um software", "Não, é uma mudança cultural e organizacional auxiliada por automação", "É apenas para utilizadores de Linux", "É um tipo de base de dados"],
-      correctAnswer: 1
+      id: "q8_4",
+      question: "Qual a métrica DevOps que mede o tempo médio necessário para restaurar o serviço após uma falha?",
+      options: [
+        "Lead Time",
+        "Throughput",
+        "MTTR (Mean Time To Recover)",
+        "Code Coverage"
+      ],
+      correctAnswer: 2
     },
     {
-      id: "q5",
-      question: "A monitorização proativa (Measurement) serve para:",
-      options: ["Espiar os funcionários", "Detetar falhas antes que elas afetem o utilizador final", "Aumentar a conta da cloud", "Contar linhas de código"],
-      correctAnswer: 1
+      id: "q8_5",
+      question: "Segundo o pilar 'Automation', o que deve ser a prioridade da equipa?",
+      options: [
+        "Automatizar apenas os testes de interface.",
+        "Automatizar qualquer tarefa manual repetitiva que possa causar erro humano.",
+        "Remover todos os humanos da equipa de operações.",
+        "Usar IA para escrever 100% do código fonte."
+      ],
+      correctAnswer: 1,
+      explanation: "A automação liberta o engenheiro para focar na lógica e criatividade, removendo a fricção de tarefas mecânicas."
     },
     {
-      id: "q6",
-      question: "O 'S' do CAMS (Sharing) incentiva:",
-      options: ["Dividir a mesma senha entre todos", "Partilhar conhecimento, ferramentas e sucessos/falhas entre equipas", "Partilhar o mesmo monitor", "Dividir o custo do servidor"],
-      correctAnswer: 1
+      id: "q8_6",
+      question: "Qual a relação correta entre DevOps e SRE (Site Reliability Engineering)?",
+      options: [
+        "São concorrentes e não podem ser usados juntos.",
+        "SRE é uma implementação específica e técnica da filosofia DevOps.",
+        "DevOps é para startups e SRE apenas para o Google.",
+        "SRE foca apenas em hardware e DevOps apenas em código."
+      ],
+      correctAnswer: 1,
+      explanation: "SRE é o que acontece quando pedes a um engenheiro de software para desenhar uma equipa de operações."
     }
   ]
 };
