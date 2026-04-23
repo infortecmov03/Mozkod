@@ -2,21 +2,37 @@ import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
   id: "ds-t3",
-  title: "Pilhas (Stacks): Lógica LIFO",
+  title: "Stacks: A Lógica LIFO e a Gestão de Chamadas",
   content: `
-    <div class="space-y-6">
-      <h2 class="text-2xl font-bold">📚 O Último a Entrar é o Primeiro a Sair</h2>
-      <p>Pense numa pilha de pratos. Você só pode mexer no prato do topo.</p>
-      <div class="bg-card p-4 rounded-xl border">
-        <h4 class="font-bold text-primary">Operações:</h4>
-        <ul class="list-disc ml-6 mt-2">
-          <li><strong>Push:</strong> Adicionar ao topo.</li>
-          <li><strong>Pop:</strong> Remover do topo.</li>
-          <li><strong>Peek:</strong> Olhar o topo sem remover.</li>
-        </ul>
+    <div class="space-y-8">
+      <div class="bg-primary/5 p-6 rounded-2xl border border-primary/10 shadow-2xl">
+        <h2 class="text-2xl font-bold mb-4 font-headline text-primary flex items-center gap-2">
+          📚 Last-In, First-Out (LIFO)
+        </h2>
+        <p class="text-lg leading-relaxed">
+          A Pilha é uma estrutura linear onde a inserção e remoção acontecem apenas numa extremidade: o **Topo**. É a base para a execução de quase todo o software moderno através da **Call Stack**.
+        </p>
       </div>
-      <p class="text-sm text-muted-foreground italic">Uso real: Botão "Retroceder" do navegador e Undo/Redo.</p>
+
+      <div class="space-y-6">
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">1. Operações Atómicas</h3>
+        <ul class="space-y-2 text-sm font-mono">
+          <li><b class="text-accent">Push:</b> Adiciona ao topo O(1).</li>
+          <li><b class="text-accent">Pop:</b> Remove do topo O(1).</li>
+          <li><b class="text-accent">Peek:</b> Visualiza o topo sem remover O(1).</li>
+        </ul>
+
+        <h3 class="text-xl font-bold font-headline">2. Aplicações de Engenharia</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="p-4 bg-muted/20 border-l-4 border-primary rounded-r-xl">
+            <strong class="text-primary">Recursão:</strong> Cada chamada de função guarda o seu estado numa stack na memória.
+          </div>
+          <div class="p-4 bg-muted/20 border-l-4 border-primary rounded-r-xl">
+            <strong class="text-primary">Parsing:</strong> Compiladores usam stacks para validar parênteses e avaliar expressões matemáticas.
+          </div>
+        </div>
+      </div>
     </div>
   `,
-  quizId: "ds-q3"
+  quizId: "ds-mq3"
 };
