@@ -1,7 +1,7 @@
-
 import type { KnowledgeArea } from '../../types';
 import { lessons } from './theory';
 import { quizzes } from './quizzes';
+import { practice } from './laboratory';
 
 export const softwareDesign: KnowledgeArea = {
   id: 'ka-se-design',
@@ -10,8 +10,6 @@ export const softwareDesign: KnowledgeArea = {
   load: '45h',
   iconName: 'Layout',
   theory: lessons,
-  practice: {
-    typescript: []
-  },
+  practice: practice,
   quizzes: quizzes
 };

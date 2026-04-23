@@ -1,3 +1,8 @@
+/**
+ * @fileOverview NÍVEL 4: ENGENHARIA DE SOFTWARE
+ * 
+ * Focado em processos, design de sistemas e qualidade.
+ */
 
 import type { Level } from '../types';
 import { softwareProcesses } from './01-software-processes/index';
