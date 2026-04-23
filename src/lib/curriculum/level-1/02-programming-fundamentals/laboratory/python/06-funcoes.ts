@@ -5,7 +5,7 @@ export const exercise: PracticeExercise = {
   language: "python",
   title: "Missão: Conversor Pythonic",
   description: "Aprenda a definir sub-rotinas reutilizáveis em Python.",
-  statement: "Crie uma função que converta Meticais para Dólares.",
+  statement: "Crie uma função que converta Meticais para Dólares e imprima o resultado.",
   isProjectPart: true,
   template: ``,
   youtubeVideoId: "mNst8vX-u8E",
@@ -24,18 +24,18 @@ export const exercise: PracticeExercise = {
         </p>
       </div>
 
-      <p class="text-xs">
+      <p class="text-xs leading-relaxed">
         <strong>Instruções de Construção:</strong>
         <br/>1. Define a função com <code>def converter(valor_mzn):</code>.
-        <br/>2. Retorna o cálculo <code>valor_mzn / 64</code>.
-        <br/>3. Chama a função com o valor 1280.
-        <br/>4. Imprime o resultado final.
+        <br/>2. Dentro dela, retorna o cálculo <code>valor_mzn / 64</code>.
+        <br/>3. Chama a função passando 1280 e guarda em <code>resultado</code>.
+        <br/>4. Imprime <code>resultado</code> no terminal para validação.
       </p>
     </div>
   `,
   objectives: [
     { id: "obj1", description: "Usar def para criar a função", test: "def converter" },
-    { id: "obj2", description: "Usar return para o resultado", test: "return" },
+    { id: "obj2", description: "Usar return para devolver o valor", test: "return" },
     { id: "obj3", description: "Mostrar o valor 20.0 no terminal", test: "print" }
   ]
 };
