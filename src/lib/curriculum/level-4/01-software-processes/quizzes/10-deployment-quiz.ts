@@ -7,72 +7,73 @@ export const quiz: Quiz = {
   questions: [
     {
       id: "q10_1",
-      question: "Qual a principal vantagem do Blue-Green Deployment?",
+      question: "Qual a principal vantagem estratégica do Blue-Green Deployment?",
       options: [
-        "Usa menos memória RAM no servidor.",
-        "Permite Rollback instantâneo ao virar o Load Balancer de volta para o ambiente estável.",
-        "É a estratégia mais barata de infraestrutura.",
-        "Não necessita de testes unitários."
+        "Consome 50% menos memória no servidor de produção.",
+        "Permite um Rollback instantâneo ao reverter o tráfego via Load Balancer.",
+        "É a estratégia que exige o menor investimento em infraestrutura.",
+        "Garante que o código é compilado diretamente no servidor do cliente."
       ],
       correctAnswer: 1,
-      explanation: "Como mantemos as duas versões ativas, a reversão é apenas uma mudança de configuração de rede, sem necessidade de re-instalação."
+      explanation: "Como mantemos os dois ambientes (Blue e Green) ativos e idênticos, se a nova versão falhar, basta mudar o ponteiro do tráfego de volta para a versão estável, sem necessidade de novas instalações."
     },
     {
       id: "q10_2",
-      question: "Como funciona a estratégia Canary Deployment?",
+      question: "Como funciona tecnicamente a estratégia de Canary Deployment?",
       options: [
-        "O site muda de cor para amarelo durante o deploy.",
-        "A nova versão é libertada para uma pequena percentagem de utilizadores reais para monitorização inicial.",
-        "As tarefas são feitas apenas por programadores seniores.",
-        "O código é compilado apenas no telemóvel do cliente."
+        "O site muda de cor para amarelo durante o processo de deploy.",
+        "O código é enviado para todos os servidores ao mesmo tempo.",
+        "A nova versão é libertada para uma pequena percentagem de utilizadores reais para monitorização de métricas.",
+        "A atualização ocorre apenas durante a noite, quando os utilizadores estão a dormir."
       ],
-      correctAnswer: 1,
-      explanation: "O objetivo é limitar o 'Blast Radius' (raio de impacto) caso a nova versão contenha um erro crítico."
+      correctAnswer: 2,
+      explanation: "O objetivo do Canary é limitar o 'Blast Radius' (raio de impacto). Monitorizamos as taxas de erro e latência num grupo pequeno antes de expandir para toda a base."
     },
     {
       id: "q10_3",
-      question: "O que caracteriza um Rolling Update?",
+      question: "O que caracteriza a estratégia de Rolling Update, comum em clusters Kubernetes?",
       options: [
-        "A atualização de todos os servidores simultaneamente.",
-        "A atualização gradual de instâncias, uma por uma, garantindo que o serviço nunca fique 100% offline.",
-        "O fecho do site para manutenção durante a noite.",
-        "A mudança de nome do domínio a cada versão."
+        "A atualização de todos os nós do cluster simultaneamente.",
+        "A substituição gradual de instâncias, uma por uma, garantindo que o serviço nunca fique totalmente offline.",
+        "A cópia de todos os ficheiros via FTP manual.",
+        "O reinício de todos os servidores à meia-noite."
       ],
       correctAnswer: 1
     },
     {
       id: "q10_4",
-      question: "Por que as alterações na Base de Dados são o maior desafio num Rollback?",
+      question: "Por que as alterações de esquema na Base de Dados são o maior desafio num Rollback de deploy?",
       options: [
-        "Porque os ficheiros SQL são muito grandes.",
-        "Porque dados inseridos pela versão nova podem ser incompatíveis com a lógica da versão antiga recuperada.",
-        "Porque o banco de dados não suporta Git.",
-        "Porque as senhas mudam sozinhas."
+        "Porque o SQL é uma linguagem lenta.",
+        "Porque dados inseridos pela versão nova podem tornar-se incompatíveis ou órfãos se a versão antiga for restaurada.",
+        "Porque o banco de dados não suporta o uso de Git.",
+        "Porque as tabelas são apagadas automaticamente em cada deploy."
       ],
       correctAnswer: 1,
-      explanation: "Garantir a compatibilidade de dados entre versões (Schema Migration) é a tarefa mais complexa da engenharia de deploy."
+      explanation: "O código é fácil de reverter, mas os dados são persistentes. Mudanças de esquema devem ser feitas de forma a suportar tanto a versão nova quanto a antiga do código."
     },
     {
       id: "q10_5",
-      question: "A estratégia Blue-Green exige quanto de infraestrutura comparada a um deploy simples?",
+      question: "No Blue-Green Deployment, qual o custo de infraestrutura comparado a um deploy tradicional?",
       options: [
-        "O mesmo valor.",
-        "O dobro (exige dois ambientes completos e idênticos).",
-        "Metade do valor.",
+        "O mesmo custo.",
+        "Cerca de metade do custo.",
+        "O dobro do custo (exige dois ambientes completos ativos).",
         "Depende apenas da velocidade da internet."
       ],
-      correctAnswer: 1
+      correctAnswer: 2
     },
     {
       id: "q10_6",
-      question: "Qual métrica é vital monitorizar durante um Canary Deployment para decidir se o rollout continua?",
+      question: "Ao utilizar o Canary Deployment, qual métrica é VITAL para decidir se o rollout deve prosseguir ou ser abortado?",
       options: [
-        "Número de linhas de código novas.",
-        "Taxa de erro (HTTP 5xx) e latência percebida pelos utilizadores do grupo canary.",
-        "O brilho do monitor do servidor.",
-        "O número de commits feitos no dia."
+        "O número de linhas de comentário adicionadas no commit.",
+        "A taxa de erros HTTP (5xx) e a latência percebida pelo grupo de teste.",
+        "A cor do log no terminal do desenvolvedor.",
+        "A quantidade de ficheiros comprimidos no artefacto."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "Se a taxa de erro ou latência subir no grupo canary, o sistema deve abortar o deploy automaticamente para proteger os restantes 95% dos utilizadores."
     }
   ]
 };
