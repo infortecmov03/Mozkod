@@ -1,4 +1,3 @@
-
 import { lesson as l1 } from './theory/01-propositional-logic';
 import { lesson as l2 } from './theory/02-predicate-logic';
 import { lesson as l3 } from './theory/03-set-theory';
