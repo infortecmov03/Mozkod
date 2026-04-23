@@ -6,8 +6,9 @@ import { exercise as exerciseGrid } from './laboratory/css/05-grid-lab';
 import { exercise as exerciseResp } from './laboratory/css/06-media-queries-lab';
 import { exercise as exerciseForms } from './laboratory/html/02-formularios-lab';
 import { exercise as exerciseDeploy } from './laboratory/03-deployment-lab';
+import { exercise as exerciseSem } from './laboratory/04-semantica-lab';
 
 export const practice = {
-  html: [exerciseHTML1, exerciseForms, exerciseDeploy],
+  html: [exerciseHTML1, exerciseForms, exerciseDeploy, exerciseSem],
   css: [exerciseCSS1, exerciseCSS2, exerciseFlex, exerciseGrid, exerciseResp]
 };
