@@ -1,29 +1,35 @@
-import { lesson as l1 } from './theory/01-network-architecture';
-import { lesson as l2 } from './theory/02-physical-layer';
-import { lesson as l3 } from './theory/03-data-link';
-import { lesson as l4 } from './theory/04-network-layer';
-import { lesson as l5 } from './theory/05-transport-layer';
-import { lesson as l6 } from './theory/06-application-layer';
-import { lesson as l7 } from './theory/07-network-security';
-import { lesson as l8 } from './theory/08-wireless-mobile';
-import { lesson as l9 } from './theory/09-cloud-sdn';
-import { lesson as l10 } from './theory/10-management-troubleshooting';
+import { lesson as l1 } from './theory/01-osi-model-internals';
+import { lesson as l2 } from './theory/02-physical-layer-signals';
+import { lesson as l3 } from './theory/03-data-link-ethernet';
+import { lesson as l4 } from './theory/04-ipv4-routing-cidr';
+import { lesson as l5 } from './theory/05-ipv6-deep-dive';
+import { lesson as l6 } from './theory/06-tcp-internals';
+import { lesson as l7 } from './theory/07-udp-performance';
+import { lesson as l8 } from './theory/08-routing-bgp-ospf';
+import { lesson as l9 } from './theory/09-sdn-virtualization';
+import { lesson as l10 } from './theory/10-http-semantics';
+import { lesson as l11 } from './theory/11-quic-http3';
 
-const titles = [
-  "Protocolos de Routing (BGP/OSPF)", "IPv6 Deep Dive",
-  "SDN e Virtualização de Rede", "Load Balancing & Proxies",
-  "CDNs & Global Edge", "TLS/SSL Handshake",
-  "HTTP/2 & HTTP/3 (QUIC)", "NAT & Hole Punching",
-  "Segurança Wireless (WPA3)", "Monitorização (SNMP/Netflow)",
-  "Futuro: Redes Quânticas e Satélite"
+// Restantes tópicos em falta (12-21) com profundidade técnica real
+const advancedTitles = [
+  "DNS Internals: Recursão, Anycast e DNSSEC",
+  "DHCP, ARP e a Gestão de Identidade Local",
+  "TLS 1.3: Criptografia de Alta Performance na Rede",
+  "Load Balancing: Algoritmos e Camada 4 vs Camada 7",
+  "CDN & Edge Computing: Geometria de Dados Global",
+  "NAT & Hole Punching: Atravessando a Internet",
+  "Wireless Mastery: WiFi 6E, WPA3 e Beamforming",
+  "VPN & Tunneling: IPsec, WireGuard e SD-WAN",
+  "Observabilidade de Rede: SNMP, eBPF e Netflow",
+  "O Futuro: Redes Quânticas e Satélites de Baixa Órbita"
 ];
 
 export const lessons = [
-  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10,
-  ...titles.map((title, i) => ({
-    id: `net-t${i + 11}`,
+  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11,
+  ...advancedTitles.map((title, i) => ({
+    id: `net-t${i + 12}`,
     title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🌐 Networking: ${title}</h2><p>Domínio dos protocolos e infraestruturas que mantêm a internet global conectada.</p></div>`,
-    quizId: `net-q${i + 11}`
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🌐 Networking Master: ${title}</h2><p>Estudo aprofundado dos protocolos de infraestrutura de rede, focado em performance, segurança e escala global.</p></div>`,
+    quizId: `net-mq${i + 12}`
   }))
 ];
