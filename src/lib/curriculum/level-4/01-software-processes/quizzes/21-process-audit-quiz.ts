@@ -2,72 +2,75 @@ import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "se-q21-master",
-  title: "Quiz: Auditoria de Processo e Melhoria Contínua",
+  title: "Quiz: Auditoria de Processo e Performance Industrial",
   passingScore: 80,
   questions: [
     {
       id: "q21_1",
-      question: "Qual das métricas DORA mede a agilidade da equipa em levar uma ideia do código para as mãos do utilizador?",
+      question: "Qual das métricas DORA mede especificamente a agilidade da equipa em transformar uma ideia em código vivo?",
       options: [
         "Change Failure Rate",
         "Lead Time for Changes",
-        "Time to Restore Service",
-        "CPU Load Average"
+        "Deployment Frequency",
+        "Mean Time to Recovery"
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "O Lead Time mede a velocidade do pipeline e do processo de review: do commit à produção."
     },
     {
       id: "q21_2",
-      question: "O que indica uma 'Change Failure Rate' alta?",
+      question: "Uma equipa de elite, segundo o relatório DORA, deve ser capaz de restaurar um serviço (MTTR) em quanto tempo?",
       options: [
-        "A equipa é muito rápida.",
-        "Instabilidade no processo de QA e falta de testes automatizados eficazes antes do deploy.",
-        "O servidor de produção é antigo.",
-        "Muitos utilizadores estão a aceder ao site ao mesmo tempo."
+        "Menos de uma hora",
+        "No máximo 24 horas",
+        "Dentro da mesma semana",
+        "Apenas após uma auditoria completa"
       ],
-      correctAnswer: 1
+      correctAnswer: 0
     },
     {
       id: "q21_3",
-      question: "O conceito de Kaizen na engenharia de software foca em:",
+      question: "O conceito de 'Kaizen' aplicado à engenharia de software foca em:",
       options: [
-        "Reescrever o sistema todo a cada 6 meses.",
-        "Pequenas e contínuas melhorias incrementais no processo e na qualidade.",
-        "Contratar o máximo de estagiários possível.",
-        "Usar apenas ferramentas japonesas."
+        "Reescrever o código legado a cada 6 meses.",
+        "Pequenas e contínuas melhorias incrementais baseadas em evidências e feedback.",
+        "Contratar o máximo de estagiários possível para reduzir custos.",
+        "Automatizar apenas a interface visual do site."
       ],
       correctAnswer: 1
     },
     {
       id: "q21_4",
-      question: "Por que comparar a velocidade (Velocity) entre duas equipas diferentes é considerado um erro de gestão?",
+      question: "Qual o principal perigo de comparar a 'Velocity' (Story Points) entre duas equipas diferentes?",
       options: [
-        "Porque os programadores ficam tristes.",
-        "Porque Story Points são relativos e cada equipa tem a sua própria régua de estimativa.",
-        "Porque o cálculo da média é complexo.",
-        "Porque o Scrum proíbe medições."
+        "Nenhum, serve para premiar a melhor equipa.",
+        "É um erro metodológico, pois Story Points são relativos e cada equipa tem a sua própria régua de esforço.",
+        "Aumenta a velocidade do processador.",
+        "Torna o código mais longo e difícil de ler."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "A velocidade é uma métrica de capacidade interna da equipa, não uma ferramenta de comparação competitiva externa."
     },
     {
       id: "q21_5",
-      question: "O objetivo de uma auditoria de processo é:",
+      question: "Ao auditar um processo, se observares uma 'Change Failure Rate' superior a 50%, qual deve ser a recomendação técnica prioritária?",
       options: [
-        "Encontrar alguém para culpar pelos atrasos.",
-        "Identificar gargalos e desperdícios para otimizar o fluxo de entrega de valor.",
-        "Aumentar o número de horas de trabalho.",
-        "Validar se as cores do site estão no padrão da marca."
+        "Dobrar o número de desenvolvedores.",
+        "Investir em automação de testes e melhorar o processo de Code Review antes do deploy.",
+        "Desligar o servidor de produção.",
+        "Mudar a linguagem de programação do sistema."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "Uma alta taxa de falha indica instabilidade no processo de garantia de qualidade (QA)."
     },
     {
       id: "q21_6",
-      question: "Maturidade em Engenharia de Software (CMMI) significa que:",
+      question: "Maturidade em Engenharia de Software significa que o processo de desenvolvimento é:",
       options: [
-        "O código não tem bugs.",
-        "O processo de desenvolvimento é previsível, gerido e em constante otimização.",
-        "A equipa só tem engenheiros seniores.",
-        "A empresa usa a tecnologia mais cara."
+        "Livre de qualquer bug.",
+        "Previsível, monitorizado e em constante otimização baseada em dados.",
+        "Escrito inteiramente por inteligência artificial.",
+        "Executado sem necessidade de reuniões de alinhamento."
       ],
       correctAnswer: 1
     }
