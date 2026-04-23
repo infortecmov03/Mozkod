@@ -51,19 +51,21 @@ export default function LearnPage() {
   const quiz = useMemo(() => theory?.quizId ? findQuizById(theory.quizId) : null, [theory]);
   const nextLessonId = useMemo(() => findNextLessonId(lessonId), [lessonId]);
 
-  // Sibling exercises in different languages for the same theme
-  const availableLangs = useMemo(() => {
+  // Encontrar variantes da mesma lição em outras linguagens
+  const availableVariants = useMemo(() => {
     if (!data || !practice) return [];
-    const siblings: { lang: string; id: string }[] = [];
-    const currentBaseId = practice.id.split('-').slice(0, 2).join('-'); // e.g. pf-p2
+    const variants: { lang: string; id: string }[] = [];
+    
+    // Pegar o prefixo do ID (ex: "pf-p1") ignorando o sufixo da língua
+    const currentBaseId = practice.id.split('-').slice(0, 2).join('-'); 
     
     Object.entries(data.ka.practice).forEach(([lang, exercises]) => {
       const match = exercises.find(ex => ex.id.startsWith(currentBaseId));
       if (match) {
-        siblings.push({ lang, id: match.id });
+        variants.push({ lang, id: match.id });
       }
     });
-    return siblings;
+    return variants;
   }, [data, practice]);
 
   const [htmlCode, setHtmlCode] = useState("");
@@ -79,7 +81,7 @@ export default function LearnPage() {
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Quiz States
+  // Estados do Quiz
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
   const [validated, setValidated] = useState(false);
 
@@ -134,7 +136,11 @@ export default function LearnPage() {
         ? (activeTab === 'js' ? jsCode : activeTab === 'css' ? cssCode : htmlCode) 
         : code;
       
-      const newDone = practice?.objectives.filter(obj => current.includes(obj.test)).map(obj => obj.id) || [];
+      const newDone = practice?.objectives.filter(obj => {
+        // Validação simples por inclusão de string ou regex simulado
+        return current.includes(obj.test);
+      }).map(obj => obj.id) || [];
+      
       setCompletedObjectives(newDone);
 
       if (newDone.length === (practice?.objectives.length || 0)) {
@@ -229,24 +235,37 @@ export default function LearnPage() {
           {isConceptLab ? <Brain className="w-4 h-4" /> : <ListChecks className="w-4 h-4" />}
           Missão {isConceptLab ? "Lógica Pura" : "Técnica"}
         </h3>
+        {availableVariants.length > 0 && (
+          <div className="flex items-center gap-1.5 bg-secondary/50 p-1 rounded-lg">
+             {availableVariants.map(v => (
+               <Button
+                 key={v.id}
+                 size="sm"
+                 variant={lessonId === v.id ? "secondary" : "ghost"}
+                 onClick={() => router.push(`/learn/${v.id}`)}
+                 className={cn(
+                   "h-6 px-2 text-[9px] font-black uppercase rounded",
+                   lessonId === v.id ? "bg-background shadow-sm border border-white/5" : "opacity-40"
+                 )}
+               >
+                 {v.lang}
+               </Button>
+             ))}
+          </div>
+        )}
       </div>
 
-      {availableLangs.length > 1 && (
-        <div className="mb-6 p-1 bg-secondary/50 rounded-xl flex gap-1">
-          {availableLangs.map((l) => (
-            <Button
-              key={l.lang}
-              variant={practice.language === l.lang ? "secondary" : "ghost"}
-              size="sm"
-              onClick={() => router.push(`/learn/${l.id}`)}
-              className={cn(
-                "flex-1 h-8 text-[9px] font-black uppercase rounded-lg",
-                practice.language === l.lang ? "bg-background shadow-sm" : "opacity-50"
-              )}
-            >
-              {l.lang}
-            </Button>
-          ))}
+      {practice?.youtubeVideoId && (
+        <div className="mb-6 aspect-video w-full overflow-hidden rounded-2xl border border-white/5 bg-black/40 group relative">
+           <iframe 
+            src={`https://www.youtube.com/embed/${practice.youtubeVideoId}`}
+            title={practice.title}
+            className="w-full h-full"
+            allowFullScreen
+          />
+          <div className="absolute top-2 left-2 inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-red-600/90 text-white text-[8px] font-black uppercase tracking-widest shadow-lg">
+            <Youtube className="w-3 h-3" /> Guia Prático
+          </div>
         </div>
       )}
       
@@ -314,7 +333,6 @@ export default function LearnPage() {
                   variant="ghost" 
                   size="icon" 
                   className="h-8 w-8 rounded-full border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors"
-                  aria-label="Ver todas as lições"
                 >
                   <Brain className="w-4 h-4 text-primary" />
                 </Button>
@@ -387,7 +405,6 @@ export default function LearnPage() {
                     src={`https://www.youtube.com/embed/${theory.youtubeVideoId}`}
                     title={theory.title}
                     className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
                   <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-600/90 text-white text-[10px] font-black uppercase tracking-widest shadow-lg">
@@ -440,15 +457,10 @@ export default function LearnPage() {
                             >
                               {q.options.map((opt, idx) => {
                                 const isSelected = selectedAnswers[q.id] === idx;
-                                const showOptionCorrect = validated && isSelected && isCorrect;
-                                const showOptionError = validated && isSelected && isIncorrect;
-                                
                                 return (
                                   <div key={idx} className={cn(
                                     "flex items-center space-x-3 p-4 rounded-2xl border transition-all cursor-pointer",
-                                    isSelected ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" : "border-white/5 bg-background/20",
-                                    showOptionCorrect && "border-green-500/50 bg-green-500/10",
-                                    showOptionError && "border-destructive/50 bg-destructive/10"
+                                    isSelected ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" : "border-white/5 bg-background/20"
                                   )} onClick={() => selectAnswer(q.id, idx)}>
                                     <RadioGroupItem value={idx.toString()} id={`q-${q.id}-opt-${idx}`} className="sr-only" />
                                     <div className={cn(
@@ -484,34 +496,16 @@ export default function LearnPage() {
                                <CheckCircle2 className="w-12 h-12 text-green-500" />
                                <h3 className="text-2xl font-black text-green-500 uppercase tracking-tighter">Conhecimento Validado!</h3>
                             </div>
-                            {nextLessonId ? (
-                              <Button 
-                                onClick={() => router.push(`/learn/${nextLessonId}`)} 
-                                className="w-full max-w-md h-16 rounded-[2.5rem] font-black text-xl bg-green-600 hover:bg-green-700 shadow-2xl shadow-green-900/30 gap-2"
-                              >
+                            {nextLessonId && (
+                              <Button onClick={() => router.push(`/learn/${nextLessonId}`)} className="w-full max-w-md h-16 rounded-[2.5rem] font-black text-xl bg-green-600 hover:bg-green-700 shadow-2xl shadow-green-900/30 gap-2">
                                 PRÓXIMA LIÇÃO <ChevronRight className="w-6 h-6" />
-                              </Button>
-                            ) : (
-                              <Button onClick={() => router.push('/dashboard')} className="w-full max-w-md h-16 rounded-[2.5rem] font-black text-xl bg-primary">
-                                VOLTAR AO PAINEL
                               </Button>
                             )}
                           </div>
                        ) : (
-                         <>
-                            <Button 
-                              onClick={handleVerifyQuiz} 
-                              disabled={Object.keys(selectedAnswers).length < quiz.questions.length}
-                              className="w-full max-w-md h-16 rounded-[2.5rem] font-black text-lg shadow-2xl shadow-primary/30"
-                            >
-                              {validated ? 'REAVALIAR RESPOSTAS' : 'VERIFICAR RESPOSTAS'}
-                            </Button>
-                            {Object.keys(selectedAnswers).length < quiz.questions.length && (
-                               <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest animate-pulse">
-                                  Responde a todas as {quiz.questions.length} questões para validar
-                               </p>
-                            )}
-                         </>
+                         <Button onClick={handleVerifyQuiz} disabled={Object.keys(selectedAnswers).length < quiz.questions.length} className="w-full max-w-md h-16 rounded-[2.5rem] font-black text-lg shadow-2xl shadow-primary/30">
+                           {validated ? 'REAVALIAR RESPOSTAS' : 'VERIFICAR RESPOSTAS'}
+                         </Button>
                        )}
                     </div>
                   </div>
@@ -536,7 +530,7 @@ export default function LearnPage() {
                   )}
                 </div>
                 <div className="hidden lg:block text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-50">
-                  {isConceptLab ? 'Ambiente de Raciocínio' : 'Ambiente de Programação'}
+                   Ambiente {practice?.language.toUpperCase()}
                 </div>
               </div>
 

@@ -47,6 +47,7 @@ export type PracticeExercise = {
   detailedExplanation: string; // Briefing da missão (HTML)
   objectives: Objective[];
   isProjectPart?: boolean; // Se true, o motor procura o código das aulas anteriores
+  youtubeVideoId?: string; // ID do vídeo para laboratórios que possuem aula gravada
 };
 
 export type KnowledgeArea = {
