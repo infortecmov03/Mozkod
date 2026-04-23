@@ -1,17 +1,21 @@
 
 import type { KnowledgeArea } from '../../types';
 import { lessons } from './theory';
-import { quiz1 } from './quizzes/01-basic-vocab-quiz';
+import { quizzes } from './quizzes';
 import { exercise1 } from './laboratory/01-vocabulary-exercise';
 
+/**
+ * Knowledge Area: Tech English
+ * Focada na comunicação global para engenheiros de software.
+ */
 export const techEnglish: KnowledgeArea = {
   id: 'ka-tech-english',
   title: '04. Tech English',
-  description: 'Vocabulário essencial para navegar na indústria tecnológica.',
-  load: '15h',
+  description: 'Vocabulário essencial, documentação e comunicação profissional para o mercado global.',
+  load: '20h',
   iconName: 'Languages',
   theory: lessons,
-  quizzes: [quiz1],
+  quizzes: quizzes,
   practice: {
     english: [exercise1]
   }
