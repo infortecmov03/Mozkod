@@ -1,4 +1,5 @@
 import { lesson as l1 } from './theory/01-sdlc';
+import { lesson as l2 } from './theory/02-agile-manifesto';
 
 const titles = [
   "SDLC Master: Arquitetura do Ciclo de Vida",
@@ -25,7 +26,8 @@ const titles = [
 ];
 
 export const lessons = titles.map((title, i) => {
-  if (i === 0) return l1;
+  if (i === 0) return { ...l1, title };
+  if (i === 1) return { ...l2, title };
   
   return {
     id: `se-t${i + 1}`,

@@ -1,6 +1,7 @@
 import { quiz as q1 } from './quizzes/01-sdlc-mastery-quiz';
+import { quiz as q2 } from './quizzes/02-agile-mastery-quiz';
 
-// Fallback para quizzes avançados 2-21 mantendo o padrão de elite
+// Fallback para quizzes avançados 3-21 mantendo o padrão de elite
 const generateAdvancedQuiz = (idNum: number) => ({
   id: `se-q${idNum}`,
   title: `Quiz Técnico Processos Tópico ${idNum}`,
@@ -17,5 +18,6 @@ const generateAdvancedQuiz = (idNum: number) => ({
 
 export const quizzes = [
   q1,
-  ...Array.from({ length: 20 }, (_, i) => generateAdvancedQuiz(i + 2))
+  q2,
+  ...Array.from({ length: 19 }, (_, i) => generateAdvancedQuiz(i + 3))
 ];
