@@ -2,48 +2,30 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { Navigation } from "@/components/Navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
-  Terminal, Play, CheckCircle2, ChevronLeft, 
-  ListChecks, Loader2, Brain, Eye, Sparkles, ChevronDown, ChevronUp,
-  Info, ChevronRight, XCircle, AlertCircle, RefreshCcw, Youtube, Menu,
-  Library, Languages
-} from "lucide-react";
-import { 
-  modules, findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
-  findQuizById, findNextLessonId, findOrderedLessons
+  findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
+  findQuizById, findNextLessonId
 } from "@/lib/curriculum";
 import { useParams, useRouter } from "next/navigation";
-import { useLanguage } from "@/components/LanguageContext";
-import { useAuth } from "@/hooks/useAuth";
 import { useProgress } from "@/contexts/ProgressContext";
 import { cn } from "@/lib/utils";
-import dynamic from "next/dynamic";
 import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 
-const Editor = dynamic(() => import("@monaco-editor/react"), { ssr: false });
+// Componentes Modulares
+import { LearnHeader } from "./components/LearnHeader";
+import { TheoryView } from "./components/TheoryView";
+import { PracticeWorkspace } from "./components/PracticeWorkspace";
+import { MissionBriefing } from "./components/MissionBriefing";
 
 export default function LearnPage() {
   const params = useParams();
   const lessonId = params.moduleId as string;
   const router = useRouter();
   const isMobile = useIsMobile();
-  const { t } = useLanguage();
-  const { profile } = useAuth();
-  const { markAsCompleted, isCompleted, progress } = useProgress();
+  const { markAsCompleted, isCompleted } = useProgress();
 
   const data = useMemo(() => findKnowledgeAreaByLessonId(lessonId), [lessonId]);
   const theory = useMemo(() => findTheoryLesson(lessonId), [lessonId]);
@@ -65,6 +47,7 @@ export default function LearnPage() {
     return variants;
   }, [data, practice]);
 
+  // State para Código
   const [htmlCode, setHtmlCode] = useState("");
   const [cssCode, setCssCode] = useState("");
   const [jsCode, setJsCode] = useState("");
@@ -78,11 +61,9 @@ export default function LearnPage() {
   const [isConsoleOpen, setIsConsoleOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
-  const [validated, setValidated] = useState(false);
-
-  const isWebLang = useMemo(() => ['html', 'css', 'javascript'].includes(practice?.language.toLowerCase() || '') && !lessonId.includes('pf-p'), [practice, lessonId]);
-  const isConceptLab = useMemo(() => practice?.language.toLowerCase() === 'concept', [practice]);
+  const isWebLang = useMemo(() => 
+    ['html', 'css', 'javascript'].includes(practice?.language.toLowerCase() || '') && !lessonId.includes('pf-p'), 
+  [practice, lessonId]);
 
   useEffect(() => {
     setMounted(true);
@@ -104,11 +85,6 @@ export default function LearnPage() {
     setCompletedObjectives([]);
     setOutput("");
   }, [practice, lessonId, isWebLang]);
-
-  useEffect(() => {
-    setSelectedAnswers({});
-    setValidated(false);
-  }, [lessonId]);
 
   const updatePreview = useCallback(() => {
     if (!iframeRef.current || !isWebLang) return;
@@ -139,7 +115,6 @@ export default function LearnPage() {
       
       setCompletedObjectives(newDone);
 
-      // Simulação de Output Realista baseado no conteúdo
       let logs = "";
       if (practice?.language === 'javascript' || practice?.language === 'python') {
         const matches = current.match(/console\.log\((.*)\)|print\((.*)\)/g);
@@ -149,7 +124,7 @@ export default function LearnPage() {
       }
 
       if (newDone.length === (practice?.objectives.length || 0)) {
-        setOutput(`${logs}\n> ✅ STATUS: 200 OK\n> [AUDITORIA]: Todos os requisitos foram encontrados no código.\n> Missão concluída com sucesso.`);
+        setOutput(`${logs}\n> ✅ STATUS: 200 OK\n> [AUDITORIA]: Todos os requisitos foram encontrados.\n> Missão concluída.`);
         toast.success("Excelente! Missão concluída.");
         if (data && !isCompleted(lessonId)) {
           const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
@@ -157,72 +132,38 @@ export default function LearnPage() {
         }
       } else {
         const remaining = (practice?.objectives.length || 0) - newDone.length;
-        setOutput(`${logs}\n> ⚠️ STATUS: 412 PRECONDITION FAILED\n> [AUDITORIA]: Faltam ${remaining} componentes essenciais.\n> Verifique o briefing da missão.`);
+        setOutput(`${logs}\n> ⚠️ STATUS: 412 PRECONDITION FAILED\n> [AUDITORIA]: Faltam ${remaining} componentes essenciais.`);
         toast.error("Alguns requisitos ainda não foram atingidos.");
       }
     }, 800);
   };
 
-  const handleVerifyQuiz = async () => {
-    if (!quiz) return;
-    
-    let correctCount = 0;
-    quiz.questions.forEach((q) => {
-      if (selectedAnswers[q.id] === q.correctAnswer) {
-        correctCount++;
-      }
-    });
-
-    const scorePercent = (correctCount / quiz.questions.length) * 100;
-    setValidated(true);
-
-    if (scorePercent >= quiz.passingScore) {
-      toast.success(`Parabéns! Acertaste ${correctCount}/${quiz.questions.length} questões.`);
-      if (data && !isCompleted(lessonId)) {
-        await markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', Math.round(scorePercent));
-      }
-    } else {
-      toast.error(`Ainda existem erros. Analisa as dicas abaixo e ajusta as tuas respostas.`);
+  const handleTheoryComplete = async (score: number) => {
+    if (data && !isCompleted(lessonId)) {
+      await markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', score);
     }
   };
 
-  const selectAnswer = (questionId: string, optionIndex: number) => {
-    if (isCompleted(lessonId)) return;
-    setSelectedAnswers(prev => ({
-      ...prev,
-      [questionId]: optionIndex
-    }));
-    if (validated) setValidated(false); 
-  };
-
   if (!mounted || !data) return null;
-  const { ka, level } = data;
+  const { ka } = data;
 
   const LessonList = (
     <div className="flex flex-col gap-1 p-4 overflow-y-auto max-h-[70vh] scroll-container">
       {ka.theory.map((l) => (
-        <Link 
-          key={l.id} 
-          href={`/learn/${l.id}`}
-          className={cn(
-            "flex items-center justify-between p-3 rounded-xl text-sm transition-all border",
-            lessonId === l.id ? "bg-primary/20 border-primary/30 text-primary font-bold" : "bg-card/40 border-transparent hover:bg-card/60"
-          )}
-        >
+        <Link key={l.id} href={`/learn/${l.id}`} className={cn(
+          "flex items-center justify-between p-3 rounded-xl text-sm border transition-all",
+          lessonId === l.id ? "bg-primary/20 border-primary/30 text-primary font-bold" : "bg-card/40 border-transparent hover:bg-card/60"
+        )}>
           <span className="truncate mr-2">{l.title}</span>
           {isCompleted(l.id) && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />}
         </Link>
       ))}
       {Object.entries(ka.practice).map(([lang, exercises]) => (
         exercises.map(ex => (
-          <Link 
-            key={ex.id} 
-            href={`/learn/${ex.id}`}
-            className={cn(
-              "flex items-center justify-between p-3 rounded-xl text-sm transition-all border",
-              lessonId === ex.id ? "bg-accent/20 border-accent/30 text-accent font-bold" : "bg-card/40 border-transparent hover:bg-card/60"
-            )}
-          >
+          <Link key={ex.id} href={`/learn/${ex.id}`} className={cn(
+            "flex items-center justify-between p-3 rounded-xl text-sm border transition-all",
+            lessonId === ex.id ? "bg-accent/20 border-accent/30 text-accent font-bold" : "bg-card/40 border-transparent hover:bg-card/60"
+          )}>
             <span className="truncate mr-2 flex items-center gap-2">
               <span className="text-[10px] bg-accent/10 px-1.5 py-0.5 rounded text-accent uppercase font-black">{lang}</span>
               {ex.title}
@@ -234,390 +175,76 @@ export default function LearnPage() {
     </div>
   );
 
-  const MissionContent = (
-    <div className="p-5 h-full flex flex-col bg-card/30 overflow-y-auto scroll-container">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-headline font-bold text-[10px] md:text-xs uppercase flex items-center gap-2 tracking-widest text-primary">
-          {isConceptLab ? <Brain className="w-4 h-4" /> : <ListChecks className="w-4 h-4" />}
-          Missão {isConceptLab ? "Lógica Pura" : "Técnica"}
-        </h3>
-        {availableVariants.length > 0 && (
-          <div className="flex items-center gap-1.5 bg-secondary/50 p-1 rounded-lg">
-             {availableVariants.map(v => (
-               <Button
-                 key={v.id}
-                 size="sm"
-                 variant={lessonId === v.id ? "secondary" : "ghost"}
-                 onClick={() => router.push(`/learn/${v.id}`)}
-                 className={cn(
-                   "h-6 px-2 text-[9px] font-black uppercase rounded",
-                   lessonId === v.id ? "bg-background shadow-sm border border-white/5" : "opacity-40"
-                 )}
-               >
-                 {v.lang}
-               </Button>
-             ))}
-          </div>
-        )}
-      </div>
-
-      {practice?.youtubeVideoId && (
-        <div className="mb-6 aspect-video w-full overflow-hidden rounded-2xl border border-white/5 bg-black/40 group relative">
-           <iframe 
-            src={`https://www.youtube.com/embed/${practice.youtubeVideoId}`}
-            title={practice.title}
-            className="w-full h-full"
-            allowFullScreen
-          />
-          <div className="absolute top-2 left-2 inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-red-600/90 text-white text-[8px] font-black uppercase tracking-widest shadow-lg">
-            <Youtube className="w-3 h-3" /> Guia Prático
-          </div>
-        </div>
-      )}
-      
-      <div className="prose prose-invert prose-sm mb-6 text-xs leading-relaxed opacity-90" dangerouslySetInnerHTML={{ __html: practice?.detailedExplanation || "" }} />
-      
-      <div className="space-y-2 mb-10">
-        <p className="text-[10px] font-black uppercase text-muted-foreground/60 mb-2 tracking-widest">Requisitos de Construção</p>
-        {practice?.objectives.map((obj, i) => (
-          <div key={obj.id} className={cn("p-3 md:p-4 rounded-xl border transition-all", (completedObjectives.includes(obj.id) || isCompleted(lessonId)) ? "bg-green-500/10 border-green-500/30" : "bg-background/40 border-white/5 shadow-sm")}>
-            <div className="flex gap-3 items-start">
-              <div className={cn("w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[9px] font-bold mt-0.5", (completedObjectives.includes(obj.id) || isCompleted(lessonId)) ? "bg-green-500 text-white" : "bg-white/10 text-muted-foreground")}>
-                {(completedObjectives.includes(obj.id) || isCompleted(lessonId)) ? <CheckCircle2 className="w-3.5 h-3.5" /> : i + 1}
-              </div>
-              <div className="space-y-1">
-                <p className="text-[11px] md:text-xs leading-tight font-medium">{obj.description}</p>
-                {obj.hint && !completedObjectives.includes(obj.id) && !isCompleted(lessonId) && (
-                  <p className="text-[9px] text-muted-foreground italic">Dica: {obj.hint}</p>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-auto pt-6 border-t border-white/5">
-        {isCompleted(lessonId) && (
-          <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <div className="bg-green-500/10 border border-green-500/30 p-3 rounded-xl flex items-center gap-3 text-green-500">
-              <CheckCircle2 className="w-5 h-5" />
-              <span className="text-[11px] font-bold uppercase tracking-tight">Arquitetura Validada!</span>
-            </div>
-            {nextLessonId ? (
-              <Button 
-                onClick={() => router.push(`/learn/${nextLessonId}`)} 
-                className="w-full h-12 md:h-14 rounded-xl md:rounded-2xl font-black bg-green-600 hover:bg-green-700 shadow-lg shadow-green-900/20 text-white gap-2"
-              >
-                PRÓXIMA LIÇÃO <ChevronRight className="w-5 h-5" />
-              </Button>
-            ) : (
-              <Button 
-                onClick={() => router.push('/dashboard')} 
-                className="w-full h-12 md:h-14 rounded-xl md:rounded-2xl font-black bg-primary"
-              >
-                VOLTAR AO PAINEL
-              </Button>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
   return (
     <div className="flex flex-col h-[100dvh] bg-background overflow-hidden font-body">
-      <Navigation />
-      
-      <div className="bg-card/50 border-b px-4 h-12 md:h-14 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-2 md:gap-3 min-w-0">
-          <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-full h-8 w-8 shrink-0"><ChevronLeft className="w-4 h-4" /></Button>
-          
-          <div className="truncate flex-1">
-            <span className="text-[9px] md:text-[10px] text-primary font-black block uppercase tracking-tighter">{ka.title}</span>
-            <h2 className="font-headline font-bold text-xs md:text-sm truncate opacity-90">{theory?.title || practice?.title}</h2>
-          </div>
-
-          {isMobile && (
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="h-8 w-8 rounded-full border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors"
-                >
-                  <Brain className="w-4 h-4 text-primary" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="bottom" className="h-[60vh] rounded-t-[2.5rem] p-0 border-t-primary/20">
-                 <SheetHeader className="p-6 border-b">
-                   <SheetTitle className="text-left font-headline font-bold flex items-center gap-2">
-                     <Brain className="w-5 h-5 text-primary" /> Trilhas do Módulo
-                   </SheetTitle>
-                 </SheetHeader>
-                 {LessonList}
-              </SheetContent>
-            </Sheet>
-          )}
-        </div>
-        
-        <div className="flex items-center gap-2">
-          {!theory && (
-            isCompleted(lessonId) ? (
-              <Button 
-                size="sm" 
-                onClick={() => nextLessonId ? router.push(`/learn/${nextLessonId}`) : router.push('/dashboard')} 
-                className="h-8 md:h-9 bg-green-600 hover:bg-green-700 text-[10px] font-black px-4 md:px-6 rounded-full shadow-lg shadow-green-900/30 animate-in zoom-in duration-300 gap-1.5"
-              >
-                {nextLessonId ? 'PRÓXIMA LIÇÃO' : 'CONCLUÍDO'} <ChevronRight className="w-4 h-4" />
-              </Button>
-            ) : (
-              <Button 
-                size="sm" 
-                onClick={handleRunCode} 
-                disabled={isRunning} 
-                className="h-8 md:h-9 bg-primary hover:bg-primary/90 text-[10px] font-black px-4 md:px-6 rounded-full shadow-lg shadow-primary/20"
-              >
-                {isRunning ? <Loader2 className="w-3 h-3 animate-spin" /> : <><Play className="w-3 h-3 mr-1.5" /> EXECUTAR</>}
-              </Button>
-            )
-          )}
-
-          {isMobile && practice && (
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button size="sm" variant="outline" className="rounded-full h-8 md:h-9 gap-1 text-[10px] font-black border-primary/30">
-                  <Info className="w-3 h-3" /> MISSÃO
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="bottom" className="h-[80vh] rounded-t-[2rem] p-0 overflow-hidden border-t-primary/20">
-                <SheetHeader className="p-6 pb-2">
-                  <SheetTitle className="text-left font-headline font-bold flex items-center gap-2">
-                    <ListChecks className="w-5 h-5 text-primary" /> Briefing da Missão
-                  </SheetTitle>
-                </SheetHeader>
-                <div className="h-full">
-                  {MissionContent}
-                </div>
-              </SheetContent>
-            </Sheet>
-          )}
-        </div>
-      </div>
+      <LearnHeader 
+        kaTitle={ka.title}
+        lessonTitle={theory?.title || practice?.title || ""}
+        isMobile={!!isMobile}
+        isTheory={!!theory}
+        isCompleted={isCompleted(lessonId)}
+        isRunning={isRunning}
+        nextLessonId={nextLessonId}
+        onRunCode={handleRunCode}
+        lessonList={LessonList}
+        missionContent={practice && (
+          <MissionBriefing 
+            practice={practice}
+            availableVariants={availableVariants}
+            completedObjectives={completedObjectives}
+            isCompleted={isCompleted(lessonId)}
+            nextLessonId={nextLessonId}
+            onNavigate={(id) => router.push(`/learn/${id}`)}
+            onGoToDashboard={() => router.push('/dashboard')}
+          />
+        )}
+      />
 
       <main className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        <div className="flex-1 flex flex-col bg-[#1e1e1e] relative overflow-hidden">
-          {theory ? (
-            <div className="flex-1 overflow-y-auto p-5 md:p-16 max-w-4xl mx-auto w-full scroll-container">
-              <h1 className="text-2xl md:text-5xl font-headline font-bold mb-6 md:mb-10 leading-tight">{theory.title}</h1>
-              
-              {theory.youtubeVideoId && (
-                <div className="mb-12 aspect-video w-full overflow-hidden rounded-[2.5rem] shadow-2xl border border-white/5 bg-black/40 group relative">
-                   <iframe 
-                    src={`https://www.youtube.com/embed/${theory.youtubeVideoId}`}
-                    title={theory.title}
-                    className="w-full h-full"
-                    allowFullScreen
-                  />
-                  <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-600/90 text-white text-[10px] font-black uppercase tracking-widest shadow-lg">
-                    <Youtube className="w-3.5 h-3.5" /> Video Aula
-                  </div>
-                </div>
-              )}
-
-              <div className="prose prose-invert max-w-none mb-16 text-sm md:text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: theory.content }} />
-              
-              {quiz && (
-                <div className="mb-20 space-y-8 animate-in slide-in-from-bottom-4 duration-700">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-xl">
-                      <Sparkles className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl md:text-2xl font-bold font-headline">{quiz.title}</h3>
-                      <p className="text-xs text-muted-foreground">Valida o teu conhecimento para avançar (Min: {quiz.passingScore}%).</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-6">
-                    {quiz.questions.map((q, qIdx) => {
-                      const isIncorrect = validated && selectedAnswers[q.id] !== q.correctAnswer;
-                      const isCorrect = validated && selectedAnswers[q.id] === q.correctAnswer;
-                      
-                      return (
-                      <Card key={q.id} className={cn(
-                        "border-none bg-card/40 backdrop-blur-sm rounded-3xl overflow-hidden transition-all duration-300",
-                        isCorrect && "ring-2 ring-green-500/50 bg-green-500/5",
-                        isIncorrect && "ring-2 ring-destructive/50 bg-destructive/5"
-                      )}>
-                         <CardContent className="p-6 md:p-8 space-y-6">
-                            <div className="flex justify-between items-start gap-4">
-                               <h4 className="text-base md:text-lg font-bold leading-tight">
-                                  <span className="text-primary mr-2">{qIdx + 1}.</span> {q.question}
-                               </h4>
-                               {validated && (
-                                  isCorrect 
-                                    ? <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
-                                    : <XCircle className="w-6 h-6 text-destructive shrink-0" />
-                               )}
-                            </div>
-
-                            <RadioGroup 
-                              value={selectedAnswers[q.id]?.toString()} 
-                              onValueChange={(v) => selectAnswer(q.id, parseInt(v))}
-                              className="grid grid-cols-1 md:grid-cols-2 gap-3"
-                            >
-                              {q.options.map((opt, idx) => {
-                                const isSelected = selectedAnswers[q.id] === idx;
-                                return (
-                                  <div key={idx} className={cn(
-                                    "flex items-center space-x-3 p-4 rounded-2xl border transition-all cursor-pointer",
-                                    isSelected ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" : "border-white/5 bg-background/20"
-                                  )} onClick={() => selectAnswer(q.id, idx)}>
-                                    <RadioGroupItem value={idx.toString()} id={`q-${q.id}-opt-${idx}`} className="sr-only" />
-                                    <div className={cn(
-                                      "w-6 h-6 rounded-full border-2 flex items-center justify-center text-[10px] font-bold shrink-0",
-                                      isSelected ? "bg-primary border-primary text-white" : "border-white/20 text-muted-foreground"
-                                    )}>
-                                      {String.fromCharCode(65 + idx)}
-                                    </div>
-                                    <Label htmlFor={`q-${q.id}-opt-${idx}`} className="flex-1 cursor-pointer font-medium text-sm leading-snug">{opt}</Label>
-                                  </div>
-                                );
-                              })}
-                            </RadioGroup>
-
-                            {isIncorrect && q.explanation && (
-                               <div className="bg-destructive/10 border border-destructive/20 p-4 rounded-2xl flex gap-3 animate-in slide-in-from-top-2 duration-300">
-                                  <AlertCircle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
-                                  <div className="space-y-1">
-                                     <p className="text-[10px] font-black uppercase text-destructive tracking-widest">Dica Técnica</p>
-                                     <p className="text-xs text-muted-foreground leading-relaxed italic">{q.explanation}</p>
-                                  </div>
-                                </div>
-                            )}
-                         </CardContent>
-                      </Card>
-                      );
-                    })}
-
-                    <div className="pt-8 flex flex-col items-center gap-4">
-                       {isCompleted(lessonId) ? (
-                          <div className="text-center space-y-6 w-full">
-                            <div className="bg-green-600/10 border border-green-600/30 p-6 rounded-[2rem] flex flex-col items-center gap-3">
-                               <CheckCircle2 className="w-12 h-12 text-green-500" />
-                               <h3 className="text-2xl font-black text-green-500 uppercase tracking-tighter">Conhecimento Validado!</h3>
-                            </div>
-                            {nextLessonId && (
-                              <Button onClick={() => router.push(`/learn/${nextLessonId}`)} className="w-full max-w-md h-16 rounded-[2.5rem] font-black text-xl bg-green-600 hover:bg-green-700 shadow-2xl shadow-green-900/30 gap-2">
-                                PRÓXIMA LIÇÃO <ChevronRight className="w-6 h-6" />
-                              </Button>
-                            )}
-                          </div>
-                       ) : (
-                         <Button onClick={handleVerifyQuiz} disabled={Object.keys(selectedAnswers).length < quiz.questions.length} className="w-full max-w-md h-16 rounded-[2.5rem] font-black text-lg shadow-2xl shadow-primary/30">
-                           {validated ? 'REAVALIAR RESPOSTAS' : 'VERIFICAR RESPOSTAS'}
-                         </Button>
-                       )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <>
-              <div className="flex items-center justify-between px-3 md:px-4 h-10 md:h-11 bg-black/60 border-b border-white/5 shrink-0">
-                <div className="flex gap-1 overflow-x-auto no-scrollbar scroll-smooth">
-                  {isWebLang ? (
-                    <>
-                      <Button variant={activeTab === 'html' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('html')} className="h-7 md:h-8 text-[9px] md:text-[10px] font-bold">HTML</Button>
-                      <Button variant={activeTab === 'css' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('css')} className="h-7 md:h-8 text-[9px] md:text-[10px] font-bold">CSS</Button>
-                      <Button variant={activeTab === 'js' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('js')} className="h-7 md:h-8 text-[9px] md:text-[10px] font-bold">JS</Button>
-                      <Button variant={activeTab === 'preview' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('preview')} className="h-7 md:h-8 text-[9px] md:text-[10px] font-bold lg:hidden">VIEW</Button>
-                    </>
-                  ) : (
-                    <Button variant={activeTab === 'code' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('code')} className="h-7 md:h-8 text-[9px] md:text-[10px] font-bold uppercase">
-                      {isConceptLab ? "Lógica" : "Editor Principal"}
-                    </Button>
-                  )}
-                </div>
-                <div className="hidden lg:block text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-50">
-                   Compilador {practice?.language.toUpperCase()} v1.0
-                </div>
-              </div>
-
-              <div className="flex-1 flex relative overflow-hidden">
-                <div className={cn("flex-1 h-full", activeTab === 'preview' && isMobile ? "hidden" : "block")}>
-                  <Editor
-                    height="100%"
-                    theme="vs-dark"
-                    language={practice?.language}
-                    value={isWebLang ? (activeTab === 'html' ? htmlCode : activeTab === 'css' ? cssCode : jsCode) : code}
-                    onChange={(v) => {
-                      if (isWebLang) {
-                        if (activeTab === 'html') setHtmlCode(v || "");
-                        else if (activeTab === 'css') setCssCode(v || "");
-                        else setJsCode(v || "");
-                      } else {
-                        setCode(v || "");
-                        localStorage.setItem(`cwm_code_${lessonId}`, v || "");
-                      }
-                    }}
-                    options={{ 
-                      minimap: { enabled: false }, 
-                      fontSize: 14, 
-                      automaticLayout: true, 
-                      wordWrap: "on",
-                      padding: { top: 15 },
-                      scrollBeyondLastLine: false,
-                      fontFamily: "'Source Code Pro', monospace",
-                      lineNumbers: "on",
-                      renderLineHighlight: "all"
-                    }}
-                  />
-                </div>
-                
-                {activeTab === 'preview' && isMobile && (
-                   <div className="flex-1 flex flex-col bg-white">
-                      <div className="h-6 bg-muted text-[8px] font-bold flex items-center px-3 text-muted-foreground uppercase"><Eye className="w-2.5 h-2.5 mr-1.5" /> Live Preview</div>
-                      <iframe ref={iframeRef} className="flex-1 w-full border-none" title="Preview" />
-                   </div>
-                )}
-
-                {!isMobile && isWebLang && (
-                  <div className="w-1/2 border-l border-white/5 bg-white flex flex-col shadow-2xl">
-                    <div className="h-6 bg-muted text-[9px] font-black flex items-center px-3 text-muted-foreground uppercase tracking-widest"><Eye className="w-3 h-3 mr-2" /> Live Interaction View</div>
-                    <iframe ref={iframeRef} className="flex-1 w-full border-none" title="Preview" />
-                  </div>
-                )}
-              </div>
-
-              <div className={cn("bg-[#0f0f0f] border-t border-white/10 transition-all duration-300", isConsoleOpen ? "h-40 md:h-56" : "h-8 md:h-10")}>
-                <div className="flex items-center justify-between px-4 h-8 md:h-10 cursor-pointer hover:bg-white/5 transition-colors border-b border-white/5" onClick={() => setIsConsoleOpen(!isConsoleOpen)}>
-                  <span className="text-[9px] md:text-[10px] font-black text-muted-foreground uppercase flex items-center gap-2 tracking-widest">
-                    <Terminal className="w-3 h-3 text-green-500" /> Terminal de Debugging
-                  </span>
-                  {isConsoleOpen ? <ChevronDown className="w-4 h-4 opacity-40" /> : <ChevronUp className="w-4 h-4 opacity-40" />}
-                </div>
-                {isConsoleOpen && (
-                  <div className="p-4 text-[11px] md:text-xs font-code text-green-400 overflow-y-auto h-32 md:h-44 custom-scrollbar bg-black/40">
-                    <div className="opacity-40 mb-2 font-sans text-[9px] border-b border-green-900/30 pb-1">
-                      [LOG SYSTEM READY: {new Date().toLocaleTimeString()}]
-                    </div>
-                    <pre className="leading-relaxed whitespace-pre-wrap">{output || "> Pronto para execução. Aguardando input..."}</pre>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </div>
+        {theory ? (
+          <TheoryView 
+            theory={theory}
+            quiz={quiz}
+            isCompleted={isCompleted(lessonId)}
+            nextLessonId={nextLessonId}
+            onComplete={handleTheoryComplete}
+          />
+        ) : (
+          <PracticeWorkspace 
+            language={practice?.language || ""}
+            isWebLang={isWebLang}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            code={code}
+            setCode={setCode}
+            htmlCode={htmlCode}
+            setHtmlCode={setHtmlCode}
+            cssCode={cssCode}
+            setCssCode={setCssCode}
+            jsCode={jsCode}
+            setJsCode={setJsCode}
+            isMobile={!!isMobile}
+            isConsoleOpen={isConsoleOpen}
+            setIsConsoleOpen={setIsConsoleOpen}
+            output={output}
+            iframeRef={iframeRef}
+          />
+        )}
 
         {!isMobile && practice && (
           <div className="w-80 md:w-96 border-l border-white/5 bg-[#0d1117] shadow-2xl shrink-0">
-            {MissionContent}
+            <MissionBriefing 
+              practice={practice}
+              availableVariants={availableVariants}
+              completedObjectives={completedObjectives}
+              isCompleted={isCompleted(lessonId)}
+              nextLessonId={nextLessonId}
+              onNavigate={(id) => router.push(`/learn/${id}`)}
+              onGoToDashboard={() => router.push('/dashboard')}
+            />
           </div>
         )}
       </main>
     </div>
   );
 }
-
