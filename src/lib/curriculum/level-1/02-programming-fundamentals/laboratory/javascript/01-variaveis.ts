@@ -4,49 +4,37 @@ import type { PracticeExercise } from '../../../types';
 export const exercise: PracticeExercise = {
   id: "pf-p1-js",
   language: "javascript",
-  title: "Lab JS: Alocação e Identidade",
-  description: "Crie a fundação de dados do sistema do zero.",
-  statement: "Declare as variáveis fundamentais para um perfil de utilizador e imprima-as no console.",
-  template: `// Missão: Codifica desde a linha 1
-// 1. Declare uma constante API_KEY com valor "CWM123"
-// 2. Declare uma variável nome com o seu nome
-// 3. Declare uma variável tentativas com valor 3
-// 4. Imprima o nome no terminal
-`,
+  title: "Missão: Criando a Identidade do Sistema",
+  description: "Aprenda a reservar espaço na memória para guardar informações.",
+  statement: "Declare o seu nome e a sua chave de acesso no sistema.",
+  isProjectPart: true,
+  template: ``,
+  youtubeVideoId: "8ME9u065vD4",
   detailedExplanation: `
     <div class="space-y-4">
-      <h3 class="text-xl font-bold text-primary">📦 Arquitetura de Dados</h3>
-      <p>Em engenharia, a primeira tarefa é definir onde os dados vivem. Escreve o código completo no editor à esquerda.</p>
+      <h3 class="text-xl font-bold text-primary">📦 Caixas de Memória (Variáveis)</h3>
+      <p>Imagina que o computador é um armazém cheio de caixas vazias. Para guardar algo, precisas de dar um nome à caixa e colocar o valor lá dentro.</p>
+      
       <div class="bg-muted p-4 rounded-xl border border-white/10 space-y-2">
-        <p class="text-xs"><strong>Regras do Terminal:</strong></p>
-        <p class="text-[10px] text-muted-foreground">O terminal irá ler as tuas instruções <code>console.log()</code> para validar a execução.</p>
+        <p class="text-xs font-bold text-yellow-500">A Ferramenta do Dia:</p>
+        <p class="text-[11px] font-mono leading-relaxed">
+          <span class="text-primary">const</span> chave = "CWM123"; <br/>
+          <span class="text-primary">let</span> nome = "Teu Nome"; <br/>
+          <span class="text-primary">console.log</span>(nome);
+        </p>
       </div>
+
+      <p class="text-xs">
+        <strong>Instruções de Construção:</strong>
+        <br/>1. Usa <code>const</code> para criar a API_KEY com "CWM123".
+        <br/>2. Usa <code>let</code> para criar a variável nome com o teu nome.
+        <br/>3. Usa <code>console.log</code> para mostrar o nome no ecrã.
+      </p>
     </div>
   `,
   objectives: [
-    { 
-      id: "obj1", 
-      description: "Declarar constante API_KEY com 'CWM123'", 
-      hint: "const API_KEY = \"CWM123\";",
-      test: "const API_KEY = \"CWM123\"" 
-    },
-    { 
-      id: "obj2", 
-      description: "Declarar variável nome", 
-      hint: "let nome = \"...\";",
-      test: "let nome =" 
-    },
-    { 
-      id: "obj3", 
-      description: "Declarar variável tentativas como 3", 
-      hint: "let tentativas = 3;",
-      test: "let tentativas = 3" 
-    },
-    { 
-      id: "obj4", 
-      description: "Imprimir o nome usando console.log", 
-      hint: "console.log(nome);",
-      test: "console.log(nome)" 
-    }
+    { id: "obj1", description: "Criar const API_KEY = 'CWM123'", test: "const API_KEY = \"CWM123\"" },
+    { id: "obj2", description: "Criar let nome = '...'", test: "let nome =" },
+    { id: "obj3", description: "Mostrar no terminal", test: "console.log(nome)" }
   ]
 };

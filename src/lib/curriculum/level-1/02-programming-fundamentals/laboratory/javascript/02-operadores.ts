@@ -4,45 +4,38 @@ import type { PracticeExercise } from '../../../types';
 export const exercise: PracticeExercise = {
   id: "pf-p2-js",
   language: "javascript",
-  title: "Lab JS: Matemática e Lógica de Decisão",
-  description: "Pratique o uso de operadores aritméticos e de comparação.",
-  statement: "Calcule a média de 'n1' e 'n2', e verifique se o aluno está aprovado (média >= 10).",
-  template: `let n1 = 15;
-let n2 = 7;
-
-// 1. Calcule a média entre n1 e n2
-let media = ;
-
-// 2. Verifique se a média é maior ou igual a 10
-let aprovado = ;`,
+  title: "Missão: O Motor de Cálculo",
+  description: "Aprenda a realizar operações matemáticas e lógicas de comparação.",
+  statement: "Calcule a média de notas e valide se o aluno passou.",
+  isProjectPart: true,
+  template: ``,
+  youtubeVideoId: "95v88Oit0H8",
   detailedExplanation: `
     <div class="space-y-4">
-      <h3 class="text-xl font-bold text-primary">🧮 Operações em JavaScript</h3>
-      <p>O JavaScript utiliza tipagem dinâmica, o que significa que o resultado de <code>15 / 2</code> será automaticamente <code>7.5</code> (um float). No entanto, deves ter cuidado com a precedência de operadores.</p>
+      <h3 class="text-xl font-bold text-primary">🧮 Operadores e Precedência</h3>
+      <p>Para calcular a média, somamos e dividimos. Os parênteses <code>( )</code> garantem que a soma aconteça antes da divisão.</p>
       
-      <div class="bg-muted p-4 rounded-xl border border-primary/20 space-y-2">
-        <p class="text-xs font-bold">🚀 Exemplo de Aplicação (Fintech):</p>
-        <p class="text-[10px] text-muted-foreground leading-relaxed">
-          Numa aplicação bancária moçambicana, poderias calcular a taxa de transferência: <br/>
-          <code>let taxa = valor * 0.02; // 2% de taxa</code>
+      <div class="bg-muted p-4 rounded-xl border border-white/10 space-y-2">
+        <p class="text-xs font-bold text-yellow-500">A Ferramenta do Dia:</p>
+        <p class="text-[11px] font-mono leading-relaxed">
+          <span class="text-primary">const</span> media = (10 + 20) / 2; <br/>
+          <span class="text-primary">const</span> passou = media >= 10; <br/>
+          <span class="text-primary">console.log</span>(passou);
         </p>
       </div>
 
       <p class="text-xs">
-        <strong>Missão:</strong> Usa parênteses para garantir que a soma ocorre antes da divisão. Para a variável <b>aprovado</b>, usa o operador <code>>=</code> para obter um resultado booleano.
+        <strong>Instruções de Construção:</strong>
+        <br/>1. Cria variáveis <code>n1</code> e <code>n2</code> com valores 15 e 7.
+        <br/>2. Calcula a <code>media</code> usando (n1 + n2) / 2.
+        <br/>3. Cria a variável <code>aprovado</code> comparando se media é maior ou igual (>=) a 10.
+        <br/>4. Mostra o valor de <code>aprovado</code> no terminal.
       </p>
     </div>
   `,
   objectives: [
-    {
-      id: "calc_media",
-      description: "A variável 'media' deve conter o cálculo (n1 + n2) / 2.",
-      test: "media = (n1 + n2) / 2"
-    },
-    {
-      id: "check_aprovado",
-      description: "A variável 'aprovado' deve verificar se media >= 10.",
-      test: "aprovado = media >= 10"
-    }
+    { id: "obj1", description: "Calcular média com parênteses", test: "(n1 + n2) / 2" },
+    { id: "obj2", description: "Usar operador >= para aprovação", test: ">= 10" },
+    { id: "obj3", description: "Mostrar resultado no terminal", test: "console.log(" }
   ]
 };
