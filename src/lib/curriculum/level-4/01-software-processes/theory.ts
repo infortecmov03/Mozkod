@@ -15,13 +15,13 @@ import { lesson as l14 } from './theory/14-error-budgets';
 import { lesson as l15 } from './theory/15-incident-management';
 import { lesson as l16 } from './theory/16-post-mortems';
 import { lesson as l17 } from './theory/17-architecture-decision-records';
+import { lesson as l18 } from './theory/18-engineering-ethics';
+import { lesson as l19 } from './theory/19-technical-leadership';
+import { lesson as l20 } from './theory/20-se-ai-era';
+import { lesson as l21 } from './theory/21-process-audit';
 
 export const lessons = [
   l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15,
   { ...l16, title: "Post-mortems e Aprendizado Organizacional" },
-  l17,
-  { id: "se-t18", title: "Ética Profissional e Responsabilidade do Engenheiro", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q18-master" },
-  { id: "se-t19", title: "Liderança Técnica e Mentoria", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q19-master" },
-  { id: "se-t20", title: "Software Engineering na Era da IA", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q20-master" },
-  { id: "se-t21", title: "Capstone: Auditoria de Processo Completa", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q21-master" }
+  l17, l18, l19, l20, l21
 ];

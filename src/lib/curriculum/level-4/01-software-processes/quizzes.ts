@@ -15,13 +15,11 @@ import { quiz as q14 } from './quizzes/14-error-budgets-quiz';
 import { quiz as q15 } from './quizzes/15-incident-management-quiz';
 import { quiz as q16 } from './quizzes/16-post-mortems-quiz';
 import { quiz as q17 } from './quizzes/17-adr-quiz';
+import { quiz as q18 } from './quizzes/18-ethics-quiz';
+import { quiz as q19 } from './quizzes/19-leadership-quiz';
+import { quiz as q20 } from './quizzes/20-ai-era-quiz';
+import { quiz as q21 } from './quizzes/21-process-audit-quiz';
 
 export const quizzes = [
-  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16, q17,
-  ...Array.from({ length: 4 }, (_, i) => ({
-    id: `se-q${i + 18}-master`,
-    title: `Quiz Técnico Processos Tópico ${i + 18}`,
-    questions: [],
-    passingScore: 80
-  }))
+  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16, q17, q18, q19, q20, q21
 ];
