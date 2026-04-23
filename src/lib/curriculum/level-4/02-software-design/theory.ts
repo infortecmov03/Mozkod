@@ -54,7 +54,7 @@ export const lessons = designTitles.map((title, i) => {
   const baseLesson = lessonsSource[i];
   return {
     ...baseLesson,
-    id: `des-t${i + 1}`, // Standardizing IDs to prevent collisions with Level 8 Java (jv-m*)
+    id: `des-t${i + 1}`, // IDs normalizados des-t* para evitar colisão com Java jv-m*
     title: title,
     quizId: `des-q${i + 1}-master`
   };

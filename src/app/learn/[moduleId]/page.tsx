@@ -130,7 +130,7 @@ export default function LearnPage() {
 
   const handleTheoryComplete = async (score: number) => {
     if (data) {
-      // Force sync regardless of current local completion state to ensure DB parity
+      // Forçamos a sincronização mesmo se já estiver concluído localmente para garantir paridade com o DB
       await markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', score);
     }
   };
