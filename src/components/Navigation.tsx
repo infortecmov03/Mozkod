@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -73,7 +72,7 @@ export function Navigation() {
           <div className="relative w-10 h-10 flex items-center justify-center">
              <Logo className="w-16 h-16 absolute -top-1" showDevices={false} showText={false} />
           </div>
-          <span className="font-headline text-xl font-bold tracking-tight hidden sm:inline-block">
+          <span className="font-headline text-lg sm:text-xl font-bold tracking-tight">
             CodWorks <span className="text-primary">Moz</span>
           </span>
         </Link>
