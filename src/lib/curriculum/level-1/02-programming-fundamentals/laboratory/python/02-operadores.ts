@@ -1,3 +1,4 @@
+
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
@@ -18,10 +19,19 @@ eh_par = `,
   detailedExplanation: `
     <div class="space-y-4">
       <h3 class="text-xl font-bold text-primary">🐍 Matemática Pythonic</h3>
-      <p>Em Python, o operador <code>/</code> realiza sempre uma divisão real (float). Para verificar se um número é par, usamos o operador de módulo <code>%</code>.</p>
-      <div class="bg-muted p-3 rounded-lg font-code text-xs">
-        Se x % 2 == 0, então x é par.
+      <p>Em Python 3, o operador <code>/</code> realiza sempre uma divisão real (float), mesmo entre inteiros. É a linguagem favorita para Ciência de Dados por causa desta precisão nativa.</p>
+      
+      <div class="bg-muted p-4 rounded-xl border border-primary/20 space-y-2">
+        <p class="text-xs font-bold">📊 Exemplo de Aplicação (Data Science):</p>
+        <p class="text-[10px] text-muted-foreground leading-relaxed">
+          Poderias calcular o crescimento de uma empresa em Maputo: <br/>
+          <code>crescimento = (receita_atual - receita_anterior) / receita_anterior</code>
+        </p>
       </div>
+
+      <p class="text-xs">
+        <strong>Missão:</strong> Lembra-te que <code>%</code> (módulo) devolve o resto. Se o resto da divisão por 2 for 0, o número é par.
+      </p>
     </div>
   `,
   objectives: [

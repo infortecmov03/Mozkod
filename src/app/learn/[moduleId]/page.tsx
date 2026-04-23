@@ -9,7 +9,7 @@ import {
   Terminal, Play, CheckCircle2, ChevronLeft, 
   ListChecks, Loader2, Brain, Eye, Sparkles, ChevronDown, ChevronUp,
   Info, ChevronRight, XCircle, AlertCircle, RefreshCcw, Youtube, Menu,
-  Library
+  Library, Languages
 } from "lucide-react";
 import { 
   modules, findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
@@ -51,6 +51,21 @@ export default function LearnPage() {
   const quiz = useMemo(() => theory?.quizId ? findQuizById(theory.quizId) : null, [theory]);
   const nextLessonId = useMemo(() => findNextLessonId(lessonId), [lessonId]);
 
+  // Sibling exercises in different languages for the same theme
+  const availableLangs = useMemo(() => {
+    if (!data || !practice) return [];
+    const siblings: { lang: string; id: string }[] = [];
+    const currentBaseId = practice.id.split('-').slice(0, 2).join('-'); // e.g. pf-p2
+    
+    Object.entries(data.ka.practice).forEach(([lang, exercises]) => {
+      const match = exercises.find(ex => ex.id.startsWith(currentBaseId));
+      if (match) {
+        siblings.push({ lang, id: match.id });
+      }
+    });
+    return siblings;
+  }, [data, practice]);
+
   const [htmlCode, setHtmlCode] = useState("");
   const [cssCode, setCssCode] = useState("");
   const [jsCode, setJsCode] = useState("");
@@ -68,7 +83,7 @@ export default function LearnPage() {
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
   const [validated, setValidated] = useState(false);
 
-  const isWebLang = useMemo(() => ['html', 'css', 'javascript'].includes(practice?.language.toLowerCase() || ''), [practice]);
+  const isWebLang = useMemo(() => ['html', 'css', 'javascript'].includes(practice?.language.toLowerCase() || '') && !lessonId.includes('pf-p'), [practice, lessonId]);
   const isConceptLab = useMemo(() => practice?.language.toLowerCase() === 'concept', [practice]);
 
   useEffect(() => {
@@ -88,6 +103,8 @@ export default function LearnPage() {
     setHtmlCode(practice.htmlTemplate || "");
     setCssCode(practice.cssTemplate || "");
     setJsCode(practice.jsTemplate || "");
+    setCompletedObjectives([]);
+    setOutput("");
   }, [practice, lessonId, isWebLang]);
 
   useEffect(() => {
@@ -207,12 +224,31 @@ export default function LearnPage() {
 
   const MissionContent = (
     <div className="p-5 h-full flex flex-col bg-card/30 overflow-y-auto scroll-container">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <h3 className="font-headline font-bold text-[10px] md:text-xs uppercase flex items-center gap-2 tracking-widest text-primary">
           {isConceptLab ? <Brain className="w-4 h-4" /> : <ListChecks className="w-4 h-4" />}
           Missão {isConceptLab ? "Lógica Pura" : "Técnica"}
         </h3>
       </div>
+
+      {availableLangs.length > 1 && (
+        <div className="mb-6 p-1 bg-secondary/50 rounded-xl flex gap-1">
+          {availableLangs.map((l) => (
+            <Button
+              key={l.lang}
+              variant={practice.language === l.lang ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => router.push(`/learn/${l.id}`)}
+              className={cn(
+                "flex-1 h-8 text-[9px] font-black uppercase rounded-lg",
+                practice.language === l.lang ? "bg-background shadow-sm" : "opacity-50"
+              )}
+            >
+              {l.lang}
+            </Button>
+          ))}
+        </div>
+      )}
       
       <div className="prose prose-invert prose-sm mb-6 text-xs leading-relaxed opacity-90" dangerouslySetInnerHTML={{ __html: practice?.detailedExplanation || "" }} />
       
@@ -509,7 +545,7 @@ export default function LearnPage() {
                   <Editor
                     height="100%"
                     theme="vs-dark"
-                    language={isWebLang ? (activeTab === 'js' ? 'javascript' : activeTab) : (isConceptLab ? 'markdown' : practice?.language)}
+                    language={practice?.language}
                     value={isWebLang ? (activeTab === 'html' ? htmlCode : activeTab === 'css' ? cssCode : jsCode) : code}
                     onChange={(v) => {
                       if (isWebLang) {

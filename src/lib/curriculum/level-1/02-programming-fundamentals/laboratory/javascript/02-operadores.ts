@@ -1,3 +1,4 @@
+
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
@@ -16,12 +17,20 @@ let media = ;
 let aprovado = ;`,
   detailedExplanation: `
     <div class="space-y-4">
-      <h3 class="text-xl font-bold text-primary">🧮 Operações em JS</h3>
-      <p>Lembre-se da precedência: para calcular a média, você deve somar os números primeiro entre parênteses e depois dividir por 2.</p>
-      <div class="bg-muted p-3 rounded-lg font-code text-xs">
-        Ex: (a + b) / 2
+      <h3 class="text-xl font-bold text-primary">🧮 Operações em JavaScript</h3>
+      <p>O JavaScript utiliza tipagem dinâmica, o que significa que o resultado de <code>15 / 2</code> será automaticamente <code>7.5</code> (um float). No entanto, deves ter cuidado com a precedência de operadores.</p>
+      
+      <div class="bg-muted p-4 rounded-xl border border-primary/20 space-y-2">
+        <p class="text-xs font-bold">🚀 Exemplo de Aplicação (Fintech):</p>
+        <p class="text-[10px] text-muted-foreground leading-relaxed">
+          Numa aplicação bancária moçambicana, poderias calcular a taxa de transferência: <br/>
+          <code>let taxa = valor * 0.02; // 2% de taxa</code>
+        </p>
       </div>
-      <p>Para a variável 'aprovado', use o operador de comparação <code>>=</code>. O resultado será automaticamente um booleano (true/false).</p>
+
+      <p class="text-xs">
+        <strong>Missão:</strong> Usa parênteses para garantir que a soma ocorre antes da divisão. Para a variável <b>aprovado</b>, usa o operador <code>>=</code> para obter um resultado booleano.
+      </p>
     </div>
   `,
   objectives: [

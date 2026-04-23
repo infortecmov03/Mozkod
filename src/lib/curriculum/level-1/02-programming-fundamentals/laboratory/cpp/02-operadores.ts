@@ -1,3 +1,4 @@
+
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
@@ -24,7 +25,19 @@ int main() {
   detailedExplanation: `
     <div class="space-y-4">
       <h3 class="text-xl font-bold text-primary">⚡ Performance C++</h3>
-      <p>Operadores compostos como <code>+=</code> são o padrão na indústria para manter o código conciso e eficiente.</p>
+      <p>C++ é a linguagem do metal. Operadores compostos como <code>+=</code> não são apenas atalhos; eles dizem ao compilador para otimizar o acesso ao registo da CPU, tornando o código mais rápido.</p>
+      
+      <div class="bg-muted p-4 rounded-xl border border-primary/20 space-y-2">
+        <p class="text-xs font-bold">🎮 Exemplo de Aplicação (Game Dev):</p>
+        <p class="text-[10px] text-muted-foreground leading-relaxed">
+          Num motor de jogo, calcularias a posição do herói 60 vezes por segundo: <br/>
+          <code>pos_x += velocidade * delta_time;</code>
+        </p>
+      </div>
+
+      <p class="text-xs">
+        <strong>Missão:</strong> Completa as instruções usando <code>+=</code> para o incremento e o operador <code>*</code> para o cálculo do dano final.
+      </p>
     </div>
   `,
   objectives: [
