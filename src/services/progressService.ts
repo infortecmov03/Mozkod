@@ -23,6 +23,7 @@ export interface ProgressItem {
 export async function syncProgressToDb(item: ProgressItem) {
   const supabase = createClient();
   
+  // 1. Grava ou atualiza o progresso
   const { error } = await supabase
     .from('user_lesson_progress')
     .upsert(item, { 
@@ -34,13 +35,16 @@ export async function syncProgressToDb(item: ProgressItem) {
     throw new Error(error.message);
   }
 
-  // Aciona a procedure para recalcular pontos do perfil
-  const { error: rpcError } = await supabase.rpc('calculate_total_points', { 
-    p_user_id: item.user_id 
-  });
-
-  if (rpcError) {
-    console.error('Points Calculation Error:', rpcError.message);
+  /**
+   * Nota Técnica: Se o Trigger no banco falhar ou não estiver instalado,
+   * forçamos a chamada do RPC de cálculo de pontos para garantir a consistência na UI.
+   */
+  try {
+    await supabase.rpc('calculate_total_points', { 
+      p_user_id: item.user_id 
+    });
+  } catch (rpcError) {
+    console.warn('Erro ao disparar RPC de pontos:', rpcError);
   }
 
   return { success: true };

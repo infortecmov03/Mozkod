@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Navigation } from "@/components/Navigation";
@@ -5,18 +6,19 @@ import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { modules, findOrderedLessons, findTheoryLesson, findPracticeExercise, findKnowledgeAreaByLessonId } from "@/lib/curriculum";
 import { Button } from "@/components/ui/button";
-import { Zap, ArrowRight, Star, Target, Loader2, BookOpen, Laptop, ChevronRight } from "lucide-react";
+import { Zap, ArrowRight, Star, Target, Loader2, BookOpen, Laptop, ChevronRight, RefreshCcw } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/hooks/useAuth";
 import { useProgress } from "@/contexts/ProgressContext";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
   const { t } = useLanguage();
   const { profile, loading: authLoading } = useAuth();
-  const { progress, loading: progressLoading, isCompleted } = useProgress();
+  const { progress, loading: progressLoading, isCompleted, syncPoints } = useProgress();
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const currentLessonId = useMemo(() => {
     const ordered = findOrderedLessons();
@@ -37,6 +39,12 @@ export default function DashboardPage() {
       type: theory ? 'theory' : 'practice'
     };
   }, [currentLessonId]);
+
+  const handleManualSync = async () => {
+    setIsSyncing(true);
+    await syncPoints();
+    setTimeout(() => setIsSyncing(false), 1000);
+  };
 
   const moduleStats = useMemo(() => {
     return modules.map(m => {
@@ -82,11 +90,20 @@ export default function DashboardPage() {
             <h1 className="font-headline text-2xl md:text-3xl font-bold">
               Olá, {profile?.display_name?.split(' ')[0] || 'Engenheiro'}! 👋
             </h1>
-            <p className="text-muted-foreground text-xs md:text-sm">O teu progresso está sincronizado na nuvem.</p>
+            <div className="flex items-center gap-2 text-muted-foreground">
+               <p className="text-xs md:text-sm">O teu progresso está sincronizado na nuvem.</p>
+               <button 
+                onClick={handleManualSync}
+                className={cn("hover:text-primary transition-colors", isSyncing && "animate-spin")}
+                title="Sincronizar Pontos"
+               >
+                 <RefreshCcw className="w-3 h-3" />
+               </button>
+            </div>
           </div>
           <div className="flex gap-3">
             <div className="flex-1 md:flex-none">
-              <Card className="bg-primary/10 border-primary/20 flex items-center gap-2 md:gap-3 px-4 py-2 md:py-3">
+              <Card className="bg-primary/10 border-primary/20 flex items-center gap-2 md:gap-3 px-4 py-2 md:py-3 shadow-lg shadow-primary/5">
                 <Zap className="w-4 h-4 md:w-5 md:h-5 text-primary fill-primary" />
                 <div>
                   <p className="text-[9px] md:text-[10px] uppercase font-black text-muted-foreground">Pontos</p>
@@ -95,7 +112,7 @@ export default function DashboardPage() {
               </Card>
             </div>
             <div className="flex-1 md:flex-none">
-              <Card className="bg-orange-500/10 border-orange-500/20 flex items-center gap-2 md:gap-3 px-4 py-2 md:py-3">
+              <Card className="bg-orange-500/10 border-orange-500/20 flex items-center gap-2 md:gap-3 px-4 py-2 md:py-3 shadow-lg shadow-orange-900/5">
                 <Star className="w-4 h-4 md:w-5 md:h-5 text-orange-500 fill-orange-500" />
                 <div>
                   <p className="text-[9px] md:text-[10px] uppercase font-black text-muted-foreground">Streak</p>
@@ -130,7 +147,7 @@ export default function DashboardPage() {
                 <div className="pt-2">
                   <Link href={`/learn/${currentLessonId}`} className="w-full md:w-auto inline-block">
                     <Button className="w-full md:w-auto rounded-full px-8 md:px-10 h-12 md:h-14 font-black shadow-xl shadow-primary/30 group-hover:scale-105 transition-transform text-base md:text-lg">
-                      CONTINUAR <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:translate-x-2" />
+                      CONTINUAR <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-2" />
                     </Button>
                   </Link>
                 </div>

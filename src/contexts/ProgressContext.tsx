@@ -97,13 +97,16 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     });
 
     try {
-      // Delegação para o ProgressService (Ficheiro separado)
+      // Grava no DB
       await syncProgressToDb(newItem);
       
-      // Sincroniza estatísticas de perfil
-      await refreshProfile();
-      
-      toast.success("Progresso sincronizado!");
+      // FORÇA a atualização do perfil para ver os pontos novos IMEDIATAMENTE
+      // Aguardamos um pequeno delay para o DB processar o trigger/RPC
+      setTimeout(async () => {
+        await refreshProfile();
+        toast.success("Pontos atualizados!");
+      }, 500);
+
     } catch (err: any) {
       console.error('Falha na sincronização:', err);
       setProgress(oldProgress); // Reverte se falhar
