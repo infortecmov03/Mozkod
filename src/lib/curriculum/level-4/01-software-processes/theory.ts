@@ -13,10 +13,11 @@ import { lesson as l12 } from './theory/12-technical-debt';
 import { lesson as l13 } from './theory/13-sre-fundamentals';
 import { lesson as l14 } from './theory/14-error-budgets';
 import { lesson as l15 } from './theory/15-incident-management';
+import { lesson as l16 } from './theory/16-post-mortems';
 
 export const lessons = [
   l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15,
-  { id: "se-t16", title: "Post-mortems e Aprendizado Organizacional", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q16-master" },
+  { ...l16, title: "Post-mortems e Aprendizado Organizacional" },
   { id: "se-t17", title: "Documentação de Arquitetura (ADRs)", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q17-master" },
   { id: "se-t18", title: "Ética Profissional e Responsabilidade do Engenheiro", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q18-master" },
   { id: "se-t19", title: "Liderança Técnica e Mentoria", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q19-master" },
