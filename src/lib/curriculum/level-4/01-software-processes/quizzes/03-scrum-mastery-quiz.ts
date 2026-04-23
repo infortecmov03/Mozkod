@@ -3,76 +3,79 @@ import type { Quiz } from '../../../types';
 export const quiz: Quiz = {
   id: "se-q3-master",
   title: "Quiz: Scrum e Gestão de Incrementos",
-  passingScore: 80,
+  passingScore: 85,
   questions: [
     {
-      id: "q1",
-      question: "Quem é o responsável final por gerir e ordenar o Product Backlog?",
+      id: "q3_1",
+      question: "Qual papel é responsável por remover impedimentos que bloqueiam o progresso da equipa?",
       options: [
+        "Product Owner",
+        "Stakeholders",
+        "Scrum Master",
+        "Gestor de Projetos"
+      ],
+      correctAnswer: 2,
+      explanation: "O Scrum Master serve a equipa removendo obstáculos e facilitando a colaboração técnica e interpessoal."
+    },
+    {
+      id: "q3_2",
+      question: "O que deve acontecer com um item do Sprint Backlog que não foi concluído até ao final da Sprint?",
+      options: [
+        "Deve ser demonstrado na Sprint Review como 'em progresso'",
+        "Deve ser movido automaticamente para a próxima Sprint",
+        "Deve voltar ao Product Backlog para que o Product Owner o re-priorize",
+        "Deve ser descartado"
+      ],
+      correctAnswer: 2,
+      explanation: "No Scrum, apenas incrementos que cumprem a Definition of Done são mostrados. Itens incompletos voltam ao backlog principal."
+    },
+    {
+      id: "q3_3",
+      question: "Quem tem a palavra final sobre a ordem de importância dos itens no Product Backlog?",
+      options: [
+        "O Cliente",
         "O Scrum Master",
-        "O Product Owner",
         "Os Developers",
-        "O Cliente diretamente"
+        "O Product Owner"
+      ],
+      correctAnswer: 3,
+      explanation: "O Product Owner é o único ponto de autoridade para o backlog, garantindo que a equipa foca no que gera mais valor de negócio."
+    },
+    {
+      id: "q3_4",
+      question: "Qual o objetivo técnico da 'Definition of Done' (DoD)?",
+      options: [
+        "Ser uma lista de desejos do cliente",
+        "Garantir a transparência sobre os critérios de qualidade e o estado de 'concluído' do incremento",
+        "Substituir a necessidade de testes manuais",
+        "Medir o desempenho individual de cada programador"
       ],
       correctAnswer: 1,
-      explanation: "O Product Owner é o único ponto de autoridade sobre o conteúdo e a prioridade do backlog."
+      explanation: "A DoD é o padrão de qualidade comum que permite que todos entendam quando o trabalho é realmente utilizável e seguro."
     },
     {
-      id: "q2",
-      question: "Qual o objetivo principal da Sprint Retrospective?",
+      id: "q3_5",
+      question: "Durante a Sprint, quem é responsável por gerir o progresso e o plano de trabalho diário?",
       options: [
-        "Demonstrar o código aos clientes",
-        "Avaliar como a Sprint correu em termos de pessoas, ferramentas e processos para planear melhorias",
-        "Decidir quais tarefas serão feitas na próxima Sprint",
-        "Corrigir bugs encontrados em produção"
+        "O Product Owner",
+        "Os Developers",
+        "O Scrum Master",
+        "A gerência externa"
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "Os Developers são auto-geridos. Eles decidem como transformar o Sprint Backlog em um incremento de valor."
     },
     {
-      id: "q3",
-      question: "Se a equipa não termina todos os itens da Sprint, o que acontece aos itens incompletos?",
+      id: "q3_6",
+      question: "Qual evento do Scrum foca especificamente em melhorar o PROCESSO e as relações humanas da equipa?",
       options: [
-        "São marcados como concluídos",
-        "São movidos para a próxima Sprint sem passar pelo PO",
-        "Voltam para o Product Backlog para serem re-priorizados",
-        "O Scrum Master deve ser demitido"
-      ],
-      correctAnswer: 2,
-      explanation: "Scrum foca na inspeção. Se não está 'Done', volta ao backlog para o PO decidir o valor futuro."
-    },
-    {
-      id: "q4",
-      question: "A Definition of Done (DoD) é importante porque:",
-      options: [
-        "Garante a transparência e um padrão de qualidade comum para o Incremento",
-        "Serve para castigar programadores lentos",
-        "É um documento exigido pela lei moçambicana",
-        "Impede que o cliente peça novas funcionalidades"
-      ],
-      correctAnswer: 0
-    },
-    {
-      id: "q5",
-      question: "Qual o papel do Scrum Master durante a Daily Scrum?",
-      options: [
-        "Atribuir tarefas a cada programador",
-        "Cobrar a velocidade da equipa",
-        "Garantir que a reunião ocorre e que se mantém no limite de 15 minutos",
-        "Decidir a arquitetura do sistema"
+        "Sprint Planning",
+        "Sprint Review",
+        "Sprint Retrospective",
+        "Daily Scrum"
       ],
       correctAnswer: 2,
-      explanation: "O Scrum Master facilita o processo; a reunião é para os Developers se coordenarem."
-    },
-    {
-      id: "q6",
-      question: "Um Sprint Goal claro serve para:",
-      options: [
-        "Aumentar o número de horas trabalhadas",
-        "Dar um propósito e foco à equipa para além de apenas completar tarefas individuais",
-        "Substituir o Product Backlog",
-        "Medir a performance do computador"
-      ],
-      correctAnswer: 1
+      explanation: "A Retrospectiva é o momento de inspeção e adaptação da própria equipa e do seu fluxo de trabalho."
     }
   ]
 };
