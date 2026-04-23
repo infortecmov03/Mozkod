@@ -8,12 +8,13 @@ import { quiz as q7 } from './quizzes/07-estimation-quiz';
 import { quiz as q8 } from './quizzes/08-devops-quiz';
 import { quiz as q9 } from './quizzes/09-cicd-quiz';
 import { quiz as q10 } from './quizzes/10-deployment-quiz';
+import { quiz as q11 } from './quizzes/11-code-review-quiz';
 
 export const quizzes = [
-  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10,
-  ...Array.from({ length: 11 }, (_, i) => ({
-    id: `se-q${i + 11}-master`,
-    title: `Quiz Técnico Processos Tópico ${i + 11}`,
+  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11,
+  ...Array.from({ length: 10 }, (_, i) => ({
+    id: `se-q${i + 12}-master`,
+    title: `Quiz Técnico Processos Tópico ${i + 12}`,
     questions: [],
     passingScore: 80
   }))
