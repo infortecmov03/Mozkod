@@ -1,73 +1,33 @@
 
 import type { TheoryLesson } from '../../types';
 
-// Fase 3: Avançado
-const advancedLessons: TheoryLesson[] = [
-  {
-    id: "py-f3-t1",
-    title: "Fase 3: Decoradores e Context Managers",
-    content: "<div class='space-y-4'><h2 class='text-2xl font-bold'>🎭 Metaprogramação</h2><p>Aprenda a criar decoradores com parâmetros e gestores de contexto personalizados para gerir recursos.</p></div>",
-    quizId: "py-mq13"
-  },
-  {
-    id: "py-f3-t2",
-    title: "Fase 3: Concorrência e Paralelismo",
-    content: "<div class='space-y-4'><h2 class='text-2xl font-bold'>🚀 Threads vs Multiprocessing</h2><p>Entenda o GIL e quando usar cada modelo de execução paralela no Python.</p></div>",
-    quizId: "py-mq3"
-  },
-  {
-    id: "py-f3-t3",
-    title: "Fase 3: Async/Await (AsyncIO)",
-    content: "<div class='space-y-4'><h2 class='text-2xl font-bold'>⚡ I/O Não-Bloqueante</h2><p>Domine o loop de eventos para criar servidores de alta performance.</p></div>",
-    quizId: "py-mq3"
-  }
+const pythonTitles = [
+  "Fase 1: Zen do Python e Tipagem Dinâmica",
+  "Fase 1: Listas, Tuplas e Dicionários Master",
+  "Fase 1: List Comprehensions e Geradores",
+  "Fase 2: POO: Dunder Methods e Mixins",
+  "Fase 2: Decoradores e Metaprogramação",
+  "Fase 2: Gestão de Memória e GIL Internals",
+  "Fase 3: AsyncIO: Concorrência Assíncrona de Elite",
+  "Fase 3: Multiprocessing e Paralelismo Real",
+  "Fase 3: Networking: Sockets e Protocolos Binários",
+  "Fase 3: FFI: Chamando Código C/Rust com Cython",
+  "Fase 4: Web: FastAPI, Pydantic e Gunicorn",
+  "Fase 4: Data: NumPy, SIMD e Vectorização",
+  "Fase 4: Data: Pandas, Polars e Data Lakes",
+  "Fase 4: AI: Scikit-learn e Pipelines de Produção",
+  "Fase 4: AI: PyTorch, Tensores e GPU Computing",
+  "Fase 4: MLOps: Deployment e Monitorização de Modelos",
+  "Fase 4: Segurança: Sanitização e Bytecode Audit",
+  "Fase 4: DevOps: Poetry, Docker e CI/CD Industrial",
+  "Fase 4: Profiling: Identificando Gargalos de CPU/RAM",
+  "Fase 4: Internals: Bytecode, AST e CPython",
+  "Fase 4: Capstone: Deploy de System Monitor de Elite"
 ];
 
-// Fase 4: Especialização
-const specializationLessons: TheoryLesson[] = [
-  {
-    id: "py-f4-t1",
-    title: "Fase 4: Desenvolvimento Web (FastAPI/Django)",
-    content: "<div class='space-y-4'><h2 class='text-2xl font-bold'>🌐 Construindo APIs Modernas</h2><p>Arquitetura de sistemas web, autenticação e integração com bases de dados.</p></div>",
-    quizId: "py-mq5"
-  },
-  {
-    id: "py-f4-t2",
-    title: "Fase 4: Ciência de Dados (NumPy/Pandas)",
-    content: "<div class='space-y-4'><h2 class='text-2xl font-bold'>📊 Análise e Processamento</h2><p>Manipulação de grandes volumes de dados e visualização estatística.</p></div>",
-    quizId: "py-mq6"
-  },
-  {
-    id: "py-f4-t3",
-    title: "Fase 4: Automação e Bot Design",
-    content: "<div class='space-y-4'><h2 class='text-2xl font-bold'>🤖 Scripts de Produtividade</h2><p>Web scraping, automação de tarefas e criação de bots para Telegram/Discord.</p></div>",
-    quizId: "py-mq18"
-  }
-];
-
-const internalsLessons: TheoryLesson[] = [
-  {
-    id: "py-m-int-1",
-    title: "Internals: CPython, GIL e Bytecode",
-    content: "<p>Como o Python funciona no nível do silício.</p>",
-    quizId: "py-mq1"
-  },
-  {
-    id: "py-m-int-2",
-    title: "Internals: Gestão de Memória e GC",
-    content: "<p>Profiling e otimização de memória no Heap.</p>",
-    quizId: "py-mq4"
-  }
-];
-
-export const lessons = [
-  ...advancedLessons,
-  ...specializationLessons,
-  ...internalsLessons,
-  {
-    id: "py-m21",
-    title: "Fase 4: Capstone Milestone - Produção",
-    content: "<p>Finalização e deploy do projeto de especialização.</p>",
-    quizId: "py-mq21"
-  }
-];
+export const lessons: TheoryLesson[] = pythonTitles.map((title, i) => ({
+  id: `py-m${i + 1}`,
+  title: title,
+  content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐍 Python Master: ${title}</h2><p>Exploração profunda da linguagem seguindo o Roadmap industrial.</p></div>`,
+  quizId: `py-mq${i + 1}`
+}));

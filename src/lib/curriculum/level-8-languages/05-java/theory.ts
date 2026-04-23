@@ -37,14 +37,20 @@ const javaTitles = [
 ];
 
 export const lessons = javaTitles.map((title, i) => {
-  if (i === 0) return { ...l1, title };
-  if (i === 15) return { ...l2, title };
-  if (i === 12) return { ...l3, id: "jv-m13", title }; // Mapeamento para Virtual Threads
-  
+  let baseLesson;
+  if (i === 0) baseLesson = l1;
+  else if (i === 15) baseLesson = l2;
+  else if (i === 12) baseLesson = l3;
+  else {
+    baseLesson = {
+      content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>☕ Java Master: ${title}</h2><p>Estudo aprofundado seguindo os padrões da indústria enterprise global.</p></div>`,
+    };
+  }
+
   return {
+    ...baseLesson,
     id: `jv-m${i + 1}`,
     title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>☕ Java Master: ${title}</h2><p>Estudo aprofundado seguindo os padrões da indústria enterprise global.</p></div>`,
     quizId: `jv-mq${i + 1}`
   };
 });

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
@@ -115,7 +116,7 @@ export default function LearnPage() {
       if (newDone.length === (practice?.objectives.length || 0)) {
         setOutput("> ✅ STATUS: 200 OK\n> [AUDITORIA]: Requisitos validados.\n> Missão concluída.");
         toast.success("Excelente! Missão concluída.");
-        if (data && !isCompleted(lessonId)) {
+        if (data) {
           const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
           await markAsCompleted(lessonId, data.level.id, data.ka.id, 'exercise', 100, finalCode);
         }
@@ -128,7 +129,8 @@ export default function LearnPage() {
   };
 
   const handleTheoryComplete = async (score: number) => {
-    if (data && !isCompleted(lessonId)) {
+    if (data) {
+      // Force sync regardless of current local completion state to ensure DB parity
       await markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', score);
     }
   };
