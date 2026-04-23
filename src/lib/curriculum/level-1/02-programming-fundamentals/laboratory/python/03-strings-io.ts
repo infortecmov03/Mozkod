@@ -34,7 +34,7 @@ export const exercise: PracticeExercise = {
   `,
   objectives: [
     { id: "obj1", description: "Usar .strip() para limpar", test: ".strip()" },
-    { id: "obj2", description: "Usar f-string para formatar", test: "f\"" },
+    { id: "obj2", description: "Usar f-string para formatar", test: "f" },
     { id: "obj3", description: "Usar print(mensagem)", test: "print(mensagem)" }
   ]
 };

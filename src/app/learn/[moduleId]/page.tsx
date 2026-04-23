@@ -115,16 +115,39 @@ export default function LearnPage() {
       
       setCompletedObjectives(newDone);
 
+      // Simulação de Terminal Inteligente
       let logs = "";
       if (practice?.language === 'javascript' || practice?.language === 'python') {
-        const matches = current.match(/console\.log\((.*)\)|print\((.*)\)/g);
-        if (matches) {
-          logs = matches.map(m => `> OUT: ${m.replace(/console\.log\(|print\(|\)|'|"/g, '')}`).join('\n');
+        // Tenta encontrar atribuições simples: var = "valor"
+        const vars: Record<string, string> = {};
+        const assignRegex = /(?:const|let|var|)\s*(\w+)\s*=\s*["'`](.*?)["'`]/g;
+        let match;
+        while ((match = assignRegex.exec(current)) !== null) {
+          vars[match[1]] = match[2];
+        }
+
+        // Tenta encontrar console.log ou print
+        const logRegex = /(?:console\.log|print)\s*\(\s*(\w+)\s*\)/g;
+        while ((match = logRegex.exec(current)) !== null) {
+          const varName = match[1];
+          if (vars[varName]) {
+             logs += `> OUT: ${vars[varName]}\n`;
+          } else {
+             logs += `> OUT: [${varName}]\n`;
+          }
+        }
+
+        // Se não encontrou variáveis, tenta strings diretas
+        if (!logs) {
+          const directLogRegex = /(?:console\.log|print)\s*\(\s*["'`](.*?)["'`]\s*\)/g;
+          while ((match = directLogRegex.exec(current)) !== null) {
+            logs += `> OUT: ${match[1]}\n`;
+          }
         }
       }
 
       if (newDone.length === (practice?.objectives.length || 0)) {
-        setOutput(`${logs}\n> ✅ STATUS: 200 OK\n> [AUDITORIA]: Todos os requisitos foram encontrados.\n> Missão concluída.`);
+        setOutput(`${logs}> ✅ STATUS: 200 OK\n> [AUDITORIA]: Requisitos validados.\n> Missão concluída.`);
         toast.success("Excelente! Missão concluída.");
         if (data && !isCompleted(lessonId)) {
           const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
@@ -132,7 +155,7 @@ export default function LearnPage() {
         }
       } else {
         const remaining = (practice?.objectives.length || 0) - newDone.length;
-        setOutput(`${logs}\n> ⚠️ STATUS: 412 PRECONDITION FAILED\n> [AUDITORIA]: Faltam ${remaining} componentes essenciais.`);
+        setOutput(`${logs}> ⚠️ STATUS: 412 PRECONDITION FAILED\n> [AUDITORIA]: Faltam ${remaining} componentes essenciais.`);
         toast.error("Alguns requisitos ainda não foram atingidos.");
       }
     }, 800);

@@ -34,7 +34,7 @@ export const exercise: PracticeExercise = {
   `,
   objectives: [
     { id: "obj1", description: "Usar .trim() para limpar a entrada", test: ".trim()" },
-    { id: "obj2", description: "Usar backticks e ${user}", test: "`${" },
+    { id: "obj2", description: "Usar backticks e ${user}", test: "${" },
     { id: "obj3", description: "Mostrar mensagem no terminal", test: "console.log(mensagem)" }
   ]
 };
