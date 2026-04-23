@@ -5,8 +5,9 @@ import { exercise as exerciseFlex } from './laboratory/css/04-flexbox-lab';
 import { exercise as exerciseGrid } from './laboratory/css/05-grid-lab';
 import { exercise as exerciseResp } from './laboratory/css/06-media-queries-lab';
 import { exercise as exerciseForms } from './laboratory/html/02-formularios-lab';
+import { exercise as exerciseDeploy } from './laboratory/03-deployment-lab';
 
 export const practice = {
-  html: [exerciseHTML1, exerciseForms],
+  html: [exerciseHTML1, exerciseForms, exerciseDeploy],
   css: [exerciseCSS1, exerciseCSS2, exerciseFlex, exerciseGrid, exerciseResp]
 };

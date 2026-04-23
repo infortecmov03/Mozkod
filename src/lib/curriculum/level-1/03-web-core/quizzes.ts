@@ -5,12 +5,13 @@ import { quiz as q4 } from './quizzes/04-flexbox-quiz';
 import { quiz as q5 } from './quizzes/05-grid-quiz';
 import { quiz as q6 } from './quizzes/06-responsividade-quiz';
 import { quiz as q7 } from './quizzes/07-forms-quiz';
+import { quiz as q8 } from './quizzes/08-deployment-quiz';
 
 export const quizzes = [
-  q1, q2, q3, q4, q5, q6, q7,
-  ...Array.from({ length: 14 }, (_, i) => ({
-    id: `web-q${i + 8}`,
-    title: `Web Core Quiz ${i + 8}`,
+  q1, q2, q3, q4, q5, q6, q7, q8,
+  ...Array.from({ length: 13 }, (_, i) => ({
+    id: `web-q${i + 9}`,
+    title: `Web Core Quiz ${i + 9}`,
     questions: [],
     passingScore: 70
   }))
