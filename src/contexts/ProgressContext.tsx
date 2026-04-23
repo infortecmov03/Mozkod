@@ -1,9 +1,10 @@
+
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase/client';
 import { useAuth } from './AuthContext';
 import { toast } from 'sonner';
+import { syncProgressToDb, fetchUserProgress } from '@/services/progressService';
 
 type ProgressContextType = {
   isCompleted: (id: string) => boolean;
@@ -21,7 +22,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const [progress, setProgress] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchProgress = useCallback(async () => {
+  const refreshProgress = useCallback(async () => {
     if (!user) {
       setProgress([]);
       setLoading(false);
@@ -30,27 +31,21 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('user_lesson_progress')
-        .select('*')
-        .eq('user_id', user.id);
-      
-      if (!error && data) {
-        setProgress(data.map(p => ({
-          ...p,
-          completed: p.completed === true || p.completed === 1 || String(p.completed) === "true"
-        })));
-      }
+      const data = await fetchUserProgress(user.id);
+      setProgress(data.map(p => ({
+        ...p,
+        completed: p.completed === true || p.completed === 1 || String(p.completed) === "true"
+      })));
     } catch (err: any) {
-      console.error('Erro ao carregar progresso real:', err.message);
+      console.error('Erro ao carregar progresso:', err.message);
     } finally {
       setLoading(false);
     }
   }, [user]);
 
   useEffect(() => {
-    fetchProgress();
-  }, [fetchProgress]);
+    refreshProgress();
+  }, [refreshProgress]);
 
   const isCompleted = useCallback((id: string) => {
     return progress.some(p => p.lesson_id === id && p.completed);
@@ -59,7 +54,6 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const syncPoints = async () => {
     if (!user) return;
     try {
-      await supabase.rpc('calculate_total_points', { p_user_id: user.id });
       await refreshProfile();
     } catch (err) {
       console.error('Erro ao sincronizar pontos:', err);
@@ -92,7 +86,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       quiz_passed: score >= 70
     };
 
-    // UI Otimista
+    // UI Otimista para resposta imediata
     const oldProgress = [...progress];
     setProgress(prev => {
       const idx = prev.findIndex(p => p.lesson_id === id);
@@ -103,25 +97,22 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     });
 
     try {
-      const { error } = await supabase
-        .from('user_lesson_progress')
-        .upsert(newItem, { onConflict: 'user_id,lesson_id' });
-
-      if (error) throw error;
-
+      // Delegação para o ProgressService (Ficheiro separado)
+      await syncProgressToDb(newItem);
+      
       // Sincroniza estatísticas de perfil
-      await syncPoints();
+      await refreshProfile();
       
       toast.success("Progresso sincronizado!");
     } catch (err: any) {
-      console.error('Falha na sincronização real:', err);
+      console.error('Falha na sincronização:', err);
       setProgress(oldProgress); // Reverte se falhar
-      toast.error('Erro ao sincronizar dados com o Supabase.');
+      toast.error('Erro de conexão ao salvar progresso.');
     }
   };
 
   return (
-    <ProgressContext.Provider value={{ isCompleted, markAsCompleted, syncPoints, progress, loading, refreshProgress: fetchProgress }}>
+    <ProgressContext.Provider value={{ isCompleted, markAsCompleted, syncPoints, progress, loading, refreshProgress }}>
       {children}
     </ProgressContext.Provider>
   );
