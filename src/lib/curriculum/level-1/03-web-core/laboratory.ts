@@ -10,8 +10,11 @@ import { exercise as exerciseSem } from './laboratory/04-semantica-lab';
 import { exercise as exerciseSVG } from './laboratory/05-svg-lab';
 import { exercise as exerciseARIA } from './laboratory/11-aria-lab';
 import { exercise as exerciseAnim } from './laboratory/06-animacoes-lab';
+import { exercise as exerciseBEM } from './laboratory/13-bem-refactoring-lab';
+import { exercise as exerciseHTTP } from './laboratory/14-http-analysis-lab';
+import { exercise as exercisePerf } from './laboratory/15-perf-optimization-lab';
 
 export const practice = {
-  html: [exerciseHTML1, exerciseForms, exerciseDeploy, exerciseSem, exerciseSVG, exerciseARIA, exerciseAnim],
-  css: [exerciseCSS1, exerciseCSS2, exerciseFlex, exerciseGrid, exerciseResp]
+  html: [exerciseHTML1, exerciseForms, exerciseDeploy, exerciseSem, exerciseSVG, exerciseARIA, exerciseAnim, exerciseHTTP, exercisePerf],
+  css: [exerciseCSS1, exerciseCSS2, exerciseFlex, exerciseGrid, exerciseResp, exerciseBEM]
 };

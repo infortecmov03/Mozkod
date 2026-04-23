@@ -10,12 +10,15 @@ import { quiz as q9 } from './quizzes/09-semantica-seo-quiz';
 import { quiz as q10 } from './quizzes/10-svg-quiz';
 import { quiz as q11 } from './quizzes/11-aria-accessibility-quiz';
 import { quiz as q12 } from './quizzes/12-animacoes-quiz';
+import { quiz as q13 } from './quizzes/13-bem-methodology-quiz';
+import { quiz as q14 } from './quizzes/14-http-protocol-quiz';
+import { quiz as q15 } from './quizzes/15-performance-vitals-quiz';
 
 export const quizzes = [
-  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12,
-  ...Array.from({ length: 9 }, (_, i) => ({
-    id: `web-q${i + 13}`,
-    title: `Web Core Quiz ${i + 13}`,
+  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15,
+  ...Array.from({ length: 6 }, (_, i) => ({
+    id: `web-q${i + 16}`,
+    title: `Web Core Quiz ${i + 16}`,
     questions: [],
     passingScore: 70
   }))
