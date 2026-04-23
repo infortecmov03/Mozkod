@@ -16,19 +16,10 @@ import { lesson as l15 } from './theory/15-web-performance';
 import { lesson as l16 } from './theory/16-seguranca-web';
 import { lesson as l17 } from './theory/17-pwa-basics';
 import { lesson as l18 } from './theory/18-devtools-inspecao';
-
-const remainingTitles = [
-  "Tipografia e Web Fonts Otimizadas",
-  "Layouts Flexíveis com Container Queries",
-  "Fronteira com JavaScript (DOM Intro)"
-];
+import { lesson as l19 } from './theory/19-tipografia-performance';
+import { lesson as l20 } from './theory/20-container-queries';
+import { lesson as l21 } from './theory/21-dom-intro';
 
 export const lessons = [
-  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18,
-  ...remainingTitles.map((title, i) => ({
-    id: `web-t${i + 19}`,
-    title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🌐 Web Core: ${title}</h2><p>Conteúdo em desenvolvimento focado em técnicas avançadas de interface moderna.</p></div>`,
-    quizId: `web-q${i + 19}`
-  }))
+  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20, l21
 ];

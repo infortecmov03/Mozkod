@@ -26,34 +26,34 @@ export const practice = {
     exerciseHTTP, 
     exercisePerf,
     {
-      id: "web-p16-csp",
+      id: "web-p19-typo",
       language: "html",
-      title: "Laboratório: Implementação de CSP",
-      description: "Proteja o site contra injeção de scripts.",
-      statement: "Adicione uma meta tag CSP que permita scripts apenas do próprio domínio ('self').",
-      template: "<!-- Adicione a meta CSP aqui -->",
-      detailedExplanation: "<p>Utilize o atributo http-equiv='Content-Security-Policy'.</p>",
-      objectives: [{ id: "obj1", description: "Configurar CSP self", test: "default-src 'self'" }]
+      title: "Laboratório: Otimização de Fontes",
+      description: "Implemente carregamento de fontes performático.",
+      statement: "No bloco style, defina uma @font-face que utilize 'font-display: swap'.",
+      template: "<style>\n  @font-face {\n    font-family: 'Elite';\n    /* Adicione aqui */\n  }\n</style>",
+      detailedExplanation: "<p>O swap garante que o texto não desapareça durante o carregamento.</p>",
+      objectives: [{ id: "obj1", description: "Usar font-display: swap", test: "font-display: swap" }]
     },
     {
-      id: "web-p17-pwa",
+      id: "web-p20-cq",
       language: "html",
-      title: "Laboratório: Configuração de PWA",
-      description: "Torne o seu site instalável.",
-      statement: "Crie um link para o ficheiro 'manifest.json' na seção head.",
-      template: "<head>\n  <!-- Vincule o manifesto aqui -->\n</head>",
-      detailedExplanation: "<p>PWAs exigem um link rel='manifest'.</p>",
-      objectives: [{ id: "obj1", description: "Vincular manifest.json", test: "rel=\"manifest\"" }]
+      title: "Laboratório: Container Queries na Prática",
+      description: "Crie um componente autossuficiente.",
+      statement: "Defina o container-type como inline-size no elemento .card-parent.",
+      template: "<style>\n  .card-parent {\n    /* Defina aqui */\n  }\n</style>",
+      detailedExplanation: "<p>Isto permite que os filhos reajam ao tamanho do card.</p>",
+      objectives: [{ id: "obj1", description: "Configurar container-type", test: "container-type: inline-size" }]
     },
     {
-      id: "web-p18-devtools",
+      id: "web-p21-dom",
       language: "html",
-      title: "Laboratório: Auditoria DevTools",
-      description: "Identifique falhas visuais via inspeção.",
-      statement: "Encontre a propriedade que define a cor do fundo no editor abaixo e mude para 'black'.",
-      template: "<style>\n  body { background-color: white; }\n</style>",
-      detailedExplanation: "<p>Este exercício simula a inspeção de elementos e alteração de propriedades no painel Elements.</p>",
-      objectives: [{ id: "obj1", description: "Mudar fundo para preto", test: "background-color: black" }]
+      title: "Laboratório: O Primeiro Gancho JS",
+      description: "Prepare o HTML para o JavaScript.",
+      statement: "Crie um botão com o ID 'action-trigger' para que possamos selecioná-lo no futuro.",
+      template: "<button id=\"\">Clique aqui</button>",
+      detailedExplanation: "<p>IDs são os endereços que o JavaScript usa para encontrar elementos.</p>",
+      objectives: [{ id: "obj1", description: "Definir o ID correto", test: "id=\"action-trigger\"" }]
     }
   ],
   css: [exerciseCSS1, exerciseCSS2, exerciseFlex, exerciseGrid, exerciseResp, exerciseBEM]
