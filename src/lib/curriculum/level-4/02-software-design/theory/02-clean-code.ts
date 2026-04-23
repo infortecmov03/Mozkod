@@ -21,7 +21,7 @@ export const lesson: TheoryLesson = {
           <li><strong>Funções são Verbos:</strong> <code>calculateTotal()</code>, <code>validateEmail()</code>.</li>
         </ul>
 
-        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">2. Funções de Elite</h3>
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">2. Funções de Elite (O Poder do Um)</h3>
         <p class="text-sm">Funções devem ser pequenas e fazer <strong>apenas uma coisa</strong>. Se uma função tem mais de 20 linhas ou 3 níveis de indentação, ela deve ser dividida.</p>
         <div class="bg-black/40 p-4 rounded-xl border border-indigo-500/20 shadow-inner">
           <h4 class="text-xs font-bold text-indigo-400 mb-2">O Princípio da Transparência:</h4>
@@ -32,10 +32,11 @@ export const lesson: TheoryLesson = {
         <p class="text-sm leading-relaxed">
           Refatorar não é mudar o que o código faz, mas sim como ele é estruturado. Técnicas Master:
           <br/>- <b>Extract Method:</b> Mover um bloco de código complexo para uma função com nome claro.
-          <br/>- <b>Replace Conditional with Polymorphism:</b> Eliminar <code>if/else</code> gigantes usando classes derivadas.
+          <br/>- <b>Replace Conditional with Polymorphism:</b> Eliminar <code>if/else</code> gigantes usando classes derivadas ou o Strategy Pattern.
           <br/>- <b>Guard Clauses:</b> Retornar cedo (Early Return) para evitar aninhamento profundo de <code>if</code>.
         </p>
       </div>
     </div>
-  `
+  `,
+  quizId: "des-q2-master"
 };

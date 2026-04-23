@@ -1,14 +1,16 @@
 import type { PracticeExercise } from '../../types';
+import { exercise as p1 } from './laboratory/01-solid-srp-lab';
+import { exercise as p2 } from './laboratory/02-clean-code-lab';
 
-// Gerador de laboratórios de design para os 21 tópicos
+// Gerador para os restantes labs enquanto são aprofundados individualmente
 const generateDesignLab = (idNum: number, title: string, testStr: string) => ({
   id: `des-p${idNum}`,
   language: "typescript",
-  title: `Laboratório: ${title}`,
-  description: "Implementação de padrões e princípios de design.",
-  statement: `Aplique o conceito de ${title} no editor.`,
-  template: `// Implemente ${title}\n`,
-  detailedExplanation: `<div class='space-y-4'><h3>🏗️ Arquitetura de Código</h3><p>O objetivo é criar uma estrutura que respeite o padrão ${title}.</p></div>`,
+  title: `Laboratório Master: ${title}`,
+  description: "Implementação de padrões e princípios de design de alta fidelidade.",
+  statement: `Aplique o conceito de ${title} no editor utilizando TypeScript.`,
+  template: `// Implemente ${title} (Arquitetura Master)\n`,
+  detailedExplanation: `<div class='space-y-4'><h3>🏗️ Engenharia de Design</h3><p>O objetivo é criar uma estrutura que respeite o padrão ${title} com segurança de tipos.</p></div>`,
   objectives: [{ id: "obj1", description: `Implementar ${title}`, test: testStr }]
 });
 
@@ -31,5 +33,8 @@ const tests = [
 ];
 
 export const practice = {
-  typescript: titles.map((title, i) => generateDesignLab(i + 1, title, tests[i]))
+  typescript: [
+    p1, p2,
+    ...titles.slice(2).map((title, i) => generateDesignLab(i + 3, title, tests[i + 2]))
+  ]
 };
