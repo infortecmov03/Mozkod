@@ -9,6 +9,8 @@ import { exercise as p5js } from './laboratory/javascript/05-loops';
 import { exercise as p6js } from './laboratory/javascript/06-funcoes';
 import { exercise as p7js } from './laboratory/javascript/07-arrays';
 import { exercise as p8js } from './laboratory/javascript/08-objetos';
+import { exercise as p9js } from './laboratory/javascript/09-recursao';
+import { exercise as p10js } from './laboratory/javascript/10-poo';
 
 // Python Variants
 import { exercise as p1py } from './laboratory/python/01-variaveis';
@@ -19,6 +21,8 @@ import { exercise as p5py } from './laboratory/python/05-loops';
 import { exercise as p6py } from './laboratory/python/06-funcoes';
 import { exercise as p7py } from './laboratory/python/07-arrays';
 import { exercise as p8py } from './laboratory/python/08-dicionarios';
+import { exercise as p9py } from './laboratory/python/09-recursao';
+import { exercise as p10py } from './laboratory/python/10-poo';
 
 // Java Variants
 import { exercise as p1jv } from './laboratory/java/01-variaveis';
@@ -30,10 +34,10 @@ import { exercise as p2cp } from './laboratory/cpp/02-operadores';
 
 export const practice = {
   javascript: [
-    p1js, p2js, p3js, p4js, p5js, p6js, p7js, p8js
+    p1js, p2js, p3js, p4js, p5js, p6js, p7js, p8js, p9js, p10js
   ],
   python: [
-    p1py, p2py, p3py, p4py, p5py, p6py, p7py, p8py
+    p1py, p2py, p3py, p4py, p5py, p6py, p7py, p8py, p9py, p10py
   ],
   java: [
     p1jv, p2jv
