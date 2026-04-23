@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -56,7 +55,7 @@ export function MissionBriefing({
       </div>
 
       {practice.youtubeVideoId && (
-        <div className="mb-6 aspect-video w-full overflow-hidden rounded-2xl border border-white/5 bg-black/40 group relative">
+        <div className="mb-6 aspect-video w-full overflow-hidden rounded-2xl border border-white/5 bg-black/40 group relative shrink-0">
            <iframe 
             src={`https://www.youtube.com/embed/${practice.youtubeVideoId}?rel=0&modestbranding=1`}
             title={practice.title}

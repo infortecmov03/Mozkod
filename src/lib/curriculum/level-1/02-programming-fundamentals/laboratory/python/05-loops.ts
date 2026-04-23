@@ -26,10 +26,10 @@ export const exercise: PracticeExercise = {
 
       <p class="text-xs">
         <strong>Instruções de Construção:</strong>
-        <br/>1. Cria <code>total = 0</code>.
+        <br/>1. Cria a variável <code>total = 0</code>.
         <br/>2. Inicia o loop com <code>for i in range(1, 6):</code>.
-        <br/>3. Dentro do loop, usa <code>total += i</code> para acumular.
-        <br/>4. Exibe o resultado final com <code>print</code>.
+        <br/>3. Dentro do loop, usa <code>total += i</code> para acumular o valor (não esqueças a indentação!).
+        <br/>4. Exibe o resultado final com <code>print(total)</code>.
       </p>
     </div>
   `,

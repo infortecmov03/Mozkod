@@ -5,7 +5,7 @@ export const exercise: PracticeExercise = {
   language: "javascript",
   title: "Missão: O Contador Automático",
   description: "Aprenda a automatizar tarefas repetitivas usando loops.",
-  statement: "Crie um loop que some os números de 1 a 5 e exiba o total.",
+  statement: "Crie um loop que some os números de 1 a 5 e exiba o total no terminal.",
   isProjectPart: true,
   template: ``,
   youtubeVideoId: "8hly31xKli0",
@@ -30,8 +30,8 @@ export const exercise: PracticeExercise = {
         <br/>1. Cria a variável <code>total</code> começando em 0.
         <br/>2. Inicia o loop <code>for</code> com <code>i = 1</code>.
         <br/>3. A condição deve ser <code>i <= 5</code>.
-        <br/>4. Dentro do loop, soma o valor de <code>i</code> ao <code>total</code>.
-        <br/>5. Exibe o <code>total</code> final no terminal.
+        <br/>4. Dentro do loop, soma o valor de <code>i</code> ao <code>total</code> (Dica: use +=).
+        <br/>5. Exibe o <code>total</code> final no terminal usando <code>console.log</code>.
       </p>
     </div>
   `,
