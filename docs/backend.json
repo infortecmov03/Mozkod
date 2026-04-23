@@ -6,14 +6,13 @@
       "description": "Dados do utilizador e estatísticas de aprendizagem",
       "type": "object",
       "properties": {
-        "displayName": { "type": "string" },
+        "display_name": { "type": "string" },
         "email": { "type": "string" },
-        "avatarUrl": { "type": "string" },
-        "preferredLanguage": { "type": "string", "default": "pt" },
-        "preferredTheme": { "type": "string", "default": "system" },
-        "totalPoints": { "type": "number", "default": 0 },
+        "avatar_url": { "type": "string" },
+        "preferred_language": { "type": "string", "default": "pt" },
+        "total_points": { "type": "number", "default": 0 },
         "streak": { "type": "number", "default": 0 },
-        "lastActive": { "type": "string", "format": "date-time" }
+        "created_at": { "type": "string", "format": "date-time" }
       }
     },
     "LessonProgress": {
@@ -21,63 +20,28 @@
       "description": "Progresso em lições e exercícios",
       "type": "object",
       "properties": {
-        "levelId": { "type": "number" },
-        "kaId": { "type": "string" },
-        "lessonId": { "type": "string" },
-        "lessonType": { "type": "string", "enum": ["theory", "exercise"] },
+        "user_id": { "type": "string" },
+        "level_id": { "type": "number" },
+        "ka_id": { "type": "string" },
+        "lesson_id": { "type": "string" },
+        "lesson_type": { "type": "string", "enum": ["theory", "exercise"] },
         "completed": { "type": "boolean", "default": false },
-        "completedAt": { "type": "string", "format": "date-time" },
-        "quizPassed": { "type": "boolean", "default": false },
-        "quizScore": { "type": "number" },
-        "quizAttempts": { "type": "number", "default": 0 },
-        "lastCode": { "type": "string" }
-      }
-    },
-    "QuizAttempt": {
-      "title": "Quiz Attempt",
-      "description": "Histórico de tentativas de quiz",
-      "type": "object",
-      "properties": {
-        "quizId": { "type": "string" },
-        "lessonId": { "type": "string" },
-        "score": { "type": "number" },
-        "passed": { "type": "boolean" },
-        "answers": { "type": "object" },
-        "attemptedAt": { "type": "string", "format": "date-time" }
-      }
-    },
-    "Certificate": {
-      "title": "Certificate",
-      "description": "Certificados emitidos",
-      "type": "object",
-      "properties": {
-        "levelId": { "type": "number" },
-        "levelTitle": { "type": "string" },
-        "kaId": { "type": "string" },
-        "certificateUrl": { "type": "string" },
-        "issuedAt": { "type": "string", "format": "date-time" }
+        "completed_at": { "type": "string", "format": "date-time" },
+        "quiz_passed": { "type": "boolean", "default": false },
+        "quiz_score": { "type": "number" },
+        "last_code": { "type": "string" }
       }
     }
   },
   "auth": {
-    "providers": ["google", "password"]
+    "providers": ["google", "github", "password", "email"]
   },
   "firestore": {
-    "/users/{userId}": {
-      "schema": "UserProfile",
-      "description": "Documento raiz do perfil do usuário"
+    "/profiles/{userId}": {
+      "schema": "UserProfile"
     },
-    "/users/{userId}/progress/{lessonId}": {
-      "schema": "LessonProgress",
-      "description": "Sub-coleção para progresso em lições"
-    },
-    "/users/{userId}/quiz_attempts/{attemptId}": {
-      "schema": "QuizAttempt",
-      "description": "Sub-coleção para tentativas de quiz"
-    },
-    "/users/{userId}/certificates/{certId}": {
-      "schema": "Certificate",
-      "description": "Sub-coleção para certificados conquistados"
+    "/user_lesson_progress/{progressId}": {
+      "schema": "LessonProgress"
     }
   }
 }
