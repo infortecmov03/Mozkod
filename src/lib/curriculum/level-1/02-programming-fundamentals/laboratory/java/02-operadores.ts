@@ -1,20 +1,34 @@
-import type { PracticeExercise } from '../../../../types';
+import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
   id: "pf-p2-java",
   language: "java",
-  title: "Lab Java: Operadores e Casting",
-  description: "Cálculos matemáticos com tipagem estrita.",
-  statement: "Calcule a média de 'nota1' (15) e 'nota2' (10) e guarde no double 'media'.",
+  title: "Lab Java: Casting e Tipagem Estrita",
+  description: "Cálculos matemáticos com segurança de tipos.",
+  statement: "Calcule a média de dois inteiros garantindo um resultado decimal.",
   template: `public class Main {
     public static void main(String[] args) {
-        int nota1 = 15;
-        int nota2 = 10;
-        double media = ; // Calcule aqui
+        int a = 15;
+        int b = 10;
+        
+        // Calcule a média. Dica: use 2.0 para evitar a divisão inteira!
+        double media = ;
+        
+        System.out.println(media);
     }
 }`,
-  detailedExplanation: "<h3>☕ Divisão em Java</h3><p>Para obter um resultado decimal (double) a partir de inteiros, lembre-se de usar pelo menos um número decimal na operação (ex: 2.0) para evitar a divisão inteira.</p>",
+  detailedExplanation: `
+    <div class="space-y-4">
+      <h3 class="text-xl font-bold text-primary">☕ O Rigor do Java</h3>
+      <p>Em Java, se dividires um <code>int</code> por outro <code>int</code>, o resultado será um <code>int</code> (a parte decimal é perdida).</p>
+      <p class="text-xs">Para obter 12.5 em vez de 12, deves garantir que um dos números na divisão seja um <code>double</code>.</p>
+    </div>
+  `,
   objectives: [
-    { id: "obj1", description: "Média deve resultar em 12.5", test: "media = (nota1 + nota2) / 2.0" }
+    {
+      id: "java_div",
+      description: "Calcular média dividindo por 2.0.",
+      test: "/ 2.0"
+    }
   ]
 };
