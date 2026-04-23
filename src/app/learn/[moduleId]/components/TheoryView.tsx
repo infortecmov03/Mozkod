@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, XCircle, AlertCircle, Sparkles, Youtube, ChevronRight } from "lucide-react";
+import { CheckCircle2, XCircle, AlertCircle, Sparkles, Youtube, ChevronRight, RefreshCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ export function TheoryView({ theory, quiz, isCompleted, nextLessonId, onComplete
   const router = useRouter();
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
   const [validated, setValidated] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setSelectedAnswers({});
@@ -44,17 +45,19 @@ export function TheoryView({ theory, quiz, isCompleted, nextLessonId, onComplete
     setValidated(true);
 
     if (scorePercent >= quiz.passingScore) {
-      toast.success(`Parabéns! Acertaste ${correctCount}/${quiz.questions.length} questões.`);
+      setIsSubmitting(true);
+      toast.success(`Excelente! Acertaste ${correctCount}/${quiz.questions.length} questões.`);
       await onComplete(Math.round(scorePercent));
+      setIsSubmitting(false);
     } else {
-      toast.error(`Ainda existem erros. Analisa as dicas abaixo e ajusta as tuas respostas.`);
+      toast.error(`Ainda existem erros (${correctCount}/${quiz.questions.length}). Analisa as dicas e ajusta as tuas respostas.`);
     }
   };
 
   const selectAnswer = (questionId: string, optionIndex: number) => {
     if (isCompleted) return;
     setSelectedAnswers(prev => ({ ...prev, [questionId]: optionIndex }));
-    if (validated) setValidated(false);
+    // Removido o reset do validated para manter os ícones visíveis enquanto retifica
   };
 
   return (
@@ -91,8 +94,9 @@ export function TheoryView({ theory, quiz, isCompleted, nextLessonId, onComplete
 
           <div className="space-y-6">
             {quiz.questions.map((q, qIdx) => {
-              const isIncorrect = validated && selectedAnswers[q.id] !== q.correctAnswer;
-              const isCorrect = validated && selectedAnswers[q.id] === q.correctAnswer;
+              const isSelected = selectedAnswers[q.id] !== undefined;
+              const isIncorrect = validated && isSelected && selectedAnswers[q.id] !== q.correctAnswer;
+              const isCorrect = validated && isSelected && selectedAnswers[q.id] === q.correctAnswer;
               
               return (
               <Card key={q.id} className={cn(
@@ -105,7 +109,7 @@ export function TheoryView({ theory, quiz, isCompleted, nextLessonId, onComplete
                        <h4 className="text-base md:text-lg font-bold leading-tight">
                           <span className="text-primary mr-2">{qIdx + 1}.</span> {q.question}
                        </h4>
-                       {validated && (
+                       {validated && isSelected && (
                           isCorrect 
                             ? <CheckCircle2 className="w-6 h-6 text-green-500 shrink-0" />
                             : <XCircle className="w-6 h-6 text-destructive shrink-0" />
@@ -118,16 +122,18 @@ export function TheoryView({ theory, quiz, isCompleted, nextLessonId, onComplete
                       className="grid grid-cols-1 md:grid-cols-2 gap-3"
                     >
                       {q.options.map((opt, idx) => {
-                        const isSelected = selectedAnswers[q.id] === idx;
+                        const isThisOptionSelected = selectedAnswers[q.id] === idx;
                         return (
                           <div key={idx} className={cn(
                             "flex items-center space-x-3 p-4 rounded-2xl border transition-all cursor-pointer",
-                            isSelected ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" : "border-white/5 bg-background/20"
+                            isThisOptionSelected ? "border-primary bg-primary/10 shadow-lg shadow-primary/10" : "border-white/5 bg-background/20",
+                            isThisOptionSelected && validated && idx !== q.correctAnswer && "border-destructive bg-destructive/10"
                           )} onClick={() => selectAnswer(q.id, idx)}>
                             <RadioGroupItem value={idx.toString()} id={`q-${q.id}-opt-${idx}`} className="sr-only" />
                             <div className={cn(
                               "w-6 h-6 rounded-full border-2 flex items-center justify-center text-[10px] font-bold shrink-0",
-                              isSelected ? "bg-primary border-primary text-white" : "border-white/20 text-muted-foreground"
+                              isThisOptionSelected ? "bg-primary border-primary text-white" : "border-white/20 text-muted-foreground",
+                              isThisOptionSelected && validated && idx !== q.correctAnswer && "bg-destructive border-destructive"
                             )}>
                               {String.fromCharCode(65 + idx)}
                             </div>
@@ -165,8 +171,12 @@ export function TheoryView({ theory, quiz, isCompleted, nextLessonId, onComplete
                     )}
                   </div>
                ) : (
-                 <Button onClick={handleVerifyQuiz} disabled={Object.keys(selectedAnswers).length < quiz.questions.length} className="w-full max-w-md h-16 rounded-[2.5rem] font-black text-lg shadow-2xl shadow-primary/30">
-                   {validated ? 'REAVALIAR RESPOSTAS' : 'VERIFICAR RESPOSTAS'}
+                 <Button 
+                    onClick={handleVerifyQuiz} 
+                    disabled={Object.keys(selectedAnswers).length < quiz.questions.length || isSubmitting} 
+                    className="w-full max-w-md h-16 rounded-[2.5rem] font-black text-lg shadow-2xl shadow-primary/30 gap-2"
+                 >
+                   {validated ? <><RefreshCcw className="w-5 h-5" /> REAVALIAR RESPOSTAS</> : 'VERIFICAR RESPOSTAS'}
                  </Button>
                )}
             </div>
