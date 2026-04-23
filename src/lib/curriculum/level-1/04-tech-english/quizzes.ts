@@ -1,5 +1,5 @@
 
-import { quiz as q1 } from './quizzes/01-basic-vocab-quiz';
+import { quiz1 as q1 } from './quizzes/01-basic-vocab-quiz';
 
 export const quizzes = [
   q1,
@@ -9,9 +9,9 @@ export const quizzes = [
     questions: [
       {
         id: "q_auto",
-        question: "Validation question for topic " + (i + 2),
-        options: ["Correct Option", "Incorrect", "Wrong"],
-        correctAnswer: 0
+        question: "Qual o termo em Inglês para 'Pedido' (Browser -> Server)?",
+        options: ["Response", "Request", "Connection", "Header"],
+        correctAnswer: 1
       }
     ],
     passingScore: 70
