@@ -1,9 +1,11 @@
 import { quiz as q1 } from './quizzes/01-sdlc-mastery-quiz';
 import { quiz as q2 } from './quizzes/02-agile-mastery-quiz';
+import { quiz as q3 } from './quizzes/03-scrum-mastery-quiz';
+import { quiz as q4 } from './quizzes/04-kanban-mastery-quiz';
 
-// Fallback para quizzes avançados 3-21 mantendo o padrão de elite
+// Fallback para quizzes avançados 5-21 mantendo o padrão de elite
 const generateAdvancedQuiz = (idNum: number) => ({
-  id: `se-q${idNum}`,
+  id: `se-q${idNum}-master`,
   title: `Quiz Técnico Processos Tópico ${idNum}`,
   questions: [
     { id: "q1", question: "Qual o impacto deste processo na qualidade?", options: ["Melhora a manutenibilidade", "Reduz o tempo de build", "Nenhum impacto"], correctAnswer: 0 },
@@ -17,7 +19,6 @@ const generateAdvancedQuiz = (idNum: number) => ({
 });
 
 export const quizzes = [
-  q1,
-  q2,
-  ...Array.from({ length: 19 }, (_, i) => generateAdvancedQuiz(i + 3))
+  q1, q2, q3, q4,
+  ...Array.from({ length: 17 }, (_, i) => generateAdvancedQuiz(i + 5))
 ];

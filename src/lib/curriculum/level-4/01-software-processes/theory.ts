@@ -1,5 +1,7 @@
 import { lesson as l1 } from './theory/01-sdlc';
 import { lesson as l2 } from './theory/02-agile-manifesto';
+import { lesson as l3 } from './theory/03-scrum-framework';
+import { lesson as l4 } from './theory/04-kanban-lean';
 
 const titles = [
   "SDLC Master: Arquitetura do Ciclo de Vida",
@@ -28,11 +30,13 @@ const titles = [
 export const lessons = titles.map((title, i) => {
   if (i === 0) return { ...l1, title };
   if (i === 1) return { ...l2, title };
+  if (i === 2) return { ...l3, title };
+  if (i === 3) return { ...l4, title };
   
   return {
     id: `se-t${i + 1}`,
     title: title,
     content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>⚙️ Software Processes: ${title}</h2><p>Estudo aprofundado dos processos industriais de engenharia de software para escala global.</p></div>`,
-    quizId: `se-q${i + 1}`
+    quizId: `se-q${i + 1}-master`
   };
 });
