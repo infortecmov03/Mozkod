@@ -3,9 +3,9 @@ import { lesson as l2 } from './theory/02-css-seletores';
 import { lesson as l3 } from './theory/03-css-box-model';
 import { lesson as l4 } from './theory/04-css-flexbox';
 import { lesson as l5 } from './theory/05-css-grid';
+import { lesson as l6 } from './theory/06-responsividade';
 
 const titles = [
-  "Responsividade e Media Queries",
   "Formulários e Captura de Dados",
   "Publicação: Levando o Teu Site ao Ar",
   "Semântica e SEO: Significado na Web",
@@ -24,11 +24,11 @@ const titles = [
 ];
 
 export const lessons = [
-  l1, l2, l3, l4, l5,
+  l1, l2, l3, l4, l5, l6,
   ...titles.map((title, i) => ({
-    id: `web-t${i + 6}`,
+    id: `web-t${i + 7}`,
     title: title,
     content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🌐 Web Core: ${title}</h2><p>Domínio das tecnologias fundamentais da interface web moderna, focando em performance, acessibilidade e design responsivo.</p></div>`,
-    quizId: `web-q${i + 6}`
+    quizId: `web-q${i + 7}`
   }))
 ];

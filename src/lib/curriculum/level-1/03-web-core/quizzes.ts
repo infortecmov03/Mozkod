@@ -3,15 +3,10 @@ import { quiz as q2 } from './quizzes/02-css-selectors-quiz';
 import { quiz as q3 } from './quizzes/03-box-model-quiz';
 import { quiz as q4 } from './quizzes/04-flexbox-quiz';
 import { quiz as q5 } from './quizzes/05-grid-quiz';
+import { quiz as q6 } from './quizzes/06-responsividade-quiz';
 
 export const quizzes = [
-  q1, q2, q3, q4, q5,
-  {
-    id: "web-q6",
-    title: "Quiz: Responsividade",
-    questions: [{ id: "q1", question: "Qual regra CSS permite adaptar o site ao ecrã?", options: ["@media", "@import", "@font-face"], correctAnswer: 0 }],
-    passingScore: 70
-  },
+  q1, q2, q3, q4, q5, q6,
   {
     id: "web-q7",
     title: "Quiz: Formulários",
