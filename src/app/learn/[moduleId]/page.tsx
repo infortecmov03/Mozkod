@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
@@ -10,9 +9,10 @@ import { useParams, useRouter } from "next/navigation";
 import { useProgress } from "@/contexts/ProgressContext";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, LayoutGrid, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 // Componentes Modulares
 import { LearnHeader } from "./components/LearnHeader";
@@ -118,7 +118,6 @@ export default function LearnPage() {
       // Simulação de Terminal Inteligente
       let logs = "";
       if (practice?.language === 'javascript' || practice?.language === 'python') {
-        // Tenta encontrar atribuições simples: var = "valor"
         const vars: Record<string, string> = {};
         const assignRegex = /(?:const|let|var|)\s*(\w+)\s*=\s*["'`](.*?)["'`]/g;
         let match;
@@ -126,7 +125,6 @@ export default function LearnPage() {
           vars[match[1]] = match[2];
         }
 
-        // Tenta encontrar console.log ou print
         const logRegex = /(?:console\.log|print)\s*\(\s*(\w+)\s*\)/g;
         while ((match = logRegex.exec(current)) !== null) {
           const varName = match[1];
@@ -137,7 +135,6 @@ export default function LearnPage() {
           }
         }
 
-        // Se não encontrou variáveis, tenta strings diretas
         if (!logs) {
           const directLogRegex = /(?:console\.log|print)\s*\(\s*["'`](.*?)["'`]\s*\)/g;
           while ((match = directLogRegex.exec(current)) !== null) {
@@ -171,20 +168,29 @@ export default function LearnPage() {
   const { ka } = data;
 
   const LessonList = (
-    <div className="flex flex-col gap-1 p-4 overflow-y-auto max-h-[70vh] scroll-container">
+    <div className="flex flex-col gap-1 p-4 pb-32 overflow-y-auto max-h-[80vh] scroll-container">
+      <Link href="/modules" className="mb-4">
+        <Button variant="outline" className="w-full justify-start gap-2 border-primary/20 bg-primary/5 hover:bg-primary/10 rounded-xl h-12 font-bold">
+          <LayoutGrid className="w-4 h-4 text-primary" /> Voltar aos Módulos
+        </Button>
+      </Link>
+
+      <div className="text-[10px] font-black uppercase text-muted-foreground/60 mb-2 px-2 tracking-widest">Aulas Teóricas</div>
       {ka.theory.map((l) => (
         <Link key={l.id} href={`/learn/${l.id}`} className={cn(
-          "flex items-center justify-between p-3 rounded-xl text-sm border transition-all",
+          "flex items-center justify-between p-3 rounded-xl text-sm border transition-all mb-1",
           lessonId === l.id ? "bg-primary/20 border-primary/30 text-primary font-bold" : "bg-card/40 border-transparent hover:bg-card/60"
         )}>
           <span className="truncate mr-2">{l.title}</span>
           {isCompleted(l.id) && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />}
         </Link>
       ))}
+
+      <div className="text-[10px] font-black uppercase text-muted-foreground/60 mt-4 mb-2 px-2 tracking-widest">Laboratórios Práticos</div>
       {Object.entries(ka.practice).map(([lang, exercises]) => (
         exercises.map(ex => (
           <Link key={ex.id} href={`/learn/${ex.id}`} className={cn(
-            "flex items-center justify-between p-3 rounded-xl text-sm border transition-all",
+            "flex items-center justify-between p-3 rounded-xl text-sm border transition-all mb-1",
             lessonId === ex.id ? "bg-accent/20 border-accent/30 text-accent font-bold" : "bg-card/40 border-transparent hover:bg-card/60"
           )}>
             <span className="truncate mr-2 flex items-center gap-2">
