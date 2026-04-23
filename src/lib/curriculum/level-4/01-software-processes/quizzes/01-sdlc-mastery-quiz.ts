@@ -3,73 +3,69 @@ import type { Quiz } from '../../../types';
 export const quiz: Quiz = {
   id: "se-q1-master",
   title: "Quiz: Engenharia de SDLC e Gestão de Risco",
-  passingScore: 80,
+  passingScore: 75,
   questions: [
     {
-      id: "q1",
-      question: "Qual o custo relativo estimado de corrigir um erro de requisito na fase de Manutenção em comparação à fase de Definição?",
+      id: "q1_1",
+      question: "Qual o impacto financeiro de corrigir um bug na fase de manutenção comparado à fase de requisitos?",
       options: [
-        "O mesmo custo",
-        "Até 10 vezes mais caro",
-        "Até 100 vezes mais caro ou mais",
-        "Metade do preço"
-      ],
-      correctAnswer: 2,
-      explanation: "A correção tardia exige refazer design, código e testes, além de possivelmente quebrar integrações existentes."
-    },
-    {
-      id: "q2",
-      question: "Qual a diferença fundamental entre Verificação e Validação?",
-      options: [
-        "São sinônimos técnicos",
-        "Verificação olha para as regras; Validação olha para as necessidades do utilizador",
-        "Validação é automática; Verificação é manual",
-        "Verificação ocorre no início; Validação apenas no fim"
+        "O custo é o mesmo",
+        "O custo na manutenção pode ser até 100 vezes superior",
+        "A fase de requisitos é mais cara",
+        "A manutenção não tem custos se o código for limpo"
       ],
       correctAnswer: 1,
-      explanation: "Verificação: 'Estamos a fazer o sistema corretamente?'. Validação: 'Estamos a fazer o sistema certo?'."
+      explanation: "A correção tardia exige retrabalho em todas as fases anteriores (documentação, design, código e testes) e aumenta o risco de regressão."
     },
     {
-      id: "q3",
-      question: "A manutenção do tipo 'Perfeitiva' foca em:",
+      id: "q1_2",
+      question: "No contexto de V&V, o que define a 'Validação'?",
       options: [
-        "Reparar bugs críticos",
-        "Adaptar o software a uma nova base de dados",
-        "Melhorar a estrutura interna do código sem alterar a sua função (Refactoring)",
-        "Prevenir ataques de hackers"
+        "Verificar se o código não tem erros de sintaxe",
+        "Garantir que o software construído atende às necessidades reais do cliente",
+        "Validar se a base de dados está online",
+        "Seguir rigorosamente o manual de estilo"
       ],
-      correctAnswer: 2
+      correctAnswer: 1,
+      explanation: "Validação responde à pergunta: 'Estamos a fazer o sistema certo?'."
     },
     {
-      id: "q4",
-      question: "Em qual cenário o modelo Waterfall (Cascata) ainda é considerado uma escolha técnica de elite?",
+      id: "q1_3",
+      question: "Qual modelo de ciclo de vida é mais indicado para sistemas com riscos técnicos desconhecidos no início?",
+      options: ["Waterfall", "Modelo Espiral", "Modelo em V", "Linear Puro"],
+      correctAnswer: 1,
+      explanation: "O Modelo Espiral foca na avaliação de riscos em cada iteração, permitindo mitigar incertezas antes de grandes investimentos."
+    },
+    {
+      id: "q1_4",
+      question: "A manutenção 'Adaptativa' ocorre quando:",
       options: [
-        "Startups com requisitos voláteis",
-        "Projetos de software para sistemas críticos de hardware com requisitos fixos e regulados",
-        "Desenvolvimento de aplicações web modernas",
-        "Sistemas baseados em IA generativa"
+        "Existe um bug crítico em produção",
+        "O ambiente externo (SO, Hardware, Cloud) muda e o software precisa de ajuste",
+        "O código é refatorado para ficar mais limpo",
+        "O utilizador esquece a senha"
       ],
       correctAnswer: 1
     },
     {
-      id: "q5",
-      question: "O 'Gargalo de Requisitos' ocorre quando:",
+      id: "q1_5",
+      question: "O que é o 'Technical Success Ratio' (TSR)?",
       options: [
-        "O programador escreve código lento",
-        "O design visual demora a ser aprovado",
-        "As necessidades do negócio não são clarificadas, paralisando o progresso da equipa",
-        "O servidor de testes cai"
+        "O número de linhas de código por dia",
+        "A probabilidade técnica de o projeto atingir os objetivos dentro das restrições",
+        "O rácio de lucro da empresa",
+        "A velocidade da internet no servidor"
       ],
-      correctAnswer: 2
+      correctAnswer: 1
     },
     {
-      id: "q6",
-      question: "Qual o principal objetivo do 'Passo de Viabilidade' no SDLC?",
+      id: "q1_6",
+      question: "Qual o perigo da fase de 'Análise' ser demasiado curta?",
       options: [
-        "Escolher a cor da interface",
-        "Avaliar se o projeto deve prosseguir com base em custo, tempo e capacidade técnica",
-        "Contratar o máximo de estagiários possível",
-        "Garantir que o site tenha 1 milhão de acessos"
+        "O programador fica sem trabalho",
+        "Desenvolver funcionalidades que ninguém vai usar ou que não resolvem o problema",
+        "O site fica com cores erradas",
+        "O computador gasta mais energia"
       ],
       correctAnswer: 1
     }

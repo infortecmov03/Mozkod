@@ -1,5 +1,6 @@
 import type { KnowledgeArea } from '../../types';
 import { lessons } from './theory';
+import { quizzes } from './quizzes';
 
 export const softwareProcesses: KnowledgeArea = {
   id: 'ka-se-processes',
@@ -8,12 +9,7 @@ export const softwareProcesses: KnowledgeArea = {
   load: '30h',
   iconName: 'Settings',
   theory: lessons,
-  quizzes: Array.from({ length: 21 }, (_, i) => ({
-    id: `se-q${i + 1}`,
-    title: `Processes Quiz ${i + 1}`,
-    questions: [],
-    passingScore: 70
-  })),
+  quizzes: quizzes,
   practice: {
     process: []
   }
