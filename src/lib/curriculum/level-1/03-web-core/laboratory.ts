@@ -8,8 +8,9 @@ import { exercise as exerciseForms } from './laboratory/html/02-formularios-lab'
 import { exercise as exerciseDeploy } from './laboratory/03-deployment-lab';
 import { exercise as exerciseSem } from './laboratory/04-semantica-lab';
 import { exercise as exerciseSVG } from './laboratory/05-svg-lab';
+import { exercise as exerciseARIA } from './laboratory/11-aria-lab';
 
 export const practice = {
-  html: [exerciseHTML1, exerciseForms, exerciseDeploy, exerciseSem, exerciseSVG],
+  html: [exerciseHTML1, exerciseForms, exerciseDeploy, exerciseSem, exerciseSVG, exerciseARIA],
   css: [exerciseCSS1, exerciseCSS2, exerciseFlex, exerciseGrid, exerciseResp]
 };

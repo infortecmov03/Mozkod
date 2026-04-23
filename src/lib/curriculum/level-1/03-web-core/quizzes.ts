@@ -8,12 +8,13 @@ import { quiz as q7 } from './quizzes/07-forms-quiz';
 import { quiz as q8 } from './quizzes/08-deployment-quiz';
 import { quiz as q9 } from './quizzes/09-semantica-seo-quiz';
 import { quiz as q10 } from './quizzes/10-svg-quiz';
+import { quiz as q11 } from './quizzes/11-aria-accessibility-quiz';
 
 export const quizzes = [
-  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10,
-  ...Array.from({ length: 11 }, (_, i) => ({
-    id: `web-q${i + 11}`,
-    title: `Web Core Quiz ${i + 11}`,
+  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11,
+  ...Array.from({ length: 10 }, (_, i) => ({
+    id: `web-q${i + 12}`,
+    title: `Web Core Quiz ${i + 12}`,
     questions: [],
     passingScore: 70
   }))
