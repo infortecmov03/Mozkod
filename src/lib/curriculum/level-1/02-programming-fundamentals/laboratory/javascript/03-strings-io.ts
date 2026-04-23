@@ -1,4 +1,3 @@
-
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
@@ -13,7 +12,7 @@ export const exercise: PracticeExercise = {
   detailedExplanation: `
     <div class="space-y-4">
       <h3 class="text-xl font-bold text-primary">📝 Higienização e Interpolação</h3>
-      <p>Muitas vezes, os utilizadores deixam espaços sem querer ao digitar. Vamos limpar isso e criar uma mensagem usando a técnica de <b>Backticks (crases)</b>.</p>
+      <p>Muitas vezes, os utilizadores deixam espaços sem querer ao digitar nomes. Vamos limpar isso e criar uma mensagem usando a técnica de <b>Backticks (crases)</b>.</p>
       
       <div class="bg-muted p-4 rounded-xl border border-white/10 space-y-2">
         <p class="text-xs font-bold text-yellow-500">A Ferramenta do Dia:</p>
@@ -28,7 +27,7 @@ export const exercise: PracticeExercise = {
         <strong>Instruções de Construção:</strong>
         <br/>1. Cria a variável <code>entrada</code> com o valor "  MozDev  " (com espaços).
         <br/>2. Cria a variável <code>user</code> usando <code>entrada.trim()</code>.
-        <br/>3. Cria a <code>mensagem</code> usando as crases ( ` ) e injeta o \${user}.
+        <br/>3. Cria a <code>mensagem</code> usando as crases ( \` ) e injeta o \${user}.
         <br/>4. Usa <code>console.log(mensagem)</code> para ver o resultado limpo.
       </p>
     </div>

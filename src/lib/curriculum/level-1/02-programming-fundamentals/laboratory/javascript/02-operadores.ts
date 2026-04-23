@@ -1,4 +1,3 @@
-
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
@@ -18,7 +17,7 @@ export const exercise: PracticeExercise = {
       <div class="bg-muted p-4 rounded-xl border border-white/10 space-y-2">
         <p class="text-xs font-bold text-yellow-500">A Ferramenta do Dia:</p>
         <p class="text-[11px] font-mono leading-relaxed">
-          <span class="text-primary">const</span> media = (10 + 20) / 2; <br/>
+          <span class="text-primary">const</span> media = (15 + 7) / 2; <br/>
           <span class="text-primary">const</span> passou = media >= 10; <br/>
           <span class="text-primary">console.log</span>(passou);
         </p>

@@ -1,4 +1,3 @@
-
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
