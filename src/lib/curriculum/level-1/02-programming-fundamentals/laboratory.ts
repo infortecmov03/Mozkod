@@ -14,6 +14,8 @@ import { exercise as p10js } from './laboratory/javascript/10-poo';
 import { exercise as p11js } from './laboratory/javascript/11-debugging-lab';
 import { exercise as p12js } from './laboratory/javascript/12-exceptions-lab';
 import { exercise as p13js } from './laboratory/javascript/13-regex-lab';
+import { exercise as p14js } from './laboratory/javascript/14-memory-stack-lab';
+import { exercise as p15js } from './laboratory/javascript/15-clean-code-lab';
 
 // Python Variants
 import { exercise as p1py } from './laboratory/python/01-variaveis';
@@ -26,6 +28,8 @@ import { exercise as p7py } from './laboratory/python/07-arrays';
 import { exercise as p8py } from './laboratory/python/08-dicionarios';
 import { exercise as p9py } from './laboratory/python/09-recursao';
 import { exercise as p10py } from './laboratory/python/10-poo';
+import { exercise as p14py } from './laboratory/python/14-memory-stack-lab';
+import { exercise as p15py } from './laboratory/python/15-clean-code-lab';
 
 // Java Variants
 import { exercise as p1jv } from './laboratory/java/01-variaveis';
@@ -37,10 +41,10 @@ import { exercise as p2cp } from './laboratory/cpp/02-operadores';
 
 export const practice = {
   javascript: [
-    p1js, p2js, p3js, p4js, p5js, p6js, p7js, p8js, p9js, p10js, p11js, p12js, p13js
+    p1js, p2js, p3js, p4js, p5js, p6js, p7js, p8js, p9js, p10js, p11js, p12js, p13js, p14js, p15js
   ],
   python: [
-    p1py, p2py, p3py, p4py, p5py, p6py, p7py, p8py, p9py, p10py
+    p1py, p2py, p3py, p4py, p5py, p6py, p7py, p8py, p9py, p10py, p14py, p15py
   ],
   java: [
     p1jv, p2jv
