@@ -1,36 +1,36 @@
-
 import type { TheoryLesson } from '../../types';
 
 export const lesson: TheoryLesson = {
   id: "eng-t1",
-  title: "Basic Computer Vocabulary",
-  youtubeVideoId: "",
+  title: "Phase 1: Basic Computer Vocabulary",
   content: `
     <div class="space-y-6">
-      <div class="bg-indigo-50 dark:bg-indigo-950 p-6 rounded-xl border border-indigo-200 dark:border-indigo-900">
+      <div class="bg-primary/5 p-6 rounded-2xl border border-primary/10 shadow-xl">
         <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
-          🇬🇧 Why English?
+          🇬🇧 Why English is the Master Language
         </h2>
         <p class="text-lg leading-relaxed">
-          O Inglês é a "língua franca" da tecnologia. Quase todas as linguagens de programação usam palavras em inglês como comandos (ex: <em>if</em>, <em>while</em>, <em>return</em>).
+          English is the <strong>lingua franca</strong> of technology. Almost every programming language, documentation, and cloud provider uses English keywords. Mastering this vocabulary is the first step to becoming a global engineer.
         </p>
       </div>
 
       <div class="grid md:grid-cols-2 gap-4">
-        <div class="bg-card p-4 rounded-lg border">
-          <h4 class="font-bold text-indigo-400">Hardware Terms</h4>
-          <ul class="text-sm mt-2 space-y-1">
-            <li><strong>Input:</strong> Entrada de dados</li>
-            <li><strong>Output:</strong> Saída de dados</li>
-            <li><strong>Storage:</strong> Armazenamento</li>
+        <div class="p-5 bg-card border rounded-2xl border-white/5 shadow-lg">
+          <h4 class="font-bold text-primary mb-3">Hardware Terms</h4>
+          <ul class="text-xs space-y-2">
+            <li><strong>Input:</strong> Data entering the system (mouse, keyboard).</li>
+            <li><strong>Output:</strong> Information leaving the system (monitor, speakers).</li>
+            <li><strong>Storage:</strong> Long-term data retention (SSD, HDD).</li>
+            <li><strong>Memory:</strong> Short-term workspace (RAM).</li>
           </ul>
         </div>
-        <div class="bg-card p-4 rounded-lg border">
-          <h4 class="font-bold text-indigo-400">Software Terms</h4>
-          <ul class="text-sm mt-2 space-y-1">
-            <li><strong>Run:</strong> Executar</li>
-            <li><strong>Bug:</strong> Erro/Falha</li>
-            <li><strong>Features:</strong> Funcionalidades</li>
+        <div class="p-5 bg-card border rounded-2xl border-white/5 shadow-lg">
+          <h4 class="font-bold text-accent mb-3">Software Terms</h4>
+          <ul class="text-xs space-y-2">
+            <li><strong>Run:</strong> To execute a program.</li>
+            <li><strong>Bug:</strong> A flaw or error in the code.</li>
+            <li><strong>Feature:</strong> A specific functionality of the app.</li>
+            <li><strong>Release:</strong> Launching a new version.</li>
           </ul>
         </div>
       </div>
