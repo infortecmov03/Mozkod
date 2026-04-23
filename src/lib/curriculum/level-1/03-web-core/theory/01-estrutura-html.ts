@@ -1,49 +1,60 @@
-
 import type { TheoryLesson } from '../../types';
 
 export const lesson: TheoryLesson = {
   id: "web-t1",
-  title: "Estrutura HTML5: O Esqueleto da Web",
-  youtubeVideoId: "",
+  title: "Estrutura HTML5: O Esqueleto de Alta Performance",
+  youtubeVideoId: "8ME9u065vD4",
   content: `
-    <div class="space-y-6">
-      <div class="bg-orange-50 dark:bg-orange-950 p-6 rounded-xl border border-orange-200 dark:border-orange-900">
-        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
-          🏗️ O que é o HTML?
+    <div class="space-y-8">
+      <div class="bg-orange-500/10 p-6 rounded-2xl border border-orange-500/20 shadow-xl">
+        <h2 class="text-2xl font-bold mb-4 flex items-center gap-2 font-headline text-orange-400">
+          🏗️ Mais que uma Linguagem de Marcação
         </h2>
         <p class="text-lg leading-relaxed">
-          O HTML (HyperText Markup Language) não é uma linguagem de programação, mas sim uma <strong>linguagem de marcação</strong>. Ele serve para dizer ao navegador o que é cada parte do site: um título, um parágrafo, ou uma imagem.
+          O HTML (HyperText Markup Language) define a estrutura de dados que o browser transforma em objetos (o DOM). Para um engenheiro, a escolha das tags dita a <strong>acessibilidade</strong>, o <strong>SEO</strong> e a velocidade de carregamento (LCP).
         </p>
       </div>
 
-      <div class="prose prose-invert max-w-none">
-        <h3>A Anatomia de uma Tag</h3>
-        <p>Tudo no HTML é feito de "tags". Uma tag geralmente tem uma abertura e um fecho:</p>
-        <div class="bg-card p-4 rounded-lg border font-code text-center text-orange-400">
-          &lt;tag&gt; Conteúdo &lt;/tag&gt;
-        </div>
-      </div>
+      <div class="space-y-6">
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">1. Semântica: Dando Significado ao Silício</h3>
+        <p>Utilizar as tags corretas permite que o Google e leitores de ecrã entendam a hierarquia da informação. Evite o "Div-itis" (uso excessivo de div).</p>
+        <ul class="grid md:grid-cols-3 gap-4">
+          <li class="bg-card p-4 rounded-xl border border-white/5">
+            <strong class="text-orange-400">header/nav:</strong> Identidade e navegação.
+          </li>
+          <li class="bg-card p-4 rounded-xl border border-white/5">
+            <strong class="text-orange-400">main/article:</strong> O conteúdo central e único.
+          </li>
+          <li class="bg-card p-4 rounded-xl border border-white/5">
+            <strong class="text-orange-400">footer:</strong> Rodapé e metadados legais.
+          </li>
+        </ul>
 
-      <div class="space-y-4">
-        <h3 class="text-xl font-bold text-primary">🏷️ Atributos de Identidade: Class e ID</h3>
-        <p>Para podermos personalizar os elementos mais tarde, usamos dois atributos fundamentais:</p>
-        
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="bg-card p-4 rounded-xl border border-white/10">
-            <h4 class="font-bold text-accent mb-2">Class (Classe)</h4>
-            <p class="text-sm">Usada para identificar um <strong>grupo</strong> de elementos que terão o mesmo estilo.</p>
-            <code class="text-[10px] block mt-2 bg-black/20 p-2 rounded">&lt;p class="texto-azul"&gt;...&lt;/p&gt;</code>
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">2. Atributos de Identidade: Class vs ID</h3>
+        <div class="flex flex-col md:flex-row gap-6">
+          <div class="flex-1 p-5 bg-muted/20 rounded-xl border border-white/5">
+            <h4 class="font-bold text-accent mb-2">Class (.)</h4>
+            <p class="text-xs text-muted-foreground">Reutilizável. Identifica um estilo ou comportamento que se repete. <br/><code>class="btn-primary"</code></p>
           </div>
-          <div class="bg-card p-4 rounded-xl border border-white/10">
-            <h4 class="font-bold text-accent mb-2">ID (Identificador)</h4>
-            <p class="text-sm">Usado para identificar um elemento <strong>único</strong> na página.</p>
-            <code class="text-[10px] block mt-2 bg-black/20 p-2 rounded">&lt;h1 id="titulo-principal"&gt;...&lt;/h1&gt;</code>
+          <div class="flex-1 p-5 bg-muted/20 rounded-xl border border-white/5">
+            <h4 class="font-bold text-primary mb-2">ID (#)</h4>
+            <p class="text-xs text-muted-foreground">Único. Identifica um elemento absoluto no documento. Vital para o JavaScript. <br/><code>id="main-form"</code></p>
           </div>
         </div>
 
-        <div class="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20 mt-4">
-          <p class="text-sm font-medium">
-            <strong>🚀 Nota Importante:</strong> Nas próximas lições, aprenderás a usar estas <strong>classes</strong> e <strong>IDs</strong> para dar cor e estilo ao teu site no módulo de <strong>CSS</strong>, e como usar o <strong>ID</strong> para criar comportamentos inteligentes no módulo de <strong>JavaScript</strong>.
+        <div class="bg-indigo-500/10 p-6 rounded-2xl border border-indigo-500/20 shadow-inner">
+          <h3 class="text-xl font-bold font-headline text-indigo-400 mb-4">🚀 O Caminho Crítico de Renderização</h3>
+          <p class="text-sm leading-relaxed">
+            O browser lê o HTML de cima para baixo. A ordem das tags no <code>&lt;head&gt;</code> (como a meta charset e o favicon) decide se o utilizador vê uma página branca por 1 segundo ou se o site aparece instantaneamente.
+          </p>
+        </div>
+
+        <div class="bg-green-500/5 p-6 rounded-2xl border border-green-500/20 mt-6">
+          <h4 class="font-bold text-green-500 mb-2 flex items-center gap-2">
+            💎 Visão Master
+          </h4>
+          <p class="text-sm leading-relaxed">
+            O HTML5 introduziu atributos como <code>loading="lazy"</code> e <code>async/defer</code> para scripts. Dominar estes atributos é o que separa um site pesado de uma aplicação de elite otimizada para o mercado moçambicano.
           </p>
         </div>
       </div>

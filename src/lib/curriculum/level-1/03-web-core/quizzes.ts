@@ -1,5 +1,5 @@
 import { quiz1 as q1 } from './quizzes/01-estrutura-html-quiz';
-import { quiz as q2 } from './theory/quizzes/02-css-seletores-quiz';
+import { quiz as q2 } from './quizzes/02-css-selectors-quiz';
 import { quiz as q3 } from './quizzes/03-box-model-quiz';
 import { quiz as q4 } from './quizzes/04-flexbox-quiz';
 
