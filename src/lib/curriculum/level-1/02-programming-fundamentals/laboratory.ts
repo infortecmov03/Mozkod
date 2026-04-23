@@ -19,6 +19,9 @@ import { exercise as p15js } from './laboratory/javascript/15-clean-code-lab';
 import { exercise as p16js } from './laboratory/javascript/16-async-lab';
 import { exercise as p17js } from './laboratory/javascript/17-json-lab';
 import { exercise as p18js } from './laboratory/javascript/18-functional-lab';
+import { exercise as p19js } from './laboratory/javascript/19-package-lab';
+import { exercise as p20js } from './laboratory/javascript/20-gc-lab';
+import { exercise as p21js } from './laboratory/javascript/21-clean-code-final-lab';
 
 // Python Variants
 import { exercise as p1py } from './laboratory/python/01-variaveis';
@@ -47,10 +50,12 @@ import { exercise as p2cp } from './laboratory/cpp/02-operadores';
 
 export const practice = {
   javascript: [
-    p1js, p2js, p3js, p4js, p5js, p6js, p7js, p8js, p9js, p10js, p11js, p12js, p13js, p14js, p15js, p16js, p17js, p18js
+    p1js, p2js, p3js, p4js, p5js, p6js, p7js, p8js, p9js, p10js, 
+    p11js, p12js, p13js, p14js, p15js, p16js, p17js, p18js, p19js, p20js, p21js
   ],
   python: [
-    p1py, p2py, p3py, p4py, p5py, p6py, p7py, p8py, p9py, p10py, p14py, p15py, p16py, p17py, p18py
+    p1py, p2py, p3py, p4py, p5py, p6py, p7py, p8py, p9py, p10py, 
+    p14py, p15py, p16py, p17py, p18py
   ],
   java: [
     p1jv, p2jv
