@@ -13,12 +13,15 @@ import { quiz as q12 } from './quizzes/12-animacoes-quiz';
 import { quiz as q13 } from './quizzes/13-bem-methodology-quiz';
 import { quiz as q14 } from './quizzes/14-http-protocol-quiz';
 import { quiz as q15 } from './quizzes/15-performance-vitals-quiz';
+import { quiz as q16 } from './quizzes/16-seguranca-web-quiz';
+import { quiz as q17 } from './quizzes/17-pwa-basics-quiz';
+import { quiz as q18 } from './quizzes/18-devtools-inspecao-quiz';
 
 export const quizzes = [
-  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15,
-  ...Array.from({ length: 6 }, (_, i) => ({
-    id: `web-q${i + 16}`,
-    title: `Web Core Quiz ${i + 16}`,
+  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16, q17, q18,
+  ...Array.from({ length: 3 }, (_, i) => ({
+    id: `web-q${i + 19}`,
+    title: `Web Core Quiz ${i + 19}`,
     questions: [],
     passingScore: 70
   }))

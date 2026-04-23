@@ -1,4 +1,4 @@
-import { lesson as l1 } from './theory/01-structure';
+import { lesson as l1 } from './theory/01-estrutura-html';
 import { lesson as l2 } from './theory/02-css-seletores';
 import { lesson as l3 } from './theory/03-css-box-model';
 import { lesson as l4 } from './theory/04-css-flexbox';
@@ -13,22 +13,22 @@ import { lesson as l12 } from './theory/12-animacoes-transicoes';
 import { lesson as l13 } from './theory/13-arquitetura-bem';
 import { lesson as l14 } from './theory/14-http-protocol';
 import { lesson as l15 } from './theory/15-web-performance';
+import { lesson as l16 } from './theory/16-seguranca-web';
+import { lesson as l17 } from './theory/17-pwa-basics';
+import { lesson as l18 } from './theory/18-devtools-inspecao';
 
-const titles = [
-  "Segurança Web: HTTPS e CSP",
-  "PWA: Progressive Web Apps",
-  "DevTools: Inspeção e Debugging",
+const remainingTitles = [
   "Tipografia e Web Fonts Otimizadas",
   "Layouts Flexíveis com Container Queries",
   "Fronteira com JavaScript (DOM Intro)"
 ];
 
 export const lessons = [
-  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15,
-  ...titles.map((title, i) => ({
-    id: `web-t${i + 16}`,
+  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18,
+  ...remainingTitles.map((title, i) => ({
+    id: `web-t${i + 19}`,
     title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🌐 Web Core: ${title}</h2><p>Domínio das tecnologias fundamentais da interface web moderna, focando em performance, acessibilidade e design responsivo.</p></div>`,
-    quizId: `web-q${i + 16}`
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🌐 Web Core: ${title}</h2><p>Conteúdo em desenvolvimento focado em técnicas avançadas de interface moderna.</p></div>`,
+    quizId: `web-q${i + 19}`
   }))
 ];
