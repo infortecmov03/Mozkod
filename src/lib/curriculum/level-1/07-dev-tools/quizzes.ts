@@ -8,50 +8,19 @@ import { quiz as q7 } from './quizzes/07-debugging-quiz';
 import { quiz as q8 } from './quizzes/08-api-testing-quiz';
 import { quiz as q9 } from './quizzes/09-docker-quiz';
 import { quiz as q10 } from './quizzes/10-github-actions-quiz';
+import { quiz as q11 } from './quizzes/11-ssh-keys-quiz';
+import { quiz as q12 } from './quizzes/12-bash-scripting-quiz';
+import { quiz as q13 } from './quizzes/13-performance-profiling-quiz';
+import { quiz as q14 } from './quizzes/14-npm-scripts-quiz';
+import { quiz as q15 } from './quizzes/15-lighthouse-audits-quiz';
+import { quiz as q16 } from './quizzes/16-local-tunneling-quiz';
+import { quiz as q17 } from './quizzes/17-database-clients-quiz';
+import { quiz as q18 } from './quizzes/18-markdown-docs-quiz';
+import { quiz as q19 } from './quizzes/19-regex-tools-quiz';
+import { quiz as q20 } from './quizzes/20-cloud-clis-quiz';
+import { quiz as q21 } from './quizzes/21-ai-productivity-quiz';
 
 export const quizzes = [
   q1, q2, q3, q4, q5, q6, q7, q8, q9, q10,
-  ...Array.from({ length: 11 }, (_, i) => ({
-    id: `dt-q${i + 11}`,
-    title: `Dev Tools Quiz ${i + 11}`,
-    questions: [
-      {
-        id: "q_auto_1",
-        question: "Qual a importância da automação no workflow de um engenheiro sénior?",
-        options: ["Nenhuma", "Fundamental para consistência e velocidade de escala", "Apenas para projetos em Inglês"],
-        correctAnswer: 1
-      },
-      {
-        id: "q_auto_2",
-        question: "Uma ferramenta de build otimizada garante o quê?",
-        options: ["Menor tamanho de bundle e melhor performance", "O site fica mais bonito", "O código fica secreto"],
-        correctAnswer: 0
-      },
-      {
-        id: "q_auto_3",
-        question: "O terminal é superior à interface gráfica para:",
-        options: ["Ver filmes", "Tarefas repetitivas e automação industrial", "Navegação básica em pastas vazias"],
-        correctAnswer: 1
-      },
-      {
-        id: "q_auto_4",
-        question: "O que caracteriza uma 'Zero Config' build tool?",
-        options: ["Precisa de muitos plugins para ligar", "Funciona com o padrão razoável sem ficheiros de configuração gigantes", "Não funciona com CSS"],
-        correctAnswer: 1
-      },
-      {
-        id: "q_auto_5",
-        question: "Por que auditar dependências regularmente?",
-        options: ["Para gastar tempo de CPU", "Prevenir ataques na cadeia de suprimentos (Supply chain)", "Apenas por estética"],
-        correctAnswer: 1
-      },
-      {
-        id: "q_auto_6",
-        question: "Produtividade de elite significa:",
-        options: ["Digitar 200 palavras por minuto", "Remover fricção e automatizar o que é mecânico e repetitivo", "Usar o rato para tudo"],
-        correctAnswer: 1
-      }
-    ],
-    passingScore: 70
-  }))
+  q11, q12, q13, q14, q15, q16, q17, q18, q19, q20, q21
 ];
