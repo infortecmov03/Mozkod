@@ -10,10 +10,10 @@ import { lesson as l9 } from './theory/09-ci-cd-pipelines';
 import { lesson as l10 } from './theory/10-deployment-strategies';
 import { lesson as l11 } from './theory/11-code-review-peer';
 import { lesson as l12 } from './theory/12-technical-debt';
+import { lesson as l13 } from './theory/13-sre-fundamentals';
 
 export const lessons = [
-  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12,
-  { id: "se-t13", title: "SRE: Site Reliability Engineering", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q13-master" },
+  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13,
   { id: "se-t14", title: "Error Budgets e Gestão de SLOs", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q14-master" },
   { id: "se-t15", title: "Gestão de Incidentes e Resposta a Crises", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q15-master" },
   { id: "se-t16", title: "Post-mortems e Aprendizado Organizacional", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q16-master" },
