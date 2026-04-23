@@ -2,77 +2,80 @@ import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "se-q9-master",
-  title: "Quiz: Engenharia de CI/CD e Automação",
+  title: "Quiz: Engenharia de CI/CD e Automação Industrial",
   passingScore: 80,
   questions: [
     {
       id: "q9_1",
-      question: "Qual o principal benefício técnico da Integração Contínua (CI)?",
+      question: "Qual o principal objetivo técnico da Integração Contínua (CI)?",
       options: [
-        "Aumentar o tamanho do ficheiro de log.",
-        "Reduzir o tempo de feedback e detetar conflitos de código o mais cedo possível.",
-        "Eliminar a necessidade de falar com outros desenvolvedores.",
-        "Garantir que o site tenha cores consistentes."
+        "Eliminar a necessidade de documentação do sistema.",
+        "Reduzir o tempo de feedback e detetar conflitos de integração várias vezes ao dia.",
+        "Aumentar a velocidade da CPU do servidor de produção.",
+        "Garantir que o site tenha cores consistentes em todos os browsers."
       ],
       correctAnswer: 1,
-      explanation: "A integração frequente com testes automáticos garante que os bugs não se acumulem e que o código esteja sempre saudável."
+      explanation: "O CI foca no feedback rápido. Detetar um erro 10 minutos após o commit é infinitamente mais barato do que o encontrar após um mês de desenvolvimento acumulado."
     },
     {
       id: "q9_2",
-      question: "Qual a diferença fundamental entre Continuous Delivery e Continuous Deployment?",
+      question: "O que distingue fundamentalmente Continuous Delivery de Continuous Deployment?",
       options: [
-        "O Delivery é mais rápido que o Deployment.",
-        "No Deployment, a ida para produção é 100% automática; no Delivery, exige aprovação manual.",
-        "Delivery é apenas para telemóveis e Deployment para computadores.",
-        "O Deployment não usa testes unitários."
+        "O Deployment é para mobile e o Delivery para desktop.",
+        "No Deployment, a ida para produção é automática após os testes; no Delivery, exige uma aprovação manual.",
+        "O Delivery utiliza Docker e o Deployment não.",
+        "O Deployment é mais lento por ser mais seguro."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "No Continuous Delivery, o software está sempre 'lançável', mas o negócio decide QUANDO lançar. No Deployment, a máquina decide baseando-se nos testes."
     },
     {
       id: "q9_3",
-      question: "Por que deves gerar o artefacto (build) apenas UMA vez no pipeline?",
+      question: "Por que deves gerar o artefacto (build) apenas UMA vez no início do pipeline?",
       options: [
-        "Para gastar menos eletricidade no servidor.",
-        "Para garantir que o código testado em Staging é exatamente o mesmo que será executado em Produção.",
-        "Porque o Docker não permite múltiplos builds.",
-        "Para poupar espaço no GitHub."
+        "Para poupar espaço em disco no servidor do GitHub.",
+        "Para garantir que o código testado e validado em Staging é exatamente o mesmo que será executado em Produção.",
+        "Porque o Docker proíbe múltiplos builds do mesmo código.",
+        "Para acelerar o tempo de download do programador."
       ],
       correctAnswer: 1,
-      explanation: "A imutabilidade do artefacto elimina erros de 'funciona no meu ambiente de teste mas não em produção' devido a diferenças de compilação."
+      explanation: "A imutabilidade do artefacto elimina a variabilidade. Se recompilares em cada fase, corres o risco de ter versões ligeiramente diferentes devido a mudanças em dependências ou ambiente."
     },
     {
       id: "q9_4",
-      question: "O que deve acontecer se o estágio de 'Lint' ou 'Test' falhar no pipeline?",
+      question: "O que caracteriza o estágio de 'Static Analysis' (ou Linting) num pipeline?",
       options: [
-        "O pipeline deve prosseguir para o deploy para não atrasar o cliente.",
-        "O pipeline deve ser interrompido imediatamente e o desenvolvedor notificado.",
-        "O sistema deve apagar as alterações automaticamente.",
-        "O erro deve ser ignorado se o resto do build for bem-sucedido."
+        "A execução do programa para ver se ele crasha.",
+        "A análise do código-fonte sem o executar para encontrar erros de estilo, bugs potenciais e falhas de segurança.",
+        "O teste de carga com 1 milhão de utilizadores simulados.",
+        "A tradução automática do código para outra linguagem."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "Linters e ferramentas de análise estática são os guardiões da qualidade e segurança inicial do pipeline."
     },
     {
       id: "q9_5",
-      question: "A prática de 'Build once, deploy many' foca em:",
+      question: "Qual o papel do estágio de 'Security Scan' (DevSecOps) no fluxo automático?",
       options: [
-        "Escrever o código apenas uma vez.",
-        "Utilizar o mesmo artefacto binário em múltiplos ambientes (Dev, Staging, Prod) mudando apenas a configuração.",
-        "Fazer o deploy em múltiplos países ao mesmo tempo.",
-        "Instalar o Windows em vários computadores."
+        "Mudar as senhas de todos os administradores.",
+        "Auditar automaticamente se as bibliotecas de terceiros (NPM/Pip) possuem vulnerabilidades conhecidas (CVEs).",
+        "Impedir que utilizadores externos acedam ao repositório.",
+        "Criptografar o código fonte para que o browser não o leia."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "Integrar a segurança no pipeline permite o 'Shift Left', detetando vulnerabilidades antes que o software seja publicado."
     },
     {
       id: "q9_6",
-      question: "Qual o papel do estágio de 'Security Scan' num pipeline moderno?",
+      question: "Num pipeline de elite, o que deve acontecer se o estágio de 'Unit Tests' falhar?",
       options: [
-        "Mudar as senhas dos utilizadores.",
-        "Identificar vulnerabilidades conhecidas (CVEs) em bibliotecas de terceiros antes do deploy.",
-        "Verificar se o firewall do escritório está ligado.",
-        "Bloquear o acesso de utilizadores desconhecidos ao site."
+        "O pipeline deve prosseguir para o deploy para não atrasar o cronograma.",
+        "O pipeline deve ser interrompido imediatamente (Break the build) e a equipa notificada.",
+        "O erro deve ser ignorado se for um erro pequeno.",
+        "O servidor de produção deve ser reiniciado automaticamente."
       ],
       correctAnswer: 1,
-      explanation: "A segurança deve ser parte do fluxo automatizado (DevSecOps) para prevenir o lançamento de software vulnerável."
+      explanation: "A integridade do pipeline é sagrada. Se um teste falha, o build está 'sujo' e não pode avançar para as fases seguintes de validação ou deploy."
     }
   ]
 };
