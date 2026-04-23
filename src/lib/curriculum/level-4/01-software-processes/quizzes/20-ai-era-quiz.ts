@@ -2,74 +2,79 @@ import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "se-q20-master",
-  title: "Quiz: Engenharia de Software e IA",
+  title: "Quiz: Engenharia de Software na Era da IA",
   passingScore: 80,
   questions: [
     {
       id: "q20_1",
-      question: "Qual o principal perigo de aceitar sugestões de IA sem revisão humana?",
+      question: "Qual o principal perigo de aceitar sugestões de IA (Copilots) sem uma revisão linha a linha?",
       options: [
-        "A IA cobrar pelo código gerado.",
-        "Introdução de vulnerabilidades de segurança ou lógica incorreta que 'parece' certa (Alucinação).",
-        "O computador desligar por excesso de processamento.",
-        "O código tornar-se demasiado curto."
+        "A IA cobrar taxas extras por cada linha sugerida.",
+        "A introdução de alucinações lógicas ou vulnerabilidades de segurança que parecem código correto.",
+        "O compilador ficar mais lento ao processar código gerado.",
+        "A perda automática da licença do software."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "LLMs são probabilísticos. Eles podem gerar código sintaticamente correto que falha em casos de borda ou introduz falhas de segurança graves."
     },
     {
       id: "q20_2",
-      question: "Como um Engenheiro Master deve usar a IA para melhorar a qualidade do sistema?",
+      question: "No modelo de desenvolvimento assistido por IA, qual o novo papel do Engenheiro Master?",
       options: [
-        "Deixar a IA escrever todo o código e não fazer testes.",
-        "Usar a IA para gerar cenários de teste exaustivos e documentação que ele mesmo validará.",
-        "Proibir o uso de IA em toda a empresa.",
-        "Copiar e colar funções inteiras de fóruns via IA."
+        "Digitador de prompts sem necessidade de saber algoritmos.",
+        "Editor e Auditor Crítico, responsável pela validação da arquitetura e segurança.",
+        "Substituir todos os testes automatizados por revisões de IA.",
+        "Escrever apenas a documentação e deixar o código para a máquina."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "A responsabilidade técnica e legal pelo software continua a ser do humano; a IA é apenas um acelerador de produtividade."
     },
     {
       id: "q20_3",
-      question: "O que é 'Prompt Engineering' no contexto de desenvolvimento de software?",
+      question: "Sobre a segurança de dados e privacidade em IAs Generativas públicas, qual a conduta master?",
       options: [
-        "Consertar o monitor.",
-        "A habilidade de formular instruções precisas para obter os melhores resultados da IA.",
-        "Um novo tipo de base de dados.",
-        "O ato de digitar rápido."
+        "Pode-se colar qualquer código se for para resolver um bug urgente.",
+        "Nunca submeter segredos, chaves de API ou dados sensíveis de clientes em modelos públicos.",
+        "A IA apaga os dados após a sessão, por isso é 100% seguro.",
+        "Apenas código de bases de dados deve ser protegido."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "Dados submetidos a modelos públicos podem ser usados para treino ou ficar acessíveis a terceiros, violando conformidades como o GDPR."
     },
     {
       id: "q20_4",
-      question: "Qual a regra de ouro sobre dados sensíveis e IAs Generativas?",
+      question: "Como a IA Generativa deve ser utilizada na fase de Testes e QA?",
       options: [
-        "Podes enviar qualquer dado se for para resolver um bug.",
-        "Nunca submeter código proprietário, segredos ou dados de clientes em IAs sem garantias de privacidade.",
-        "A IA apaga os dados após a resposta, por isso é seguro.",
-        "Apenas senhas não devem ser enviadas."
+        "Para garantir que o código não precisa de ser testado por humanos.",
+        "Para gerar rapidamente cenários de teste, dados de 'mock' e identificar casos de borda negligenciados.",
+        "Para substituir o ambiente de staging.",
+        "Apenas para escrever comentários sobre o que foi testado."
       ],
       correctAnswer: 1
     },
     {
       id: "q20_5",
-      question: "A IA é melhor que o humano em qual destas tarefas?",
+      question: "O conceito de 'Zero Trust AI' na engenharia de software prega que:",
       options: [
-        "Tomada de decisão arquitetural complexa com base em trade-offs de negócio.",
-        "Gerar rapidamente código repetitivo (boilerplate) e estruturas padrão.",
-        "Negociar prazos com stakeholders difíceis.",
-        "Ter empatia com o utilizador final."
+        "Não devemos usar IA no trabalho.",
+        "Todo o código gerado por IA é considerado suspeito até que seja validado por testes e revisão humana.",
+        "O utilizador final não deve saber que a IA foi usada.",
+        "O servidor deve bloquear acessos vindos de bots de IA."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "Tal como na segurança de rede, não confiamos em nada que venha de 'fora' (IA) sem uma verificação rigorosa de integridade e lógica."
     },
     {
       id: "q20_6",
-      question: "Como o uso de IA afeta a necessidade de saber algoritmos e fundamentos?",
+      question: "O uso de IA reduz a necessidade de o engenheiro dominar fundamentos de Algoritmos e Arquitetura?",
       options: [
-        "Torna o conhecimento de fundamentos inútil.",
-        "Aumenta a necessidade, pois o engenheiro precisa de fundamentação para auditar a lógica gerada pela IA.",
-        "Não altera nada.",
-        "O aprendizado de algoritmos deve ser substituído por cursos de prompt."
+        "Sim, a IA já conhece todos os algoritmos do mundo.",
+        "Não, aumenta a necessidade, pois o engenheiro precisa desses fundamentos para auditar e corrigir a lógica da IA.",
+        "Sim, o foco agora é apenas em Prompt Engineering.",
+        "Apenas para desenvolvedores frontend."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "Sem fundamentos, o desenvolvedor torna-se um refém da IA, incapaz de detetar erros de performance ou falhas arquiteturais no código sugerido."
     }
   ]
 };
