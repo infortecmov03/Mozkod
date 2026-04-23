@@ -7,6 +7,7 @@ import { exercise as p3js } from './laboratory/javascript/03-strings-io';
 import { exercise as p4js } from './laboratory/javascript/04-condicionais';
 import { exercise as p5js } from './laboratory/javascript/05-loops';
 import { exercise as p6js } from './laboratory/javascript/06-funcoes';
+import { exercise as p7js } from './laboratory/javascript/07-arrays';
 
 // Python Variants
 import { exercise as p1py } from './laboratory/python/01-variaveis';
@@ -15,6 +16,7 @@ import { exercise as p3py } from './laboratory/python/03-strings-io';
 import { exercise as p4py } from './laboratory/python/04-condicionais';
 import { exercise as p5py } from './laboratory/python/05-loops';
 import { exercise as p6py } from './laboratory/python/06-funcoes';
+import { exercise as p7py } from './laboratory/python/07-arrays';
 
 // Java Variants
 import { exercise as p1jv } from './laboratory/java/01-variaveis';
@@ -26,10 +28,10 @@ import { exercise as p2cp } from './laboratory/cpp/02-operadores';
 
 export const practice = {
   javascript: [
-    p1js, p2js, p3js, p4js, p5js, p6js
+    p1js, p2js, p3js, p4js, p5js, p6js, p7js
   ],
   python: [
-    p1py, p2py, p3py, p4py, p5py, p6py
+    p1py, p2py, p3py, p4py, p5py, p6py, p7py
   ],
   java: [
     p1jv, p2jv
