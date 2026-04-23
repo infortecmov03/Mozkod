@@ -33,8 +33,18 @@ export const lesson: TheoryLesson = {
           else { grade = 'F' }
         </div>
 
-        <h3 class="text-xl font-bold font-headline">3. Operadores Lógicos em Condições</h3>
-        <p>Podemos combinar condições para criar lógica complexa:</p>
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">3. Switch: O Escolhedor de Opções</h3>
+        <p>O <code>switch</code> é uma alternativa elegante ao <code>if/else</code> quando precisamos de comparar uma única variável com vários valores fixos (discretos). É muito mais legível quando tens 5 ou mais opções.</p>
+        <div class="bg-black/40 p-5 rounded-xl border font-code text-sm">
+          <span class="text-accent">switch</span> (dia) { <br/>
+          &nbsp;&nbsp;<span class="text-accent">case</span> 1: console.log("Segunda"); <span class="text-accent">break</span>; <br/>
+          &nbsp;&nbsp;<span class="text-accent">case</span> 2: console.log("Terça"); <span class="text-accent">break</span>; <br/>
+          &nbsp;&nbsp;<span class="text-accent">default</span>: console.log("Outro dia"); <br/>
+          }
+        </div>
+        <p class="text-xs text-muted-foreground italic">Nota: O 'break' é obrigatório para o código não "escorregar" para o próximo caso.</p>
+
+        <h3 class="text-xl font-bold font-headline">4. Operadores Lógicos em Condições</h3>
         <ul class="space-y-3 text-sm">
           <li><strong>AND (&&):</strong> Ambas devem ser verdade.</li>
           <li><strong>OR (||):</strong> Pelo menos uma deve ser verdade.</li>

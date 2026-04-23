@@ -50,7 +50,7 @@ export const quiz: Quiz = {
     },
     {
       id: "q5",
-      question: "Por que deves evitar nomes de variáveis como 'a', 'b' ou 'temp123' em projetos profissionais?",
+      question: "Por que deves evitar nomes de variáveis como 'a', 'b' ou 'temp123' num projeto profissional?",
       options: [
         "Porque o computador não gosta dessas letras",
         "Porque dificulta a leitura e manutenção do código por outros humanos",
