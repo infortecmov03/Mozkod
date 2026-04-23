@@ -6,16 +6,17 @@ export const lesson: TheoryLesson = {
   content: `
     <div class="space-y-8">
       <div class="bg-primary/5 p-6 rounded-2xl border border-primary/10 shadow-xl">
-        <h2 class="text-2xl font-bold mb-4 font-headline text-primary">📱 Design com uma mão</h2>
-        <p class="text-lg leading-relaxed">Em dispositivos móveis, a ergonomia é tudo. A "Thumb Zone" (Zona do Polegar) dita que os botões mais importantes devem estar na parte inferior e central do ecrã.</p>
+        <h2 class="text-2xl font-bold mb-4 font-headline text-primary">📱 Ergonomia em Primeiro Lugar</h2>
+        <p class="text-lg leading-relaxed">Em dispositivos móveis, a forma como seguramos o telemóvel dita o design. A "Thumb Zone" (Zona do Polegar) dita onde os botões devem estar para serem confortáveis.</p>
       </div>
 
       <div class="prose prose-invert max-w-none">
-        <h3>Regras de Ouro Mobile:</h3>
-        <ul>
-          <li><strong>Alvos de Toque:</strong> Mínimo de 44x44 pixels para evitar erros de toque.</li>
-          <li><strong>Gestos:</strong> Swipe, Pinch e Long Press devem ser intuitivos e complementares, nunca a única via.</li>
-          <li><strong>Navegação de Polegar:</strong> Coloque menus e ações críticas ao alcance fácil do polegar.</li>
+        <h3>Regras de Ouro do Design Mobile:</h3>
+        <ul class="space-y-3">
+          <li><strong>Alvos de Toque (Touch Targets):</strong> Mínimo de 44x44 pixels para evitar erros acidentais.</li>
+          <li><strong>Gestos Intuitivos:</strong> Swipe para navegar, Pinch para zoom. Devem ser naturais e acompanhados de feedback.</li>
+          <li><strong>Navegação Inferior:</strong> Coloque menus e ações críticas na parte inferior do ecrã, ao alcance fácil do polegar.</li>
+          <li><strong>Hierarquia de Scroll:</strong> O conteúdo mais importante deve estar "Acima da Dobra" (Above the Fold).</li>
         </ul>
       </div>
     </div>

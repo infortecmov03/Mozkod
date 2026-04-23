@@ -6,17 +6,17 @@ export const lesson: TheoryLesson = {
   content: `
     <div class="space-y-8">
       <div class="bg-primary/5 p-6 rounded-2xl border border-primary/10 shadow-xl">
-        <h2 class="text-2xl font-bold mb-4 font-headline text-primary">✨ Detalhes que Encantam</h2>
-        <p class="text-lg">Micro-interações são pequenos momentos funcionais que cumprem uma única tarefa. Ex: uma animação ao curtir um post ou o som de mensagem enviada.</p>
+        <h2 class="text-2xl font-bold mb-4 font-headline text-primary">✨ Detalhes que Criam o Produto</h2>
+        <p class="text-lg leading-relaxed">Micro-interações são pequenos momentos funcionais que cumprem uma única tarefa e dão "vida" ao sistema. Elas são a diferença entre uma ferramenta e um produto amado.</p>
       </div>
 
       <div class="prose prose-invert max-w-none">
-        <h3>Os 4 Passos da Micro-interação:</h3>
-        <ol>
-          <li><strong>Trigger:</strong> O que inicia a ação (ex: clicar no botão).</li>
-          <li><strong>Rules:</strong> O que acontece internamente.</li>
-          <li><strong>Feedback:</strong> A resposta visual/sonora ao utilizador.</li>
-          <li><strong>Loops & Modes:</strong> O que acontece se a ação se repetir.</li>
+        <h3>Os 4 Pilares da Micro-interação (Dan Saffer):</h3>
+        <ol class="space-y-3">
+          <li><strong>Trigger (Gatilho):</strong> O que inicia a ação (ex: clicar no botão, receber notificação).</li>
+          <li><strong>Rules (Regras):</strong> O que acontece internamente (lógica de negócio).</li>
+          <li><strong>Feedback (Resposta):</strong> Como o utilizador sabe que funcionou (ex: animação, som, cor).</li>
+          <li><strong>Loops & Modes:</strong> O que acontece se a ação se repetir ou mudar no tempo.</li>
         </ol>
       </div>
     </div>

@@ -13,10 +13,10 @@ export const lesson: TheoryLesson = {
       <div class="space-y-4">
         <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">O Princípio POUR</h3>
         <ul class="space-y-3">
-          <li><strong>Percebível:</strong> A informação deve ser apresentada de forma que todos consigam perceber (ex: alt text em imagens).</li>
-          <li><strong>Operável:</strong> A interface deve ser navegável (ex: apenas pelo teclado).</li>
-          <li><strong>Uninteligível:</strong> O utilizador deve entender o conteúdo e a operação.</li>
-          <li><strong>Robusto:</strong> O código deve funcionar em diferentes browsers e leitores de ecrã.</li>
+          <li><strong>P - Percebível:</strong> A informação deve ser apresentada de forma que todos consigam perceber (ex: alt text em imagens).</li>
+          <li><strong>O - Operável:</strong> A interface deve ser navegável (ex: apenas pelo teclado).</li>
+          <li><strong>U - Compreensível:</strong> O utilizador deve entender o conteúdo e a operação do sistema.</li>
+          <li><strong>R - Robusto:</strong> O código deve funcionar em diferentes browsers e tecnologias assistivas.</li>
         </ul>
       </div>
     </div>

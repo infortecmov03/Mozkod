@@ -6,59 +6,39 @@ export const quiz: Quiz = {
   passingScore: 70,
   questions: [
     {
-      id: "hci_q1_1",
-      question: "Qual o foco primordial da Interação Humano-Computador (HCI)?",
-      options: [
-        "Aumentar a velocidade da CPU",
-        "Melhorar a relação entre humanos e máquinas através do design e engenharia",
-        "Reduzir o custo de produção de hardware",
-        "Vender mais software no mercado global"
-      ],
+      id: "q1",
+      question: "Qual é o foco principal da Interação Humano-Computador (HCI)?",
+      options: ["Aumentar a velocidade da CPU", "Melhorar a relação entre humanos e máquinas através do design e engenharia", "Reduzir o custo de produção de chips", "Programar em código de máquina"],
       correctAnswer: 1
     },
     {
-      id: "hci_q1_2",
+      id: "q2",
       question: "O que é um 'Modelo Mental' no contexto de HCI?",
-      options: [
-        "O diagrama de base de dados do sistema",
-        "A forma como o utilizador imagina que o sistema funciona na sua mente",
-        "Um algoritmo de inteligência artificial",
-        "A memória RAM do computador"
-      ],
+      options: ["O código fonte do sistema", "A forma como o utilizador imagina que o sistema funciona", "Um tipo de memória RAM", "Um algoritmo de IA"],
       correctAnswer: 1
     },
     {
-      id: "hci_q1_3",
-      question: "Em HCI, o que representa a 'Interação'?",
-      options: [
-        "O tempo de download da página",
-        "O diálogo e a troca de sinais entre o utilizador e o sistema",
-        "A ligação via cabo de rede",
-        "A instalação do sistema operativo"
-      ],
+      id: "q3",
+      question: "Qual destes é um dispositivo de 'Haptic Output'?",
+      options: ["Monitor", "Teclado mecânico", "Vibração de smartphone", "Impressora"],
+      correctAnswer: 2
+    },
+    {
+      id: "q4",
+      question: "O HCI é uma disciplina puramente estética?",
+      options: ["Sim, foca apenas em cores", "Não, é multidisciplinar (psicologia, engenharia, design)", "Sim, é o mesmo que design gráfico", "Não, foca apenas em código de performance"],
       correctAnswer: 1
     },
     {
-      id: "hci_q1_4",
-      question: "Por que um Engenheiro de Software deve estudar HCI?",
-      options: [
-        "Para escrever código em binário",
-        "Para evitar erros de utilização e aumentar a eficiência do software",
-        "Para consertar monitores estragados",
-        "Apenas se for trabalhar com artes visuais"
-      ],
+      id: "q5",
+      question: "O que representa o pilar 'Interação' no HCI?",
+      options: ["A ligação de internet", "O diálogo e troca de sinais entre utilizador e sistema", "O barramento de dados", "A instalação de drivers"],
       correctAnswer: 1
     },
     {
-      id: "hci_q1_5",
-      question: "Qual destes é um dispositivo de 'Input' em HCI?",
-      options: ["Monitor", "Microfone", "Altifalante", "Impressora"],
-      correctAnswer: 1
-    },
-    {
-      id: "hci_q1_6",
-      question: "O conceito de 'Usabilidade' está inserido em qual área?",
-      options: ["Hardware puro", "HCI", "Back-end infra", "Redes de computadores"],
+      id: "q6",
+      question: "Por que um engenheiro de software deve estudar HCI?",
+      options: ["Para desenhar logotipos", "Para evitar erros de utilização e aumentar a eficiência do software", "Para consertar hardware", "Apenas por curiosidade"],
       correctAnswer: 1
     }
   ]

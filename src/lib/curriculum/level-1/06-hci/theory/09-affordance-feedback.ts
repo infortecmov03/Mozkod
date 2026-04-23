@@ -11,15 +11,16 @@ export const lesson: TheoryLesson = {
       </div>
 
       <div class="grid md:grid-cols-2 gap-6">
-        <div class="p-5 bg-card border rounded-2xl border-white/5">
-          <h4 class="font-bold text-accent mb-2">Affordance</h4>
-          <p class="text-xs">Um botão que parece "clicável" (tem sombra ou relevo). Uma barra de scroll que indica movimento.</p>
+        <div class="p-6 bg-card border rounded-2xl border-white/5 shadow-xl">
+          <h4 class="font-bold text-accent mb-3 flex items-center gap-2">🕹️ Affordance</h4>
+          <p class="text-xs leading-relaxed">Um botão que parece "clicável" (tem sombra ou relevo). Uma barra de scroll que indica a possibilidade de movimento vertical.</p>
         </div>
-        <div class="p-5 bg-card border rounded-2xl border-white/5">
-          <h4 class="font-bold text-accent mb-2">Feedback</h4>
-          <p class="text-xs">O botão muda de cor ao ser clicado. Um spinner aparece enquanto os dados carregam.</p>
+        <div class="p-6 bg-card border rounded-2xl border-white/5 shadow-xl">
+          <h4 class="font-bold text-accent mb-3 flex items-center gap-2">⚡ Feedback</h4>
+          <p class="text-xs leading-relaxed">O botão muda de cor ao ser clicado. Um spinner aparece enquanto os dados carregam. Um som de "sucesso" ao enviar um email.</p>
         </div>
       </div>
+      <p class="text-sm italic text-muted-foreground border-l-4 border-primary pl-4">"A pior interface é aquela que não reage a uma ação do utilizador, deixando-o na dúvida."</p>
     </div>
   `,
   quizId: "hci-q9"

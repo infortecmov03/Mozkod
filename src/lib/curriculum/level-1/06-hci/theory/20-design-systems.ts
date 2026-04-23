@@ -6,17 +6,23 @@ export const lesson: TheoryLesson = {
   content: `
     <div class="space-y-8">
       <div class="bg-primary/5 p-6 rounded-2xl border border-primary/10 shadow-xl">
-        <h2 class="text-2xl font-bold mb-4 font-headline text-primary">🏭 A Fábrica de Interfaces</h2>
-        <p class="text-lg leading-relaxed">Um Design System é a fonte da verdade para uma empresa. Contém tokens de design (cores, fontes), componentes (botões, inputs) e documentação de como usá-los.</p>
+        <h2 class="text-2xl font-bold mb-4 font-headline text-primary">🏭 A Fábrica de Interfaces de Elite</h2>
+        <p class="text-lg leading-relaxed">Um Design System é a "fonte da verdade" técnica de uma empresa. Ele contém tokens de design (cores, fontes), componentes (botões, inputs) e documentação rigorosa de como utilizá-los.</p>
       </div>
 
-      <div class="prose prose-invert max-w-none">
-        <h3>Vantagens de um DS:</h3>
-        <ul>
-          <li><strong>Consistência:</strong> O botão é igual em todos os apps da empresa.</li>
-          <li><strong>Velocidade:</strong> Engenheiros montam interfaces como Lego.</li>
-          <li><strong>Manutenibilidade:</strong> Muda a cor num sítio, muda em todo o sistema.</li>
-        </ul>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="p-4 bg-card border rounded-xl shadow-lg">
+          <h4 class="font-bold text-accent mb-2">Consistência</h4>
+          <p class="text-[10px] opacity-70">O botão é igual em todos os apps da empresa, criando confiança e rapidez de uso.</p>
+        </div>
+        <div class="p-4 bg-card border rounded-xl shadow-lg">
+          <h4 class="font-bold text-accent mb-2">Velocidade</h4>
+          <p class="text-[10px] opacity-70">Engenheiros montam interfaces complexas como se estivessem a usar peças de Lego.</p>
+        </div>
+        <div class="p-4 bg-card border rounded-xl shadow-lg">
+          <h4 class="font-bold text-accent mb-2">Padrão Único</h4>
+          <p class="text-[10px] opacity-70">Muda a cor da marca num sítio (Token) e todo o ecossistema atualiza-se sozinho.</p>
+        </div>
       </div>
     </div>
   `,
