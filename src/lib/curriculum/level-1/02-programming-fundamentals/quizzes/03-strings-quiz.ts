@@ -2,56 +2,67 @@ import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "pf-t3-quiz",
-  title: "Quiz: Strings e Manipulação de Texto",
+  title: "Quiz: Strings e Comunicação de Dados",
   passingScore: 70,
   questions: [
     {
       id: "q1",
-      question: "O que é 'Interpolação de Strings'?",
-      options: [
-        "Dividir uma string em duas",
-        "Inserir o valor de variáveis diretamente dentro de um texto",
-        "Apagar o conteúdo de uma string",
-        "Converter texto para maiúsculas"
-      ],
+      question: "Qual o índice da letra 'D' na string 'CODEWORKS'?",
+      options: ["1", "2", "3", "0"],
       correctAnswer: 1,
-      explanation: "Exemplo: `Olá, ${nome}`. É a forma moderna de criar textos dinâmicos."
+      explanation: "C(0), O(1), D(2)... A indexação começa sempre em 0."
     },
     {
       id: "q2",
-      question: "Qual o caractere usado para 'escapar' caracteres especiais dentro de uma string (ex: colocar aspas dentro de aspas)?",
-      options: ["/", "\\ (barra invertida)", "|", "&"],
-      correctAnswer: 1,
-      explanation: "A barra invertida diz ao interpretador que o próximo caractere deve ser tratado como texto, não como código."
+      question: "O que acontece se tentares somar um número e uma string no JavaScript (ex: 5 + '5')?",
+      options: [
+        "Ocorre um erro de sistema",
+        "O resultado é 10 (número)",
+        "O resultado é '55' (string) devido à coerção automática",
+        "O computador explode"
+      ],
+      correctAnswer: 2,
+      explanation: "O JS converte o número para string e junta os dois (concatenação)."
     },
     {
       id: "q3",
-      question: "Strings são coleções indexadas. Qual o índice do primeiro caractere da string 'MOZ'?",
-      options: ["1", "0", "-1", "M"],
-      correctAnswer: 1,
-      explanation: "A contagem em programação (zero-based) começa sempre no 0."
+      question: "Qual o caractere de escape usado para criar uma nova linha no terminal?",
+      options: ["\\t", "\\r", "\\n", "\\l"],
+      correctAnswer: 2,
+      explanation: "\\n vem de 'New Line'."
     },
     {
       id: "q4",
-      question: "O que significa dizer que uma string é 'Imutável' em Java ou Python?",
+      question: "O que caracteriza a 'Interpolação de Strings'?",
       options: [
-        "Que não pode ser impressa",
-        "Que o seu valor não pode ser alterado após criada; qualquer mudança gera uma nova string",
-        "Que ocupa zero de memória",
-        "Que só aceita letras"
+        "Mudar a cor da fonte",
+        "Inserir o valor de variáveis dentro de um texto usando delimitadores especiais",
+        "Dividir uma string ao meio",
+        "Traduzir o texto automaticamente"
       ],
       correctAnswer: 1
     },
     {
       id: "q5",
-      question: "Qual método é comummente usado para remover espaços em branco no início e fim de uma string?",
-      options: ["clear()", "slice()", "trim()", "split()"],
-      correctAnswer: 2
+      question: "Em linguagens onde as strings são IMUTÁVEIS, o que ocorre ao mudar um caractere?",
+      options: [
+        "Apenas aquele bit é alterado",
+        "Uma nova string é criada na memória com a alteração",
+        "O programa para de funcionar",
+        "Nada, a alteração é ignorada"
+      ],
+      correctAnswer: 1,
+      explanation: "Imutabilidade significa que o objeto original nunca muda; qualquer 'edição' gera um novo objeto."
     },
     {
       id: "q6",
-      question: "Como se chama a operação de juntar duas ou mais strings?",
-      options: ["Soma de Texto", "Concatenação", "Fusão de Bits", "Linkagem"],
+      question: "Para que serve a função trim() na maioria das linguagens?",
+      options: [
+        "Para cortar a string ao meio",
+        "Para remover espaços em branco inúteis no início e no fim do texto",
+        "Para converter tudo para maiúsculas",
+        "Para contar o número de palavras"
+      ],
       correctAnswer: 1
     }
   ]
