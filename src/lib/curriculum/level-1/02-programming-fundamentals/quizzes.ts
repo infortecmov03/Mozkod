@@ -13,12 +13,12 @@ import { quiz as q12 } from './quizzes/12-exception-handling-quiz';
 import { quiz as q13 } from './quizzes/13-regex-patterns-quiz';
 import { quiz as q14 } from './quizzes/14-memory-stack-heap-quiz';
 import { quiz as q15 } from './quizzes/15-code-style-linting-quiz';
+import { quiz as q16 } from './quizzes/16-async-basics-quiz';
 import { quiz as q17 } from './quizzes/17-json-serialization-quiz';
 
 export const quizzes = [
   q1, q2, q3, q4, q5, q6, q7, q8, q9, q10,
-  q11, q12, q13, q14, q15,
-  { id: "pf-q16", title: "Quiz: Assincronia", questions: [], passingScore: 70 },
+  q11, q12, q13, q14, q15, q16,
   q17,
   { id: "pf-q18", title: "Quiz: Funcional", questions: [], passingScore: 70 },
   { id: "pf-q19", title: "Quiz: Pacotes", questions: [], passingScore: 70 },
