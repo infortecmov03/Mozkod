@@ -1,4 +1,3 @@
-
 import { level1 } from './level-1/index';
 import { level2 } from './level-2/index';
 import { level3 } from './level-3/index';
@@ -84,13 +83,19 @@ export function findOrderedLessons(): string[] {
   modules.forEach(level => {
     level.knowledgeAreas.forEach(ka => {
       const theory = ka.theory || [];
-      const practiceList: PracticeExercise[] = [];
-      if (ka.practice) {
-        // Obter todas as práticas mantendo a ordem dos IDs para consistência
-        Object.values(ka.practice).forEach(list => practiceList.push(...list));
-      }
+      const practiceMap = ka.practice || {};
       
-      // Intercalar: T1, P1, T2, P2...
+      // Coleta todas as práticas de todas as linguagens disponíveis nesta KA
+      const practiceList: PracticeExercise[] = [];
+      Object.values(practiceMap).forEach(list => {
+        list.forEach(p => {
+          if (!practiceList.some(existing => existing.id === p.id)) {
+            practiceList.push(p);
+          }
+        });
+      });
+      
+      // Intercalação inteligente: T1, P1, T2, P2...
       const max = Math.max(theory.length, practiceList.length);
       for (let i = 0; i < max; i++) {
         if (theory[i]) allLessons.push(theory[i].id);

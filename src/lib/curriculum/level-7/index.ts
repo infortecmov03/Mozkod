@@ -1,4 +1,3 @@
-
 import type { Level, KnowledgeArea } from '../types';
 
 const capstoneLessons = Array.from({ length: 21 }, (_, i) => ({
@@ -27,11 +26,22 @@ const capstone: KnowledgeArea = {
   load: '100h',
   iconName: 'Trophy',
   theory: capstoneLessons,
-  practice: { process: [] },
+  practice: {
+    process: Array.from({ length: 21 }, (_, i) => ({
+      id: `cap-p${i + 1}`,
+      language: "process",
+      title: `Capstone Milestone ${i + 1}`,
+      description: "Marco de desenvolvimento do projeto final.",
+      statement: "Valide a conclusão deste marco.",
+      template: "let milestone = 'completed';",
+      detailedExplanation: "<h3>🏆 Marco Capstone</h3><p>Progresso oficial do projeto de graduação.</p>",
+      objectives: [{ id: "obj1", description: "Atingir marco", test: "completed" }]
+    }))
+  },
   quizzes: Array.from({ length: 21 }, (_, i) => ({
     id: `cap-q${i + 1}`,
     title: `Capstone Milestone Quiz ${i + 1}`,
-    questions: [],
+    questions: [{ id: "q1", question: "Marco atingido?", options: ["Sim", "Não"], correctAnswer: 0 }],
     passingScore: 70
   }))
 };

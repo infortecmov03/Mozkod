@@ -1,4 +1,3 @@
-
 import type { Level, KnowledgeArea } from '../types';
 
 const careerLessons = Array.from({ length: 21 }, (_, i) => ({
@@ -27,11 +26,22 @@ const careerDev: KnowledgeArea = {
   load: '30h',
   iconName: 'Briefcase',
   theory: careerLessons,
-  practice: { text: [] },
+  practice: {
+    process: Array.from({ length: 21 }, (_, i) => ({
+      id: `career-p${i + 1}`,
+      language: "process",
+      title: `Laboratório de Carreira ${i + 1}`,
+      description: "Construção de ativos profissionais.",
+      statement: "Documente o seu progresso.",
+      template: "let status = 'ready';",
+      detailedExplanation: "<h3>💼 Ativos Profissionais</h3><p>Criação de documentos e perfis de alto impacto.</p>",
+      objectives: [{ id: "obj1", description: "Concluir etapa", test: "ready" }]
+    }))
+  },
   quizzes: Array.from({ length: 21 }, (_, i) => ({
     id: `career-q${i + 1}`,
     title: `Career Quiz ${i + 1}`,
-    questions: [],
+    questions: [{ id: "q1", question: "OK?", options: ["Sim", "Não"], correctAnswer: 0 }],
     passingScore: 70
   }))
 };
