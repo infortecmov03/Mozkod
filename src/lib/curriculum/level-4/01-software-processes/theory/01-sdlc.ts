@@ -1,20 +1,60 @@
+import type { TheoryLesson } from '../../../types';
 
-import type { TheoryLesson } from '../../../../types';
 export const lesson: TheoryLesson = {
   id: "se-t1",
-  title: "SDLC: Ciclo de Vida do Software",
+  title: "SDLC Master: Arquitetura do Ciclo de Vida",
+  youtubeVideoId: "8hly31xKli0",
   content: `
-    <div class="space-y-6">
-      <h2 class="text-2xl font-bold">🏛️ As Fases da Engenharia</h2>
-      <p>O desenvolvimento profissional de software segue um ciclo estruturado para garantir qualidade e previsibilidade.</p>
-      <ul class="list-disc ml-6 space-y-2">
-        <li><strong>Análise de Requisitos:</strong> O que o sistema deve fazer?</li>
-        <li><strong>Design/Arquitetura:</strong> Como o sistema será estruturado?</li>
-        <li><strong>Implementação:</strong> A fase de codificação real.</li>
-        <li><strong>Verificação/Testes:</strong> Garantir que funciona como esperado.</li>
-        <li><strong>Manutenção:</strong> Correção de bugs e evolução.</li>
-      </ul>
+    <div class="space-y-8">
+      <div class="bg-primary/5 p-6 rounded-2xl border border-primary/10 shadow-2xl">
+        <h2 class="text-2xl font-bold mb-4 font-headline text-primary flex items-center gap-2">
+          🏛️ A Engenharia por Trás do Código
+        </h2>
+        <p class="text-lg leading-relaxed">
+          O <strong>SDLC (Software Development Life Cycle)</strong> não é apenas uma lista de tarefas; é um framework de gestão de risco. Um erro de requisito detetado na fase de manutenção pode custar <strong>100x mais</strong> do que se fosse detetado na fase de análise inicial.
+        </p>
+      </div>
+
+      <div class="space-y-6">
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">1. As Fases de Missão Crítica</h3>
+        <ul class="space-y-4">
+          <li class="p-4 bg-muted/20 rounded-xl border border-white/5">
+            <strong class="text-accent block mb-1">Análise e Viabilidade:</strong> Onde se define o <i>Business Value</i>. Inclui análise de ROI (Retorno sobre Investimento) e viabilidade técnica (TSR).
+          </li>
+          <li class="p-4 bg-muted/20 rounded-xl border border-white/5">
+            <strong class="text-accent block mb-1">Design de Arquitetura:</strong> A criação dos blueprints. Define-se aqui se o sistema será monolítico ou microserviços, as escolhas de base de dados e os diagramas de sequência.
+          </li>
+          <li class="p-4 bg-muted/20 rounded-xl border border-white/5">
+            <strong class="text-accent block mb-1">Verificação vs Validação (V&V):</strong> 
+            <br/>- <i>Verificação:</i> Estamos a construir o sistema corretamente? (Seguindo as especificações).
+            <br/>- <i>Validação:</i> Estamos a construir o sistema certo? (Atendendo às reais necessidades do utilizador).
+          </li>
+        </ul>
+
+        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">2. Modelos de Ciclo de Vida</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="p-4 bg-card border rounded-xl border-red-500/20">
+            <h4 class="font-bold text-red-400">Waterfall (Cascata)</h4>
+            <p class="text-xs opacity-70">Rígido e linear. Ideal para projetos onde os requisitos nunca mudam (ex: software para hardware médico ou espacial).</p>
+          </div>
+          <div class="p-4 bg-card border rounded-xl border-green-500/20">
+            <h4 class="font-bold text-green-400">Spiral e Iterative</h4>
+            <p class="text-xs opacity-70">Focado em análise de risco cíclica. Permite evoluir o produto em espirais de feedback, reduzindo incertezas em cada volta.</p>
+          </div>
+        </div>
+
+        <div class="bg-indigo-500/10 p-6 rounded-2xl border border-indigo-500/20 shadow-inner mt-6">
+          <h3 class="text-xl font-bold font-headline text-indigo-400 mb-4">🔧 Tipos de Manutenção de Elite</h3>
+          <p class="text-sm mb-4">Um engenheiro master sabe que o deploy é apenas o início. O software exige:</p>
+          <ul class="list-disc ml-6 space-y-2 text-xs">
+            <li><strong>Corretiva:</strong> Reparar bugs detetados em produção.</li>
+            <li><strong>Adaptativa:</strong> Alterar o software para rodar num novo SO ou cloud.</li>
+            <li><strong>Perfeitiva:</strong> Refatoração para melhorar performance ou legibilidade (Clean Code).</li>
+            <li><strong>Preventiva:</strong> Antecipar falhas futuras e atualizar dependências vulneráveis.</li>
+          </ul>
+        </div>
+      </div>
     </div>
   `,
-  quizId: "se-q1"
+  quizId: "se-q1-master"
 };
