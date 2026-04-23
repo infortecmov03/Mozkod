@@ -2,41 +2,24 @@ import { lesson as l1 } from './theory/01-sdlc';
 import { lesson as l2 } from './theory/02-agile-manifesto';
 import { lesson as l3 } from './theory/03-scrum-framework';
 import { lesson as l4 } from './theory/04-kanban-lean';
+import { lesson as l5 } from './theory/05-requirements-engineering';
+import { lesson as l6 } from './theory/06-user-stories';
+import { lesson as l7 } from './theory/07-estimation-techniques';
+import { lesson as l8 } from './theory/08-devops-culture';
+import { lesson as l9 } from './theory/09-ci-cd-pipelines';
+import { lesson as l10 } from './theory/10-deployment-strategies';
 
-const titles = [
-  "SDLC Master: Arquitetura do Ciclo de Vida",
-  "Manifesto Ágil: Colaboração sobre Processos",
-  "Scrum Framework: Papéis e Sprints",
-  "Kanban: Gestão de Fluxo e WIP Limits",
-  "Engenharia de Requisitos: Funcionais e Não-Funcionais",
-  "User Stories e o Critério INVEST",
-  "Estimativa: Fibonacci e Story Points",
-  "Cultura DevOps: CAMS Model",
-  "Pipelines CI/CD: Automação Total",
-  "Estratégias de Deploy: Blue/Green e Canary",
-  "Code Review e Pair Programming",
-  "Gestão de Débito Técnico",
-  "SRE: Site Reliability Engineering",
-  "Error Budgets e SLOs",
-  "Gestão de Incidentes e Resposta",
-  "Post-mortems Blame-free",
-  "Documentação de Arquitetura (ADRs)",
-  "Ética Profissional e Responsabilidade",
-  "Liderança Técnica e Mentoria",
-  "Software Engineering na Era da IA",
-  "Capstone: Auditoria de Processo Completa"
+export const lessons = [
+  l1, l2, l3, l4, l5, l6, l7, l8, l9, l10,
+  { id: "se-t11", title: "Code Review e Peer Programming de Elite", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q11-master" },
+  { id: "se-t12", title: "Gestão de Débito Técnico e Refatoração", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q12-master" },
+  { id: "se-t13", title: "SRE: Site Reliability Engineering", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q13-master" },
+  { id: "se-t14", title: "Error Budgets e Gestão de SLOs", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q14-master" },
+  { id: "se-t15", title: "Gestão de Incidentes e Resposta a Crises", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q15-master" },
+  { id: "se-t16", title: "Post-mortems e Aprendizado Organizacional", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q16-master" },
+  { id: "se-t17", title: "Documentação de Arquitetura (ADRs)", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q17-master" },
+  { id: "se-t18", title: "Ética Profissional e Responsabilidade do Engenheiro", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q18-master" },
+  { id: "se-t19", title: "Liderança Técnica e Mentoria", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q19-master" },
+  { id: "se-t20", title: "Software Engineering na Era da IA", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q20-master" },
+  { id: "se-t21", title: "Capstone: Auditoria de Processo Completa", content: "<p>Aprofundamento técnico em breve...</p>", quizId: "se-q21-master" }
 ];
-
-export const lessons = titles.map((title, i) => {
-  if (i === 0) return { ...l1, title };
-  if (i === 1) return { ...l2, title };
-  if (i === 2) return { ...l3, title };
-  if (i === 3) return { ...l4, title };
-  
-  return {
-    id: `se-t${i + 1}`,
-    title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>⚙️ Software Processes: ${title}</h2><p>Estudo aprofundado dos processos industriais de engenharia de software para escala global.</p></div>`,
-    quizId: `se-q${i + 1}-master`
-  };
-});
