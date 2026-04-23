@@ -2,8 +2,9 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, ChevronRight, ListChecks, Brain, Youtube } from "lucide-react";
+import { CheckCircle2, ChevronRight, ListChecks, Brain, Youtube, MessageSquare, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import type { PracticeExercise } from "@/lib/curriculum/types";
 
 interface MissionBriefingProps {
@@ -34,7 +35,7 @@ export function MissionBriefing({
           {isConceptLab ? <Brain className="w-4 h-4" /> : <ListChecks className="w-4 h-4" />}
           Missão {isConceptLab ? "Lógica Pura" : "Técnica"}
         </h3>
-        {availableVariants.length > 0 && (
+        {availableVariants.length > 1 && (
           <div className="flex items-center gap-1.5 bg-secondary/50 p-1 rounded-lg">
              {availableVariants.map(v => (
                <Button
@@ -57,12 +58,12 @@ export function MissionBriefing({
       {practice.youtubeVideoId && (
         <div className="mb-6 aspect-video w-full overflow-hidden rounded-2xl border border-white/5 bg-black/40 group relative">
            <iframe 
-            src={`https://www.youtube.com/embed/${practice.youtubeVideoId}`}
+            src={`https://www.youtube.com/embed/${practice.youtubeVideoId}?rel=0&modestbranding=1`}
             title={practice.title}
             className="w-full h-full"
             allowFullScreen
           />
-          <div className="absolute top-2 left-2 inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-red-600/90 text-white text-[8px] font-black uppercase tracking-widest shadow-lg">
+          <div className="absolute top-2 left-2 inline-flex items-center gap-1.5 px-2 py-1 rounded-full bg-red-600/90 text-white text-[8px] font-black uppercase tracking-widest shadow-lg pointer-events-none">
             <Youtube className="w-3 h-3" /> Guia Prático
           </div>
         </div>
@@ -70,7 +71,7 @@ export function MissionBriefing({
       
       <div className="prose prose-invert prose-sm mb-6 text-xs leading-relaxed opacity-90" dangerouslySetInnerHTML={{ __html: practice.detailedExplanation }} />
       
-      <div className="space-y-2 mb-10">
+      <div className="space-y-2 mb-8">
         <p className="text-[10px] font-black uppercase text-muted-foreground/60 mb-2 tracking-widest">Requisitos de Construção</p>
         {practice.objectives.map((obj, i) => (
           <div key={obj.id} className={cn("p-3 md:p-4 rounded-xl border transition-all", (completedObjectives.includes(obj.id) || isCompleted) ? "bg-green-500/10 border-green-500/30" : "bg-background/40 border-white/5 shadow-sm")}>
@@ -87,6 +88,17 @@ export function MissionBriefing({
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="space-y-3 mb-10">
+        <p className="text-[10px] font-black uppercase text-muted-foreground/60 mb-2 tracking-widest">Suporte da Comunidade</p>
+        <Link href={`/community/exercise/${practice.id}`} className="block">
+          <Button variant="outline" className="w-full rounded-xl border-dashed border-primary/30 hover:bg-primary/5 hover:border-primary/50 text-xs font-bold gap-2 h-11">
+            <MessageSquare className="w-4 h-4 text-primary" />
+            Dúvidas ou Erros? Pedir Ajuda
+            <ArrowRight className="w-3 h-3 ml-auto opacity-40" />
+          </Button>
+        </Link>
       </div>
 
       <div className="mt-auto pt-6 border-t border-white/5">

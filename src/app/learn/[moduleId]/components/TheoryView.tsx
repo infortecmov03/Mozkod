@@ -6,10 +6,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, XCircle, AlertCircle, Sparkles, Youtube, ChevronRight, RefreshCcw } from "lucide-react";
+import { CheckCircle2, XCircle, AlertCircle, Sparkles, Youtube, ChevronRight, RefreshCcw, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import type { TheoryLesson, Quiz } from "@/lib/curriculum/types";
 
 interface TheoryViewProps {
@@ -57,22 +58,28 @@ export function TheoryView({ theory, quiz, isCompleted, nextLessonId, onComplete
   const selectAnswer = (questionId: string, optionIndex: number) => {
     if (isCompleted) return;
     setSelectedAnswers(prev => ({ ...prev, [questionId]: optionIndex }));
-    // Removido o reset do validated para manter os ícones visíveis enquanto retifica
   };
 
   return (
     <div className="flex-1 overflow-y-auto p-5 md:p-16 max-w-4xl mx-auto w-full scroll-container">
-      <h1 className="text-2xl md:text-5xl font-headline font-bold mb-6 md:mb-10 leading-tight">{theory.title}</h1>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <h1 className="text-2xl md:text-5xl font-headline font-bold leading-tight">{theory.title}</h1>
+        <Link href="/community">
+          <Button variant="outline" size="sm" className="rounded-full gap-2 border-primary/20 text-xs font-bold h-9">
+            <MessageSquare className="w-4 h-4" /> Dúvida no Fórum
+          </Button>
+        </Link>
+      </div>
       
       {theory.youtubeVideoId && (
-        <div className="mb-12 aspect-video w-full overflow-hidden rounded-[2.5rem] shadow-2xl border border-white/5 bg-black/40 group relative">
+        <div className="mb-12 aspect-video w-full overflow-hidden rounded-[2rem] md:rounded-[2.5rem] shadow-2xl border border-white/5 bg-black/40 group relative">
            <iframe 
-            src={`https://www.youtube.com/embed/${theory.youtubeVideoId}`}
+            src={`https://www.youtube.com/embed/${theory.youtubeVideoId}?rel=0&modestbranding=1`}
             title={theory.title}
             className="w-full h-full"
             allowFullScreen
           />
-          <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-600/90 text-white text-[10px] font-black uppercase tracking-widest shadow-lg">
+          <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-600/90 text-white text-[10px] font-black uppercase tracking-widest shadow-lg pointer-events-none">
             <Youtube className="w-3.5 h-3.5" /> Video Aula
           </div>
         </div>
