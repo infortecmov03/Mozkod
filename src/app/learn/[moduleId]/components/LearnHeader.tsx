@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -52,13 +51,15 @@ export function LearnHeader({
                 <Brain className="w-4 h-4 text-primary" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="h-[60vh] rounded-t-[2.5rem] p-0 border-t-primary/20">
-               <SheetHeader className="p-6 border-b">
+            <SheetContent side="bottom" className="h-[85vh] rounded-t-[2.5rem] p-0 border-t-primary/20 flex flex-col">
+               <SheetHeader className="p-6 border-b shrink-0">
                  <SheetTitle className="text-left font-headline font-bold flex items-center gap-2">
                    <Brain className="w-5 h-5 text-primary" /> Trilhas do Módulo
                  </SheetTitle>
                </SheetHeader>
-               {lessonList}
+               <div className="flex-1 overflow-hidden relative">
+                 {lessonList}
+               </div>
             </SheetContent>
           </Sheet>
         )}

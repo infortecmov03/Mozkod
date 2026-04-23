@@ -7,15 +7,12 @@ import {
 } from "@/lib/curriculum";
 import { useParams, useRouter } from "next/navigation";
 import { useProgress } from "@/contexts/ProgressContext";
-import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { CheckCircle2, Loader2, LayoutGrid, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 // Componentes Modulares
 import { LearnHeader } from "./components/LearnHeader";
+import { LearnSidebar } from "./components/LearnSidebar";
 import { TheoryView } from "./components/TheoryView";
 import { PracticeWorkspace } from "./components/PracticeWorkspace";
 import { MissionBriefing } from "./components/MissionBriefing";
@@ -115,36 +112,8 @@ export default function LearnPage() {
       
       setCompletedObjectives(newDone);
 
-      // Simulação de Terminal Inteligente
-      let logs = "";
-      if (practice?.language === 'javascript' || practice?.language === 'python') {
-        const vars: Record<string, string> = {};
-        const assignRegex = /(?:const|let|var|)\s*(\w+)\s*=\s*["'`](.*?)["'`]/g;
-        let match;
-        while ((match = assignRegex.exec(current)) !== null) {
-          vars[match[1]] = match[2];
-        }
-
-        const logRegex = /(?:console\.log|print)\s*\(\s*(\w+)\s*\)/g;
-        while ((match = logRegex.exec(current)) !== null) {
-          const varName = match[1];
-          if (vars[varName]) {
-             logs += `> OUT: ${vars[varName]}\n`;
-          } else {
-             logs += `> OUT: [${varName}]\n`;
-          }
-        }
-
-        if (!logs) {
-          const directLogRegex = /(?:console\.log|print)\s*\(\s*["'`](.*?)["'`]\s*\)/g;
-          while ((match = directLogRegex.exec(current)) !== null) {
-            logs += `> OUT: ${match[1]}\n`;
-          }
-        }
-      }
-
       if (newDone.length === (practice?.objectives.length || 0)) {
-        setOutput(`${logs}> ✅ STATUS: 200 OK\n> [AUDITORIA]: Requisitos validados.\n> Missão concluída.`);
+        setOutput("> ✅ STATUS: 200 OK\n> [AUDITORIA]: Requisitos validados.\n> Missão concluída.");
         toast.success("Excelente! Missão concluída.");
         if (data && !isCompleted(lessonId)) {
           const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
@@ -152,7 +121,7 @@ export default function LearnPage() {
         }
       } else {
         const remaining = (practice?.objectives.length || 0) - newDone.length;
-        setOutput(`${logs}> ⚠️ STATUS: 412 PRECONDITION FAILED\n> [AUDITORIA]: Faltam ${remaining} componentes essenciais.`);
+        setOutput(`> ⚠️ STATUS: 412 PRECONDITION FAILED\n> [AUDITORIA]: Faltam ${remaining} componentes essenciais.`);
         toast.error("Alguns requisitos ainda não foram atingidos.");
       }
     }, 800);
@@ -165,49 +134,11 @@ export default function LearnPage() {
   };
 
   if (!mounted || !data) return null;
-  const { ka } = data;
-
-  const LessonList = (
-    <div className="flex flex-col gap-1 p-4 pb-32 overflow-y-auto max-h-[80vh] scroll-container">
-      <Link href="/modules" className="mb-4">
-        <Button variant="outline" className="w-full justify-start gap-2 border-primary/20 bg-primary/5 hover:bg-primary/10 rounded-xl h-12 font-bold">
-          <LayoutGrid className="w-4 h-4 text-primary" /> Voltar aos Módulos
-        </Button>
-      </Link>
-
-      <div className="text-[10px] font-black uppercase text-muted-foreground/60 mb-2 px-2 tracking-widest">Aulas Teóricas</div>
-      {ka.theory.map((l) => (
-        <Link key={l.id} href={`/learn/${l.id}`} className={cn(
-          "flex items-center justify-between p-3 rounded-xl text-sm border transition-all mb-1",
-          lessonId === l.id ? "bg-primary/20 border-primary/30 text-primary font-bold" : "bg-card/40 border-transparent hover:bg-card/60"
-        )}>
-          <span className="truncate mr-2">{l.title}</span>
-          {isCompleted(l.id) && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />}
-        </Link>
-      ))}
-
-      <div className="text-[10px] font-black uppercase text-muted-foreground/60 mt-4 mb-2 px-2 tracking-widest">Laboratórios Práticos</div>
-      {Object.entries(ka.practice).map(([lang, exercises]) => (
-        exercises.map(ex => (
-          <Link key={ex.id} href={`/learn/${ex.id}`} className={cn(
-            "flex items-center justify-between p-3 rounded-xl text-sm border transition-all mb-1",
-            lessonId === ex.id ? "bg-accent/20 border-accent/30 text-accent font-bold" : "bg-card/40 border-transparent hover:bg-card/60"
-          )}>
-            <span className="truncate mr-2 flex items-center gap-2">
-              <span className="text-[10px] bg-accent/10 px-1.5 py-0.5 rounded text-accent uppercase font-black">{lang}</span>
-              {ex.title}
-            </span>
-            {isCompleted(ex.id) && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />}
-          </Link>
-        ))
-      ))}
-    </div>
-  );
 
   return (
     <div className="flex flex-col h-[100dvh] bg-background overflow-hidden font-body">
       <LearnHeader 
-        kaTitle={ka.title}
+        kaTitle={data.ka.title}
         lessonTitle={theory?.title || practice?.title || ""}
         isMobile={!!isMobile}
         isTheory={!!theory}
@@ -215,7 +146,7 @@ export default function LearnPage() {
         isRunning={isRunning}
         nextLessonId={nextLessonId}
         onRunCode={handleRunCode}
-        lessonList={LessonList}
+        lessonList={<LearnSidebar ka={data.ka} lessonId={lessonId} isCompleted={isCompleted} />}
         missionContent={practice && (
           <MissionBriefing 
             practice={practice}
