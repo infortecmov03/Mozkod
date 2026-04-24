@@ -1,6 +1,9 @@
 import type { PracticeExercise } from '../../types';
 import { exercise as p1 } from './laboratory/01-solid-srp-lab';
 import { exercise as p2 } from './laboratory/02-clean-code-lab';
+import { exercise as p3 } from './laboratory/03-factory-pattern-lab';
+import { exercise as p4 } from './laboratory/04-adapter-pattern-lab';
+import { exercise as p5 } from './laboratory/05-strategy-pattern-lab';
 
 // Gerador para os restantes labs enquanto são aprofundados individualmente
 const generateDesignLab = (idNum: number, title: string, testStr: string) => ({
@@ -34,7 +37,7 @@ const tests = [
 
 export const practice = {
   typescript: [
-    p1, p2,
-    ...titles.slice(2).map((title, i) => generateDesignLab(i + 3, title, tests[i + 2]))
+    p1, p2, p3, p4, p5,
+    ...titles.slice(5).map((title, i) => generateDesignLab(i + 6, title, tests[i + 5]))
   ]
 };
