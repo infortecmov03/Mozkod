@@ -8,24 +8,48 @@ export const exercise: PracticeExercise = {
   statement: "Estruture o interior da tag <main> usando seções e títulos hierárquicos.",
   isProjectPart: true,
   youtubeVideoId: "8ME9u065vD4",
-  template: ``, // Herda do html-p4
+  template: `<!DOCTYPE html>
+<html lang="pt-MZ">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A academia de engenharia de elite de Moçambique.">
+    <meta name="author" content="Master Engineer">
+    <link rel="canonical" href="https://codworks.mz">
+    <meta property="og:title" content="Codworks Master Project">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="cover.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Codworks Master Studio</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header></header>
+    <main role="main">
+      <h1>Bem-vindo ao Nível Master</h1>
+      <p>A estrutura está validada.</p>
+    </main>
+    <footer>
+      <p>&copy; 2024 Codworks Moz</p>
+    </footer>
+  </body>
+</html>`,
   detailedExplanation: `
     <div class="space-y-4">
       <h3 class="text-xl font-bold text-primary">🔨 Passo a Passo: Árvore de Títulos</h3>
-      <p class="text-sm">Vá para dentro da tag <code>&lt;main&gt;</code> e organize o conteúdo:</p>
-      
+      <p class="text-sm">Vá para dentro da tag <code>&lt;main&gt;</code> da sua solução anterior e organize o conteúdo:</p>
       <div class="bg-black/40 p-4 rounded-xl border border-white/10 font-mono text-[11px] leading-relaxed">
-        <p><strong>Ação 1:</strong> Envolva o conteúdo existente numa tag <code>&lt;section&gt;</code>.</p>
-        <p><strong>Ação 2:</strong> Abaixo do <code>&lt;h1&gt;</code>, adicione um <code>&lt;h2&gt;</code> com o título: "Sobre o Motor de Engenharia".</p>
-        <p><strong>Ação 3:</strong> Adicione uma segunda <code>&lt;section&gt;</code> abaixo da primeira.</p>
-        <p><strong>Ação 4:</strong> Dentro da segunda seção, adicione um <code>&lt;h2&gt;</code>: "Módulos de Especialização".</p>
-        <p><strong>Ação 5:</strong> Dentro desta seção, use <code>&lt;h3&gt;</code> para listar: "Frontend", "Backend" e "DevOps".</p>
+        <p><strong>Ação 1:</strong> Envolva o H1 e o P numa tag <code>&lt;section&gt;</code>.</p>
+        <p><strong>Ação 2:</strong> Abaixo do <code>&lt;p&gt;</code>, adicione um <code>&lt;h2&gt;</code>: "Sobre o Motor".</p>
+        <p><strong>Ação 3:</strong> Crie uma segunda <code>&lt;section&gt;</code> abaixo da primeira.</p>
+        <p><strong>Ação 4:</strong> Na nova seção, adicione um <code>&lt;h2&gt;</code>: "Módulos de Elite".</p>
+        <p><strong>Ação 5:</strong> Dentro dela, use <code>&lt;h3&gt;</code> para: "Frontend", "Backend" e "DevOps".</p>
       </div>
     </div>
   `,
   objectives: [
-    { id: "sections", description: "Pelo menos 2 tags <section> no main", test: "<section>" },
-    { id: "h2_check", description: "Pelo menos 2 tags <h2>", test: "<h2>" },
-    { id: "h3_check", description: "Pelo menos 3 tags <h3>", test: "<h3>" }
+    { id: "sections", description: "Mínimo 2 seções no main", test: "<section>" },
+    { id: "h2_check", description: "Títulos H2 presentes", test: "<h2>" },
+    { id: "h3_check", description: "Títulos H3 presentes", test: "<h3>" }
   ]
 };
