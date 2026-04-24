@@ -1,12 +1,15 @@
 import type { TheoryLesson } from '../../types';
 import { lesson as l1 } from './theory/01-null-safety-master';
 import { lesson as l2 } from './theory/02-extensions-delegates';
+import { lesson as l3 } from './theory/03-sealed-state-lab';
+import { lesson as l6 } from './theory/06-coroutines-suspension';
+import { lesson as l15 } from './theory/15-compiler-plugins-ksp';
 
 const kotlinTitles = [
   "Fase 1: Null Safety Internals e o Type System",
   "Fase 1: Extension Functions e Property Delegation",
   "Fase 1: Sealed Hierarchies e Pattern Matching (When)",
-  "Fase 1: Functional Programming e Collections Framework",
+  "Fase 1: Functional Programming e Collections de Elite",
   "Fase 2: Inline Classes e Otimização de Performance",
   "Fase 2: Coroutines Master: Suspensão e Scopes",
   "Fase 2: Structured Concurrency e Job Management",
@@ -27,7 +30,7 @@ const kotlinTitles = [
 ];
 
 const sourceMap: Record<number, any> = {
-  0: l1, 1: l2
+  0: l1, 1: l2, 2: l3, 5: l6, 14: l15
 };
 
 export const lessons: TheoryLesson[] = kotlinTitles.map((title, i) => {
@@ -44,7 +47,7 @@ export const lessons: TheoryLesson[] = kotlinTitles.map((title, i) => {
   return {
     id: `kt-m${i + 1}`,
     title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>📱 Kotlin Master: ${title}</h2><p>Estudo aprofundado da linguagem para Android, Backend e Multiplataforma com rigor industrial.</p></div>`,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>📱 Kotlin Master: ${title}</h2><p>Estudo aprofundado de engenharia de software com Kotlin, focado em performance, concorrência e arquitetura multiplataforma.</p></div>`,
     quizId: `kt-mq${i + 1}`,
     enableInteractive: true
   };
