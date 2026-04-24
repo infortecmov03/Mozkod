@@ -13,10 +13,10 @@ import { lesson as l10 } from './theory/10-python-security';
 
 const pythonTitles = [
   "Fase 1: CPython Internals: O GIL e Threads",
-  "Fase 1: Metaprogramação: Decoradores de Elite",
+  "Fase 1: Metaprogramação: Decoradores e Metaclasses",
   "Fase 1: AsyncIO: Concorrência e Event Loop",
   "Fase 1: Gestão de Memória e Garbage Collection",
-  "Fase 2: FastAPI: Escalabilidade e Tipagem Pydantic",
+  "Fase 2: FastAPI: Escalabilidade e Tipagem Forte",
   "Fase 2: NumPy: Vectorização e Instruções SIMD",
   "Fase 2: Pandas: Otimização de DataFrames",
   "Fase 2: Scikit-Learn: Pipelines de Produção",
@@ -52,7 +52,7 @@ export const lessons: TheoryLesson[] = pythonTitles.map((title, i) => {
   return {
     id: `py-m${i + 1}`,
     title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐍 Python Master: ${title}</h2><p>Estudo aprofundado dos internals da linguagem e frameworks de alta performance.</p></div>`,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐍 Python Master: ${title}</h2><p>Estudo aprofundado da linguagem para engenharia de sistemas, IA e infraestrutura escalável.</p></div>`,
     quizId: `py-mq${i + 1}`
   };
 });
