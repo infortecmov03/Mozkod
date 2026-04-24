@@ -5,7 +5,7 @@ export const lesson: TheoryLesson = {
   title: "Estrutura HTML5: O Esqueleto de Alta Performance",
   youtubeVideoId: "8ME9u065vD4",
   content: `
-    <div class="space-y-8">
+    <div class="space-y-10">
       <div class="bg-orange-500/10 p-6 rounded-2xl border border-orange-500/20 shadow-xl">
         <h2 class="text-2xl font-bold mb-4 flex items-center gap-2 font-headline text-orange-400">
           🏗️ Mais que uma Linguagem de Marcação
@@ -15,46 +15,87 @@ export const lesson: TheoryLesson = {
         </p>
       </div>
 
-      <div class="space-y-6">
-        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">1. Semântica: Dando Significado ao Silício</h3>
-        <p>Utilizar as tags corretas permite que o Google e leitores de ecrã entendam a hierarquia da informação. Evite o "Div-itis" (uso excessivo de div).</p>
-        <ul class="grid md:grid-cols-3 gap-4">
-          <li class="bg-card p-4 rounded-xl border border-white/5">
-            <strong class="text-orange-400">header/nav:</strong> Identidade e navegação.
-          </li>
-          <li class="bg-card p-4 rounded-xl border border-white/5">
-            <strong class="text-orange-400">main/article:</strong> O conteúdo central e único.
-          </li>
-          <li class="bg-card p-4 rounded-xl border border-white/5">
-            <strong class="text-orange-400">footer:</strong> Rodapé e metadados legais.
-          </li>
-        </ul>
+      <div class="space-y-8">
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-orange-500/20 pb-2 text-primary">1. Semântica: A Arquitetura do Significado</h3>
+        <p class="text-sm leading-relaxed">
+          Semântica é o uso de tags que descrevem o seu próprio conteúdo. Ao usar a tag correta, você informa ao browser, ao Google e aos leitores de ecrã exatamente o que aquela parte do site representa.
+        </p>
+
+        <div class="space-y-6">
+          <!-- Header & Nav -->
+          <div class="bg-card p-6 rounded-3xl border border-white/5 shadow-lg">
+            <h4 class="font-bold text-orange-400 mb-4 flex items-center gap-2">
+              <span class="p-2 bg-orange-400/10 rounded-lg text-xs">TOP</span> header & nav: Identidade e Fluxo
+            </h4>
+            <p class="text-xs text-muted-foreground mb-4">
+              O <code>&lt;header&gt;</code> é o grupo introdutório. Geralmente contém o logotipo e a navegação principal (<code>&lt;nav&gt;</code>). É o ponto de entrada da autoridade do site.
+            </p>
+            <div class="bg-black/40 p-4 rounded-xl font-code text-[11px] text-green-400">
+              <span class="text-muted-foreground">&lt;!-- Exemplo de Elite --&gt;</span><br/>
+              &lt;<span class="text-primary">header</span>&gt;<br/>
+              &nbsp;&nbsp;&lt;<span class="text-primary">h1</span>&gt;Codworks Moz&lt;/<span class="text-primary">h1</span>&gt;<br/>
+              &nbsp;&nbsp;&lt;<span class="text-primary">nav</span>&gt;<br/>
+              &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="text-primary">ul</span>&gt;<br/>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="text-primary">li</span>&gt;&lt;<span class="text-primary">a</span> <span class="text-accent">href</span>="/learn"&gt;Módulos&lt;/<span class="text-primary">a</span>&gt;&lt;/<span class="text-primary">li</span>&gt;<br/>
+              &nbsp;&nbsp;&nbsp;&nbsp;&lt;/<span class="text-primary">ul</span>&gt;<br/>
+              &nbsp;&nbsp;&lt;/<span class="text-primary">nav</span>&gt;<br/>
+              &lt;/<span class="text-primary">header</span>&gt;
+            </div>
+          </div>
+
+          <!-- Main & Article -->
+          <div class="bg-card p-6 rounded-3xl border border-white/5 shadow-lg">
+            <h4 class="font-bold text-orange-400 mb-4 flex items-center gap-2">
+              <span class="p-2 bg-orange-400/10 rounded-lg text-xs">MID</span> main & article: O Coração dos Dados
+            </h4>
+            <p class="text-xs text-muted-foreground mb-4">
+              O <code>&lt;main&gt;</code> contém o conteúdo único daquela página específica (deve haver apenas um). O <code>&lt;article&gt;</code> é usado para conteúdos independentes, como um post ou um card, que faria sentido mesmo se fosse lido sozinho.
+            </p>
+            <div class="bg-black/40 p-4 rounded-xl font-code text-[11px] text-green-400">
+              &lt;<span class="text-primary">main</span> <span class="text-accent">role</span>="main"&gt;<br/>
+              &nbsp;&nbsp;&lt;<span class="text-primary">article</span>&gt;<br/>
+              &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="text-primary">h2</span>&gt;Como dominar o HTML5&lt;/<span class="text-primary">h2</span>&gt;<br/>
+              &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="text-primary">p</span>&gt;O segredo está na semântica...&lt;/<span class="text-primary">p</span>&gt;<br/>
+              &nbsp;&nbsp;&lt;/<span class="text-primary">article</span>&gt;<br/>
+              &lt;/<span class="text-primary">main</span>&gt;
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="bg-card p-6 rounded-3xl border border-white/5 shadow-lg">
+            <h4 class="font-bold text-orange-400 mb-4 flex items-center gap-2">
+              <span class="p-2 bg-orange-400/10 rounded-lg text-xs">BOT</span> footer: Autoridade e Legal
+            </h4>
+            <p class="text-xs text-muted-foreground mb-4">
+              O <code>&lt;footer&gt;</code> encerra o documento. É o local ideal para copyright, links de política de privacidade, morada e informações de contacto.
+            </p>
+            <div class="bg-black/40 p-4 rounded-xl font-code text-[11px] text-green-400">
+              &lt;<span class="text-primary">footer</span>&gt;<br/>
+              &nbsp;&nbsp;&lt;<span class="text-primary">p</span>&gt;&copy; 2024 Codworks Moçambique&lt;/<span class="text-primary">p</span>&gt;<br/>
+              &nbsp;&nbsp;&lt;<span class="text-primary">address</span>&gt;Maputo, MZ&lt;/<span class="text-primary">address</span>&gt;<br/>
+              &lt;/<span class="text-primary">footer</span>&gt;
+            </div>
+          </div>
+        </div>
 
         <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">2. Atributos de Identidade: Class vs ID</h3>
         <div class="flex flex-col md:flex-row gap-6">
           <div class="flex-1 p-5 bg-muted/20 rounded-xl border border-white/5">
             <h4 class="font-bold text-accent mb-2">Class (.)</h4>
-            <p class="text-xs text-muted-foreground">Reutilizável. Identifica um estilo ou comportamento que se repete. <br/><code>class="btn-primary"</code></p>
+            <p class="text-xs text-muted-foreground">Reutilizável. Identifica um estilo ou comportamento que se repete em vários elementos. <br/><code>class="btn-primary"</code></p>
           </div>
           <div class="flex-1 p-5 bg-muted/20 rounded-xl border border-white/5">
             <h4 class="font-bold text-primary mb-2">ID (#)</h4>
-            <p class="text-xs text-muted-foreground">Único. Identifica um elemento absoluto no documento. Vital para o JavaScript. <br/><code>id="main-form"</code></p>
+            <p class="text-xs text-muted-foreground">Único. Identifica um elemento absoluto no documento. Vital para o JavaScript e âncoras. <br/><code>id="main-form"</code></p>
           </div>
         </div>
 
-        <div class="bg-indigo-500/10 p-6 rounded-2xl border border-indigo-500/20 shadow-inner">
-          <h3 class="text-xl font-bold font-headline text-indigo-400 mb-4">🚀 O Caminho Crítico de Renderização</h3>
-          <p class="text-sm leading-relaxed">
-            O browser lê o HTML de cima para baixo. A ordem das tags no <code>&lt;head&gt;</code> (como a meta charset e o favicon) decide se o utilizador vê uma página branca por 1 segundo ou se o site aparece instantaneamente.
-          </p>
-        </div>
-
-        <div class="bg-green-500/5 p-6 rounded-2xl border border-green-500/20 mt-6">
-          <h4 class="font-bold text-green-500 mb-2 flex items-center gap-2">
-            💎 Visão Master
+        <div class="bg-yellow-500/5 p-6 rounded-2xl border border-yellow-500/20 mt-6 shadow-inner">
+          <h4 class="font-bold text-yellow-500 mb-2 flex items-center gap-2 text-sm">
+            💎 Dica de Senioridade: Evite a "Div-ite"
           </h4>
-          <p class="text-sm leading-relaxed">
-            O HTML5 introduziu atributos como <code>loading="lazy"</code> e <code>async/defer</code> para scripts. Dominar estes atributos é o que separa um site pesado de uma aplicação de elite otimizada para o mercado moçambicano.
+          <p class="text-xs leading-relaxed opacity-80">
+            Sempre que estiver prestes a escrever uma <code>&lt;div&gt;</code>, pare e pergunte: "Este bloco tem um significado?". Se for um cabeçalho, use <code>&lt;header&gt;</code>. Deixe as divs apenas para necessidades puramente estéticas de layout onde nenhuma outra tag descreva o conteúdo.
           </p>
         </div>
       </div>
