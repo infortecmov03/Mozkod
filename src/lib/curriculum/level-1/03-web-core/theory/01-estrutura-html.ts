@@ -55,7 +55,7 @@ export const lesson: TheoryLesson = {
            <p class="text-xs text-muted-foreground">Repare nos caracteres corrompidos no preview.</p>
            <pre><code class="language-html">
 &lt;h1&gt;ConfiguraÃ§Ã£o de AcentuaÃ§Ã£o&lt;/h1&gt;
-&lt;p&gt;Sem o UTF-8, o sistema falha ao ler o til e o cedilha.&lt;/p&gt;
+&lt;p&gt;Sem o UTF-8, o til e o cedilha podem falhar.&lt;/p&gt;
            </code></pre>
 
            <h4 class="font-bold text-green-500 text-sm">✅ Com Charset UTF-8 (Suporte Universal)</h4>
@@ -352,7 +352,7 @@ export const lesson: TheoryLesson = {
 
       <!-- 12. MULTIMÉDIA -->
       <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">12. Multimédia: Áudio, Vídeo e Iframes</h3>
+        <h3 class="text-2xl font-bold font-headline border-b border-primary/20 pb-2 text-accent">12. Multimédia: Áudio, Vídeo e Iframes</h3>
         
         <pre><code class="language-html">
 &lt;!-- Vídeo --&gt;
@@ -383,7 +383,7 @@ export const lesson: TheoryLesson = {
 
       <!-- 13. ELEMENTOS INTERACTIVOS -->
       <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">13. Elementos Interactivos</h3>
+        <h3 class="text-2xl font-bold font-headline border-b border-primary/20 pb-2 text-accent">13. Elementos Interactivos</h3>
         
         <pre><code class="language-html">
 &lt;!-- Details e Summary (acordeão nativo) --&gt;
@@ -406,7 +406,7 @@ export const lesson: TheoryLesson = {
 
       <!-- 14. SCRIPTS E ESTILOS -->
       <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">14. Conexão com CSS e JavaScript</h3>
+        <h3 class="text-2xl font-bold font-headline border-b border-primary/20 pb-2 text-accent">14. Conexão com CSS e JavaScript</h3>
         
         <pre><code class="language-html">
 &lt;!-- CSS Externo --&gt;
