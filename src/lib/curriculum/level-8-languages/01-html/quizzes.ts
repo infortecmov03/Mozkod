@@ -6,7 +6,7 @@ import { quiz as q5 } from './quizzes/05-web-components-quiz';
 import { quiz as q6 } from './quizzes/06-forms-quiz';
 import { quiz as q7 } from './quizzes/07-multimedia-quiz';
 import { quiz as q8 } from './quizzes/08-performance-quiz';
-import { quiz as q9 } from './quizzes/09-shadow-dom-quiz';
+import { quiz as q9 } from './quizzes/09-constraint-validation-quiz';
 import { quiz as q10 } from './quizzes/10-focus-management-quiz';
 import { quiz as q11 } from './quizzes/11-svg-optimization-quiz';
 import { quiz as q12 } from './quizzes/12-constraint-validation-quiz';
