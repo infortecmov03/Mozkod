@@ -1,4 +1,5 @@
 import { lesson as l1 } from './theory/01-structure';
+import { lesson as l2 } from './theory/02-meta-seo';
 import type { TheoryLesson } from '../../types';
 
 const htmlTitles = [
@@ -26,7 +27,8 @@ const htmlTitles = [
 ];
 
 export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {
-  if (i === 0) return l1; // Retorna a lição aprofundada para o primeiro tópico
+  if (i === 0) return l1;
+  if (i === 1) return l2;
 
   return {
     id: `html-m${i + 1}`,
