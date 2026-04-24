@@ -7,6 +7,7 @@ import { lesson as l6 } from './theory/06-responsive-images';
 import { lesson as l7 } from './theory/07-tables-data';
 import { lesson as l8 } from './theory/08-forms-master';
 import { lesson as l9 } from './theory/09-constraint-validation';
+import { lesson as l10 } from './theory/10-multimedia-vtt';
 import type { TheoryLesson } from '../../types';
 
 const htmlTitles = [
@@ -42,7 +43,8 @@ const lessonsSource: Record<number, any> = {
   5: l6,
   6: l7,
   7: l8,
-  8: l9
+  8: l9,
+  9: l10
 };
 
 export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {
