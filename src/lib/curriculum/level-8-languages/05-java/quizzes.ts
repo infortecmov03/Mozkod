@@ -1,4 +1,3 @@
-
 import type { Quiz } from '../../types';
 import { quiz as q1 } from './quizzes/01-jvm-architecture-quiz';
 import { quiz as q2 } from './quizzes/02-garbage-collection-quiz';
@@ -23,9 +22,10 @@ const generateJavaQuiz = (id: number, title: string) => ({
 });
 
 const titles = [
-  "", "", "", "", "Generics & Type Erasure", "", "NIO & Channels", "", "JMX Monitoring",
+  "JVM Architecture", "Garbage Collection", "Virtual Threads", "OOP Advanced", "Generics & Type Erasure", 
+  "Transactions & ACID", "NIO & Channels", "Concurrency Locks", "JMX Monitoring",
   "Reactive Stream Patterns", "Hibernate L2 Cache", "Spring Security JWT", "Resilience4j Patterns",
-  "Testcontainers & Docker", "", "Off-heap Memory", "GraalVM Native Image", "Sealed Hierarchies",
+  "Testcontainers & Docker", "ClassLoaders Internals", "Off-heap Memory", "GraalVM Native Image", "Sealed Hierarchies",
   "Foreign Function API", "ZGC Tuning", "Enterprise Deploy"
 ];
 

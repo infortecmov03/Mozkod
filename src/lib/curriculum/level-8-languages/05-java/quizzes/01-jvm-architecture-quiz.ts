@@ -1,4 +1,3 @@
-
 import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
@@ -7,7 +6,7 @@ export const quiz: Quiz = {
   passingScore: 80,
   questions: [
     {
-      id: "q1",
+      id: "q1_1",
       question: "O que caracteriza a 'Tiered Compilation' no HotSpot?",
       options: [
         "Dividir a memória em camadas físicas",
@@ -19,19 +18,19 @@ export const quiz: Quiz = {
       explanation: "A JVM começa interpretando o código, depois usa o C1 para otimizações rápidas e o C2 para o código de alto desempenho (hot paths)."
     },
     {
-      id: "q2",
+      id: "q1_2",
       question: "Qual componente da JVM é responsável pelo 'Method Inlining'?",
       options: ["Garbage Collector", "JIT Compiler", "ClassLoader", "Verifier"],
       correctAnswer: 1
     },
     {
-      id: "q3",
+      id: "q1_3",
       question: "Onde o código de máquina gerado pelo JIT é armazenado?",
       options: ["Heap", "Stack", "Code Cache", "Metaspace"],
       correctAnswer: 2
     },
     {
-      id: "q4",
+      id: "q1_4",
       question: "O que o 'Graal JIT' oferece em relação ao C2 tradicional?",
       options: [
         "É escrito em C++",
@@ -42,7 +41,7 @@ export const quiz: Quiz = {
       correctAnswer: 1
     },
     {
-      id: "q5",
+      id: "q1_5",
       question: "A fase de 'Profiling' no JIT serve para:",
       options: [
         "Mudar a senha do banco",
@@ -53,7 +52,7 @@ export const quiz: Quiz = {
       correctAnswer: 1
     },
     {
-      id: "q6",
+      id: "q1_6",
       question: "O que acontece num 'Deoptimization'?",
       options: [
         "O programa crasha",
