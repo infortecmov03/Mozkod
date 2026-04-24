@@ -1,3 +1,4 @@
+
 import { lesson as l1 } from './theory/01-sistemas-numericos';
 import { lesson as l2 } from './theory/02-logica-booleana';
 import { lesson as l3 } from './theory/03-algebra-booleana';
@@ -22,11 +23,5 @@ import { lesson as l21 } from './theory/21-ethics-history';
 
 export const lessons = [
   l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12,
-  l13,
-  l14,
-  l15,
-  l16,
-  l17,
-  l18,
-  l19, l20, l21
+  l13, l14, l15, l16, l17, l18, l19, l20, l21
 ];

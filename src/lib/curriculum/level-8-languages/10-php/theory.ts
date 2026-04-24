@@ -1,64 +1,71 @@
 
 import type { TheoryLesson } from '../../types';
+import { lesson as l1 } from './theory/01-php8-attributes';
+import { lesson as l2 } from './theory/02-strong-typing-union-types';
+import { lesson as l3 } from './theory/03-constructor-promotion';
+import { lesson as l4 } from './theory/04-oop-advanced';
+import { lesson as l8 } from './theory/08-swoole-concurrency';
+import { lesson as l15 } from './theory/15-zend-engine-internals';
 
 const phpTitles = [
-  "Fase 1: PHP 8 Moderno: Atributos, Match e JIT",
-  "Fase 1: Tipagem de Elite: Union, Intersection e DNF Types",
-  "Fase 1: Constructor Promotion e Readonly Classes",
-  "Fase 1: Enums e Algebraic Data Types no PHP",
-  "Fase 2: Zend Engine: Opcodes, AST e Lifecycle",
+  "Fase 1: PHP 8 Moderno: Atributos e Metadados",
+  "Fase 1: Tipagem de Elite: Union, Intersection e DNF",
+  "Fase 1: Constructor Promotion e Imutabilidade",
+  "Fase 1: Enums e Algebraic Data Types",
+  "Fase 2: Zend Engine: Opcodes e Ciclo de Vida",
   "Fase 2: Gestão de Memória: Reference Counting e Cycles",
   "Fase 2: PDO Master: Segurança e Transações ACID",
-  "Fase 2: SPL Internals: Estruturas de Dados de Alta Performance",
-  "Fase 2: Reflection API e Introspecção de Metadados",
+  "Fase 2: SPL Internals e Estruturas de Performance",
+  "Fase 2: Reflection API e Introspecção Dinâmica",
   "Fase 3: Concorrência Cooperativa com Fibers",
-  "Fase 3: Swoole & RoadRunner: Quebrando o Limite do FPM",
-  "Fase 3: Streams e Network Sockets de Baixo Nível",
-  "Fase 3: FFI: Invocando C e Rust diretamente do PHP",
-  "Fase 3: Generators: Processamento Massivo de Dados",
+  "Fase 3: Swoole & RoadRunner: Quebrando o CGI",
+  "Fase 3: Sockets e Streams de Baixo Nível",
+  "Fase 3: FFI: Invocando C e Rust do PHP",
+  "Fase 3: Generators e Eficiência de Memória",
   "Fase 4: Arquitetura Hexagonal e DDD com PHP",
-  "Fase 4: Dependency Injection e Auto-wiring Internals",
-  "Fase 4: Static Analysis: PHPStan Nível 9 e Psalm",
-  "Fase 4: Performance: OpCache Tuning e Preloading",
-  "Fase 4: Security: Proteção contra RCE e LFI/RFI",
+  "Fase 4: Dependency Injection e Auto-wiring",
+  "Fase 4: Static Analysis: PHPStan Nível 9",
+  "Fase 4: OpCache Tuning e JIT Performance",
+  "Fase 4: Security: Proteção contra RCE e Injeção",
   "Fase 4: Microserviços com gRPC e PHP",
-  "Fase 4: Capstone: Deploy de High-Scale Event Server"
+  "Fase 4: Capstone: Deploy de Event Server de Elite"
 ];
 
-export const lessons: TheoryLesson[] = phpTitles.map((title, i) => ({
-  id: `php-m${i + 1}`,
-  title: title,
-  content: `
-    <div class="space-y-12">
-      <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
-        <h2 class="text-3xl font-bold mb-4 font-headline text-primary flex items-center gap-3">
-          🐘 Engenharia de Backend de Larga Escala
-        </h2>
-        <p class="text-lg leading-relaxed opacity-90">
-          O PHP moderno (8.x) é uma linguagem de alta performance. Nesta trilha Master, abandonamos o "PHP de scripts" para focar em <strong>Engenharia de Sistemas</strong>, concorrência e segurança de nível bancário.
-        </p>
-      </div>
+const sourceMap: Record<number, any> = {
+  0: l1, 1: l2, 2: l3, 3: l4, 7: l8, 14: l15
+};
 
-      <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">Tópico Master: ${title}</h3>
-        <p class="text-sm">Exploração profunda dos mecanismos internos que permitem ao PHP servir milhões de pedidos simultâneos com estabilidade industrial.</p>
-        
-        <div class="bg-indigo-500/10 p-6 rounded-2xl border border-indigo-500/20 shadow-inner">
-          <h4 class="font-bold text-indigo-400 mb-4">🚀 Visão do Arquiteto</h4>
-          <p class="text-sm leading-relaxed">
-            Dominar o PHP Master exige entender a <strong>Zend VM</strong> e como os <strong>Opcodes</strong> são gerados e otimizados pelo JIT. Ao final desta trilha, você será capaz de projetar infraestruturas <i>Cloud Native</i> resilientes utilizando ferramentas como Swoole, PHPStan Nível 9 e arquiteturas desacopladas.
+export const lessons: TheoryLesson[] = phpTitles.map((title, i) => {
+  if (sourceMap[i]) {
+    return {
+      ...sourceMap[i],
+      id: `php-m${i + 1}`,
+      title: title,
+      quizId: `php-mq${i + 1}`,
+      enableInteractive: true
+    };
+  }
+
+  return {
+    id: `php-m${i + 1}`,
+    title: title,
+    content: `
+      <div class="space-y-8">
+        <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
+          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🐘 PHP Master: ${title}</h2>
+          <p class="text-lg leading-relaxed opacity-90">
+            Nesta fase avançada, exploramos como o PHP escala para milhões de pedidos usando arquiteturas modernas e o motor da Zend VM.
           </p>
         </div>
-      </section>
-
-      <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
-        <h4 class="text-xl font-bold text-primary mb-4">🏆 Selo de Qualidade Codworks</h4>
-        <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
-          "A simplicidade do PHP é o seu maior trunfo, mas a sua performance no nível 8 é o que sustenta 80% da web. Como Engenheiro Master, você dominará o equilíbrio entre entrega rápida e arquitetura inquebrável."
-        </p>
-      </section>
-    </div>
-  `,
-  quizId: `php-mq${i + 1}`,
-  enableInteractive: true
-}));
+        <section class="p-6 bg-card border rounded-2xl">
+          <h3 class="text-xl font-bold mb-4 text-accent">Engenharia de Backend Industrial</h3>
+          <p class="text-sm leading-relaxed">
+            O foco aqui é o <strong>Throughput</strong> e a <strong>Resiliência</strong>. Aprenderás a configurar o ambiente de produção, otimizar o OpCache e garantir que as transações do banco de dados seguem o padrão ACID sob alta concorrência.
+          </p>
+        </section>
+      </div>
+    `,
+    quizId: `php-mq${i + 1}`,
+    enableInteractive: true
+  };
+});
