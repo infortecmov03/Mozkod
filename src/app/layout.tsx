@@ -6,6 +6,9 @@ import { FooterWrapper } from "@/components/FooterWrapper";
 export const metadata: Metadata = {
   title: 'Codworks Moz | Engenharia de Software de Elite',
   description: 'Domine a programação com módulos interactivos, execução de código em tempo real e trilhas de aprendizagem localizadas.',
+  icons: {
+    icon: 'data:image/svg+xml,<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="14" fill="white" stroke="%23FF6B00" stroke-width="2"/><text x="16" y="21" font-family="Courier New, monospace" font-size="12" font-weight="bold" fill="%23FF6B00" text-anchor="middle">&lt;/&gt;</text></svg>',
+  },
 };
 
 export default function RootLayout({
