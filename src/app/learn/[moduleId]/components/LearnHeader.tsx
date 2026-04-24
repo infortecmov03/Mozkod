@@ -1,5 +1,7 @@
+
 'use client';
 
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Brain, Info, Play, Loader2, ChevronRight } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -18,7 +20,7 @@ interface LearnHeaderProps {
   missionContent?: React.ReactNode;
 }
 
-export function LearnHeader({
+export const LearnHeader = React.memo(function LearnHeader({
   kaTitle,
   lessonTitle,
   isMobile,
@@ -109,4 +111,4 @@ export function LearnHeader({
       </div>
     </div>
   );
-}
+});

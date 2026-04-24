@@ -1,6 +1,7 @@
 
 'use client';
 
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Eye, Terminal as TerminalIcon, ChevronDown, ChevronUp } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -28,7 +29,7 @@ interface PracticeWorkspaceProps {
   iframeRef: React.RefObject<HTMLIFrameElement | null>;
 }
 
-export function PracticeWorkspace({
+export const PracticeWorkspace = React.memo(function PracticeWorkspace({
   language,
   isWebLang,
   activeTab,
@@ -96,13 +97,14 @@ export function PracticeWorkspace({
             options={{ 
               minimap: { enabled: false }, 
               fontSize: 14, 
-              automaticLayout: true, 
+              automaticLayout: false, 
               wordWrap: "on",
               padding: { top: 15 },
               scrollBeyondLastLine: false,
               fontFamily: "'Source Code Pro', monospace",
               lineNumbers: "on",
-              renderLineHighlight: "all"
+              renderLineHighlight: "all",
+              scrollbar: { vertical: 'hidden', horizontal: 'hidden' }
             }}
           />
         </div>
@@ -140,4 +142,4 @@ export function PracticeWorkspace({
       </div>
     </div>
   );
-}
+});

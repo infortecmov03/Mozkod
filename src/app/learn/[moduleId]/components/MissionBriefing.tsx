@@ -1,5 +1,7 @@
+
 'use client';
 
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, ChevronRight, ListChecks, Brain, Youtube, MessageSquare, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -16,7 +18,7 @@ interface MissionBriefingProps {
   onGoToDashboard: () => void;
 }
 
-export function MissionBriefing({
+export const MissionBriefing = React.memo(function MissionBriefing({
   practice,
   availableVariants,
   completedObjectives,
@@ -127,4 +129,4 @@ export function MissionBriefing({
       </div>
     </div>
   );
-}
+});

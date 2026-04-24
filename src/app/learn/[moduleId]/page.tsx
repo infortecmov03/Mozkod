@@ -11,7 +11,7 @@ import { useProgress } from "@/contexts/ProgressContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 
-// Componentes Modulares
+// Componentes Memoizados
 import { LearnHeader } from "./components/LearnHeader";
 import { LearnSidebar } from "./components/LearnSidebar";
 import { TheoryView } from "./components/TheoryView";
@@ -151,22 +151,22 @@ export default function LearnPage() {
     });
   }, [practice, lessonId, isWebLang, progress, prevLessonId]);
 
+  // DEBOUNCED PREVIEW UPDATE - Fundamental para eliminar violações de 'message' e 'reflow'
   useEffect(() => {
     if (mounted) {
-      const timer = setTimeout(updatePreview, 500);
+      const timer = setTimeout(() => {
+        requestAnimationFrame(updatePreview);
+      }, 800);
       return () => clearTimeout(timer);
     }
   }, [htmlCode, cssCode, jsCode, mounted, updatePreview]);
 
-  const handleRunCode = async () => {
-    startTransition(() => {
-      setIsRunning(true);
-      setIsConsoleOpen(true);
-      setOutput("> Compilando e analisando estrutura...\n");
-    });
+  const handleRunCode = useCallback(async () => {
+    setIsRunning(true);
+    setIsConsoleOpen(true);
+    setOutput("> Compilando e analisando estrutura...\n");
     
-    setTimeout(async () => {
-      setIsRunning(false);
+    setTimeout(() => {
       const current = isWebLang 
         ? (activeTab === 'js' ? jsCode : activeTab === 'css' ? cssCode : htmlCode) 
         : code;
@@ -175,30 +175,33 @@ export default function LearnPage() {
         return current.includes(obj.test);
       }).map(obj => obj.id) || [];
       
-      setCompletedObjectives(newDone);
+      startTransition(() => {
+        setCompletedObjectives(newDone);
+        setIsRunning(false);
 
-      const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
-      localStorage.setItem(`cwm_code_${lessonId}`, finalCode);
+        const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
+        localStorage.setItem(`cwm_code_${lessonId}`, finalCode);
 
-      if (newDone.length === (practice?.objectives.length || 0)) {
-        setOutput("> ✅ STATUS: 200 OK\n> [AUDITORIA]: Requisitos validados.\n> Missão concluída.");
-        toast.success("Excelente! Missão concluída.");
-        if (data) {
-          await markAsCompleted(lessonId, data.level.id, data.ka.id, 'exercise', 100, finalCode);
+        if (newDone.length === (practice?.objectives.length || 0)) {
+          setOutput("> ✅ STATUS: 200 OK\n> [AUDITORIA]: Requisitos validados.\n> Missão concluída.");
+          toast.success("Excelente! Missão concluída.");
+          if (data) {
+            markAsCompleted(lessonId, data.level.id, data.ka.id, 'exercise', 100, finalCode);
+          }
+        } else {
+          const remaining = (practice?.objectives.length || 0) - newDone.length;
+          setOutput(`> ⚠️ STATUS: 412 PRECONDITION FAILED\n> [AUDITORIA]: Faltam ${remaining} componentes essenciais.`);
+          toast.error("Alguns requisitos ainda não foram atingidos.");
         }
-      } else {
-        const remaining = (practice?.objectives.length || 0) - newDone.length;
-        setOutput(`> ⚠️ STATUS: 412 PRECONDITION FAILED\n> [AUDITORIA]: Faltam ${remaining} componentes essenciais.`);
-        toast.error("Alguns requisitos ainda não foram atingidos.");
-      }
+      });
     }, 400);
-  };
+  }, [htmlCode, cssCode, jsCode, code, isWebLang, activeTab, practice, lessonId, data, markAsCompleted]);
 
-  const handleTheoryComplete = async (score: number) => {
+  const handleTheoryComplete = useCallback(async (score: number) => {
     if (data) {
       await markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', score);
     }
-  };
+  }, [data, lessonId, markAsCompleted]);
 
   const availableVariants = useMemo(() => {
     if (!data || !practice) return [];
