@@ -4,37 +4,21 @@ import type { PracticeExercise } from '../../../types';
 export const exercise: PracticeExercise = {
   id: "html-p1",
   language: "html",
-  title: "Laboratório Master: Arquitetura de Documento",
-  description: "Construa a fundação de um projeto real começando do zero absoluto.",
-  statement: "Declare o tipo de documento, configure o head completo e inicie o body com identificadores de elite.",
+  title: "Projeto Master: Fundação do Documento",
+  description: "Construa a estrutura base seguindo os padrões W3C.",
+  statement: "Declare o DOCTYPE, configure o head com charset UTF-8 e defina o título da página.",
   isProjectPart: true,
+  youtubeVideoId: "8ME9u065vD4",
   template: `<!-- Inicie a construção na linha 1 -->\n`,
   detailedExplanation: `
     <div class="space-y-4">
       <h3 class="text-xl font-bold text-primary">🔨 Manual do Arquiteto</h3>
-      <p>Nesta fase Master, não recebes código base. Deves escrever toda a estrutura <strong>HTML5</strong> sozinho. O terminal irá realizar uma auditoria estática ao teu código para validar a conformidade.</p>
+      <p>Nesta fase Master, deves escrever toda a estrutura <strong>HTML5</strong> sozinho. O motor de auditoria irá validar se os padrões de compatibilidade moderna foram aplicados.</p>
     </div>
   `,
   objectives: [
-    {
-      id: "doctype",
-      description: "Declarar <!DOCTYPE html> na linha 1.",
-      test: "<!DOCTYPE html>"
-    },
-    {
-      id: "html_tag",
-      description: "Abrir a tag <html> com o idioma pt-MZ.",
-      test: "<html lang=\"pt-MZ\">"
-    },
-    {
-      id: "head_meta",
-      description: "Configurar charset UTF-8 e viewport no <head>.",
-      test: "charset=\"UTF-8\""
-    },
-    {
-      id: "body_hooks",
-      description: "No <body>, criar um <h1> com id='app-header' e uma <div> com classe='content-container'.",
-      test: "id=\"app-header\""
-    }
+    { id: "doctype", description: "Declarar <!DOCTYPE html>", test: "<!DOCTYPE html>" },
+    { id: "lang", description: "Definir lang='pt-MZ' na tag html", test: "lang=\"pt-MZ\"" },
+    { id: "charset", description: "Configurar <meta charset='UTF-8'>", test: "charset=\"UTF-8\"" }
   ]
 };
