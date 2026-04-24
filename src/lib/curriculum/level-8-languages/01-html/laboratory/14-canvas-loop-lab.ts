@@ -3,27 +3,34 @@ import type { PracticeExercise } from '../../../types';
 export const exercise: PracticeExercise = {
   id: "html-p14",
   language: "html",
-  title: "Projeto Master: Pipeline de Renderização 60FPS",
-  description: "Crie animações fluidas integradas ao ciclo de atualização do ecrã.",
-  statement: "Implemente um loop de desenho no Canvas utilizando requestAnimationFrame.",
+  title: "Projeto Master: Engine Gráfica com Canvas",
+  description: "Prepare o portal para visualização de dados em tempo real.",
+  statement: "Adicione a superfície de desenho e o script de inicialização do motor.",
   isProjectPart: true,
-  template: `const canvas = document.getElementById('dashboard-chart');
-const ctx = canvas.getContext('2d');
-
-function render() {
-    // Desenhe aqui
-    // Peça o próximo frame
-}`,
+  youtubeVideoId: "raf_id",
+  template: `<!DOCTYPE html>
+<html>
+  <body>
+    <main>
+      <!-- Ação 1: Adicione o canvas aqui -->
+    </main>
+    <script>
+      // Ação 2: Obtenha o contexto aqui
+    </script>
+  </body>
+</html>`,
   detailedExplanation: `
-    <h3>🖌️ Engenharia de Frames</h3>
-    <p>Para um site profissional, nunca uses <code>setInterval</code> para animações. O <code>requestAnimationFrame</code> sincroniza o teu código com a taxa de atualização do monitor (V-Sync), poupando bateria e garantindo fluidez.</p>
+    <div class="space-y-4">
+      <h3 class="text-xl font-bold text-primary">🔨 Passo a Passo: Pincel Digital</h3>
+      <p class="text-sm">Configure o ambiente gráfico do seu dashboard:</p>
+      <div class="bg-black/40 p-4 rounded-xl border border-white/10 font-mono text-[11px] leading-relaxed">
+        <p><strong>Ação 1:</strong> No body, use <code>&lt;canvas id="stats-chart" width="400" height="200"&gt;&lt;/canvas&gt;</code>.</p>
+        <p><strong>Ação 2:</strong> No script, use <code>const ctx = document.getElementById('stats-chart').getContext('2d');</code>.</p>
+      </div>
+    </div>
   `,
   objectives: [
-    {
-      id: "raf",
-      description: "Chame a função requestAnimationFrame dentro do seu loop de render.",
-      hint: "requestAnimationFrame(render)",
-      test: "requestAnimationFrame"
-    }
+    { id: "canvas_id", description: "Canvas com ID 'stats-chart'", test: "id=\"stats-chart\"" },
+    { id: "ctx_2d", description: "Obter contexto '2d' via JS", test: "getContext('2d')" }
   ]
 };

@@ -1,20 +1,24 @@
-
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
   id: "html-p21",
   language: "html",
-  title: "Projeto Master Final: Auditoria e Cookies",
-  description: "Garanta a conformidade final do projeto.",
-  statement: "Defina a política de cookies segura usando strings de comentário 'HttpOnly; Secure; SameSite=Strict'.",
+  title: "Projeto Master Final: Auditoria e Blindagem",
+  description: "Conclua o projeto com padrões bancários de segurança.",
+  statement: "Defina a política de cookies segura do seu portal.",
   isProjectPart: true,
-  youtubeVideoId: "8aGhZQkoFbQ",
-  template: `<!-- Protocolo de Segurança Final -->\n`,
+  template: `<!-- Protocolo Final de Segurança -->
+<!-- Ação 1: Descreva a política de cookies aqui -->`,
   detailedExplanation: `
-    <h3>🔒 Blindagem de Estado</h3>
-    <p>Chegaste ao fim. O último passo é garantir que o rasto de dados deixado no browser do utilizador é imune a ataques de roubo de sessão.</p>
+    <div class="space-y-4">
+      <h3 class="text-xl font-bold text-primary">🔨 Passo a Passo: Blindagem Final</h3>
+      <p class="text-sm">Finalize o projeto com as flags de segurança obrigatórias:</p>
+      <div class="bg-black/40 p-4 rounded-xl border border-white/10 font-mono text-[11px] leading-relaxed">
+        <p><strong>Ação 1:</strong> Escreva a string: <code>HttpOnly; Secure; SameSite=Strict</code>.</p>
+      </div>
+    </div>
   `,
   objectives: [
-    { id: "secure", description: "Flags de segurança de cookies presentes", test: "HttpOnly; Secure; SameSite=Strict" }
+    { id: "secure_flags", description: "Uso de HttpOnly e SameSite", test: "HttpOnly; Secure; SameSite=Strict" }
   ]
 };

@@ -3,27 +3,39 @@ import type { PracticeExercise } from '../../../types';
 export const exercise: PracticeExercise = {
   id: "html-p11",
   language: "html",
-  title: "Projeto Master: Gráficos Vetoriais Acessíveis",
-  description: "Integre SVGs complexos mantendo a semântica correta.",
-  statement: "Adicione um ícone SVG ao seu cabeçalho e use o atributo 'role' para o browser identificá-lo como uma imagem.",
+  title: "Projeto Master: Gráficos Vetoriais Nativos",
+  description: "Integre o logotipo do portal usando SVG.",
+  statement: "Adicione um gráfico SVG ao seu cabeçalho mantendo a acessibilidade.",
   isProjectPart: true,
-  template: ``,
+  youtubeVideoId: "u044iM9xsTM",
+  template: `<!DOCTYPE html>
+<html lang="pt-MZ">
+  <head>
+    <meta charset="UTF-8">
+    <title>Codworks Master Studio</title>
+  </head>
+  <body>
+    <header>
+      <div class="logo-area">
+        <!-- Ação 1: Adicione o SVG aqui -->
+      </div>
+    </header>
+  </body>
+</html>`,
   detailedExplanation: `
-    <h3>📐 Vetores Semânticos</h3>
-    <p>Para o browser e leitores de ecrã, um SVG é apenas código XML. Devemos explicitamente declarar o seu papel (role) e fornecer um título interno para acessibilidade.</p>
+    <div class="space-y-4">
+      <h3 class="text-xl font-bold text-primary">🔨 Passo a Passo: Vetores Master</h3>
+      <p class="text-sm">No local indicado, desenhe o logo vetorial:</p>
+      <div class="bg-black/40 p-4 rounded-xl border border-white/10 font-mono text-[11px] leading-relaxed">
+        <p><strong>Ação 1:</strong> Tag <code>&lt;svg viewBox="0 0 100 100" role="img"&gt;</code>.</p>
+        <p><strong>Ação 2:</strong> Adicione <code>&lt;title&gt;Logo Codworks&lt;/title&gt;</code> internamente.</p>
+        <p><strong>Ação 3:</strong> Desenhe um círculo simples: <code>&lt;circle cx="50" cy="50" r="40" fill="blue" /&gt;</code>.</p>
+      </div>
+    </div>
   `,
   objectives: [
-    {
-      id: "svg_role",
-      description: "Adicione role='img' à tag <svg>.",
-      hint: "<svg role=\"img\"></svg>",
-      test: "role=\"img\""
-    },
-    {
-      id: "svg_title",
-      description: "Inclua uma tag <title> dentro do SVG para descrever o ícone.",
-      hint: "<svg><title>Logo</title>...</svg>",
-      test: "<title>"
-    }
+    { id: "svg_role", description: "Definir role='img' no SVG", test: "role=\"img\"" },
+    { id: "svg_title", description: "Incluir tag <title> interna", test: "<title>" },
+    { id: "svg_geometry", description: "Desenhar forma <circle>", test: "<circle" }
   ]
 };

@@ -3,21 +3,33 @@ import type { PracticeExercise } from '../../../types';
 export const exercise: PracticeExercise = {
   id: "html-p13",
   language: "html",
-  title: "Projeto Master: Legendagem Dinâmica",
-  description: "Sincronize texto com os elementos multimédia do seu projeto.",
-  statement: "Configure o atributo 'kind' no elemento track para fornecer legendas (captions).",
+  title: "Projeto Master: Legendagem Dinâmica WebVTT",
+  description: "Torne o conteúdo multimedia indexável e inclusivo.",
+  statement: "Configure a trilha de legendas para o seu vídeo de introdução.",
   isProjectPart: true,
-  template: ``,
+  youtubeVideoId: "8ME9u065vD4",
+  template: `<!DOCTYPE html>
+<html>
+  <body>
+    <video controls width="100%">
+      <source src="intro.mp4" type="video/mp4">
+      <!-- Ação 1: Adicione a tag track aqui -->
+    </video>
+  </body>
+</html>`,
   detailedExplanation: `
-    <h3>🎬 WebVTT e Sincronia</h3>
-    <p>O atributo <code>kind="captions"</code> é vital para utilizadores com deficiência auditiva, enquanto <code>kind="subtitles"</code> é para tradução. No nível Master, fornecemos ambos sempre que possível.</p>
+    <div class="space-y-4">
+      <h3 class="text-xl font-bold text-primary">🔨 Passo a Passo: Voz ao Vídeo</h3>
+      <p class="text-sm">Adicione suporte a legendas nativas:</p>
+      <div class="bg-black/40 p-4 rounded-xl border border-white/10 font-mono text-[11px] leading-relaxed">
+        <p><strong>Ação 1:</strong> Use <code>&lt;track kind="subtitles" src="pt.vtt" srclang="pt" label="Português"&gt;</code>.</p>
+        <p><strong>Ação 2:</strong> Adicione o atributo <code>default</code> à tag track.</p>
+      </div>
+    </div>
   `,
   objectives: [
-    {
-      id: "track_kind",
-      description: "Defina o atributo kind como 'captions' no seu elemento track.",
-      hint: "<track kind=\"captions\" ...>",
-      test: "kind=\"captions\""
-    }
+    { id: "track_tag", description: "Adicionar a tag <track>", test: "<track" },
+    { id: "kind_subs", description: "Definir kind='subtitles'", test: "kind=\"subtitles\"" },
+    { id: "default_attr", description: "Definir como trilha padrão", test: "default" }
   ]
 };

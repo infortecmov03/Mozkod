@@ -3,27 +3,28 @@ import type { PracticeExercise } from '../../../types';
 export const exercise: PracticeExercise = {
   id: "html-p20",
   language: "html",
-  title: "Projeto Master: Dados Estruturados JSON-LD",
-  description: "Fale diretamente com os algoritmos de busca usando semântica de dados.",
-  statement: "Adicione um bloco de script com o tipo 'application/ld+json' para descrever o seu projeto como uma 'SoftwareApplication'.",
+  title: "Projeto Master: Dados Estruturados de Elite",
+  description: "Fale diretamente com os algoritmos de busca.",
+  statement: "Adicione a descrição semântica do seu projeto via JSON-LD.",
   isProjectPart: true,
-  template: ``,
+  template: `<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Ação 1: Adicione o script de dados estruturados aqui -->
+  </head>
+</html>`,
   detailedExplanation: `
-    <h3>🏷️ Semântica Profunda</h3>
-    <p>O JSON-LD é o formato preferido pelo Google para gerar Rich Snippets. Ele permite que o teu site apareça com estrelas, preços e descrições técnicas diretamente na página de resultados.</p>
+    <div class="space-y-4">
+      <h3 class="text-xl font-bold text-primary">🔨 Passo a Passo: JSON-LD</h3>
+      <p class="text-sm">Adicione o metadado que o Google ama:</p>
+      <div class="bg-black/40 p-4 rounded-xl border border-white/10 font-mono text-[11px] leading-relaxed">
+        <p><strong>Ação 1:</strong> Crie um <code>&lt;script type="application/ld+json"&gt;</code>.</p>
+        <p><strong>Ação 2:</strong> Defina o objeto com <code>"@context": "https://schema.org"</code>.</p>
+      </div>
+    </div>
   `,
   objectives: [
-    {
-      id: "json_ld_type",
-      description: "Defina o type do script como 'application/ld+json'.",
-      hint: "<script type=\"application/ld+json\"></script>",
-      test: "application/ld+json"
-    },
-    {
-      id: "schema_context",
-      description: "Inclua o contexto schema.org dentro do objeto JSON.",
-      hint: "\"@context\": \"https://schema.org\"",
-      test: "schema.org"
-    }
+    { id: "ld_json_type", description: "Tipo application/ld+json", test: "application/ld+json" },
+    { id: "schema_context", description: "Contexto schema.org presente", test: "schema.org" }
   ]
 };
