@@ -1,4 +1,4 @@
-
+import { lesson as l1 } from './theory/01-structure';
 import type { TheoryLesson } from '../../types';
 
 const htmlTitles = [
@@ -25,9 +25,13 @@ const htmlTitles = [
   "Fase 3: Capstone: Auditoria de Segurança e Cookies"
 ];
 
-export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => ({
-  id: `html-m${i + 1}`,
-  title: title,
-  content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>📄 HTML Master: ${title}</h2><p>Arquitetura de documentos de alta complexidade seguindo padrões W3C.</p></div>`,
-  quizId: `html-mq${i + 1}`
-}));
+export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {
+  if (i === 0) return l1; // Retorna a lição aprofundada para o primeiro tópico
+
+  return {
+    id: `html-m${i + 1}`,
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>📄 HTML Master: ${title}</h2><p>Arquitetura de documentos de alta complexidade seguindo padrões W3C.</p></div>`,
+    quizId: `html-mq${i + 1}`
+  };
+});
