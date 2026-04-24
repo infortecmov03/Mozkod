@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -69,6 +70,16 @@
   }
 }
 
+/* Elite Code Highlighting */
+.code-highlight {
+  @apply font-mono text-sm leading-relaxed;
+}
+.code-tag { @apply text-blue-400; }
+.code-attr { @apply text-cyan-300; }
+.code-string { @apply text-green-400; }
+.code-comment { @apply text-muted-foreground italic; }
+.code-keyword { @apply text-purple-400 font-bold; }
+
 /* Fix for mobile scroll issues */
 .scroll-container {
   -webkit-overflow-scrolling: touch;
@@ -100,6 +111,7 @@
 
 /* Better Prose visibility on mobile */
 .prose {
+  @apply text-foreground/90;
   font-size: 0.95rem;
   line-height: 1.6;
 }
