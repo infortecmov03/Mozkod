@@ -1,33 +1,58 @@
 
 import type { TheoryLesson } from '../../types';
+import { lesson as l1 } from './theory/01-gil-internals';
+import { lesson as l2 } from './theory/02-metaprogramming';
+import { lesson as l3 } from './theory/03-asyncio';
+import { lesson as l4 } from './theory/04-memory-management';
+import { lesson as l5 } from './theory/05-fastapi-scaling';
+import { lesson as l6 } from './theory/06-numpy-simd';
+import { lesson as l7 } from './theory/07-pandas-optimization';
+import { lesson as l8 } from './theory/08-sklearn-pipelines';
+import { lesson as l9 } from './theory/09-pytorch-tensors';
+import { lesson as l10 } from './theory/10-python-security';
 
 const pythonTitles = [
-  "Fase 1: Zen do Python e Tipagem Dinâmica",
-  "Fase 1: Listas, Tuplas e Dicionários Master",
-  "Fase 1: List Comprehensions e Geradores",
-  "Fase 2: POO: Dunder Methods e Mixins",
-  "Fase 2: Decoradores e Metaprogramação",
-  "Fase 2: Gestão de Memória e GIL Internals",
-  "Fase 3: AsyncIO: Concorrência Assíncrona de Elite",
-  "Fase 3: Multiprocessing e Paralelismo Real",
+  "Fase 1: CPython Internals: O GIL e Threads",
+  "Fase 1: Metaprogramação: Decoradores de Elite",
+  "Fase 1: AsyncIO: Concorrência e Event Loop",
+  "Fase 1: Gestão de Memória e Garbage Collection",
+  "Fase 2: FastAPI: Escalabilidade e Tipagem Pydantic",
+  "Fase 2: NumPy: Vectorização e Instruções SIMD",
+  "Fase 2: Pandas: Otimização de DataFrames",
+  "Fase 2: Scikit-Learn: Pipelines de Produção",
+  "Fase 2: PyTorch: Tensores e Aceleração por GPU",
+  "Fase 3: Security: SQLi e Code Injection em Python",
+  "Fase 3: Context Managers e o Protocolo 'with'",
+  "Fase 3: Descriptors e Data Validation Internals",
+  "Fase 3: Metaclasses e Abstract Base Classes (ABCs)",
   "Fase 3: Networking: Sockets e Protocolos Binários",
-  "Fase 3: FFI: Chamando Código C/Rust com Cython",
-  "Fase 4: Web: FastAPI, Pydantic e Gunicorn",
-  "Fase 4: Data: NumPy, SIMD e Vectorização",
-  "Fase 4: Data: Pandas, Polars e Data Lakes",
-  "Fase 4: AI: Scikit-learn e Pipelines de Produção",
-  "Fase 4: AI: PyTorch, Tensores e GPU Computing",
-  "Fase 4: MLOps: Deployment e Monitorização de Modelos",
-  "Fase 4: Segurança: Sanitização e Bytecode Audit",
-  "Fase 4: DevOps: Poetry, Docker e CI/CD Industrial",
-  "Fase 4: Profiling: Identificando Gargalos de CPU/RAM",
-  "Fase 4: Internals: Bytecode, AST e CPython",
+  "Fase 3: FFI: Chamando Código C com Cython",
+  "Fase 4: Profiling: Identificando Gargalos Reais",
+  "Fase 4: Microserviços e gRPC com Python",
+  "Fase 4: Gestão de Dependências com Poetry",
+  "Fase 4: Internals: Bytecode, AST e Máquina de Pilha",
+  "Fase 4: Dockerização de Apps Python de Alta Escala",
   "Fase 4: Capstone: Deploy de System Monitor de Elite"
 ];
 
-export const lessons: TheoryLesson[] = pythonTitles.map((title, i) => ({
-  id: `py-m${i + 1}`,
-  title: title,
-  content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐍 Python Master: ${title}</h2><p>Exploração profunda da linguagem seguindo o Roadmap industrial.</p></div>`,
-  quizId: `py-mq${i + 1}`
-}));
+const lessonsSource: Record<number, any> = {
+  0: l1, 1: l2, 2: l3, 3: l4, 4: l5, 5: l6, 6: l7, 7: l8, 8: l9, 9: l10
+};
+
+export const lessons: TheoryLesson[] = pythonTitles.map((title, i) => {
+  if (lessonsSource[i]) {
+    return {
+      ...lessonsSource[i],
+      title: title,
+      id: `py-m${i + 1}`,
+      quizId: `py-mq${i + 1}`
+    };
+  }
+
+  return {
+    id: `py-m${i + 1}`,
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐍 Python Master: ${title}</h2><p>Estudo aprofundado dos internals da linguagem e frameworks de alta performance.</p></div>`,
+    quizId: `py-mq${i + 1}`
+  };
+});
