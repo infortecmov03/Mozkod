@@ -1,21 +1,67 @@
+
 import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "jv-mq1",
-  title: "Quiz: Arquitetura JVM Internals",
+  title: "Quiz: Arquitetura JVM e JIT",
   passingScore: 80,
   questions: [
     {
       id: "q1",
-      question: "O que é a 'Tiered Compilation' no Java moderno?",
+      question: "O que caracteriza a 'Tiered Compilation' no HotSpot?",
       options: [
-        "Um sistema de pastas para organizar o código",
+        "Dividir a memória em camadas físicas",
         "O uso coordenado de interpretador, compilador C1 e compilador C2",
-        "Uma forma de dividir a memória RAM",
-        "Um tipo de herança múltipla"
+        "Uma técnica de rede para Java",
+        "A hierarquia de pacotes"
       ],
       correctAnswer: 1,
-      explanation: "A compilação em níveis permite que o Java tenha um startup razoável e uma performance de pico excepcional ao otimizar o código progressivamente."
+      explanation: "A JVM começa interpretando o código, depois usa o C1 para otimizações rápidas e o C2 para o código de alto desempenho (hot paths)."
+    },
+    {
+      id: "q2",
+      question: "Qual componente da JVM é responsável pelo 'Method Inlining'?",
+      options: ["Garbage Collector", "JIT Compiler", "ClassLoader", "Verifier"],
+      correctAnswer: 1
+    },
+    {
+      id: "q3",
+      question: "Onde o código de máquina gerado pelo JIT é armazenado?",
+      options: ["Heap", "Stack", "Code Cache", "Metaspace"],
+      correctAnswer: 2
+    },
+    {
+      id: "q4",
+      question: "O que o 'Graal JIT' oferece em relação ao C2 tradicional?",
+      options: [
+        "É escrito em C++",
+        "É escrito em Java e permite otimizações especulativas mais agressivas",
+        "Apenas suporte a versões antigas",
+        "Redução do tamanho do JAR"
+      ],
+      correctAnswer: 1
+    },
+    {
+      id: "q5",
+      question: "A fase de 'Profiling' no JIT serve para:",
+      options: [
+        "Mudar a senha do banco",
+        "Coletar dados estatísticos sobre a execução para guiar otimizações futuras",
+        "Limpar a memória RAM",
+        "Verificar a licença do software"
+      ],
+      correctAnswer: 1
+    },
+    {
+      id: "q6",
+      question: "O que acontece num 'Deoptimization'?",
+      options: [
+        "O programa crasha",
+        "O JIT descarta o código otimizado e volta ao interpretador se uma suposição for quebrada",
+        "O computador desliga",
+        "A internet fica lenta"
+      ],
+      correctAnswer: 1
     }
   ]
 };

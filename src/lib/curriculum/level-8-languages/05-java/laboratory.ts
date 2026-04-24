@@ -1,3 +1,5 @@
+
+import type { PracticeExercise } from '../../types';
 import { exercise as p1 } from './laboratory/01-banking-init-lab';
 import { exercise as p2 } from './laboratory/02-generics-banking-lab';
 import { exercise as p3 } from './laboratory/03-functional-streams-lab';
