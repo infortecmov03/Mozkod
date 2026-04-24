@@ -67,6 +67,44 @@ export default function LearnPage() {
     return parts;
   };
 
+  const updatePreview = useCallback(() => {
+    if (!iframeRef.current || !isWebLang) return;
+    const docContent = `
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body { 
+              margin: 0; 
+              padding: 20px; 
+              font-family: system-ui, sans-serif; 
+              background: #fff; 
+              color: #1a1a1a; 
+            }
+            ${cssCode}
+          </style>
+        </head>
+        <body>
+          ${htmlCode}
+          <script>
+            try {
+              ${jsCode}
+            } catch (err) {
+              console.error('JS Preview Error:', err.message);
+            }
+          </script>
+        </body>
+      </html>
+    `;
+    
+    const iframeDoc = iframeRef.current.contentDocument || iframeRef.current.contentWindow?.document;
+    if (iframeDoc) {
+      iframeDoc.open();
+      iframeDoc.write(docContent);
+      iframeDoc.close();
+    }
+  }, [htmlCode, cssCode, jsCode, isWebLang]);
+
   useEffect(() => {
     setMounted(true);
     if (!practice) return;
@@ -90,18 +128,19 @@ export default function LearnPage() {
       sourceCode = localCurrent;
     } else if (currentProgress?.last_code) {
       sourceCode = currentProgress.last_code;
-    } else if (practice.isProjectPart) {
+    } else if (practice.isProjectPart && (localPrev || prevProgress?.last_code)) {
       sourceCode = localPrev || prevProgress?.last_code || "";
     }
 
     if (isWebLang) {
-      if (sourceCode.includes('HTML:\n')) {
+      if (sourceCode && sourceCode.includes('HTML:\n')) {
         const parsed = parseCompositeCode(sourceCode);
-        setHtmlCode(parsed.html || practice.htmlTemplate || "");
+        setHtmlCode(parsed.html || practice.htmlTemplate || practice.template || "");
         setCssCode(parsed.css || practice.cssTemplate || "");
         setJsCode(parsed.js || practice.jsTemplate || "");
       } else {
-        setHtmlCode(sourceCode || practice.htmlTemplate || "");
+        // Fallback para quando o código não é composto ou é a primeira lição
+        setHtmlCode(sourceCode || practice.template || practice.htmlTemplate || "");
         setCssCode(practice.cssTemplate || "");
         setJsCode(practice.jsTemplate || "");
       }
@@ -113,17 +152,13 @@ export default function LearnPage() {
     setOutput("");
   }, [practice, lessonId, isWebLang, progress, prevLessonId]);
 
-  const updatePreview = useCallback(() => {
-    if (!iframeRef.current || !isWebLang) return;
-    const doc = `<html><head><style>${cssCode}</style></head><body style="padding:20px; font-family:sans-serif;">${htmlCode}<script>${jsCode}</script></body></html>`;
-    const iframeDoc = iframeRef.current.contentDocument;
-    if (iframeDoc) { iframeDoc.open(); iframeDoc.write(doc); iframeDoc.close(); }
-  }, [htmlCode, cssCode, jsCode, isWebLang]);
-
+  // Atualiza o preview sempre que o código muda ou quando o componente monta
   useEffect(() => {
-    const timer = setTimeout(updatePreview, 500);
-    return () => clearTimeout(timer);
-  }, [updatePreview]);
+    if (mounted) {
+      const timer = setTimeout(updatePreview, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [htmlCode, cssCode, jsCode, mounted, updatePreview]);
 
   const handleRunCode = async () => {
     setIsRunning(true);
@@ -255,4 +290,3 @@ export default function LearnPage() {
     </div>
   );
 }
-
