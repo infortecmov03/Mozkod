@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef, useTransition } from "react";
 import { 
   findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
   findQuizById, findNextLessonId, findPreviousLessonId
@@ -24,6 +24,7 @@ export default function LearnPage() {
   const router = useRouter();
   const isMobile = useIsMobile();
   const { markAsCompleted, isCompleted, progress } = useProgress();
+  const [isPending, startTransition] = useTransition();
 
   const data = useMemo(() => findKnowledgeAreaByLessonId(lessonId), [lessonId]);
   const theory = useMemo(() => findTheoryLesson(lessonId), [lessonId]);
@@ -49,9 +50,6 @@ export default function LearnPage() {
     ['html', 'css', 'javascript'].includes(practice?.language.toLowerCase() || '') && !lessonId.includes('pf-p'), 
   [practice, lessonId]);
 
-  /**
-   * Helper para extrair blocos de código de uma string composta (usada em labs web)
-   */
   const parseCompositeCode = (composite: string) => {
     const parts = { html: "", css: "", js: "" };
     if (!composite) return parts;
@@ -99,9 +97,11 @@ export default function LearnPage() {
     
     const iframeDoc = iframeRef.current.contentDocument || iframeRef.current.contentWindow?.document;
     if (iframeDoc) {
-      iframeDoc.open();
-      iframeDoc.write(docContent);
-      iframeDoc.close();
+      requestAnimationFrame(() => {
+        iframeDoc.open();
+        iframeDoc.write(docContent);
+        iframeDoc.close();
+      });
     }
   }, [htmlCode, cssCode, jsCode, isWebLang]);
 
@@ -109,61 +109,61 @@ export default function LearnPage() {
     setMounted(true);
     if (!practice) return;
     
-    if (isWebLang) {
-      setActiveTab(practice.language === 'javascript' ? 'js' : (practice.language === 'css' ? 'css' : 'html'));
-    } else {
-      setActiveTab('code');
-    }
-
-    // LÓGICA DE HERANÇA DE PROJETO
-    const currentProgress = progress.find(p => p.lesson_id === lessonId);
-    const prevProgress = prevLessonId ? progress.find(p => p.lesson_id === prevLessonId) : null;
-    
-    // Tenta carregar: 1. LocalStorage atual | 2. DB atual | 3. Herança anterior | 4. Template
-    const localCurrent = localStorage.getItem(`cwm_code_${lessonId}`);
-    const localPrev = prevLessonId ? localStorage.getItem(`cwm_code_${prevLessonId}`) : null;
-    
-    let sourceCode = "";
-    if (localCurrent) {
-      sourceCode = localCurrent;
-    } else if (currentProgress?.last_code) {
-      sourceCode = currentProgress.last_code;
-    } else if (practice.isProjectPart && (localPrev || prevProgress?.last_code)) {
-      sourceCode = localPrev || prevProgress?.last_code || "";
-    }
-
-    if (isWebLang) {
-      if (sourceCode && sourceCode.includes('HTML:\n')) {
-        const parsed = parseCompositeCode(sourceCode);
-        setHtmlCode(parsed.html || practice.htmlTemplate || practice.template || "");
-        setCssCode(parsed.css || practice.cssTemplate || "");
-        setJsCode(parsed.js || practice.jsTemplate || "");
+    startTransition(() => {
+      if (isWebLang) {
+        setActiveTab(practice.language === 'javascript' ? 'js' : (practice.language === 'css' ? 'css' : 'html'));
       } else {
-        // Fallback para quando o código não é composto ou é a primeira lição
-        setHtmlCode(sourceCode || practice.template || practice.htmlTemplate || "");
-        setCssCode(practice.cssTemplate || "");
-        setJsCode(practice.jsTemplate || "");
+        setActiveTab('code');
       }
-    } else {
-      setCode(sourceCode || practice.template || "");
-    }
 
-    setCompletedObjectives([]);
-    setOutput("");
+      const currentProgress = progress.find(p => p.lesson_id === lessonId);
+      const prevProgress = prevLessonId ? progress.find(p => p.lesson_id === prevLessonId) : null;
+      
+      const localCurrent = localStorage.getItem(`cwm_code_${lessonId}`);
+      const localPrev = prevLessonId ? localStorage.getItem(`cwm_code_${prevLessonId}`) : null;
+      
+      let sourceCode = "";
+      if (localCurrent) {
+        sourceCode = localCurrent;
+      } else if (currentProgress?.last_code) {
+        sourceCode = currentProgress.last_code;
+      } else if (practice.isProjectPart && (localPrev || prevProgress?.last_code)) {
+        sourceCode = localPrev || prevProgress?.last_code || "";
+      }
+
+      if (isWebLang) {
+        if (sourceCode && sourceCode.includes('HTML:\n')) {
+          const parsed = parseCompositeCode(sourceCode);
+          setHtmlCode(parsed.html || practice.htmlTemplate || practice.template || "");
+          setCssCode(parsed.css || practice.cssTemplate || "");
+          setJsCode(parsed.js || practice.jsTemplate || "");
+        } else {
+          setHtmlCode(sourceCode || practice.template || practice.htmlTemplate || "");
+          setCssCode(practice.cssTemplate || "");
+          setJsCode(practice.jsTemplate || "");
+        }
+      } else {
+        setCode(sourceCode || practice.template || "");
+      }
+
+      setCompletedObjectives([]);
+      setOutput("");
+    });
   }, [practice, lessonId, isWebLang, progress, prevLessonId]);
 
-  // Atualiza o preview sempre que o código muda ou quando o componente monta
   useEffect(() => {
     if (mounted) {
-      const timer = setTimeout(updatePreview, 300);
+      const timer = setTimeout(updatePreview, 500);
       return () => clearTimeout(timer);
     }
   }, [htmlCode, cssCode, jsCode, mounted, updatePreview]);
 
   const handleRunCode = async () => {
-    setIsRunning(true);
-    setIsConsoleOpen(true);
-    setOutput("> Compilando e analisando estrutura...\n");
+    startTransition(() => {
+      setIsRunning(true);
+      setIsConsoleOpen(true);
+      setOutput("> Compilando e analisando estrutura...\n");
+    });
     
     setTimeout(async () => {
       setIsRunning(false);
@@ -178,7 +178,6 @@ export default function LearnPage() {
       setCompletedObjectives(newDone);
 
       const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
-      // Salva no LocalStorage para persistência imediata
       localStorage.setItem(`cwm_code_${lessonId}`, finalCode);
 
       if (newDone.length === (practice?.objectives.length || 0)) {
@@ -192,7 +191,7 @@ export default function LearnPage() {
         setOutput(`> ⚠️ STATUS: 412 PRECONDITION FAILED\n> [AUDITORIA]: Faltam ${remaining} componentes essenciais.`);
         toast.error("Alguns requisitos ainda não foram atingidos.");
       }
-    }, 800);
+    }, 400);
   };
 
   const handleTheoryComplete = async (score: number) => {
