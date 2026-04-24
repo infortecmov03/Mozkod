@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Navigation } from "@/components/Navigation";
@@ -16,6 +15,9 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
+/**
+ * Agrupador de lições para visualização no Nível 8.
+ */
 const groupLessonsByPhase = (lessons: any[]) => {
   const phases: Record<string, any[]> = {};
   lessons.forEach(lesson => {
@@ -40,24 +42,37 @@ function ModulesContent() {
     if (levelParam) setActiveLevel(levelParam);
   }, [levelParam]);
 
+  /**
+   * Cálculo de progresso resiliente.
+   * Itera sobre todas as teorias e práticas de cada área.
+   */
   const getModuleProgress = (module: any) => {
     if (!module || !module.knowledgeAreas) return 0;
     let total = 0;
-    let completed = 0;
+    let completedCount = 0;
+    
     module.knowledgeAreas.forEach((ka: any) => {
-      const theoryList = ka.theory || [];
-      total += theoryList.length;
-      completed += theoryList.filter((l: any) => isCompleted(l.id)).length;
+      // Teorias
+      const theories = ka.theory || [];
+      total += theories.length;
+      completedCount += theories.filter((l: any) => isCompleted(l.id)).length;
+      
+      // Práticas (todas as linguagens do módulo)
       if (ka.practice) {
-        Object.values(ka.practice).forEach((exercises: any) => {
-          if (Array.isArray(exercises)) {
-            total += exercises.length;
-            completed += exercises.filter((p: any) => isCompleted(p.id)).length;
-          }
+        // Coletamos IDs únicos de exercícios para evitar duplicar contagem em multi-linguagem
+        const uniqueExerciseIds = new Set<string>();
+        Object.values(ka.practice).forEach((list: any) => {
+          if (Array.isArray(list)) list.forEach(ex => uniqueExerciseIds.add(ex.id));
+        });
+        
+        total += uniqueExerciseIds.size;
+        uniqueExerciseIds.forEach(id => {
+          if (isCompleted(id)) completedCount++;
         });
       }
     });
-    return total > 0 ? Math.round((completed / total) * 100) : 0;
+    
+    return total > 0 ? Math.round((completedCount / total) * 100) : 0;
   };
 
   return (
@@ -80,8 +95,9 @@ function ModulesContent() {
         onValueChange={setActiveLevel}
       >
         {modules.map((module) => {
-          const progress = getModuleProgress(module);
+          const progressPercent = getModuleProgress(module);
           const isLevel8 = module.id === 8;
+          
           return (
             <AccordionItem key={module.id} value={module.id.toString()} className="border-none">
               <AccordionTrigger className="hover:no-underline bg-card/40 rounded-2xl px-6 py-4 shadow-sm border border-white/5 data-[state=open]:rounded-b-none data-[state=open]:border-b-0 transition-all group">
@@ -93,10 +109,13 @@ function ModulesContent() {
                     <div className="text-left">
                       <h3 className="font-headline font-bold text-lg">{module.title}</h3>
                       <div className="flex items-center gap-3">
-                        <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20">
-                          {progress === 100 ? 'Concluído' : 'Nível ' + module.id}
+                        <Badge variant="outline" className={cn(
+                          "text-[10px] uppercase",
+                          progressPercent === 100 ? "bg-green-500/10 text-green-500 border-green-500/20" : "bg-primary/5 text-primary border-primary/20"
+                        )}>
+                          {progressPercent === 100 ? 'CONCLUÍDO' : 'NÍVEL ' + module.id}
                         </Badge>
-                        <span className="text-xs text-muted-foreground">{progress}% completo</span>
+                        <span className="text-xs text-muted-foreground">{progressPercent}% completo</span>
                       </div>
                     </div>
                   </div>
@@ -104,10 +123,11 @@ function ModulesContent() {
               </AccordionTrigger>
               <AccordionContent className="bg-card/20 rounded-b-2xl border-x border-b border-white/5 p-4 md:p-8 pt-4">
                 <p className="text-sm text-muted-foreground mb-8 max-w-2xl px-2">{module.description}</p>
+                
                 {isLevel8 ? (
                   <Accordion type="single" collapsible className="w-full space-y-3">
                     {module.knowledgeAreas.map((ka) => {
-                      const theoryByPhase = groupLessonsByPhase(ka.theory || []);
+                      const phases = groupLessonsByPhase(ka.theory || []);
                       return (
                         <AccordionItem key={ka.id} value={ka.id} className="border-none">
                           <AccordionTrigger className="hover:no-underline bg-background/50 rounded-xl px-5 py-4 border border-white/5 hover:border-primary/30 transition-all group/lang">
@@ -123,7 +143,7 @@ function ModulesContent() {
                           </AccordionTrigger>
                           <AccordionContent className="pt-6 pb-2 px-2">
                              <div className="space-y-10">
-                                {Object.entries(theoryByPhase).map(([phase, lessons]) => (
+                                {Object.entries(phases).map(([phase, items]) => (
                                   <div key={phase} className="space-y-4">
                                      <div className="flex items-center gap-3">
                                         <Layers className="w-4 h-4 text-primary" />
@@ -131,21 +151,21 @@ function ModulesContent() {
                                         <div className="h-px flex-1 bg-primary/10" />
                                      </div>
                                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                        {lessons.map(lesson => (
-                                          <Link key={lesson.id} href={`/learn/${lesson.id}`}>
-                                            <Card className="bg-card/40 border-white/5 hover:border-primary/20 hover:bg-card/60 transition-all group/item overflow-hidden">
+                                        {items.map(l => (
+                                          <Link key={l.id} href={`/learn/${l.id}`}>
+                                            <Card className="bg-card/40 border-white/5 hover:border-primary/20 transition-all group/item overflow-hidden">
                                                <CardContent className="p-4 flex items-center justify-between gap-3">
-                                                  <div className="flex items-center gap-3">
-                                                     {isCompleted(lesson.id) ? (
+                                                  <div className="flex items-center gap-3 min-w-0">
+                                                     {isCompleted(l.id) ? (
                                                        <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
                                                      ) : (
                                                        <Circle className="w-4 h-4 text-muted-foreground shrink-0" />
                                                      )}
                                                      <span className={cn(
-                                                       "text-xs font-medium line-clamp-1",
-                                                       isCompleted(lesson.id) && "text-muted-foreground line-through"
+                                                       "text-xs font-medium truncate",
+                                                       isCompleted(l.id) && "text-muted-foreground line-through"
                                                      )}>
-                                                       {lesson.title.replace(/Fase \d+: /i, '')}
+                                                       {l.title.replace(/Fase \d+: /i, '')}
                                                      </span>
                                                   </div>
                                                   <ChevronRight className="w-4 h-4 opacity-0 group-hover/item:opacity-100 transition-opacity text-primary" />
@@ -156,24 +176,30 @@ function ModulesContent() {
                                      </div>
                                   </div>
                                 ))}
+                                {/* Labs do Nível 8 */}
                                 <div className="pt-4 border-t border-white/5">
-                                   <div className="flex items-center justify-between mb-4">
-                                      <h5 className="font-headline font-bold text-sm text-accent uppercase tracking-tighter flex items-center gap-2">
-                                        <Laptop className="w-4 h-4" /> Laboratórios de Projeto Master
-                                      </h5>
-                                   </div>
+                                   <h5 className="font-headline font-bold text-sm text-accent uppercase tracking-tighter mb-4 flex items-center gap-2">
+                                      <Laptop className="w-4 h-4" /> Laboratórios de Projeto Master
+                                   </h5>
                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                       {Object.entries(ka.practice || {}).map(([lang, exercises]) => (
                                         exercises.map((ex: any) => (
                                           <Link key={ex.id} href={`/learn/${ex.id}`}>
-                                            <Card className="bg-accent/5 border-accent/10 hover:border-accent/40 transition-all p-4 flex items-center justify-between">
+                                            <Card className={cn(
+                                              "border transition-all p-4 flex items-center justify-between",
+                                              isCompleted(ex.id) ? "bg-green-500/5 border-green-500/20" : "bg-accent/5 border-accent/10 hover:border-accent/40"
+                                            )}>
                                                <div className="flex items-center gap-3">
-                                                  <div className="w-8 h-8 rounded bg-accent/10 flex items-center justify-center font-bold text-[10px] text-accent">
-                                                     {lang.toUpperCase()}
-                                                  </div>
-                                                  <span className="text-xs font-bold">{ex.title}</span>
+                                                  {isCompleted(ex.id) ? (
+                                                    <CheckCircle2 className="w-5 h-5 text-green-500" />
+                                                  ) : (
+                                                    <div className="w-8 h-8 rounded bg-accent/10 flex items-center justify-center font-bold text-[10px] text-accent">
+                                                      {lang.toUpperCase()}
+                                                    </div>
+                                                  )}
+                                                  <span className={cn("text-xs font-bold", isCompleted(ex.id) && "line-through text-muted-foreground")}>{ex.title}</span>
                                                </div>
-                                               <ArrowRight className="w-4 h-4 text-accent" />
+                                               <ArrowRight className={cn("w-4 h-4", isCompleted(ex.id) ? "text-green-500" : "text-accent")} />
                                             </Card>
                                           </Link>
                                         ))
@@ -193,6 +219,7 @@ function ModulesContent() {
                       const availableLangs = Object.keys(ka.practice || {});
                       const currentLang = selectedLangs[ka.id] || availableLangs[0] || "";
                       const practiceExercises = ka.practice?.[currentLang] || [];
+                      
                       return (
                         <div key={ka.id} className="space-y-4">
                           <div className="flex items-center gap-3 mb-2">
@@ -200,44 +227,37 @@ function ModulesContent() {
                             <h4 className="font-headline font-bold text-sm uppercase tracking-widest text-primary/80">{ka.title}</h4>
                             <div className="h-px flex-1 bg-white/5" />
                           </div>
-                          <div className="grid md:grid-cols-2 gap-6 md:items-stretch">
-                             <Card className="bg-background/40 border-white/5 hover:border-primary/20 transition-all overflow-hidden group/card shadow-xl rounded-2xl flex flex-col">
+                          
+                          <div className="grid md:grid-cols-2 gap-6 items-stretch">
+                             {/* Coluna Teoria */}
+                             <Card className="bg-background/40 border-white/5 hover:border-primary/20 transition-all shadow-xl rounded-2xl flex flex-col">
                                 <CardContent className="p-6 space-y-6 flex-1 flex flex-col">
                                   <div className="flex justify-between items-start">
-                                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                                        <BookOpen className="w-5 h-5 text-primary" />
+                                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                        <BookOpen className="w-5 h-5" />
                                      </div>
-                                     <Badge variant="outline" className="text-[10px] uppercase">TEORIA</Badge>
+                                     <Badge variant="outline" className="text-[9px] font-black tracking-widest">TEORIA</Badge>
                                   </div>
                                   <div className="space-y-2 flex-1">
-                                     {theoryLessons.map(lesson => (
-                                       <div key={lesson.id} className="flex items-center justify-between text-xs p-2 rounded-lg hover:bg-white/5 transition-colors">
-                                          <div className="flex items-center gap-3">
-                                            {isCompleted(lesson.id) ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Circle className="w-4 h-4 text-muted-foreground" />}
-                                            <span className={cn(isCompleted(lesson.id) && "text-muted-foreground line-through")}>{lesson.title}</span>
+                                     {theoryLessons.map(l => (
+                                       <Link key={l.id} href={`/learn/${l.id}`} className="flex items-center justify-between text-xs p-2.5 rounded-lg hover:bg-white/5 transition-colors group/l">
+                                          <div className="flex items-center gap-3 min-w-0">
+                                            {isCompleted(l.id) ? <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" /> : <Circle className="w-4 h-4 text-muted-foreground shrink-0" />}
+                                            <span className={cn("truncate", isCompleted(l.id) && "text-muted-foreground line-through")}>{l.title}</span>
                                           </div>
-                                          <Link href={`/learn/${lesson.id}`}>
-                                            <ChevronRight className="w-4 h-4 opacity-0 group-hover/card:opacity-100 transition-opacity" />
-                                          </Link>
-                                       </div>
+                                          <ChevronRight className="w-4 h-4 opacity-0 group-hover/l:opacity-100 transition-opacity" />
+                                       </Link>
                                      ))}
                                   </div>
-                                  {theoryLessons.length > 0 && (
-                                    <Link href={`/learn/${theoryLessons[0].id}`}>
-                                      <Button className="w-full rounded-xl font-bold h-10 gap-2 text-xs">
-                                        Explorar Teoria
-                                        <ArrowRight className="w-4 h-4" />
-                                      </Button>
-                                    </Link>
-                                  )}
                                 </CardContent>
                              </Card>
-                             {availableLangs.length > 0 ? (
-                               <Card className="bg-background/40 border-white/5 hover:border-accent/20 transition-all overflow-hidden group/card shadow-xl rounded-2xl flex flex-col">
-                                 <CardContent className="p-6 space-y-6 flex-1 flex flex-col">
+
+                             {/* Coluna Prática */}
+                             <Card className="bg-background/40 border-white/5 hover:border-accent/20 transition-all shadow-xl rounded-2xl flex flex-col">
+                                <CardContent className="p-6 space-y-6 flex-1 flex flex-col">
                                     <div className="flex justify-between items-start">
-                                       <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
-                                          <Code2 className="w-5 h-5 text-accent" />
+                                       <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
+                                          <Code2 className="w-5 h-5" />
                                        </div>
                                        <div className="flex gap-1">
                                           {availableLangs.map(lang => (
@@ -245,7 +265,7 @@ function ModulesContent() {
                                               key={lang}
                                               onClick={() => setSelectedLangs(prev => ({...prev, [ka.id]: lang}))}
                                               className={cn(
-                                                "text-[9px] px-2 py-0.5 rounded-md border font-bold uppercase transition-all",
+                                                "text-[9px] px-2 py-0.5 rounded border font-black uppercase transition-all",
                                                 currentLang === lang 
                                                   ? "bg-accent text-accent-foreground border-accent" 
                                                   : "bg-transparent text-muted-foreground border-white/10 hover:border-accent/50"
@@ -257,42 +277,20 @@ function ModulesContent() {
                                        </div>
                                     </div>
                                     <div className="space-y-2 flex-1">
-                                       {practiceExercises.map(ex => {
-                                         const theoryId = theoryLessons[practiceExercises.indexOf(ex)]?.id;
-                                         const isLocked = theoryId && !isCompleted(theoryId);
-                                         return (
-                                           <div key={ex.id} className={cn(
-                                             "flex items-center justify-between text-xs p-2 rounded-lg transition-colors",
-                                             isLocked ? "opacity-50" : "hover:bg-white/5"
-                                           )}>
-                                              <div className="flex items-center gap-3">
-                                                {isCompleted(ex.id) ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <Circle className="w-4 h-4 text-muted-foreground" />}
-                                                <span className={cn(isCompleted(ex.id) && "text-muted-foreground line-through")}>{ex.title}</span>
-                                              </div>
-                                              {!isLocked && (
-                                                <Link href={`/learn/${ex.id}`}>
-                                                  <ChevronRight className="w-4 h-4 opacity-0 group-hover/card:opacity-100 transition-opacity" />
-                                                </Link>
-                                              )}
-                                           </div>
-                                         );
-                                       })}
+                                       {practiceExercises.length > 0 ? practiceExercises.map(ex => (
+                                         <Link key={ex.id} href={`/learn/${ex.id}`} className="flex items-center justify-between text-xs p-2.5 rounded-lg hover:bg-white/5 transition-colors group/l">
+                                            <div className="flex items-center gap-3 min-w-0">
+                                              {isCompleted(ex.id) ? <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" /> : <Circle className="w-4 h-4 text-muted-foreground shrink-0" />}
+                                              <span className={cn("truncate", isCompleted(ex.id) && "text-muted-foreground line-through")}>{ex.title}</span>
+                                            </div>
+                                            <ChevronRight className="w-4 h-4 opacity-0 group-hover/l:opacity-100 transition-opacity" />
+                                         </Link>
+                                       )) : (
+                                         <div className="h-full flex items-center justify-center opacity-20 italic text-[10px]">Prática em breve</div>
+                                       )}
                                     </div>
-                                    {practiceExercises.length > 0 && (
-                                      <Link href={`/learn/${practiceExercises[0].id}`}>
-                                        <Button variant="outline" className="w-full rounded-xl font-bold h-10 gap-2 text-xs border-accent/20 hover:bg-accent/5">
-                                          Laboratório {currentLang.toUpperCase()}
-                                          <Laptop className="w-4 h-4" />
-                                        </Button>
-                                      </Link>
-                                    )}
-                                 </CardContent>
-                               </Card>
-                             ) : (
-                               <Card className="bg-card/10 border-dashed border-2 flex items-center justify-center p-8 opacity-40 rounded-2xl">
-                                  <p className="text-xs font-bold text-muted-foreground italic">Prática em breve</p>
-                               </Card>
-                             )}
+                                </CardContent>
+                             </Card>
                           </div>
                         </div>
                       );
@@ -310,7 +308,7 @@ function ModulesContent() {
 
 export default function ModulesPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background pb-0 font-body">
+    <div className="min-h-screen flex flex-col bg-background font-body">
       <Navigation />
       <Suspense fallback={<div className="flex h-screen items-center justify-center"><Loader2 className="w-10 h-10 animate-spin text-primary" /></div>}>
         <ModulesContent />

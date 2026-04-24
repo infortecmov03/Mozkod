@@ -1,10 +1,14 @@
-
 'use client';
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { toast } from 'sonner';
-import { syncProgressToDb, fetchUserProgress } from '@/services/progressService';
+import { syncProgressToDb, fetchUserProgress, ProgressItem } from '@/services/progressService';
+
+/**
+ * @fileOverview Orquestrador de Estado de Aprendizagem.
+ * Gere a reatividade da interface após ações do serviço de persistência.
+ */
 
 type ProgressContextType = {
   isCompleted: (id: string) => boolean;
@@ -22,6 +26,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
   const [progress, setProgress] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Carregamento inicial de dados
   const refreshProgress = useCallback(async () => {
     if (!user) {
       setProgress([]);
@@ -32,12 +37,9 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       const data = await fetchUserProgress(user.id);
-      setProgress(data.map(p => ({
-        ...p,
-        completed: p.completed === true || p.completed === 1 || String(p.completed) === "true"
-      })));
+      setProgress(data);
     } catch (err: any) {
-      console.error('Erro ao carregar progresso:', err.message);
+      console.error('Falha ao carregar histórico:', err.message);
     } finally {
       setLoading(false);
     }
@@ -47,6 +49,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     refreshProgress();
   }, [refreshProgress]);
 
+  // Verificação de conclusão universal (IDs únicos garantem precisão)
   const isCompleted = useCallback((id: string) => {
     return progress.some(p => p.lesson_id === id && p.completed);
   }, [progress]);
@@ -56,10 +59,14 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     try {
       await refreshProfile();
     } catch (err) {
-      console.error('Erro ao sincronizar pontos:', err);
+      console.error('Sync Points Error:', err);
     }
   };
 
+  /**
+   * Ponto de entrada para qualquer conclusão em todos os níveis (1 a 8).
+   * Delega a tarefa para o ProgressService.
+   */
   const markAsCompleted = async (
     id: string, 
     levelId: number, 
@@ -69,11 +76,11 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     code?: string
   ) => {
     if (!user) {
-      toast.error("Precisas de estar logado para guardar o progresso.");
+      toast.error("Autenticação necessária para salvar progresso.");
       return;
     }
 
-    const newItem = { 
+    const newItem: ProgressItem = { 
       user_id: user.id, 
       lesson_id: id, 
       completed: true, 
@@ -86,30 +93,30 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       quiz_passed: score >= 70
     };
 
-    // UI Otimista para resposta imediata
+    // UI Otimista: Feedback visual instantâneo
     const oldProgress = [...progress];
     setProgress(prev => {
-      const idx = prev.findIndex(p => p.lesson_id === id);
+      const existing = prev.findIndex(p => p.lesson_id === id);
       const updated = [...prev];
-      if (idx > -1) updated[idx] = { ...updated[idx], ...newItem };
+      if (existing > -1) updated[existing] = { ...updated[existing], ...newItem };
       else updated.push(newItem);
       return updated;
     });
 
     try {
-      // Grava no DB
+      // 1. Persistência via Serviço
       await syncProgressToDb(newItem);
       
-      // FORÇA a atualização do perfil para ver os pontos novos IMEDIATAMENTE
-      // Aguardamos um pequeno delay para o DB processar o trigger/RPC
+      // 2. Sincronização de Perfil (Pontos)
+      // Pequeno delay para garantir que o DB processou o trigger de pontos
       setTimeout(async () => {
         await refreshProfile();
-        toast.success("Pontos atualizados!");
-      }, 500);
+        toast.success("Progresso sincronizado na nuvem! ✨");
+      }, 300);
 
     } catch (err: any) {
-      console.error('Falha na sincronização:', err);
-      setProgress(oldProgress); // Reverte se falhar
+      console.error('Falha crítica de sincronização:', err);
+      setProgress(oldProgress); // Reversão em caso de erro real
       toast.error('Erro de conexão ao salvar progresso.');
     }
   };

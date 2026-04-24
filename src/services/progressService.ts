@@ -1,10 +1,10 @@
-
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
 
 /**
- * @fileOverview Serviço responsável pela persistência de progresso no banco de dados.
+ * @fileOverview Serviço responsável exclusivamente pela persistência de progresso.
+ * Aplica o princípio de Responsabilidade Única (SRP).
  */
 
 export interface ProgressItem {
@@ -20,36 +20,41 @@ export interface ProgressItem {
   completed_at: string;
 }
 
+/**
+ * Envia o progresso para o Supabase e dispara a atualização de pontos.
+ */
 export async function syncProgressToDb(item: ProgressItem) {
   const supabase = createClient();
   
-  // 1. Grava ou atualiza o progresso
-  const { error } = await supabase
+  // 1. Persistência com Upsert (Sincronização Ativa)
+  const { data, error } = await supabase
     .from('user_lesson_progress')
     .upsert(item, { 
       onConflict: 'user_id,lesson_id' 
-    });
+    })
+    .select()
+    .single();
 
   if (error) {
     console.error('ProgressService Error:', error.message);
     throw new Error(error.message);
   }
 
-  /**
-   * Nota Técnica: Se o Trigger no banco falhar ou não estiver instalado,
-   * forçamos a chamada do RPC de cálculo de pontos para garantir a consistência na UI.
-   */
+  // 2. Cálculo de Pontos via RPC (Redundância de Segurança)
   try {
     await supabase.rpc('calculate_total_points', { 
       p_user_id: item.user_id 
     });
   } catch (rpcError) {
-    console.warn('Erro ao disparar RPC de pontos:', rpcError);
+    console.warn('RPC Points Warning:', rpcError);
   }
 
-  return { success: true };
+  return { success: true, data };
 }
 
+/**
+ * Recupera todo o histórico do utilizador.
+ */
 export async function fetchUserProgress(userId: string) {
   const supabase = createClient();
   const { data, error } = await supabase
@@ -58,5 +63,10 @@ export async function fetchUserProgress(userId: string) {
     .eq('user_id', userId);
 
   if (error) throw error;
-  return data || [];
+  
+  // Normalização de booleanos para evitar falhas de tipagem no JS
+  return (data || []).map(p => ({
+    ...p,
+    completed: p.completed === true || p.completed === 1 || String(p.completed) === "true"
+  }));
 }
