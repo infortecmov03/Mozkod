@@ -1,4 +1,3 @@
-
 /**
  * @fileOverview Definições de tipos para o motor do currículo.
  * Use estes tipos para garantir que as novas lições sejam compatíveis com a UI.
@@ -10,7 +9,7 @@ export type TheoryLesson = {
   content: string;        // Conteúdo em HTML (suporta tags de estilo)
   youtubeVideoId?: string; // ID do vídeo do Youtube (opcional)
   quizId: string;         // ID do quiz vinculado a esta aula
-  enableInteractive?: boolean; // Se true, ativa o motor de preview de código (Web Core)
+  enableInteractive?: boolean; // Se true, ativa o motor de preview de código
 };
 
 export type QuizQuestion = {

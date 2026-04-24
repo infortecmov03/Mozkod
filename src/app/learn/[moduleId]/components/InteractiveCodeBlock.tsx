@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useRef } from "react";
@@ -90,7 +89,7 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
           doc.close();
 
           // 🔒 BLOQUEIO DE SEGURANÇA
-          const iframeDoc = iframeRef.current?.contentDocument;
+          const iframeDoc = iframeRef.current.contentDocument;
           if (iframeDoc) {
             iframeDoc.querySelectorAll('form').forEach(form => {
               form.addEventListener('submit', (e) => {

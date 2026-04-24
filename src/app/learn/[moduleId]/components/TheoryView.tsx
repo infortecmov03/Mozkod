@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -12,7 +11,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { TheoryLesson, Quiz } from "@/lib/curriculum/types";
-import parse, { HTMLReactParserOptions, Element } from 'html-react-parser';
+import parse, { HTMLReactParserOptions, Element, Text } from 'html-react-parser';
 import { InteractiveCodeBlock } from "./InteractiveCodeBlock";
 
 interface TheoryViewProps {
@@ -75,14 +74,16 @@ export function TheoryView({
         if (codeNode) {
           const language = (codeNode.attribs.class || '').replace('language-', '') || 'html';
           
-          const getRawCode = (node: Element): string => {
+          // Função robusta para extrair o texto de dentro da tag code
+          const extractText = (node: Element): string => {
             return node.children.map((child: any) => {
               if (child.type === 'text') return child.data;
+              if (child instanceof Element) return extractText(child);
               return '';
             }).join('');
           };
 
-          const rawCode = getRawCode(codeNode);
+          const rawCode = extractText(codeNode);
           if (!rawCode) return null;
 
           return <InteractiveCodeBlock code={rawCode} language={language} />;
