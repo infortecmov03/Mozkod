@@ -10,6 +10,7 @@ export type TheoryLesson = {
   content: string;        // Conteúdo em HTML (suporta tags de estilo)
   youtubeVideoId?: string; // ID do vídeo do Youtube (opcional)
   quizId: string;         // ID do quiz vinculado a esta aula
+  enableInteractive?: boolean; // Se true, ativa o motor de preview de código (Web Core)
 };
 
 export type QuizQuestion = {

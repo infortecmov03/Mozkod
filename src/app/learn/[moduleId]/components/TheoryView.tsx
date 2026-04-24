@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from "react";
@@ -20,7 +21,6 @@ interface TheoryViewProps {
   isCompleted: boolean;
   nextLessonId: string | null;
   onComplete: (score: number) => Promise<void>;
-  enableInteractive?: boolean;
 }
 
 export function TheoryView({ 
@@ -28,8 +28,7 @@ export function TheoryView({
   quiz, 
   isCompleted, 
   nextLessonId, 
-  onComplete,
-  enableInteractive = false 
+  onComplete
 }: TheoryViewProps) {
   const router = useRouter();
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
@@ -71,12 +70,11 @@ export function TheoryView({
 
   const parseOptions: HTMLReactParserOptions = {
     replace: (domNode) => {
-      if (enableInteractive && domNode instanceof Element && domNode.name === 'pre') {
+      if (theory.enableInteractive && domNode instanceof Element && domNode.name === 'pre') {
         const codeNode = domNode.children.find(c => c instanceof Element && c.name === 'code') as Element;
         if (codeNode) {
           const language = (codeNode.attribs.class || '').replace('language-', '') || 'html';
           
-          // Extrai o conteúdo textual de forma robusta, mantendo escapes se existirem
           const getRawCode = (node: Element): string => {
             return node.children.map((child: any) => {
               if (child.type === 'text') return child.data;

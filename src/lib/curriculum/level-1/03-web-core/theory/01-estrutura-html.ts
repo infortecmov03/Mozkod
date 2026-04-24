@@ -1,9 +1,11 @@
+
 import type { TheoryLesson } from '../../types';
 
 export const lesson: TheoryLesson = {
   id: "web-t1",
   title: "Estrutura HTML5: Arquitetura de Documentos e Metadados de Elite",
   youtubeVideoId: "8ME9u065vD4",
+  enableInteractive: true,
   content: `
     <div class="space-y-12">
       <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
