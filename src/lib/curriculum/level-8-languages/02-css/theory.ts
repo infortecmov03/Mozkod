@@ -3,6 +3,8 @@ import { lesson as l2 } from './theory/02-cascade-layers';
 import { lesson as l3 } from './theory/03-custom-properties';
 import { lesson as l4 } from './theory/04-logical-properties';
 import { lesson as l5 } from './theory/05-flexbox-mastery';
+import { lesson as l6 } from './theory/06-grid-master';
+import { lesson as l8 } from './theory/08-subgrid-master';
 
 import type { TheoryLesson } from '../../types';
 
@@ -30,12 +32,18 @@ const cssTitles = [
   "Fase 4: Capstone: Design System de Elite Completo"
 ];
 
-const lessonsSource = [
-  l1, l2, l3, l4, l5
-];
+const lessonsSource: Record<number, any> = {
+  0: l1,
+  1: l2,
+  2: l3,
+  3: l4,
+  4: l5,
+  5: l6,
+  7: l8
+};
 
 export const lessons: TheoryLesson[] = cssTitles.map((title, i) => {
-  if (i < lessonsSource.length) {
+  if (lessonsSource[i]) {
     return {
       ...lessonsSource[i],
       title: title,
