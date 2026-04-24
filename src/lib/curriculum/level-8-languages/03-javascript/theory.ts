@@ -7,63 +7,53 @@ import { lesson as l4 } from './theory/04-proxies-metaprogramming';
 import { lesson as l5 } from './theory/05-abort-signals';
 import { lesson as l6 } from './theory/06-esm-tree-shaking';
 import { lesson as l7 } from './theory/07-web-workers';
-import { lesson as l8 } from './theory/08-observers-apis';
+import { lesson as l8 } from './theory/14-streams-api'; // Reutilizando a lógica de Streams para o lugar correto
 import { lesson as l9 } from './theory/09-debouncing-throttling';
-import { lesson as l10 } from './theory/10-promises-internals';
-import { lesson as l11 } from './theory/11-v8-engines';
-import { lesson as l12 } from './theory/12-functional-currying';
-import { lesson as l13 } from './theory/13-web-crypto-security';
-import { lesson as l14>src/lib/curriculum/level-8-languages/03-javascript/theory/14-streams-api.ts</file>
-    <content><![CDATA[
-import type { TheoryLesson } from '../../../types';
+import { lesson as l10 } from './theory/10-xss-sanitization';
 
-export const lesson: TheoryLesson = {
-  id: "js-m14",
-  title: "Fase 3: Streams API: Processamento de Dados Massivos",
-  enableInteractive: true,
-  quizId: "js-mq14",
-  content: `
-    <div class="space-y-12">
-      <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
-        <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🌊 Fluxos Contínuos de Dados</h2>
-        <p class="text-lg leading-relaxed opacity-90">
-          Como processar um ficheiro de 2GB num browser com 512MB de RAM? A resposta são as <strong>Streams</strong>. No nível Master, não esperamos o download terminar; processamos os dados enquanto eles ainda estão a viajar pela rede.
-        </p>
-      </div>
+const jsTitles = [
+  "Fase 1: Prototypal Inheritance: A Alma do JavaScript",
+  "Fase 1: Event Loop Deep Dive: Microtasks vs Macrotasks",
+  "Fase 1: Closures e Memória: O Escopo Léxico Profundo",
+  "Fase 1: Metaprogramação: Proxies e Reflect API",
+  "Fase 2: Advanced Async: AbortController e Sinais",
+  "Fase 2: JavaScript Modules (ESM) & Tree Shaking",
+  "Fase 2: Web Workers: Paralelismo Real no Browser",
+  "Fase 2: Streams API: Processamento de Dados Massivos",
+  "Fase 2: Performance: Debouncing e Throttling Master",
+  "Fase 3: Security: Sanitização e Proteção contra XSS",
+  "Fase 3: Ecossistema: Transpilers e o futuro do TC39",
+  "Fase 3: Gestão de Memória: Heap, Stack e GC Internals",
+  "Fase 3: Programação Funcional: Currying e Composição",
+  "Fase 3: Web Crypto API: Segurança de Dados Nativa",
+  "Fase 3: V8 Internals: Hidden Classes e Inline Caching",
+  "Fase 4: Service Workers e Interceção de Rede",
+  "Fase 4: Shadow DOM Interactivity e Event Retargeting",
+  "Fase 4: Custom Events e Comunicação Desacoplada",
+  "Fase 4: Intl API: Internacionalização de Elite",
+  "Fase 4: History API: Roteamento de SPAs do Zero",
+  "Fase 4: Capstone: Deploy de Portal Dinâmico de Elite"
+];
 
-      <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. ReadableStream e Backpressure</h3>
-        <p class="text-sm">A API de Streams permite ler pedaços (chunks) de dados de forma assíncrona. O <strong>Backpressure</strong> é o mecanismo que avisa a fonte para abrandar se o processamento for mais lento que o download.</p>
-        <pre><code class="language-javascript">
-const response = await fetch('/big-data.json');
-const reader = response.body.getReader();
-
-while(true) {
-  const { done, value } = await reader.read();
-  if (done) break;
-  // 'value' é um Uint8Array contendo um pedaço do ficheiro
-  processChunk(value);
-}
-        </code></pre>
-      </section>
-
-      <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">2. Transform Streams</h3>
-        <p class="text-sm">Podes encadear transformações (como compressão ou tradução) num "tubo" de dados sem nunca carregar o ficheiro inteiro na memória.</p>
-        <pre><code class="language-javascript">
-readableStream
-  .pipeThrough(new TextDecoderStream())
-  .pipeThrough(new MyCustomTransformStream())
-  .pipeTo(writableStream);
-        </code></pre>
-      </section>
-
-      <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
-        <h4 class="text-xl font-bold text-primary mb-4">🏆 Regra do Engenheiro de Performance</h4>
-        <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
-          "Em sistemas de escala, a memória é mais cara que a CPU. Use Streams para manter o consumo de RAM constante (O(1)), independentemente do tamanho do ficheiro processado."
-        </p>
-      </section>
-    </div>
-  `
+const lessonsSource: Record<number, any> = {
+  0: l1, 1: l2, 2: l3, 3: l4, 4: l5, 5: l6, 6: l7, 7: l8, 8: l9, 9: l10
 };
+
+export const lessons: TheoryLesson[] = jsTitles.map((title, i) => {
+  if (lessonsSource[i]) {
+    return {
+      ...lessonsSource[i],
+      title: title,
+      id: `js-m${i + 1}`,
+      quizId: `js-mq${i + 1}`
+    };
+  }
+
+  return {
+    id: `js-m${i + 1}`,
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>⚡ JavaScript Master: ${title}</h2><p>Exploração profunda das APIs modernas do browser e otimizações de motor V8 para engenharia de alta escala.</p></div>`,
+    quizId: `js-mq${i + 1}`,
+    enableInteractive: true
+  };
+});
