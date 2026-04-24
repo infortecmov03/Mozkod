@@ -1,19 +1,24 @@
+import { lesson as l1 } from './theory/01-selectors';
+import { lesson as l2 } from './theory/02-cascade-layers';
+import { lesson as l3 } from './theory/03-custom-properties';
+import { lesson as l4 } from './theory/04-logical-properties';
+import { lesson as l5 } from './theory/05-flexbox-mastery';
 
 import type { TheoryLesson } from '../../types';
 
 const cssTitles = [
-  "Fase 1: Seletores de Elite e Especificidade",
-  "Fase 1: Box Model, Box Sizing e Física da Web",
-  "Fase 1: Sistemas de Cores, Unidades e Escala",
-  "Fase 1: Tipografia Master e Altura de Linha",
-  "Fase 2: Flexbox Mastery: Eixos e Alinhamento",
+  "Fase 1: Seletores de Elite, Especificidade e :has()",
+  "Fase 1: Cascade Layers (@layer) e a Nova Ordem",
+  "Fase 1: Custom Properties e Design Tokens",
+  "Fase 1: Propriedades Lógicas e Layout Global",
+  "Fase 2: Flexbox Mastery: Eixos, Gap e Intrinsic Sizing",
   "Fase 2: Grid Layout Master: Geometria 2D",
   "Fase 2: Posicionamento e Fluxo de Documento",
-  "Fase 2: Propriedades Lógicas e Layout Global",
+  "Fase 2: Subgrid: Alinhamento Multi-nível",
   "Fase 3: Transições e Transformações de Hardware",
   "Fase 3: Animações @keyframes e Performance GPU",
   "Fase 3: Pseudo-classes, Elementos e Estados de UI",
-  "Fase 3: Variáveis CSS e Design Systems Escaláveis",
+  "Fase 3: Design Systems Escaláveis e Variáveis",
   "Fase 3: Media Queries, Container Queries e Contexto",
   "Fase 4: Arquiteturas CSS: BEM, ITCSS e Utility",
   "Fase 4: Tooling: PostCSS, Sass e Compiladores",
@@ -25,9 +30,25 @@ const cssTitles = [
   "Fase 4: Capstone: Design System de Elite Completo"
 ];
 
-export const lessons: TheoryLesson[] = cssTitles.map((title, i) => ({
-  id: `css-m${i + 1}`,
-  title: title,
-  content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🎨 CSS Master: ${title}</h2><p>Engenharia de estilos e sistemas visuais de alta performance.</p></div>`,
-  quizId: `css-mq${i + 1}`
-}));
+const lessonsSource = [
+  l1, l2, l3, l4, l5
+];
+
+export const lessons: TheoryLesson[] = cssTitles.map((title, i) => {
+  if (i < lessonsSource.length) {
+    return {
+      ...lessonsSource[i],
+      title: title,
+      id: `css-m${i + 1}`,
+      quizId: `css-mq${i + 1}`
+    };
+  }
+
+  return {
+    id: `css-m${i + 1}`,
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🎨 CSS Master: ${title}</h2><p>Estudo avançado sobre engenharia de estilos e performance visual.</p></div>`,
+    quizId: `css-mq${i + 1}`,
+    enableInteractive: true
+  };
+});
