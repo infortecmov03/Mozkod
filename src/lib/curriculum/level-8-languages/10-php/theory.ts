@@ -41,14 +41,21 @@ export const lessons: TheoryLesson[] = phpTitles.map((title, i) => ({
 
       <section class="space-y-6">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">Tópico Master: ${title}</h3>
-        <p class="text-sm">Exploração profunda dos mecanismos internos que permitem ao PHP servir milhões de pedidos simultâneos.</p>
+        <p class="text-sm">Exploração profunda dos mecanismos internos que permitem ao PHP servir milhões de pedidos simultâneos com estabilidade industrial.</p>
         
         <div class="bg-indigo-500/10 p-6 rounded-2xl border border-indigo-500/20 shadow-inner">
           <h4 class="font-bold text-indigo-400 mb-4">🚀 Visão do Arquiteto</h4>
           <p class="text-sm leading-relaxed">
-            Dominar o PHP Master exige entender a <strong>Zend VM</strong> e como os <strong>Opcodes</strong> são gerados. Ao final desta trilha, você será capaz de projetar infraestruturas <i>Cloud Native</i> resilientes e seguras.
+            Dominar o PHP Master exige entender a <strong>Zend VM</strong> e como os <strong>Opcodes</strong> são gerados e otimizados pelo JIT. Ao final desta trilha, você será capaz de projetar infraestruturas <i>Cloud Native</i> resilientes utilizando ferramentas como Swoole, PHPStan Nível 9 e arquiteturas desacopladas.
           </p>
         </div>
+      </section>
+
+      <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
+        <h4 class="text-xl font-bold text-primary mb-4">🏆 Selo de Qualidade Codworks</h4>
+        <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
+          "A simplicidade do PHP é o seu maior trunfo, mas a sua performance no nível 8 é o que sustenta 80% da web. Como Engenheiro Master, você dominará o equilíbrio entre entrega rápida e arquitetura inquebrável."
+        </p>
       </section>
     </div>
   `,
