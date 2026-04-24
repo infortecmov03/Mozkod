@@ -3,6 +3,7 @@ import { lesson as l2 } from './theory/02-meta-seo';
 import { lesson as l3 } from './theory/03-semantics-accessibility';
 import { lesson as l4 } from './theory/04-text-hierarchy-navigation';
 import { lesson as l5 } from './theory/05-identity-attributes';
+import { lesson as l6 } from './theory/06-responsive-images';
 import type { TheoryLesson } from '../../types';
 
 const htmlTitles = [
@@ -34,7 +35,8 @@ const lessonsSource: Record<number, any> = {
   1: l2,
   2: l3,
   3: l4,
-  4: l5
+  4: l5,
+  5: l6
 };
 
 export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {
