@@ -12,7 +12,7 @@ export const lesson: TheoryLesson = {
           🔒 A Última Linha de Defesa
         </h2>
         <p class="text-lg leading-relaxed opacity-90">
-          Chegaste ao topo da engenharia HTML. A lição final foca na <strong>Segurança de Estado</strong>. No nível Master, entendemos que onde e como guardas os dados do utilizador define a resiliência do sistema contra ataques cibernéticos globais.
+          Chegaste ao topo da engenharia HTML. A lição final foca na <strong>Segurança de Estado</strong>. No nível Master, entendemos que onde e como guardas os dados do utilizador define a resiliência do sistema contra ataques cibernéticos globais como XSS e CSRF.
         </p>
       </div>
 
@@ -28,11 +28,11 @@ export const lesson: TheoryLesson = {
           </div>
           <div class="p-6 bg-card border rounded-2xl border-white/5 shadow-lg">
             <h4 class="font-bold text-red-400 mb-2">Secure</h4>
-            <p class="text-[10px] opacity-70 leading-relaxed">Garante que o cookie só viaja em ligações encriptadas (HTTPS). Nunca é enviado em redes abertas.</p>
+            <p class="text-[10px] opacity-70 leading-relaxed">Garante que o cookie só viaja em ligações encriptadas (HTTPS). Nunca é enviado em redes Wi-Fi abertas ou inseguras.</p>
           </div>
           <div class="p-6 bg-card border rounded-2xl border-white/5 shadow-lg">
             <h4 class="font-bold text-red-400 mb-2">SameSite=Strict</h4>
-            <p class="text-[10px] opacity-70 leading-relaxed">O cookie nunca é enviado em pedidos vindos de outros sites. A defesa definitiva contra ataques CSRF.</p>
+            <p class="text-[10px] opacity-70 leading-relaxed">O cookie nunca é enviado em pedidos vindos de outros sites. A defesa definitiva contra ataques CSRF (falsificação de pedidos).</p>
           </div>
         </div>
       </section>
@@ -40,7 +40,7 @@ export const lesson: TheoryLesson = {
       <!-- 2. DATA PARTITIONING (CHIPS) -->
       <section class="space-y-8">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">2. O Futuro: CHIPS e Cookies Particionados</h3>
-        <p class="text-sm leading-relaxed">Com o fim dos cookies de terceiros, o browser introduziu o <strong>CHIPS (Cookies Having Independent Partitioned State)</strong>. O atributo <code>Partitioned</code> permite guardar cookies de embutidos (widgets) de forma isolada por site, mantendo a privacidade do utilizador.</p>
+        <p class="text-sm leading-relaxed">Com o fim dos cookies de terceiros, o browser introduziu o <strong>CHIPS (Cookies Having Independent Partitioned State)</strong>. O atributo <code>Partitioned</code> permite guardar cookies de embutidos (widgets) de forma isolada por site, mantendo a privacidade.</p>
 
         <div class="space-y-4">
            <h4 class="font-bold text-primary text-xs uppercase tracking-widest">Exemplo de Cabeçalho Seguro</h4>
@@ -53,32 +53,32 @@ export const lesson: TheoryLesson = {
       <!-- 3. STORAGE AUDIT -->
       <section class="space-y-6">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">3. Auditoria: Onde guardar o quê?</h3>
-        <p class="text-sm">Um erro estratégico é guardar dados sensíveis no local errado. Utilize esta matriz de decisão Master:</p>
+        <p class="text-sm">Um erro estratégico é guardar dados sensíveis no local errado. Utilize esta matriz de decisão Master para o seu projeto:</p>
         
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto rounded-xl border border-white/10">
           <table class="w-full border-collapse text-xs">
             <thead>
               <tr class="bg-muted/50">
-                <th class="p-3 border border-white/10">Tipo de Dado</th>
-                <th class="p-3 border border-white/10">Recomendação</th>
-                <th class="p-3 border border-white/10">Razão Técnica</th>
+                <th class="p-3 text-left">Tipo de Dado</th>
+                <th class="p-3 text-left">Recomendação</th>
+                <th class="p-3 text-left">Razão Técnica</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="p-3 border border-white/10 font-bold">JWT / Session Token</td>
-                <td class="p-3 border border-white/10">Cookie (HttpOnly)</td>
-                <td class="p-3 border border-white/10 text-muted-foreground">Proteção nativa contra roubo via script.</td>
+              <tr class="border-t border-white/5">
+                <td class="p-3 font-bold">Token JWT (Sessão)</td>
+                <td class="p-3 text-green-400 font-bold">Cookie (HttpOnly)</td>
+                <td class="p-3 text-muted-foreground">Proteção nativa do browser contra roubo via scripts XSS.</td>
               </tr>
-              <tr>
-                <td class="p-3 border border-white/10 font-bold">Preferências (Tema)</td>
-                <td class="p-3 border border-white/10">LocalStorage</td>
-                <td class="p-3 border border-white/10 text-muted-foreground">Acesso síncrono e simples no carregamento.</td>
+              <tr class="border-t border-white/5">
+                <td class="p-3 font-bold">Preferências (Tema/Idioma)</td>
+                <td class="p-3 text-blue-400 font-bold">LocalStorage</td>
+                <td class="p-3 text-muted-foreground">Acesso síncrono e simples no carregamento da página.</td>
               </tr>
-              <tr>
-                <td class="p-3 border border-white/10 font-bold">Dados do App (Offline)</td>
-                <td class="p-3 border border-white/10">IndexedDB</td>
-                <td class="p-3 border border-white/10 text-muted-foreground">Suporte a grandes volumes e transações.</td>
+              <tr class="border-t border-white/5">
+                <td class="p-3 font-bold">Dados do App (Offline)</td>
+                <td class="p-3 text-yellow-400 font-bold">IndexedDB</td>
+                <td class="p-3 text-muted-foreground">Suporte a grandes volumes, objetos e transações atómicas.</td>
               </tr>
             </tbody>
           </table>
@@ -88,22 +88,26 @@ export const lesson: TheoryLesson = {
       <!-- 4. CAPSTONE INTERATIVO -->
       <section class="space-y-6">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">4. Simulador de Política de Segurança</h3>
-        <p class="text-sm leading-relaxed">Experimente o impacto das flags. No motor de preview, observe como o JavaScript falha ao tentar ler um cookie seguro.</p>
+        <p class="text-sm leading-relaxed">Experimente o impacto das flags. No motor de preview, observe como o JavaScript falha ao tentar ler um cookie protegido com HttpOnly.</p>
         
         <pre><code class="language-html">
-&lt;div id="debug-log" style="font-family:monospace; font-size:12px; color:green;"&gt;&lt;/div&gt;
+&lt;div id="security-log" style="font-family:monospace; font-size:12px; color:green; background:#000; padding:15px; border-radius:8px;"&gt;&lt;/div&gt;
 
 &lt;script&gt;
-  // Simulação de escrita de cookie seguro (não visível ao JS)
-  document.cookie = "auth_token=MASTER_KEY_123; SameSite=Strict; Secure; HttpOnly";
+  const log = document.getElementById('security-log');
   
-  const log = document.getElementById('debug-log');
-  log.innerHTML += "> Tentando ler cookies via JS...<br>";
+  // 1. Simulação de escrita de cookie inseguro
+  document.cookie = "public_data=valor_aberto; SameSite=Strict; Secure";
   
-  if (document.cookie.includes("auth_token")) {
-    log.innerHTML += "<span style='color:red;'>[ALERTA] VULNERÁVEL: Cookie lido com sucesso!</span>";
-  } else {
-    log.innerHTML += "[SUCESSO] PROTEGIDO: O cookie HttpOnly é invisível para o script.";
+  // 2. Simulação de cookie seguro (Inacessível ao document.cookie)
+  // Nota: Em ambientes reais, o servidor envia 'HttpOnly' no header SET-COOKIE
+  
+  log.innerHTML += "> A verificar vulnerabilidade XSS...<br>";
+  log.innerHTML += "> Lendo cookies via document.cookie:<br>";
+  log.innerHTML += \` [DATA]: \${document.cookie || 'Vazio'}<br>\`;
+  
+  if (document.cookie.includes("public_data")) {
+    log.innerHTML += "<br><span style='color:orange;'>[INFO] Cookie comum detectado.</span>";
   }
 &lt;/script&gt;
         </code></pre>
