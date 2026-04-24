@@ -17,7 +17,7 @@ import { quiz as q16 } from './quizzes/16-shadow-dom-quiz';
 import { quiz as q17 } from './quizzes/17-drag-drop-quiz';
 import { quiz as q18 } from './quizzes/18-persistence-quiz';
 import { quiz as q19 } from './quizzes/19-web-workers-quiz';
-import { quiz as q20 } from './quizzes/20-structured-data-quiz';
+import { quiz as q20 } from './quizzes/20-history-api-quiz';
 import { quiz as q21 } from './quizzes/21-security-storage-quiz';
 
 export const quizzes = [
