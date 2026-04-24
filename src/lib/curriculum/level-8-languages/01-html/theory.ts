@@ -1,5 +1,6 @@
 import { lesson as l1 } from './theory/01-structure';
 import { lesson as l2 } from './theory/02-meta-seo';
+import { lesson as l3 } from './theory/03-semantics-accessibility';
 import type { TheoryLesson } from '../../types';
 
 const htmlTitles = [
@@ -29,11 +30,12 @@ const htmlTitles = [
 export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {
   if (i === 0) return l1;
   if (i === 1) return l2;
+  if (i === 2) return l3;
 
   return {
     id: `html-m${i + 1}`,
     title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>📄 HTML Master: ${title}</h2><p>Arquitetura de documentos de alta complexidade seguindo padrões W3C.</p></div>`,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>📄 HTML Master: ${title}</h2><p>Arquitetura de documentos de alta compexidade seguindo padrões W3C.</p></div>`,
     quizId: `html-mq${i + 1}`
   };
 });
