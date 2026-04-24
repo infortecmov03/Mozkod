@@ -1,10 +1,13 @@
+
 import { lesson as l1 } from './theory/01-selectors';
 import { lesson as l2 } from './theory/02-cascade-layers';
 import { lesson as l3 } from './theory/03-custom-properties';
 import { lesson as l4 } from './theory/04-logical-properties';
 import { lesson as l5 } from './theory/05-flexbox-mastery';
-import { lesson as l6 } from './theory/06-grid-master';
+import { lesson as l6 } from './theory/06-container-queries';
+import { lesson as l7 } from './theory/07-positioning-flow';
 import { lesson as l8 } from './theory/08-subgrid-master';
+import { lesson as l9 } from './theory/09-transforms-transitions';
 
 import type { TheoryLesson } from '../../types';
 
@@ -14,7 +17,7 @@ const cssTitles = [
   "Fase 1: Custom Properties e Design Tokens",
   "Fase 1: Propriedades Lógicas e Layout Global",
   "Fase 2: Flexbox Mastery: Eixos, Gap e Intrinsic Sizing",
-  "Fase 2: Grid Layout Master: Geometria 2D",
+  "Fase 2: Container Queries vs Media Queries",
   "Fase 2: Posicionamento e Fluxo de Documento",
   "Fase 2: Subgrid: Alinhamento Multi-nível",
   "Fase 3: Transições e Transformações de Hardware",
@@ -39,7 +42,9 @@ const lessonsSource: Record<number, any> = {
   3: l4,
   4: l5,
   5: l6,
-  7: l8
+  6: l7,
+  7: l8,
+  8: l9
 };
 
 export const lessons: TheoryLesson[] = cssTitles.map((title, i) => {
