@@ -3,35 +3,28 @@ import type { PracticeExercise } from '../../../types';
 export const exercise: PracticeExercise = {
   id: "kt-p2",
   language: "kotlin",
-  title: "Projeto Master: Extensões e Property Delegation",
-  description: "Dê superpoderes às classes existentes e gerencie estado de forma limpa.",
-  statement: "Crie uma Extension Function 'toBase64' para a classe String e utilize 'by lazy' para inicializar o logger do motor.",
+  title: "Projeto Master: Extensões e Lazy Loading",
+  description: "Dê superpoderes ao motor e otimize o carregamento.",
+  statement: "Adicione uma extensão para sanitizar strings e configure o logger por delegação.",
   isProjectPart: true,
-  template: `// Implemente a extensão e o lazy loading
-fun String.toBase64(): String {
-    return java.util.Base64.getEncoder().encodeToString(this.toByteArray())
-}
+  template: `// CWM SYNC ENGINE - CHECKPOINT 2
+data class Update(val id: String, val payload: String?)
+
+fun processUpdate(update: Update?): String = update?.payload ?: "EMPTY"
+
+// Ação 1: Crie uma Extension Function String.sanitize() que remova espaços
+fun String.sanitize(): String = this.trim()
 
 class SyncEngine {
-    // Inicialize o logger apenas quando for necessário
-    val logger: String by lazy { 
-        "Engine Logger Initialized" 
-    }
+    // Ação 2: Inicialize o logger via 'by lazy'
+    val logger: String by lazy { "Engine Initialized" }
 }`,
   detailedExplanation: `
-    <h3>🧩 Sintaxe de Elite</h3>
-    <p>As <strong>Extension Functions</strong> permitem estender funcionalidades de bibliotecas fechadas. O <strong>Property Delegation</strong> (lazy) garante que recursos pesados só ocupem memória quando realmente forem utilizados no motor de sincronização.</p>
+    <h3>🧩 Evoluindo a Estrutura</h3>
+    <p>Utilizamos <strong>Extensions</strong> para manter o código limpo e <strong>Lazy Loading</strong> para garantir que o motor só consuma memória quando o logger for realmente necessário.</p>
   `,
   objectives: [
-    {
-      id: "extension",
-      description: "Implemente a extensão String.toBase64().",
-      test: "String.toBase64"
-    },
-    {
-      id: "lazy",
-      description: "Utilize a keyword 'by lazy' para o logger.",
-      test: "by lazy"
-    }
+    { id: "ext_fn", description: "Implementar a extensão String.sanitize().", test: "String.sanitize" },
+    { id: "lazy_prop", description: "Usar by lazy para o logger.", test: "by lazy" }
   ]
 };

@@ -1,40 +1,51 @@
-
 import type { TheoryLesson } from '../../types';
+import { lesson as l1 } from './theory/01-null-safety-master';
+import { lesson as l2 } from './theory/02-extensions-delegates';
 
 const kotlinTitles = [
-  // FASE 1: Fundamentos (1-4)
-  "Fase 1: Sintaxe Concisa, Type Inference e Null Safety",
-  "Fase 1: Data Classes e String Templates de Elite",
-  "Fase 1: Ranges, Progressions e Estruturas de Controlo",
-  "Fase 1: When Expressions e Pattern Matching Nativo",
-  
-  // FASE 2: Intermediário (5-9)
-  "Fase 2: Funções Especiais: Default, Named e Infix",
-  "Fase 2: Operator Overloading e Extension Functions",
-  "Fase 2: Higher-order Functions e Inline Performance",
-  "Fase 2: Collections Framework: Immutable vs Mutable",
-  "Fase 2: POO Kotlin: Sealed Classes e Companion Objects",
-  
-  // FASE 3: Avançado (10-15)
-  "Fase 3: Delegation: Class Delegation e Property Delegates",
-  "Fase 3: Coroutines Master: Suspensão e Contextos",
-  "Fase 3: Structured Concurrency e Scopes de Execução",
-  "Fase 3: Channels e Flow: Streams Assíncronas",
-  "Fase 3: Generics Avançado: Reified, In e Out",
-  "Fase 3: Building DSLs e Scope Functions (let, apply)",
-  
-  // FASE 4: Especialização Android & Backend (16-21)
-  "Fase 4: Kotlin Multiplatform (KMP) e Compose",
-  "Fase 4: Android Lifecycle, ViewModel e Navigation",
-  "Fase 4: Persistência com Room e Networking com Retrofit",
-  "Fase 4: Injeção de Dependência com Hilt e Dagger",
-  "Fase 4: Clean Architecture, MVVM e MVI em Kotlin",
-  "Fase 4: Capstone: Deploy de Sync Engine Multiplataforma"
+  "Fase 1: Null Safety Internals e o Type System",
+  "Fase 1: Extension Functions e Property Delegation",
+  "Fase 1: Sealed Hierarchies e Pattern Matching (When)",
+  "Fase 1: Functional Programming e Collections Framework",
+  "Fase 2: Inline Classes e Otimização de Performance",
+  "Fase 2: Coroutines Master: Suspensão e Scopes",
+  "Fase 2: Structured Concurrency e Job Management",
+  "Fase 2: Suspension Internals: A Máquina de Estados",
+  "Fase 2: Flow API: Cold Streams e Operadores",
+  "Fase 3: StateFlow e SharedFlow: Hot Streams",
+  "Fase 3: Channels e Padrões de Comunicação",
+  "Fase 3: Coroutine Context e Dispatchers",
+  "Fase 3: Exception Handling e Supervision",
+  "Fase 3: Kotlin Multiplatform (KMP) Architecture",
+  "Fase 3: Kotlinx Serialization e Protocolos Binários",
+  "Fase 4: Dependency Injection: Padrões de Elite",
+  "Fase 4: KSP e Geração de Código em Compilação",
+  "Fase 4: Reflection e Introspecção (kotlin-reflect)",
+  "Fase 4: Advanced Generics: Variância e Reified",
+  "Fase 4: Construindo DSLs Type-safe",
+  "Fase 4: Capstone: Deploy do Sync Engine Multiplataforma"
 ];
 
-export const lessons: TheoryLesson[] = kotlinTitles.map((title, i) => ({
-  id: `kt-m${i + 1}`,
-  title: title,
-  content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>📱 Kotlin Master: ${title}</h2><p>Exploração profunda da linguagem que revolucionou o Android e o desenvolvimento de sistemas seguros e expressivos.</p></div>`,
-  quizId: `kt-mq${i + 1}`
-}));
+const sourceMap: Record<number, any> = {
+  0: l1, 1: l2
+};
+
+export const lessons: TheoryLesson[] = kotlinTitles.map((title, i) => {
+  if (sourceMap[i]) {
+    return {
+      ...sourceMap[i],
+      id: `kt-m${i + 1}`,
+      title: title,
+      quizId: `kt-mq${i + 1}`,
+      enableInteractive: true
+    };
+  }
+
+  return {
+    id: `kt-m${i + 1}`,
+    title: title,
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>📱 Kotlin Master: ${title}</h2><p>Estudo aprofundado da linguagem para Android, Backend e Multiplataforma com rigor industrial.</p></div>`,
+    quizId: `kt-mq${i + 1}`,
+    enableInteractive: true
+  };
+});
