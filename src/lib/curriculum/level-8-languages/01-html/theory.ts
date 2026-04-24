@@ -13,6 +13,7 @@ import { lesson as l12 } from './theory/12-aria-deep-dive';
 import { lesson as l13 } from './theory/13-microdata-jsonld';
 import { lesson as l14 } from './theory/14-canvas-engineering';
 import { lesson as l15 } from './theory/15-web-components-master';
+import { lesson as l16 } from './theory/16-shadow-dom';
 import type { TheoryLesson } from '../../types';
 
 const htmlTitles = [
@@ -54,7 +55,8 @@ const lessonsSource: Record<number, any> = {
   11: l12,
   12: l13,
   13: l14,
-  14: l15
+  14: l15,
+  15: l16
 };
 
 export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {
