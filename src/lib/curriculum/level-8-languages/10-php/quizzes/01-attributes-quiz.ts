@@ -1,4 +1,3 @@
-
 import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
@@ -8,62 +7,62 @@ export const quiz: Quiz = {
   questions: [
     {
       id: "q1_1",
-      question: "Qual a sintaxe nativa dos Atributos no PHP 8?",
+      question: "Qual a sintaxe nativa dos Atributos introduzida no PHP 8?",
       options: ["@Attribute", "#[Attribute]", "[[Attribute]]", "/* @Attr */"],
       correctAnswer: 1
     },
     {
       id: "q1_2",
-      question: "Atributos podem ser aplicados a quais elementos?",
+      question: "Diferente das anotações em Docblocks, os Atributos são:",
       options: [
-        "Apenas classes",
-        "Apenas funções",
-        "Classes, métodos, funções, propriedades e constantes",
-        "Somente variáveis locais"
+        "Apenas comentários ignorados pelo motor",
+        "Cidadãos de primeira classe integrados na árvore de sintaxe (AST)",
+        "Exclusivos para classes e não para métodos",
+        "Executados apenas no modo de debug"
       ],
-      correctAnswer: 2
+      correctAnswer: 1
     },
     {
       id: "q1_3",
       question: "Como se obtêm os metadados de um atributo em tempo de execução?",
       options: [
-        "Usando var_dump()",
-        "Através da Reflection API (getAttributes)",
-        "Lendo o ficheiro de logs",
-        "Através da variável global $_SERVER"
+        "Usando a variável superglobal $_GET",
+        "Através da Reflection API usando o método getAttributes()",
+        "Lendo o ficheiro de configuração php.ini",
+        "Não é possível ler atributos em runtime"
       ],
       correctAnswer: 1
     },
     {
       id: "q1_4",
-      question: "O que significa a flag 'Attribute::TARGET_CLASS'?",
+      question: "O que o parâmetro 'Attribute::TARGET_METHOD' define?",
       options: [
-        "O atributo é obrigatório",
-        "O atributo só pode ser aplicado em classes",
-        "O atributo é invisível para o motor",
-        "O atributo aumenta a performance"
+        "Que o atributo é opcional",
+        "Que o atributo só pode ser aplicado a métodos de classe",
+        "Que o atributo aumenta a velocidade do método",
+        "Que o método deve ser privado"
       ],
       correctAnswer: 1
     },
     {
       id: "q1_5",
-      question: "Atributos aceitam argumentos?",
+      question: "Atributos aceitam argumentos dinâmicos no PHP 8?",
       options: [
-        "Não, são apenas etiquetas estáticas",
-        "Sim, podem receber valores escalares e expressões constantes",
-        "Apenas strings",
-        "Apenas se o servidor for PHP 8.3"
+        "Sim, qualquer expressão de código",
+        "Apenas valores constantes e expressões escalares simples",
+        "Apenas strings literais",
+        "Não aceitam qualquer tipo de argumento"
       ],
       correctAnswer: 1
     },
     {
       id: "q1_6",
-      question: "Qual a principal vantagem dos Atributos sobre Docblocks?",
+      question: "Qual o impacto dos Atributos na performance em relação ao parsing manual de Docblocks?",
       options: [
-        "São mais bonitos",
-        "São cidadãos de primeira classe, validados pelo parser e sem custo de parsing manual de strings",
-        "Ocupam menos espaço em disco",
-        "Permitem o uso de emojis"
+        "São mais lentos por serem objetos",
+        "São muito mais rápidos, pois o parser da Zend já os processa nativamente",
+        "Têm o mesmo desempenho",
+        "Consomem o dobro da RAM"
       ],
       correctAnswer: 1
     }

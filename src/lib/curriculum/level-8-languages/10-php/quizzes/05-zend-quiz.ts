@@ -1,4 +1,3 @@
-
 import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
@@ -8,58 +7,53 @@ export const quiz: Quiz = {
   questions: [
     {
       id: "q5_1",
-      question: "O que é um Opcode no contexto do PHP?",
+      question: "O que é um Opcode no contexto da Zend VM?",
       options: [
-        "O código-fonte escrito pelo programador",
-        "Uma instrução intermediária de baixo nível que a Zend VM consegue executar",
+        "O código-fonte escrito pelo engenheiro",
+        "Uma instrução binária de baixo nível que o motor consegue executar eficientemente",
         "Um erro de sintaxe no servidor",
-        "O nome do servidor web"
+        "Um protocolo de rede"
       ],
       correctAnswer: 1
     },
     {
       id: "q5_2",
-      question: "Qual o benefício principal do OpCache?",
+      question: "Qual o papel do OpCache na performance de uma aplicação de elite?",
       options: [
-        "Aumentar o brilho das cores do site",
-        "Evitar o parsing e compilação do código em cada request, guardando Opcodes na RAM",
-        "Substituir a base de dados SQL",
-        "Encriptar o código para o utilizador"
+        "Criptografar os dados do banco",
+        "Armazenar os Opcodes compilados na RAM para evitar o custo de parsing e compilação em cada request",
+        "Reduzir o tamanho das imagens",
+        "Ligar o servidor ao GitHub"
       ],
       correctAnswer: 1
     },
     {
       id: "q5_3",
-      question: "O estágio de 'Parsing' no PHP 8 gera qual estrutura?",
-      options: ["Binary File", "AST (Abstract Syntax Tree)", "Token Stream", "HTML"],
-      correctAnswer: 1
+      question: "O estágio de 'Lexing' transforma o código fonte em:",
+      options: ["Opcodes", "AST (Abstract Syntax Tree)", "Tokens", "Ficheiros binários"],
+      correctAnswer: 2
     },
     {
       id: "q5_4",
-      question: "Qual a função do 'Lexer' no motor Zend?",
-      options: [
-        "Realizar cálculos matemáticos",
-        "Transformar o código em uma sequência de unidades chamadas Tokens",
-        "Ligar à internet",
-        "Apagar ficheiros temporários"
-      ],
+      question: "A Zend Virtual Machine (ZVM) é uma máquina de:",
+      options: ["Registos (como a Lua VM)", "Pilha (Stack-based)", "Hardware físico", "Rede"],
       correctAnswer: 1
     },
     {
       id: "q5_5",
-      question: "A Zend Virtual Machine é uma máquina de:",
-      options: ["Registos", "Pilha (Stack)", "Estado Linear", "Hardware Puro"],
+      question: "O que o JIT (Just-In-Time) do PHP 8 faz especificamente?",
+      options: [
+        "Limpa a memória mais rápido",
+        "Compila Opcodes 'quentes' em código de máquina nativo (x86/ARM) em tempo de execução",
+        "Corrige bugs automaticamente",
+        "Aumenta a segurança contra SQL Injection"
+      ],
       correctAnswer: 1
     },
     {
       id: "q5_6",
-      question: "Onde o JIT (Just-In-Time) atua no pipeline da Zend?",
-      options: [
-        "No momento do download do ficheiro",
-        "Convertendo Opcodes 'quentes' em código de máquina nativo em runtime",
-        "Validando a senha do utilizador",
-        "Comprimindo imagens JPG"
-      ],
+      question: "Qual ferramenta permite visualizar os Opcodes gerados por um ficheiro PHP?",
+      options: ["var_dump", "VLD (Vulcan Logic Dumper)", "Xdebug (apenas)", "Composer"],
       correctAnswer: 1
     }
   ]
