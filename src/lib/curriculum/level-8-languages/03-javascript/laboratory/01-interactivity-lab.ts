@@ -1,37 +1,49 @@
+
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
   id: "js-p1",
   language: "html",
   title: "Projeto Master: Injetando Interatividade",
-  description: "Dê vida aos elementos que construiu no HTML e estilizou no CSS.",
-  statement: "Adicione um bloco <script> no final do seu HTML e implemente a lógica de saudação dinâmica.",
+  description: "Dê vida ao portal de engenharia construído nos módulos anteriores.",
+  statement: "Adicione um script para capturar cliques no botão de inscrição.",
   isProjectPart: true,
-  template: ``,
+  youtubeVideoId: "8ME9u065vD4",
+  template: `<!DOCTYPE html>
+<html lang="pt-MZ">
+<head>
+  <meta charset="UTF-8">
+  <title>Codworks Master Studio</title>
+  <style>
+    body { background: #0f172a; color: white; font-family: sans-serif; padding: 2rem; }
+    .btn { background: #3b82f6; color: white; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Elite Dashboard</h1>
+  <button id="main-btn" class="btn">Iniciar Missão</button>
+  <div id="status-area" style="margin-top: 20px; color: #94a3b8;">Aguardando comando...</div>
+
+  <script>
+    // Ação 1: Selecione o botão e a área de status
+    const btn = document.getElementById('main-btn');
+    const status = document.getElementById('status-area');
+
+    // Ação 2: Adicione o listener de clique
+    btn.addEventListener('click', () => {
+      status.textContent = "Missão Iniciada: Motor JS Ativo!";
+    });
+  </script>
+</body>
+</html>`,
   detailedExplanation: `
     <div class="space-y-4">
-      <h3 class="text-xl font-bold text-yellow-500">⚡ O Cérebro do Projeto</h3>
-      <p>Agora que tens a estrutura e o estilo, vamos usar o JavaScript para tornar o projeto vivo. O objetivo é capturar o clique do usuário e manipular o DOM de forma eficiente.</p>
+      <h3 class="text-xl font-bold text-primary">⚡ O Despertar do DOM</h3>
+      <p class="text-sm">O objetivo é selecionar elementos via <code>getElementById</code> e usar <code>addEventListener</code> para reagir a eventos do utilizador.</p>
     </div>
   `,
   objectives: [
-    {
-      id: "script_tag",
-      description: "No final do <body>, adicione uma tag <script>.",
-      hint: "<script></script>",
-      test: "<script>"
-    },
-    {
-      id: "event_listener",
-      description: "Adicione um listener de clique a um botão do seu projeto.",
-      hint: "document.querySelector('button').addEventListener('click', ...)",
-      test: "addEventListener('click'"
-    },
-    {
-      id: "dom_manipulation",
-      description: "Mude o texto de um elemento quando o botão for clicado.",
-      hint: "element.textContent = 'Olá!';",
-      test: "textContent ="
-    }
+    { id: "select", description: "Selecionar o botão por ID", test: "getElementById('main-btn')" },
+    { id: "event", description: "Adicionar click listener", test: "addEventListener('click'" }
   ]
 };

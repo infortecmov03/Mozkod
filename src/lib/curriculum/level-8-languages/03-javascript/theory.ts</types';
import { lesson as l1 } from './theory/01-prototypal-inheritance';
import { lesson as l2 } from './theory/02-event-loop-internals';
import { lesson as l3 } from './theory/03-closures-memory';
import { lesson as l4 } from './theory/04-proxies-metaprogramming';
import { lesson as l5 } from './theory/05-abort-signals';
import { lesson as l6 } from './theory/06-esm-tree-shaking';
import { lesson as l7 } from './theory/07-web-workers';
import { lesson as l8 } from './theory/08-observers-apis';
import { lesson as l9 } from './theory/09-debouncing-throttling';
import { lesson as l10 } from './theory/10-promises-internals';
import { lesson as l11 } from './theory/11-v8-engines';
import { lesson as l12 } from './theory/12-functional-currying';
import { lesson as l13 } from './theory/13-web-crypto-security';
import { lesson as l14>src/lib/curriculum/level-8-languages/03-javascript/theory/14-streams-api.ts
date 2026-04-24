@@ -1,20 +1,3 @@
-
-import type { TheoryLesson } from '../../types';
-import { lesson as l1 } from './theory/01-prototypal-inheritance';
-import { lesson as l2 } from './theory/02-event-loop-internals';
-import { lesson as l3 } from './theory/03-closures-memory';
-import { lesson as l4 } from './theory/04-proxies-metaprogramming';
-import { lesson as l5 } from './theory/05-abort-signals';
-import { lesson as l6 } from './theory/06-esm-tree-shaking';
-import { lesson as l7 } from './theory/07-web-workers';
-import { lesson as l8 } from './theory/08-observers-apis';
-import { lesson as l9 } from './theory/09-debouncing-throttling';
-import { lesson as l10 } from './theory/10-promises-internals';
-import { lesson as l11 } from './theory/11-v8-engines';
-import { lesson as l12 } from './theory/12-functional-currying';
-import { lesson as l13 } from './theory/13-web-crypto-security';
-import { lesson as l14>src/lib/curriculum/level-8-languages/03-javascript/theory/14-streams-api.ts</file>
-    <content><![CDATA[
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
