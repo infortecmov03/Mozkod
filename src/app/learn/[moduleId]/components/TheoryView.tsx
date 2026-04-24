@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { TheoryLesson, Quiz } from "@/lib/curriculum/types";
-import parse, { HTMLReactParserOptions, Element, Text } from 'html-react-parser';
+import parse, { HTMLReactParserOptions, Element, domToReact } from 'html-react-parser';
 import { InteractiveCodeBlock } from "./InteractiveCodeBlock";
 
 interface TheoryViewProps {
@@ -76,12 +76,16 @@ export function TheoryView({
         if (codeNode) {
           const language = (codeNode.attribs.class || '').replace('language-', '') || 'html';
           
-          // Extrai o texto preservando quebras de linha e caracteres
-          const rawCode = codeNode.children
-            .filter(child => child instanceof Text)
-            .map(child => (child as Text).data)
-            .join('');
+          // Extrai o conteúdo textual de forma robusta
+          const getRawText = (nodes: any[]): string => {
+            return nodes.map(node => {
+              if (node.type === 'text') return node.data;
+              if (node.children) return getRawText(node.children);
+              return '';
+            }).join('');
+          };
 
+          const rawCode = getRawText(codeNode.children);
           return <InteractiveCodeBlock code={rawCode} language={language} />;
         }
       }

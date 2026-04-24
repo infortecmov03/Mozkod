@@ -89,57 +89,51 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
           doc.close();
 
           // 🔒 BLOQUEIO DE SEGURANÇA
-          doc.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              return false;
-            });
-          });
-
-          doc.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', (e) => {
-              const href = link.getAttribute('href');
-              if (href && href !== '#' && !href.startsWith('#') && !href.startsWith('javascript:void')) {
+          const iframeDoc = iframeRef.current?.contentDocument;
+          if (iframeDoc) {
+            iframeDoc.querySelectorAll('form').forEach(form => {
+              form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-              }
+                return false;
+              });
             });
-          });
+
+            iframeDoc.querySelectorAll('a').forEach(link => {
+              link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href && href !== '#' && !href.startsWith('#') && !href.startsWith('javascript:void')) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+              });
+            });
+          }
         }
       };
 
-      // Pequeno delay para garantir que o iframe está no DOM
       const timer = setTimeout(updateIframe, 50);
       return () => clearTimeout(timer);
     }
   }, [view, cleanCode, isMobileSim]);
 
-  // Renderiza o código como TEXTO com syntax highlighting via spans
   const renderCodeWithHighlight = (rawCode: string) => {
     const lines = rawCode.split('\n');
     
     return lines.map((line, i) => {
-      // Escapa o HTML primeiro para mostrar as tags como texto
       let escaped = line
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
 
-      // Agora aplica o highlight nas tags já escapadas
       let highlighted = escaped
-        // Tags HTML (abertura, fecho, self-closing)
         .replace(/(&lt;\/?)([a-zA-Z][a-zA-Z0-9]*|h[1-6])([\s\S]*?)(\/?&gt;)/g, 
           '<span class="code-tag">$1</span><span class="code-tag">$2</span><span class="code-tag">$3$4</span>')
-        
-        // Atributos
         .replace(/(\s)([a-zA-Z-]+)(=)(&quot;)/g, 
           ' <span class="code-attr">$2</span>=<span class="code-string">')
         .replace(/(&quot;)(?=[\s&gt;])/g, 
           '</span>')
-        
-        // Comentários HTML
         .replace(/(&lt;!--)(.*?)(--&gt;)/g, 
           '<span class="code-comment">$1$2$3</span>');
 
