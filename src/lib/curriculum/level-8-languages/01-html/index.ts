@@ -1,4 +1,3 @@
-
 /**
  * @fileOverview MÓDULO: HTML MASTER
  * 
@@ -31,11 +30,12 @@ import { exercise as p11 } from './laboratory/11-svg-master-lab';
 import { exercise as p12 } from './laboratory/12-custom-validation-lab';
 import { exercise as p13 } from './laboratory/13-subtitles-lab';
 import { exercise as p14 } from './laboratory/14-canvas-loop-lab';
-import { exercise as p15 } from './laboratory/15-wasm-loader-lab';
+import { exercise as p15 } from './laboratory/15-web-components-quiz'; // Antigo erro corrigido
+import { exercise as p15_real } from './laboratory/15-wasm-loader-lab';
 import { exercise as p16 } from './laboratory/16-resource-hints-lab';
 import { exercise as p17 } from './laboratory/17-csp-nonce-lab';
 import { exercise as p18 } from './laboratory/18-sw-cache-lab';
-import { exercise as p19 } from './laboratory/19-webgpu-init-lab';
+import { exercise as p19 } from './laboratory/19-web-workers-lab';
 import { exercise as p20 } from './laboratory/20-json-ld-lab';
 import { exercise as p21 } from './laboratory/21-secure-cookies-lab';
 
@@ -47,7 +47,7 @@ export const htmlKA: KnowledgeArea = {
   iconName: 'Code',
   theory: lessons,
   practice: {
-    html: [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21]
+    html: [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15_real, p16, p17, p18, p19, p20, p21]
   },
   quizzes: quizzes
 };
