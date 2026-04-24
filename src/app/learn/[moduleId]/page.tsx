@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
@@ -31,10 +30,10 @@ export default function LearnPage() {
   const quiz = useMemo(() => theory?.quizId ? findQuizById(theory.quizId) : null, [theory]);
   const nextLessonId = useMemo(() => findNextLessonId(lessonId), [lessonId]);
 
-  // Decisão técnica: ativar interatividade apenas para WebCore ou Nível 8 (Linguagens Web)
+  // Decisão técnica de ativação de preview baseada no módulo (Separação de preocupações)
   const isInteractiveTheory = useMemo(() => {
     if (!data) return false;
-    const isWebKA = ['ka-web-core', 'lang-html', 'lang-css'].includes(data.ka.id);
+    const isWebKA = ['ka-web-core', 'lang-html', 'lang-css', 'lang-javascript'].includes(data.ka.id);
     return isWebKA;
   }, [data]);
 
