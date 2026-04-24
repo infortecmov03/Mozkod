@@ -18,6 +18,7 @@ import { lesson as l17 } from './theory/17-drag-drop-api';
 import { lesson as l18 } from './theory/18-storage-persistence';
 import { lesson as l19 } from './theory/19-web-workers';
 import { lesson as l20 } from './theory/20-history-api-routing';
+import { lesson as l21 } from './theory/21-security-storage';
 
 import type { TheoryLesson } from '../../types';
 
@@ -65,7 +66,8 @@ const lessonsSource: Record<number, any> = {
   16: l17,
   17: l18,
   18: l19,
-  19: l20
+  19: l20,
+  20: l21
 };
 
 export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {

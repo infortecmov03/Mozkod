@@ -101,12 +101,9 @@ export const lesson: TheoryLesson = {
   // 1. Simulação de escrita de cookie inseguro (Acessível ao JS)
   document.cookie = "insecure_token=amador_123; SameSite=Strict; Secure";
   
-  // 2. Simulação de cookie seguro (Inacessível ao document.cookie)
-  // Nota: Em ambientes reais, o servidor envia 'HttpOnly' no header SET-COOKIE
-  
   log.innerHTML += "&gt; A verificar vulnerabilidade XSS...&lt;br&gt;";
   log.innerHTML += "&gt; Tentando ler cookies via JavaScript:&lt;br&gt;";
-  log.innerHTML += \` [COOKIES ENCONTRADOS]: \${document.cookie || 'Nenhum'}&lt;br&gt;\`;
+  log.innerHTML += " [COOKIES ENCONTRADOS]: " + (document.cookie || 'Nenhum') + "&lt;br&gt;";
   
   if (document.cookie.includes("insecure_token")) {
     log.innerHTML += "&lt;br&gt;&lt;span style='color:#ef4444;'&gt;[ALERTA] Cookie inseguro detectado! Um atacante poderia roubar esta sessão.&lt;/span&gt;";
