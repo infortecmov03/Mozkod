@@ -12,6 +12,7 @@ import { lesson as l11 } from './theory/11-svg-optimization';
 import { lesson as l12 } from './theory/12-aria-deep-dive';
 import { lesson as l13 } from './theory/13-microdata-jsonld';
 import { lesson as l14 } from './theory/14-canvas-engineering';
+import { lesson as l15 } from './theory/15-web-components-master';
 import type { TheoryLesson } from '../../types';
 
 const htmlTitles = [
@@ -52,7 +53,8 @@ const lessonsSource: Record<number, any> = {
   10: l11,
   11: l12,
   12: l13,
-  13: l14
+  13: l14,
+  14: l15
 };
 
 export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {
