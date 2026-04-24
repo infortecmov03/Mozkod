@@ -4,6 +4,7 @@ import { lesson as l3 } from './theory/03-semantics-accessibility';
 import { lesson as l4 } from './theory/04-text-hierarchy-navigation';
 import { lesson as l5 } from './theory/05-identity-attributes';
 import { lesson as l6 } from './theory/06-responsive-images';
+import { lesson as l7 } from './theory/07-tables-data';
 import type { TheoryLesson } from '../../types';
 
 const htmlTitles = [
@@ -36,7 +37,8 @@ const lessonsSource: Record<number, any> = {
   2: l3,
   3: l4,
   4: l5,
-  5: l6
+  5: l6,
+  6: l7
 };
 
 export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {
