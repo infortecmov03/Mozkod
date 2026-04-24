@@ -4,7 +4,7 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { 
   findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
-  findQuizById, findNextLessonId
+  findQuizById, findNextLessonId, findPreviousLessonId
 } from "@/lib/curriculum";
 import { useParams, useRouter } from "next/navigation";
 import { useProgress } from "@/contexts/ProgressContext";
@@ -23,27 +23,14 @@ export default function LearnPage() {
   const lessonId = params.moduleId as string;
   const router = useRouter();
   const isMobile = useIsMobile();
-  const { markAsCompleted, isCompleted } = useProgress();
+  const { markAsCompleted, isCompleted, progress } = useProgress();
 
   const data = useMemo(() => findKnowledgeAreaByLessonId(lessonId), [lessonId]);
   const theory = useMemo(() => findTheoryLesson(lessonId), [lessonId]);
   const practice = useMemo(() => findPracticeExercise(lessonId), [lessonId]);
   const quiz = useMemo(() => theory?.quizId ? findQuizById(theory.quizId) : null, [theory]);
   const nextLessonId = useMemo(() => findNextLessonId(lessonId), [lessonId]);
-
-  const availableVariants = useMemo(() => {
-    if (!data || !practice) return [];
-    const variants: { lang: string; id: string }[] = [];
-    const currentBaseId = practice.id.split('-').slice(0, 2).join('-'); 
-    
-    Object.entries(data.ka.practice).forEach(([lang, exercises]) => {
-      const match = exercises.find(ex => ex.id.startsWith(currentBaseId));
-      if (match) {
-        variants.push({ lang, id: match.id });
-      }
-    });
-    return variants;
-  }, [data, practice]);
+  const prevLessonId = useMemo(() => findPreviousLessonId(lessonId), [lessonId]);
 
   const [htmlCode, setHtmlCode] = useState("");
   const [cssCode, setCssCode] = useState("");
@@ -62,6 +49,24 @@ export default function LearnPage() {
     ['html', 'css', 'javascript'].includes(practice?.language.toLowerCase() || '') && !lessonId.includes('pf-p'), 
   [practice, lessonId]);
 
+  /**
+   * Helper para extrair blocos de código de uma string composta (usada em labs web)
+   */
+  const parseCompositeCode = (composite: string) => {
+    const parts = { html: "", css: "", js: "" };
+    if (!composite) return parts;
+
+    const htmlMatch = composite.match(/HTML:\n([\s\S]*?)(?=\n\nCSS:|$)/);
+    const cssMatch = composite.match(/CSS:\n([\s\S]*?)(?=\n\nJS:|$)/);
+    const jsMatch = composite.match(/JS:\n([\s\S]*?)$/);
+
+    if (htmlMatch) parts.html = htmlMatch[1];
+    if (cssMatch) parts.css = cssMatch[1];
+    if (jsMatch) parts.js = jsMatch[1];
+
+    return parts;
+  };
+
   useEffect(() => {
     setMounted(true);
     if (!practice) return;
@@ -72,16 +77,41 @@ export default function LearnPage() {
       setActiveTab('code');
     }
 
-    const localCode = localStorage.getItem(`cwm_code_${lessonId}`);
-    if (localCode) setCode(localCode);
-    else setCode(practice.template || "");
+    // LÓGICA DE HERANÇA DE PROJETO
+    const currentProgress = progress.find(p => p.lesson_id === lessonId);
+    const prevProgress = prevLessonId ? progress.find(p => p.lesson_id === prevLessonId) : null;
+    
+    // Tenta carregar: 1. LocalStorage atual | 2. DB atual | 3. Herança anterior | 4. Template
+    const localCurrent = localStorage.getItem(`cwm_code_${lessonId}`);
+    const localPrev = prevLessonId ? localStorage.getItem(`cwm_code_${prevLessonId}`) : null;
+    
+    let sourceCode = "";
+    if (localCurrent) {
+      sourceCode = localCurrent;
+    } else if (currentProgress?.last_code) {
+      sourceCode = currentProgress.last_code;
+    } else if (practice.isProjectPart) {
+      sourceCode = localPrev || prevProgress?.last_code || "";
+    }
 
-    setHtmlCode(practice.htmlTemplate || "");
-    setCssCode(practice.cssTemplate || "");
-    setJsCode(practice.jsTemplate || "");
+    if (isWebLang) {
+      if (sourceCode.includes('HTML:\n')) {
+        const parsed = parseCompositeCode(sourceCode);
+        setHtmlCode(parsed.html || practice.htmlTemplate || "");
+        setCssCode(parsed.css || practice.cssTemplate || "");
+        setJsCode(parsed.js || practice.jsTemplate || "");
+      } else {
+        setHtmlCode(sourceCode || practice.htmlTemplate || "");
+        setCssCode(practice.cssTemplate || "");
+        setJsCode(practice.jsTemplate || "");
+      }
+    } else {
+      setCode(sourceCode || practice.template || "");
+    }
+
     setCompletedObjectives([]);
     setOutput("");
-  }, [practice, lessonId, isWebLang]);
+  }, [practice, lessonId, isWebLang, progress, prevLessonId]);
 
   const updatePreview = useCallback(() => {
     if (!iframeRef.current || !isWebLang) return;
@@ -112,11 +142,14 @@ export default function LearnPage() {
       
       setCompletedObjectives(newDone);
 
+      const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
+      // Salva no LocalStorage para persistência imediata
+      localStorage.setItem(`cwm_code_${lessonId}`, finalCode);
+
       if (newDone.length === (practice?.objectives.length || 0)) {
         setOutput("> ✅ STATUS: 200 OK\n> [AUDITORIA]: Requisitos validados.\n> Missão concluída.");
         toast.success("Excelente! Missão concluída.");
         if (data) {
-          const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
           await markAsCompleted(lessonId, data.level.id, data.ka.id, 'exercise', 100, finalCode);
         }
       } else {
@@ -132,6 +165,20 @@ export default function LearnPage() {
       await markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', score);
     }
   };
+
+  const availableVariants = useMemo(() => {
+    if (!data || !practice) return [];
+    const variants: { lang: string; id: string }[] = [];
+    const currentBaseId = practice.id.split('-').slice(0, 2).join('-'); 
+    
+    Object.entries(data.ka.practice).forEach(([lang, exercises]) => {
+      const match = exercises.find(ex => ex.id.startsWith(currentBaseId));
+      if (match) {
+        variants.push({ lang, id: match.id });
+      }
+    });
+    return variants;
+  }, [data, practice]);
 
   if (!mounted || !data) return null;
 
@@ -208,3 +255,4 @@ export default function LearnPage() {
     </div>
   );
 }
+
