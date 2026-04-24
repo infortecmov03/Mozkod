@@ -2,6 +2,7 @@ import { lesson as l1 } from './theory/01-structure';
 import { lesson as l2 } from './theory/02-meta-seo';
 import { lesson as l3 } from './theory/03-semantics-accessibility';
 import { lesson as l4 } from './theory/04-text-hierarchy-navigation';
+import { lesson as l5 } from './theory/05-identity-attributes';
 import type { TheoryLesson } from '../../types';
 
 const htmlTitles = [
@@ -28,11 +29,23 @@ const htmlTitles = [
   "Fase 3: Capstone: Auditoria de Segurança e Cookies"
 ];
 
+const lessonsSource: Record<number, any> = {
+  0: l1,
+  1: l2,
+  2: l3,
+  3: l4,
+  4: l5
+};
+
 export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {
-  if (i === 0) return l1;
-  if (i === 1) return l2;
-  if (i === 2) return l3;
-  if (i === 3) return l4;
+  if (lessonsSource[i]) {
+    return {
+      ...lessonsSource[i],
+      title: title,
+      id: `html-m${i + 1}`,
+      quizId: `html-mq${i + 1}`
+    };
+  }
 
   return {
     id: `html-m${i + 1}`,
