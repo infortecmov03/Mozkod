@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Eye, Terminal as TerminalIcon, ChevronDown, ChevronUp } from "lucide-react";
+import { Eye, Terminal as TerminalIcon, ChevronDown, ChevronUp, Code as CodeIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
 
@@ -49,8 +49,9 @@ export const PracticeWorkspace = React.memo(function PracticeWorkspace({
   iframeRef
 }: PracticeWorkspaceProps) {
   
+  // Lógica de determinação do código atual para o editor
   const currentCode = isWebLang 
-    ? (activeTab === 'html' ? htmlCode : activeTab === 'css' ? cssCode : jsCode) 
+    ? (activeTab === 'html' ? htmlCode : activeTab === 'css' ? cssCode : activeTab === 'js' ? jsCode : htmlCode) 
     : code;
 
   const handleEditorChange = (v: string | undefined) => {
@@ -58,14 +59,14 @@ export const PracticeWorkspace = React.memo(function PracticeWorkspace({
     if (isWebLang) {
       if (activeTab === 'html') setHtmlCode(val);
       else if (activeTab === 'css') setCssCode(val);
-      else setJsCode(val);
+      else if (activeTab === 'js') setJsCode(val);
     } else {
       setCode(val);
     }
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-[#1e1e1e] relative overflow-hidden">
+    <div className="flex-1 flex flex-col bg-[#1e1e1e] relative overflow-hidden h-full">
       <div className="flex items-center justify-between px-3 md:px-4 h-10 md:h-11 bg-black/60 border-b border-white/5 shrink-0">
         <div className="flex gap-1 overflow-x-auto no-scrollbar scroll-smooth">
           {isWebLang ? (
@@ -76,20 +77,21 @@ export const PracticeWorkspace = React.memo(function PracticeWorkspace({
               <Button variant={activeTab === 'preview' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('preview')} className="h-7 md:h-8 text-[9px] md:text-[10px] font-bold lg:hidden">VIEW</Button>
             </>
           ) : (
-            <Button variant={activeTab === 'code' ? 'secondary' : 'ghost'} size="sm" onClick={() => setActiveTab('code')} className="h-7 md:h-8 text-[9px] md:text-[10px] font-bold uppercase">
-              {language === 'concept' ? "Lógica" : "Editor Principal"}
+            <Button variant="secondary" size="sm" className="h-7 md:h-8 text-[9px] md:text-[10px] font-bold uppercase">
+              <CodeIcon className="w-3.5 h-3.5 mr-1" /> {language === 'concept' ? "Lógica" : "Editor"}
             </Button>
           )}
         </div>
         <div className="hidden lg:block text-[9px] font-black text-muted-foreground uppercase tracking-widest opacity-50">
-           Compilador {language.toUpperCase()} v1.0
+           Engine {language.toUpperCase()} v1.0
         </div>
       </div>
 
-      <div className="flex-1 flex relative overflow-hidden">
-        <div className={cn("flex-1 h-full", activeTab === 'preview' && isMobile ? "hidden" : "block")}>
+      <div className="flex-1 flex relative overflow-hidden min-h-0">
+        <div className={cn("flex-1 h-full", (activeTab === 'preview' && isMobile) ? "hidden" : "block")}>
           <Editor
             height="100%"
+            width="100%"
             theme="vs-dark"
             language={activeTab === 'html' ? 'html' : (activeTab === 'css' ? 'css' : (language === 'javascript' ? 'javascript' : language))}
             value={currentCode}
@@ -97,14 +99,13 @@ export const PracticeWorkspace = React.memo(function PracticeWorkspace({
             options={{ 
               minimap: { enabled: false }, 
               fontSize: 14, 
-              automaticLayout: false, 
+              automaticLayout: true, 
               wordWrap: "on",
               padding: { top: 15 },
               scrollBeyondLastLine: false,
               fontFamily: "'Source Code Pro', monospace",
               lineNumbers: "on",
-              renderLineHighlight: "all",
-              scrollbar: { vertical: 'hidden', horizontal: 'hidden' }
+              renderLineHighlight: "all"
             }}
           />
         </div>
@@ -124,7 +125,7 @@ export const PracticeWorkspace = React.memo(function PracticeWorkspace({
         )}
       </div>
 
-      <div className={cn("bg-[#0f0f0f] border-t border-white/10 transition-all duration-300", isConsoleOpen ? "h-40 md:h-56" : "h-8 md:h-10")}>
+      <div className={cn("bg-[#0f0f0f] border-t border-white/10 transition-all duration-300 shrink-0", isConsoleOpen ? "h-40 md:h-56" : "h-8 md:h-10")}>
         <div className="flex items-center justify-between px-4 h-8 md:h-10 cursor-pointer hover:bg-white/5 transition-colors border-b border-white/5" onClick={() => setIsConsoleOpen(!isConsoleOpen)}>
           <span className="text-[9px] md:text-[10px] font-black text-muted-foreground uppercase flex items-center gap-2 tracking-widest">
             <TerminalIcon className="w-3 h-3 text-green-500" /> Terminal de Debugging

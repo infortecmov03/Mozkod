@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo, useCallback, useRef, useTransition } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { 
   findKnowledgeAreaByLessonId, findTheoryLesson, findPracticeExercise, 
   findQuizById, findNextLessonId, findPreviousLessonId
@@ -24,7 +24,6 @@ export default function LearnPage() {
   const router = useRouter();
   const isMobile = useIsMobile();
   const { markAsCompleted, isCompleted, progress } = useProgress();
-  const [isPending, startTransition] = useTransition();
 
   const data = useMemo(() => findKnowledgeAreaByLessonId(lessonId), [lessonId]);
   const theory = useMemo(() => findTheoryLesson(lessonId), [lessonId]);
@@ -38,7 +37,7 @@ export default function LearnPage() {
   const [jsCode, setJsCode] = useState("");
   const [code, setCode] = useState("");
   
-  const [activeTab, setActiveTab] = useState<string>("code");
+  const [activeTab, setActiveTab] = useState<string>("html");
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
   const [completedObjectives, setCompletedObjectives] = useState<string[]>([]);
@@ -61,6 +60,11 @@ export default function LearnPage() {
     if (htmlMatch) parts.html = htmlMatch[1];
     if (cssMatch) parts.css = cssMatch[1];
     if (jsMatch) parts.js = jsMatch[1];
+
+    // Fallback se não estiver no formato composto
+    if (!htmlMatch && !cssMatch && !jsMatch) {
+        parts.html = composite;
+    }
 
     return parts;
   };
@@ -97,69 +101,66 @@ export default function LearnPage() {
     
     const iframeDoc = iframeRef.current.contentDocument || iframeRef.current.contentWindow?.document;
     if (iframeDoc) {
-      requestAnimationFrame(() => {
-        iframeDoc.open();
-        iframeDoc.write(docContent);
-        iframeDoc.close();
-      });
+      iframeDoc.open();
+      iframeDoc.write(docContent);
+      iframeDoc.close();
     }
   }, [htmlCode, cssCode, jsCode, isWebLang]);
 
+  // Sincronização inicial de dados e herança
   useEffect(() => {
     setMounted(true);
     if (!practice) return;
+
+    // Define a aba inicial correta
+    if (isWebLang) {
+      setActiveTab(practice.language === 'javascript' ? 'js' : (practice.language === 'css' ? 'css' : 'html'));
+    } else {
+      setActiveTab('code');
+    }
+
+    const currentProgress = progress.find(p => p.lesson_id === lessonId);
+    const prevProgress = prevLessonId ? progress.find(p => p.lesson_id === prevLessonId) : null;
     
-    startTransition(() => {
-      if (isWebLang) {
-        setActiveTab(practice.language === 'javascript' ? 'js' : (practice.language === 'css' ? 'css' : 'html'));
+    const localCurrent = localStorage.getItem(`cwm_code_${lessonId}`);
+    const localPrev = prevLessonId ? localStorage.getItem(`cwm_code_${prevLessonId}`) : null;
+    
+    let sourceCode = "";
+    if (localCurrent) {
+      sourceCode = localCurrent;
+    } else if (currentProgress?.last_code) {
+      sourceCode = currentProgress.last_code;
+    } else if (practice.isProjectPart && (localPrev || prevProgress?.last_code)) {
+      sourceCode = localPrev || prevProgress?.last_code || "";
+    }
+
+    if (isWebLang) {
+      if (sourceCode && (sourceCode.includes('HTML:\n') || sourceCode.includes('CSS:\n'))) {
+        const parsed = parseCompositeCode(sourceCode);
+        setHtmlCode(parsed.html || practice.template || practice.htmlTemplate || "");
+        setCssCode(parsed.css || practice.cssTemplate || "");
+        setJsCode(parsed.js || practice.jsTemplate || "");
       } else {
-        setActiveTab('code');
+        // Se for o primeiro exercício ou código sem tags de separação
+        setHtmlCode(sourceCode || practice.template || practice.htmlTemplate || "");
+        setCssCode(practice.cssTemplate || "");
+        setJsCode(practice.jsTemplate || "");
       }
+    } else {
+      setCode(sourceCode || practice.template || "");
+    }
 
-      const currentProgress = progress.find(p => p.lesson_id === lessonId);
-      const prevProgress = prevLessonId ? progress.find(p => p.lesson_id === prevLessonId) : null;
-      
-      const localCurrent = localStorage.getItem(`cwm_code_${lessonId}`);
-      const localPrev = prevLessonId ? localStorage.getItem(`cwm_code_${prevLessonId}`) : null;
-      
-      let sourceCode = "";
-      if (localCurrent) {
-        sourceCode = localCurrent;
-      } else if (currentProgress?.last_code) {
-        sourceCode = currentProgress.last_code;
-      } else if (practice.isProjectPart && (localPrev || prevProgress?.last_code)) {
-        sourceCode = localPrev || prevProgress?.last_code || "";
-      }
-
-      if (isWebLang) {
-        if (sourceCode && sourceCode.includes('HTML:\n')) {
-          const parsed = parseCompositeCode(sourceCode);
-          setHtmlCode(parsed.html || practice.htmlTemplate || practice.template || "");
-          setCssCode(parsed.css || practice.cssTemplate || "");
-          setJsCode(parsed.js || practice.jsTemplate || "");
-        } else {
-          setHtmlCode(sourceCode || practice.template || practice.htmlTemplate || "");
-          setCssCode(practice.cssTemplate || "");
-          setJsCode(practice.jsTemplate || "");
-        }
-      } else {
-        setCode(sourceCode || practice.template || "");
-      }
-
-      setCompletedObjectives([]);
-      setOutput("");
-    });
+    setCompletedObjectives([]);
+    setOutput("");
   }, [practice, lessonId, isWebLang, progress, prevLessonId]);
 
-  // DEBOUNCED PREVIEW UPDATE - Fundamental para eliminar violações de 'message' e 'reflow'
+  // Atualização do preview com debounce
   useEffect(() => {
-    if (mounted) {
-      const timer = setTimeout(() => {
-        requestAnimationFrame(updatePreview);
-      }, 800);
+    if (mounted && isWebLang) {
+      const timer = setTimeout(updatePreview, 500);
       return () => clearTimeout(timer);
     }
-  }, [htmlCode, cssCode, jsCode, mounted, updatePreview]);
+  }, [htmlCode, cssCode, jsCode, mounted, isWebLang, updatePreview]);
 
   const handleRunCode = useCallback(async () => {
     setIsRunning(true);
@@ -175,25 +176,23 @@ export default function LearnPage() {
         return current.includes(obj.test);
       }).map(obj => obj.id) || [];
       
-      startTransition(() => {
-        setCompletedObjectives(newDone);
-        setIsRunning(false);
+      setCompletedObjectives(newDone);
+      setIsRunning(false);
 
-        const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
-        localStorage.setItem(`cwm_code_${lessonId}`, finalCode);
+      const finalCode = isWebLang ? `HTML:\n${htmlCode}\n\nCSS:\n${cssCode}\n\nJS:\n${jsCode}` : code;
+      localStorage.setItem(`cwm_code_${lessonId}`, finalCode);
 
-        if (newDone.length === (practice?.objectives.length || 0)) {
-          setOutput("> ✅ STATUS: 200 OK\n> [AUDITORIA]: Requisitos validados.\n> Missão concluída.");
-          toast.success("Excelente! Missão concluída.");
-          if (data) {
-            markAsCompleted(lessonId, data.level.id, data.ka.id, 'exercise', 100, finalCode);
-          }
-        } else {
-          const remaining = (practice?.objectives.length || 0) - newDone.length;
-          setOutput(`> ⚠️ STATUS: 412 PRECONDITION FAILED\n> [AUDITORIA]: Faltam ${remaining} componentes essenciais.`);
-          toast.error("Alguns requisitos ainda não foram atingidos.");
+      if (newDone.length === (practice?.objectives.length || 0)) {
+        setOutput("> ✅ STATUS: 200 OK\n> [AUDITORIA]: Requisitos validados.\n> Missão concluída.");
+        toast.success("Excelente! Missão concluída.");
+        if (data) {
+          markAsCompleted(lessonId, data.level.id, data.ka.id, 'exercise', 100, finalCode);
         }
-      });
+      } else {
+        const remaining = (practice?.objectives.length || 0) - newDone.length;
+        setOutput(`> ⚠️ STATUS: 412 PRECONDITION FAILED\n> [AUDITORIA]: Faltam ${remaining} componentes essenciais.`);
+        toast.error("Alguns requisitos ainda não foram atingidos.");
+      }
     }, 400);
   }, [htmlCode, cssCode, jsCode, code, isWebLang, activeTab, practice, lessonId, data, markAsCompleted]);
 
