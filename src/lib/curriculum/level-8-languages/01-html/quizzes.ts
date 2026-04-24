@@ -10,7 +10,7 @@ import { quiz as q9 } from './quizzes/09-constraint-validation-quiz';
 import { quiz as q10 } from './quizzes/10-focus-management-quiz';
 import { quiz as q11 } from './quizzes/11-svg-optimization-quiz';
 import { quiz as q12 } from './quizzes/12-constraint-validation-quiz';
-import { quiz as q13 } from './quizzes/13-webvtt-quiz';
+import { quiz as q13 } from './quizzes/13-json-ld-quiz';
 import { quiz as q14 } from './quizzes/14-canvas-engineering-quiz';
 import { quiz as q15 } from './quizzes/15-webassembly-quiz';
 import { quiz as q16 } from './quizzes/16-fetch-priority-quiz';

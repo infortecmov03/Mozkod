@@ -10,6 +10,7 @@ import { lesson as l9 } from './theory/09-constraint-validation';
 import { lesson as l10 } from './theory/10-multimedia-vtt';
 import { lesson as l11 } from './theory/11-svg-optimization';
 import { lesson as l12 } from './theory/12-aria-deep-dive';
+import { lesson as l13 } from './theory/13-microdata-jsonld';
 import type { TheoryLesson } from '../../types';
 
 const htmlTitles = [
@@ -48,7 +49,8 @@ const lessonsSource: Record<number, any> = {
   8: l9,
   9: l10,
   10: l11,
-  11: l12
+  11: l12,
+  12: l13
 };
 
 export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {
