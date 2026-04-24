@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from "react";
@@ -12,7 +11,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { TheoryLesson, Quiz } from "@/lib/curriculum/types";
-import parse, { HTMLReactParserOptions, Element } from 'html-react-parser';
+import parse, { HTMLReactParserOptions, Element, Text } from 'html-react-parser';
 import { InteractiveCodeBlock } from "./InteractiveCodeBlock";
 
 interface TheoryViewProps {
@@ -21,7 +20,7 @@ interface TheoryViewProps {
   isCompleted: boolean;
   nextLessonId: string | null;
   onComplete: (score: number) => Promise<void>;
-  enableInteractive?: boolean; // Nova prop para separar comportamento webcore do genérico
+  enableInteractive?: boolean;
 }
 
 export function TheoryView({ 
@@ -70,19 +69,20 @@ export function TheoryView({
     setSelectedAnswers(prev => ({ ...prev, [questionId]: optionIndex }));
   };
 
-  // Opções de parser separadas para quando a interatividade está ativa (WebCore)
   const parseOptions: HTMLReactParserOptions = {
     replace: (domNode) => {
       if (enableInteractive && domNode instanceof Element && domNode.name === 'pre') {
         const codeNode = domNode.children.find(c => c instanceof Element && c.name === 'code') as Element;
         if (codeNode) {
           const language = (codeNode.attribs.class || '').replace('language-', '') || 'html';
-          const codeText = (codeNode.children[0] as any).data
-            .replace(/&lt;/g, '<')
-            .replace(/&gt;/g, '>')
-            .replace(/&amp;/g, '&');
-            
-          return <InteractiveCodeBlock code={codeText} language={language} />;
+          
+          // Extrai o texto preservando quebras de linha e caracteres
+          const rawCode = codeNode.children
+            .filter(child => child instanceof Text)
+            .map(child => (child as Text).data)
+            .join('');
+
+          return <InteractiveCodeBlock code={rawCode} language={language} />;
         }
       }
     }

@@ -23,74 +23,73 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
 
   useEffect(() => {
     if (view === 'preview' && iframeRef.current) {
-      const doc = iframeRef.current.contentDocument;
-      if (doc) {
-        doc.open();
-        
-        const hasViewport = cleanCode.includes('viewport');
-        const viewportSimStyles = !hasViewport && isMobileSim ? `
-          body { width: 980px !important; transform: scale(0.28); transform-origin: top left; }
-        ` : '';
+      const updateIframe = () => {
+        const doc = iframeRef.current?.contentDocument;
+        if (doc) {
+          doc.open();
+          
+          const hasViewport = cleanCode.includes('viewport');
+          const viewportSimStyles = !hasViewport && isMobileSim ? `
+            body { width: 980px !important; transform: scale(0.28); transform-origin: top left; }
+          ` : '';
 
-        doc.write(`
-          <html>
-            <head>
-              <meta charset="UTF-8">
-              <style>
-                * { box-sizing: border-box; }
-                body { 
-                  font-family: system-ui, -apple-system, sans-serif; 
-                  margin: 0; padding: 15px; 
-                  background: #f8fafc; color: #1e293b;
-                  line-height: 1.5;
-                  overflow-x: auto;
-                  ${viewportSimStyles}
-                }
-                
-                header, nav, main, article, section, footer, aside {
-                  border: 2px dashed #cbd5e1;
-                  padding: 1.5rem 1rem 1rem 1rem;
-                  margin-bottom: 1rem;
-                  position: relative;
-                  background: white;
-                  border-radius: 8px;
-                }
+          doc.write(`
+            <html>
+              <head>
+                <meta charset="UTF-8">
+                <style>
+                  * { box-sizing: border-box; }
+                  body { 
+                    font-family: system-ui, -apple-system, sans-serif; 
+                    margin: 0; padding: 15px; 
+                    background: #f8fafc; color: #1e293b;
+                    line-height: 1.5;
+                    overflow-x: auto;
+                    ${viewportSimStyles}
+                  }
+                  
+                  header, nav, main, article, section, footer, aside {
+                    border: 2px dashed #cbd5e1;
+                    padding: 1.5rem 1rem 1rem 1rem;
+                    margin-bottom: 1rem;
+                    position: relative;
+                    background: white;
+                    border-radius: 8px;
+                  }
 
-                header::before, nav::before, main::before, article::before, 
-                section::before, footer::before, aside::before {
-                  content: attr(data-tag-name);
-                  position: absolute;
-                  top: 0; left: 0;
-                  background: #64748b;
-                  color: white;
-                  font-size: 8px;
-                  font-weight: bold;
-                  padding: 2px 5px;
-                  border-radius: 6px 0 6px 0;
-                  text-transform: uppercase;
-                }
+                  header::before, nav::before, main::before, article::before, 
+                  section::before, footer::before, aside::before {
+                    content: attr(data-tag-name);
+                    position: absolute;
+                    top: 0; left: 0;
+                    background: #64748b;
+                    color: white;
+                    font-size: 8px;
+                    font-weight: bold;
+                    padding: 2px 5px;
+                    border-radius: 6px 0 6px 0;
+                    text-transform: uppercase;
+                  }
 
-                h1, h2, h3 { margin-top: 0; color: #0f172a; word-break: break-word; }
-                p { margin-bottom: 0.5rem; word-break: break-word; }
-                
-                header:not([data-tag-name])::before { content: "header"; }
-                nav:not([data-tag-name])::before { content: "nav"; }
-                main:not([data-tag-name])::before { content: "main"; }
-                footer:not([data-tag-name])::before { content: "footer"; }
-                section:not([data-tag-name])::before { content: "section"; }
-                article:not([data-tag-name])::before { content: "article"; }
-                aside:not([data-tag-name])::before { content: "aside"; }
-              </style>
-            </head>
-            <body>${cleanCode}</body>
-          </html>
-        `);
-        doc.close();
+                  h1, h2, h3 { margin-top: 0; color: #0f172a; word-break: break-word; }
+                  p { margin-bottom: 0.5rem; word-break: break-word; }
+                  
+                  header:not([data-tag-name])::before { content: "header"; }
+                  nav:not([data-tag-name])::before { content: "nav"; }
+                  main:not([data-tag-name])::before { content: "main"; }
+                  footer:not([data-tag-name])::before { content: "footer"; }
+                  section:not([data-tag-name])::before { content: "section"; }
+                  article:not([data-tag-name])::before { content: "article"; }
+                  aside:not([data-tag-name])::before { content: "aside"; }
+                </style>
+              </head>
+              <body>${cleanCode}</body>
+            </html>
+          `);
+          doc.close();
 
-        // 🔒 BLOQUEIO DE SEGURANÇA
-        const iframeDoc = iframeRef.current.contentDocument;
-        if (iframeDoc) {
-          iframeDoc.querySelectorAll('form').forEach(form => {
+          // 🔒 BLOQUEIO DE SEGURANÇA
+          doc.querySelectorAll('form').forEach(form => {
             form.addEventListener('submit', (e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -98,7 +97,7 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
             });
           });
 
-          iframeDoc.querySelectorAll('a').forEach(link => {
+          doc.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', (e) => {
               const href = link.getAttribute('href');
               if (href && href !== '#' && !href.startsWith('#') && !href.startsWith('javascript:void')) {
@@ -108,11 +107,15 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
             });
           });
         }
-      }
+      };
+
+      // Pequeno delay para garantir que o iframe está no DOM
+      const timer = setTimeout(updateIframe, 50);
+      return () => clearTimeout(timer);
     }
   }, [view, cleanCode, isMobileSim]);
 
-  // NOVA FUNÇÃO: Renderiza o código como TEXTO com syntax highlighting via spans
+  // Renderiza o código como TEXTO com syntax highlighting via spans
   const renderCodeWithHighlight = (rawCode: string) => {
     const lines = rawCode.split('\n');
     
