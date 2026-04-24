@@ -27,7 +27,13 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
       const doc = iframeRef.current.contentDocument;
       if (doc) {
         doc.open();
-        // Injetamos um CSS de "Wireframe Técnico" que destaca a semântica
+        
+        // Simulação de ausência de Viewport (Desktop scaling no mobile)
+        const hasViewport = cleanCode.includes('viewport');
+        const viewportSimStyles = !hasViewport && isMobileSim ? `
+          body { width: 980px !important; transform: scale(0.28); transform-origin: top left; }
+        ` : '';
+
         doc.write(`
           <html>
             <head>
@@ -38,7 +44,8 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
                   margin: 0; padding: 15px; 
                   background: #f8fafc; color: #1e293b;
                   line-height: 1.5;
-                  overflow-x: hidden;
+                  overflow-x: auto;
+                  ${viewportSimStyles}
                 }
                 
                 header, nav, main, article, section, footer, aside {
@@ -82,7 +89,7 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
         doc.close();
       }
     }
-  }, [view, cleanCode]);
+  }, [view, cleanCode, isMobileSim]);
 
   return (
     <div className="my-6 rounded-2xl overflow-hidden border border-white/10 bg-black/40 shadow-xl max-w-full">
@@ -96,7 +103,7 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
           >
             <CodeIcon className="w-3 h-3 mr-1" /> Código
           </Button>
-          {language === 'html' && (
+          {(language === 'html' || language === 'css') && (
             <Button 
               variant={view === 'preview' ? 'secondary' : 'ghost'} 
               size="sm" 
@@ -129,9 +136,10 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
       <div className="relative overflow-hidden bg-[#0d1117]">
         {view === 'code' ? (
           <div className="p-4 overflow-x-auto custom-scrollbar">
-            <pre className="m-0 leading-relaxed text-[11px] font-mono scroll-smooth">
+            <pre className="m-0 leading-relaxed text-[12px] font-mono scroll-smooth text-gray-300">
               <code className="block whitespace-pre">
                 {code.split('\n').map((line, i) => {
+                  // Regex para highlight profissional de tags escapadas
                   let highlighted = line
                     .replace(/(&lt;[a-zA-Z1-6!/]+|&lt;\/[a-zA-Z1-6]+)/g, '<span class="code-tag">$1</span>')
                     .replace(/(\s[a-zA-Z-]+(?==))/g, ' <span class="code-attr">$1</span>')
@@ -152,10 +160,10 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
           )}>
             <div className={cn(
               "bg-white shadow-2xl transition-all duration-500 overflow-hidden border-[6px] border-[#1e293b] relative",
-              isMobileSim ? "w-[280px] h-[450px] rounded-[2rem]" : "w-full max-w-4xl h-[350px] rounded-t-lg border-b-0"
+              isMobileSim ? "w-[300px] h-[480px] rounded-[2.5rem]" : "w-full max-w-4xl h-[400px] rounded-t-lg border-b-0"
             )}>
-               <div className="h-4 bg-[#1e293b] flex items-center justify-center gap-1 shrink-0">
-                  <div className="w-8 h-1 bg-white/10 rounded-full" />
+               <div className="h-5 bg-[#1e293b] flex items-center justify-center gap-1 shrink-0">
+                  <div className="w-10 h-1.5 bg-white/10 rounded-full" />
                </div>
                <iframe ref={iframeRef} className="w-full h-full border-none bg-white" title="Live Interaction View" />
             </div>

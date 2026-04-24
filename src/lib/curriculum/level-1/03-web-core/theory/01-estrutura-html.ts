@@ -18,49 +18,47 @@ export const lesson: TheoryLesson = {
 
       <section class="space-y-8">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. O Cérebro: Charset e Codificação</h3>
-        <p class="text-sm">Sem o <code>charset="UTF-8"</code>, o browser pode falhar ao renderizar caracteres especiais e acentos comuns em Moçambique.</p>
+        <p class="text-sm">Sem o <code>charset="UTF-8"</code>, o browser falha ao interpretar caracteres especiais. Veja no preview abaixo o erro de "mojibake" (caracteres corrompidos).</p>
         
         <div class="space-y-4">
-           <h4 class="font-bold text-primary text-sm">❌ Sem Charset (Pode gerar erros de símbolos)</h4>
+           <h4 class="font-bold text-red-500 text-sm">❌ Sem Charset (Erro de Encoding Visível)</h4>
            <pre><code class="language-html">
-&lt;!-- Omissão de charset --&gt;
-&lt;h1&gt;Configuracao de Acentuacao&lt;/h1&gt;
-&lt;p&gt;Sem o UTF-8, o til e acentos podem falhar.&lt;/p&gt;
+&lt;h1&gt;ConfiguraÃ§Ã£o de AcentuaÃ§Ã£o&lt;/h1&gt;
+&lt;p&gt;Sem o UTF-8, o sistema falha ao ler o til e o cedilha.&lt;/p&gt;
            </code></pre>
 
            <h4 class="font-bold text-green-500 text-sm">✅ Com Charset UTF-8 (Suporte Universal)</h4>
            <pre><code class="language-html">
 &lt;meta charset="UTF-8"&gt;
 &lt;h1&gt;Configuração de Acentuação&lt;/h1&gt;
-&lt;p&gt;Com UTF-8, o til (ã) e acentos (ê) funcionam sempre.&lt;/p&gt;
+&lt;p&gt;Com UTF-8, os caracteres são renderizados perfeitamente.&lt;/p&gt;
            </code></pre>
         </div>
       </section>
 
       <section class="space-y-8">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">2. Escala Mobile First (Viewport)</h3>
-        <p class="text-sm">A tag <code>viewport</code> impede que o telemóvel tente emular um ecrã gigante, o que tornaria o seu site minúsculo e difícil de ler.</p>
+        <p class="text-sm">A tag <code>viewport</code> impede que o telemóvel tente emular um ecrã de desktop de 980px, o que tornaria o seu site minúsculo. Compare o realismo no simulador abaixo:</p>
         
         <div class="space-y-4">
-           <h4 class="font-bold text-primary text-sm">❌ Sem Viewport (Ecrã Esmagado no Mobile)</h4>
+           <h4 class="font-bold text-red-500 text-sm">❌ Sem Viewport (Conteúdo Esmagado/Minúsculo)</h4>
            <pre><code class="language-html">
-&lt;!-- Sem viewport --&gt;
 &lt;h1&gt;Site Ilegível&lt;/h1&gt;
-&lt;p&gt;Este texto aparece muito pequeno no telemóvel.&lt;/p&gt;
+&lt;p&gt;O browser simula um ecrã gigante e o texto fica impossível de ler sem fazer zoom manual.&lt;/p&gt;
            </code></pre>
 
            <h4 class="font-bold text-green-500 text-sm">✅ Com Viewport (Escala Real 1:1)</h4>
            <pre><code class="language-html">
 &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
 &lt;h1&gt;Site Mobile-Ready&lt;/h1&gt;
-&lt;p&gt;Este texto é perfeitamente legível sem zoom.&lt;/p&gt;
+&lt;p&gt;O texto adapta-se à largura real do dispositivo, garantindo leitura imediata.&lt;/p&gt;
            </code></pre>
         </div>
       </section>
 
       <section class="space-y-8">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">3. O Esqueleto Semântico Completo</h3>
-        <p class="text-sm">Observe como as tags de abertura e fecho delimitam as regiões do sistema. No modo <strong>Preview</strong>, podes ver o mapeamento arquitetural do documento.</p>
+        <p class="text-sm">Observe no preview a arquitetura de blocos. No modo <strong>Wireframe</strong>, você vê como o browser delimita cada região do sistema.</p>
         
         <div class="space-y-6">
           <pre><code class="language-html">
@@ -76,8 +74,8 @@ export const lesson: TheoryLesson = {
 
 &lt;main role="main"&gt;
   &lt;article&gt;
-    &lt;h2&gt;Fase 1: Engenharia HTML&lt;/h2&gt;
-    &lt;p&gt;O HTML define a estrutura lógica dos dados.&lt;/p&gt;
+    &lt;h2&gt;Engenharia HTML Master&lt;/h2&gt;
+    &lt;p&gt;O conteúdo central deve ser único e acessível.&lt;/p&gt;
   &lt;/article&gt;
 &lt;/main&gt;
 
@@ -91,7 +89,7 @@ export const lesson: TheoryLesson = {
       <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
         <h4 class="text-xl font-bold text-primary mb-4">🏆 Regra do Arquiteto</h4>
         <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
-          "Omitir metadados é como construir um prédio sem planta de fundação. O site pode parecer 'ok' no teu ecrã, mas falhará para 50% dos teus utilizadores no mundo real."
+          "Escrever HTML sem as tags de cabeçalho e viewport é como construir uma casa sem janelas. O sistema funciona, mas ninguém consegue habitá-lo confortavelmente."
         </p>
       </section>
     </div>
