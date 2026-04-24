@@ -24,11 +24,11 @@ export const lesson: TheoryLesson = {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="p-6 bg-card border rounded-2xl border-white/5 shadow-lg">
             <h4 class="font-bold text-red-400 mb-2">HttpOnly</h4>
-            <p class="text-[10px] opacity-70 leading-relaxed">Impede que o JavaScript aceda ao cookie. Se um atacante injetar um script (XSS), ele não conseguirá ler o seu token de sessão via document.cookie.</p>
+            <p class="text-[10px] opacity-70 leading-relaxed">Impede que o JavaScript aceda ao cookie. Se um atacante injetar um script (XSS), ele não conseguirá ler o seu token de sessão via <code>document.cookie</code>.</p>
           </div>
           <div class="p-6 bg-card border rounded-2xl border-white/5 shadow-lg">
             <h4 class="font-bold text-red-400 mb-2">Secure</h4>
-            <p class="text-[10px] opacity-70 leading-relaxed">Garante que o cookie só viaja em ligações encriptadas (HTTPS). Nunca é enviado em redes Wi-Fi abertas ou inseguras.</p>
+            <p class="text-[10px] opacity-70 leading-relaxed">Garante que o cookie só viaja em ligações encriptadas (HTTPS). <strong>⚠️ Importante:</strong> Se o seu site estiver em HTTP (sem S), a flag 'Secure' fará com que o browser <strong>não envie nem guarde</strong> o cookie, protegendo o utilizador de transmissões em texto limpo.</p>
           </div>
           <div class="p-6 bg-card border rounded-2xl border-white/5 shadow-lg">
             <h4 class="font-bold text-red-400 mb-2">SameSite=Strict</h4>
@@ -50,11 +50,30 @@ export const lesson: TheoryLesson = {
         </div>
       </section>
 
-      <!-- 3. STORAGE AUDIT -->
+      <!-- 3. PERSISTÊNCIA DURÁVEL -->
       <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">3. Auditoria: Onde guardar o quê?</h3>
-        <p class="text-sm">Um erro estratégico é guardar dados sensíveis no local errado. Utilize esta matriz de decisão Master para o seu projeto:</p>
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">3. Persistência Durável (Durable Storage)</h3>
+        <p class="text-sm">Por padrão, o browser pode apagar dados do IndexedDB ou LocalStorage se o disco do utilizador ficar cheio (Best-effort). Para aplicações críticas (ex: um editor offline), precisamos de solicitar que o armazenamento seja <strong>Persistente</strong>.</p>
         
+        <div class="bg-indigo-500/10 p-6 rounded-2xl border border-indigo-500/20 shadow-inner">
+          <h4 class="font-bold text-indigo-400 mb-2">A API navigator.storage</h4>
+          <p class="text-xs mb-4">Utilizamos o método <code>persist()</code> para pedir ao browser que não descarte os nossos dados sob pressão de disco.</p>
+          <pre><code class="language-javascript">
+async function requestPersistence() {
+  if (navigator.storage && navigator.storage.persist) {
+    const isPersisted = await navigator.storage.persist();
+    if (isPersisted) {
+      console.log("Os dados estão seguros contra limpeza automática!");
+    }
+  }
+}
+          </code></pre>
+        </div>
+      </section>
+
+      <!-- 4. MATRIZ DE AUDITORIA -->
+      <section class="space-y-6">
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">4. Auditoria: Onde guardar o quê?</h3>
         <div class="overflow-x-auto rounded-xl border border-white/10">
           <table class="w-full border-collapse text-xs">
             <thead>
@@ -68,50 +87,21 @@ export const lesson: TheoryLesson = {
               <tr class="border-t border-white/5">
                 <td class="p-3 font-bold">Token JWT (Sessão)</td>
                 <td class="p-3 text-green-400 font-bold">Cookie (HttpOnly)</td>
-                <td class="p-3 text-muted-foreground">Proteção nativa do browser contra roubo via scripts XSS.</td>
+                <td class="p-3 text-muted-foreground">Proteção nativa contra roubo via scripts XSS.</td>
               </tr>
               <tr class="border-t border-white/5">
                 <td class="p-3 font-bold">Preferências (Tema/Idioma)</td>
                 <td class="p-3 text-blue-400 font-bold">LocalStorage</td>
-                <td class="p-3 text-muted-foreground">Acesso síncrono e simples no carregamento da página.</td>
+                <td class="p-3 text-muted-foreground">Acesso síncrono simples.</td>
               </tr>
               <tr class="border-t border-white/5">
-                <td class="p-3 font-bold">Dados do App (Offline)</td>
-                <td class="p-3 text-yellow-400 font-bold">IndexedDB</td>
-                <td class="p-3 text-muted-foreground">Suporte a grandes volumes, objetos e transações atómicas.</td>
+                <td class="p-3 font-bold">Dados Offline (Gigabytes)</td>
+                <td class="p-3 text-yellow-400 font-bold">IndexedDB + Persistence</td>
+                <td class="p-3 text-muted-foreground">Suporte a grandes volumes e garantia de não-exclusão.</td>
               </tr>
             </tbody>
           </table>
         </div>
-      </section>
-
-      <!-- 4. CAPSTONE INTERATIVO -->
-      <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">4. Simulador de Política de Segurança</h3>
-        <p class="text-sm leading-relaxed">Experimente o impacto das flags. No motor de preview, observe como o JavaScript falha ao tentar ler um cookie protegido com HttpOnly.</p>
-        
-        <pre><code class="language-html">
-&lt;div id="security-log" style="font-family:monospace; font-size:12px; color:green; background:#000; padding:15px; border-radius:8px;"&gt;
-  &gt; Iniciando auditoria de segurança...&lt;br&gt;
-&lt;/div&gt;
-
-&lt;script&gt;
-  const log = document.getElementById('security-log');
-  
-  // 1. Simulação de escrita de cookie inseguro (Acessível ao JS)
-  document.cookie = "insecure_token=amador_123; SameSite=Strict; Secure";
-  
-  log.innerHTML += "&gt; A verificar vulnerabilidade XSS...&lt;br&gt;";
-  log.innerHTML += "&gt; Tentando ler cookies via JavaScript:&lt;br&gt;";
-  log.innerHTML += " [COOKIES ENCONTRADOS]: " + (document.cookie || 'Nenhum') + "&lt;br&gt;";
-  
-  if (document.cookie.includes("insecure_token")) {
-    log.innerHTML += "&lt;br&gt;&lt;span style='color:#ef4444;'&gt;[ALERTA] Cookie inseguro detectado! Um atacante poderia roubar esta sessão.&lt;/span&gt;";
-  } else {
-    log.innerHTML += "&lt;br&gt;&lt;span style='color:#22c55e;'&gt;[SUCESSO] Sessão protegida. O script não consegue ler os dados sensíveis.&lt;/span&gt;";
-  }
-&lt;/script&gt;
-        </code></pre>
       </section>
 
       <section class="bg-red-500/5 p-8 rounded-[2rem] border-2 border-dashed border-red-500/20 text-center">
@@ -121,5 +111,5 @@ export const lesson: TheoryLesson = {
         </p>
       </section>
     </div>
-  `
+  `,
 };
