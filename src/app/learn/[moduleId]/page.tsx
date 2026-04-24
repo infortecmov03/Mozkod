@@ -31,6 +31,13 @@ export default function LearnPage() {
   const quiz = useMemo(() => theory?.quizId ? findQuizById(theory.quizId) : null, [theory]);
   const nextLessonId = useMemo(() => findNextLessonId(lessonId), [lessonId]);
 
+  // Decisão técnica: ativar interatividade apenas para WebCore ou Nível 8 (Linguagens Web)
+  const isInteractiveTheory = useMemo(() => {
+    if (!data) return false;
+    const isWebKA = ['ka-web-core', 'lang-html', 'lang-css'].includes(data.ka.id);
+    return isWebKA;
+  }, [data]);
+
   const availableVariants = useMemo(() => {
     if (!data || !practice) return [];
     const variants: { lang: string; id: string }[] = [];
@@ -130,7 +137,6 @@ export default function LearnPage() {
 
   const handleTheoryComplete = async (score: number) => {
     if (data) {
-      // Forçamos a sincronização mesmo se já estiver concluído localmente para garantir paridade com o DB
       await markAsCompleted(lessonId, data.level.id, data.ka.id, 'theory', score);
     }
   };
@@ -170,6 +176,7 @@ export default function LearnPage() {
             isCompleted={isCompleted(lessonId)}
             nextLessonId={nextLessonId}
             onComplete={handleTheoryComplete}
+            enableInteractive={isInteractiveTheory}
           />
         ) : (
           <PracticeWorkspace 

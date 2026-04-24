@@ -1,18 +1,19 @@
 
 'use client';
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { CheckCircle2, XCircle, AlertCircle, Sparkles, Youtube, ChevronRight, RefreshCcw, MessageSquare, Eye, Code as CodeIcon } from "lucide-react";
+import { CheckCircle2, XCircle, AlertCircle, Sparkles, Youtube, ChevronRight, RefreshCcw, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { TheoryLesson, Quiz } from "@/lib/curriculum/types";
-import parse, { domToReact, HTMLReactParserOptions, Element } from 'html-react-parser';
+import parse, { HTMLReactParserOptions, Element } from 'html-react-parser';
+import { InteractiveCodeBlock } from "./InteractiveCodeBlock";
 
 interface TheoryViewProps {
   theory: TheoryLesson;
@@ -20,92 +21,17 @@ interface TheoryViewProps {
   isCompleted: boolean;
   nextLessonId: string | null;
   onComplete: (score: number) => Promise<void>;
+  enableInteractive?: boolean; // Nova prop para separar comportamento webcore do genérico
 }
 
-/**
- * Componente interno para renderizar exemplos de código com Live Preview.
- */
-function InteractiveCodeBlock({ code, language }: { code: string, language: string }) {
-  const [view, setView] = useState<'code' | 'preview'>('code');
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-
-  useEffect(() => {
-    if (view === 'preview' && iframeRef.current && language === 'html') {
-      const doc = iframeRef.current.contentDocument;
-      if (doc) {
-        doc.open();
-        doc.write(`
-          <html>
-            <head>
-              <style>
-                body { font-family: sans-serif; padding: 20px; color: #333; background: #fff; }
-                header { background: #3b82f6; color: white; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
-                nav { background: #f1f5f9; padding: 10px; margin-bottom: 10px; border-radius: 4px; }
-                main { border: 2px dashed #cbd5e1; padding: 20px; min-height: 100px; }
-                footer { margin-top: 20px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 0.8rem; color: #64748b; }
-              </style>
-            </head>
-            <body>${code}</body>
-          </html>
-        `);
-        doc.close();
-      }
-    }
-  }, [view, code, language]);
-
-  return (
-    <div className="my-8 rounded-3xl overflow-hidden border border-white/10 bg-black/40 shadow-2xl">
-      <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/5">
-        <div className="flex gap-2">
-          <Button 
-            variant={view === 'code' ? 'secondary' : 'ghost'} 
-            size="sm" 
-            className="h-8 rounded-full text-[10px] font-black uppercase"
-            onClick={() => setView('code')}
-          >
-            <CodeIcon className="w-3 h-3 mr-1.5" /> Código
-          </Button>
-          {language === 'html' && (
-            <Button 
-              variant={view === 'preview' ? 'secondary' : 'ghost'} 
-              size="sm" 
-              className="h-8 rounded-full text-[10px] font-black uppercase"
-              onClick={() => setView('preview')}
-            >
-              <Eye className="w-3 h-3 mr-1.5" /> Visualizar
-            </Button>
-          )}
-        </div>
-        <span className="text-[10px] font-mono opacity-40 uppercase tracking-widest">{language}</span>
-      </div>
-      
-      <div className="relative min-h-[150px]">
-        {view === 'code' ? (
-          <pre className="p-6 overflow-x-auto custom-scrollbar">
-            <code className="text-xs md:text-sm leading-relaxed block whitespace-pre">
-              {code.split('\n').map((line, i) => {
-                // Simples highlight manual para manter leveza
-                let highlighted = line
-                  .replace(/(&lt;[a-zA-Z1-6]+|&lt;\/[a-zA-Z1-6]+)/g, '<span class="code-tag">$1</span>')
-                  .replace(/(\s[a-zA-Z-]+(?==))/g, ' <span class="code-attr">$1</span>')
-                  .replace(/(".*?")/g, '<span class="code-string">$1</span>')
-                  .replace(/(&lt;!--.*?--&gt;)/g, '<span class="code-comment">$1</span>');
-                
-                return (
-                  <div key={i} dangerouslySetInnerHTML={{ __html: highlighted || ' ' }} />
-                );
-              })}
-            </code>
-          </pre>
-        ) : (
-          <iframe ref={iframeRef} className="w-full min-h-[300px] bg-white" title="Code Preview" />
-        )}
-      </div>
-    </div>
-  );
-}
-
-export function TheoryView({ theory, quiz, isCompleted, nextLessonId, onComplete }: TheoryViewProps) {
+export function TheoryView({ 
+  theory, 
+  quiz, 
+  isCompleted, 
+  nextLessonId, 
+  onComplete,
+  enableInteractive = false 
+}: TheoryViewProps) {
   const router = useRouter();
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({});
   const [validated, setValidated] = useState(false);
@@ -144,14 +70,13 @@ export function TheoryView({ theory, quiz, isCompleted, nextLessonId, onComplete
     setSelectedAnswers(prev => ({ ...prev, [questionId]: optionIndex }));
   };
 
-  // Opções para transformar o HTML em componentes React
+  // Opções de parser separadas para quando a interatividade está ativa (WebCore)
   const parseOptions: HTMLReactParserOptions = {
     replace: (domNode) => {
-      if (domNode instanceof Element && domNode.name === 'pre') {
+      if (enableInteractive && domNode instanceof Element && domNode.name === 'pre') {
         const codeNode = domNode.children.find(c => c instanceof Element && c.name === 'code') as Element;
         if (codeNode) {
           const language = (codeNode.attribs.class || '').replace('language-', '') || 'html';
-          // Extrai o texto do código escapando entidades HTML comuns
           const codeText = (codeNode.children[0] as any).data
             .replace(/&lt;/g, '<')
             .replace(/&gt;/g, '>')
