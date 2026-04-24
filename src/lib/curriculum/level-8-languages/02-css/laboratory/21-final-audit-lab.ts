@@ -1,22 +1,35 @@
+
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
   id: "css-p21",
   language: "html",
-  title: "Projeto Master: Auditoria Final e Entrega",
-  description: "Consolide a arquitetura de estilos para produção.",
-  statement: "Adicione um comentário final indicando a versão do seu Design System Master.",
+  title: "Projeto Master: Auditoria Final do Design System",
+  description: "Consolide todos os conceitos aplicados.",
+  statement: "Garante que o seu ficheiro CSS utiliza @layer, OKLCH, Container Queries e Animações GPU.",
   isProjectPart: true,
-  template: `<!-- Design System Master Finalizado -->`,
-  detailedExplanation: `
-    <h3>🏆 Excelência em Estilos</h3>
-    <p>Chegaste ao fim do CSS Master. O teu projeto possui agora uma arquitetura resiliente, performance otimizada e padrões de acessibilidade de nível mundial. Este é o selo de qualidade da Codworks Moz.</p>
-  `,
-  objectives: [
-    {
-      id: "final_comment",
-      description: "Mantenha o comentário de conclusão.",
-      test: "Design System Master"
+  template: `<!DOCTYPE html>
+<html lang="pt-MZ">
+<head>
+  <style>
+    /* DESIGN SYSTEM MASTER FINALIZADO */
+    @layer reset, base, components, utilities;
+    
+    @layer base {
+      :root {
+        --primary: oklch(60% 0.15 250);
+        --bg: #0f172a;
+      }
+      body { background: var(--bg); color: white; }
     }
+  </style>
+</head>
+<body>
+  <h1>Status: Elite Software Engineer</h1>
+</body>
+</html>`,
+  detailedExplanation: `<h3>🏆 Graduação CSS Master</h3><p>Parabéns! Criaste uma arquitetura de estilos que é performática, acessível e escalável para o mercado global.</p>`,
+  objectives: [
+    { id: "audit", description: "Mantenha o comentário de Design System Master.", test: "DESIGN SYSTEM MASTER" }
   ]
 };
