@@ -1,6 +1,7 @@
 import { lesson as l1 } from './theory/01-structure';
 import { lesson as l2 } from './theory/02-meta-seo';
 import { lesson as l3 } from './theory/03-semantics-accessibility';
+import { lesson as l4 } from './theory/04-text-hierarchy-navigation';
 import type { TheoryLesson } from '../../types';
 
 const htmlTitles = [
@@ -31,6 +32,7 @@ export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {
   if (i === 0) return l1;
   if (i === 1) return l2;
   if (i === 2) return l3;
+  if (i === 3) return l4;
 
   return {
     id: `html-m${i + 1}`,
