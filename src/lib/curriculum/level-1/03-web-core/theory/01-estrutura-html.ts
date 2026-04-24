@@ -323,7 +323,7 @@ export const lesson: TheoryLesson = {
       &lt;h2&gt;Título do Artigo&lt;/h2&gt;
       &lt;p&gt;Conteúdo principal do artigo...&lt;/p&gt;
       &lt;figure&gt;
-        &lt;img src="https://picsum.photos/seed/img/400/300" alt="Descrição"&gt;
+        &lt;img src="imagem.jpg" alt="Descrição"&gt;
         &lt;figcaption&gt;Legenda da imagem&lt;/figcaption&gt;
       &lt;/figure&gt;
     &lt;/article&gt;
@@ -355,7 +355,7 @@ export const lesson: TheoryLesson = {
         
         <pre><code class="language-html">
 &lt;!-- Vídeo --&gt;
-&lt;video width="320" height="240" controls poster="https://picsum.photos/seed/thumb/320/240"&gt;
+&lt;video width="320" height="240" controls poster="thumbnail.jpg"&gt;
   &lt;source src="video.mp4" type="video/mp4"&gt;
   &lt;source src="video.webm" type="video/webm"&gt;
   O seu navegador não suporta o elemento de vídeo.

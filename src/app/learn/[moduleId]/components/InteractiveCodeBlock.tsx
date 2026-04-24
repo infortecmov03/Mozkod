@@ -117,23 +117,31 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
     }
   }, [view, cleanCode, isMobileSim]);
 
+  // NOVA FUNÇÃO: Renderiza o código como TEXTO com syntax highlighting via spans
   const renderCodeWithHighlight = (rawCode: string) => {
     const lines = rawCode.split('\n');
     
     return lines.map((line, i) => {
+      // Escapa o HTML primeiro para mostrar as tags como texto
       let escaped = line
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
 
+      // Agora aplica o highlight nas tags já escapadas
       let highlighted = escaped
+        // Tags HTML (abertura, fecho, self-closing)
         .replace(/(&lt;\/?)([a-zA-Z][a-zA-Z0-9]*|h[1-6])([\s\S]*?)(\/?&gt;)/g, 
           '<span class="code-tag">$1</span><span class="code-tag">$2</span><span class="code-tag">$3$4</span>')
+        
+        // Atributos
         .replace(/(\s)([a-zA-Z-]+)(=)(&quot;)/g, 
           ' <span class="code-attr">$2</span>=<span class="code-string">')
         .replace(/(&quot;)(?=[\s&gt;])/g, 
           '</span>')
+        
+        // Comentários HTML
         .replace(/(&lt;!--)(.*?)(--&gt;)/g, 
           '<span class="code-comment">$1$2$3</span>');
 
