@@ -76,7 +76,7 @@ await cache.addAll([
         <pre><code class="language-javascript">
 if (navigator.storage && navigator.storage.persist) {
   const isPersisted = await navigator.storage.persist();
-  console.log(`Armazenamento durável: ${isPersisted ? "ATIVO" : "NÃO"}`);
+  console.log(\`Armazenamento durável: \${isPersisted ? "ATIVO" : "NÃO"}\`);
 }
         </code></pre>
       </section>
