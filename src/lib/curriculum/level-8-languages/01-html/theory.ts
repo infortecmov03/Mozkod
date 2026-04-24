@@ -8,6 +8,7 @@ import { lesson as l7 } from './theory/07-tables-data';
 import { lesson as l8 } from './theory/08-forms-master';
 import { lesson as l9 } from './theory/09-constraint-validation';
 import { lesson as l10 } from './theory/10-multimedia-vtt';
+import { lesson as l11 } from './theory/11-svg-optimization';
 import type { TheoryLesson } from '../../types';
 
 const htmlTitles = [
@@ -44,7 +45,8 @@ const lessonsSource: Record<number, any> = {
   6: l7,
   7: l8,
   8: l9,
-  9: l10
+  9: l10,
+  10: l11
 };
 
 export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {
@@ -61,6 +63,7 @@ export const lessons: TheoryLesson[] = htmlTitles.map((title, i) => {
     id: `html-m${i + 1}`,
     title: title,
     content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>📄 HTML Master: ${title}</h2><p>Arquitetura de documentos de alta compexidade seguindo padrões W3C.</p></div>`,
-    quizId: `html-mq${i + 1}`
+    quizId: `html-mq${i + 1}`,
+    enableInteractive: true
   };
 });
