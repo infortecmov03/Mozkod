@@ -30,12 +30,9 @@ const sourceMap: Record<number, any> = {
 export const lessons: TheoryLesson[] = Array.from({ length: 21 }, (_, i) => {
   const idNum = i + 1;
   const baseLesson = sourceMap[idNum];
-  
-  // Garantir a remoção total de youtubeVideoId
-  const { youtubeVideoId, ...cleanLesson } = baseLesson;
 
   return {
-    ...cleanLesson,
+    ...baseLesson,
     id: `css-m${idNum}`,
     quizId: `css-mq${idNum}`,
     enableInteractive: true

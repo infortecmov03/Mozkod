@@ -4,6 +4,7 @@ export const lesson: TheoryLesson = {
   id: "css-m4",
   title: "Fase 1: Propriedades Lógicas e Layout Global",
   enableInteractive: true,
+  youtubeVideoId: "8ME9u065vD4",
   quizId: "css-mq4",
   content: `
     <div class="space-y-12">
@@ -53,22 +54,6 @@ export const lesson: TheoryLesson = {
 }
            </code></pre>
         </div>
-      </section>
-
-      <section class="bg-indigo-500/10 p-8 rounded-[2.5rem] border border-indigo-500/20 shadow-inner">
-        <h4 class="text-xl font-bold text-indigo-400 mb-4 flex items-center gap-2">
-          🚀 Porquê é o Padrão de Elite?
-        </h4>
-        <p class="text-sm leading-relaxed">
-          Ao usar propriedades lógicas, eliminas a necessidade de hacks como <code>[dir="rtl"] .margin-left { margin-left: 0; margin-right: 20px; }</code>. O browser faz todo o cálculo geométrico por ti, reduzindo o tamanho do seu bundle de CSS em até 30% em sites multi-idioma.
-        </p>
-      </section>
-
-      <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
-        <h4 class="text-xl font-bold text-primary mb-4">🏆 Regra do Arquiteto Global</h4>
-        <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
-          "Pense em 'start' e 'end', nunca em 'esquerda' e 'direita'. O software de elite é inclusivo e respeita a diversidade cultural do utilizador através da arquitetura de estilos inteligente."
-        </p>
       </section>
     </div>
   `,

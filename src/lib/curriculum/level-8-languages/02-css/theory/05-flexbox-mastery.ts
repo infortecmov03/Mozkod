@@ -4,6 +4,7 @@ export const lesson: TheoryLesson = {
   id: "css-m5",
   title: "Fase 2: Flexbox Mastery - Eixos, Gap e Intrinsic Sizing",
   enableInteractive: true,
+  youtubeVideoId: "u044iM9xsTM",
   quizId: "css-mq5",
   content: `<div class="space-y-12">
       <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
@@ -28,9 +29,7 @@ export const lesson: TheoryLesson = {
     background: #f1f5f9;
     padding: 20px;
     border-radius: 12px;
-    /* Alinha no eixo principal (horizontal por padrão) */
     justify-content: space-around;
-    /* Alinha no eixo cruzado (vertical por padrão) */
     align-items: center;
     height: 150px;
   }
@@ -66,13 +65,6 @@ export const lesson: TheoryLesson = {
             <strong class="text-primary block mb-1">Flex-basis:</strong> O tamanho inicial ideal antes do cálculo de crescimento. Use 'auto' para respeitar o conteúdo.
           </li>
         </ul>
-      </section>
-
-      <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
-        <h4 class="text-xl font-bold text-primary mb-4">🏆 Dica Master: Gap</h4>
-        <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
-          "Nunca mais use margens manuais para separar itens flex. A propriedade <code>gap</code> lida com o espaçamento sem criar margens indesejadas nas bordas do container, mantendo a geometria perfeita."
-        </p>
       </section>
     </div>`
 };

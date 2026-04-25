@@ -4,6 +4,7 @@ export const lesson: TheoryLesson = {
   id: "css-m9",
   title: "Fase 3: Variable Fonts & Typography Performance",
   enableInteractive: true,
+  youtubeVideoId: "u044iM9xsTM",
   quizId: "css-mq9",
   content: `<div class="space-y-12">
       <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
@@ -28,9 +29,6 @@ export const lesson: TheoryLesson = {
           <li class="p-4 bg-muted/20 border border-white/5 rounded-xl">
              <strong class="text-primary">"ital" (Italic):</strong> Grau de inclinação.
           </li>
-          <li class="p-4 bg-muted/20 border border-white/5 rounded-xl">
-             <strong class="text-primary">"slnt" (Slant):</strong> Ângulo de rotação.
-          </li>
         </ul>
       </section>
 
@@ -51,13 +49,6 @@ h1 {
   font-variation-settings: "wght" 650, "wdth" 85;
 }
         </code></pre>
-      </section>
-
-      <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
-        <h4 class="text-xl font-bold text-primary mb-4">🏆 Regra de Elite</h4>
-        <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
-          "Use fontes variáveis para criar animações de transição de peso suaves no hover, algo impossível com fontes estáticas tradicionais."
-        </p>
       </section>
     </div>`
 };

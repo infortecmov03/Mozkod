@@ -4,6 +4,7 @@ export const lesson: TheoryLesson = {
   id: "css-m10",
   title: "Fase 3: Animações de Alta Performance: O Papel do Compositor",
   enableInteractive: true,
+  youtubeVideoId: "jV8B24w82CU",
   quizId: "css-mq10",
   content: `<div class="space-y-12">
       <div class="bg-red-500/5 p-8 rounded-[2.5rem] border border-red-500/10 shadow-2xl">
@@ -26,7 +27,6 @@ export const lesson: TheoryLesson = {
                <li>width / height</li>
                <li>top / left / margin</li>
                <li>font-size</li>
-               <li>box-shadow (lento no paint)</li>
              </ul>
           </div>
           <div class="p-4 bg-green-900/20 border border-green-500/30 rounded-xl">
@@ -34,7 +34,6 @@ export const lesson: TheoryLesson = {
              <ul class="text-[10px] space-y-1">
                <li>transform: translate()</li>
                <li>transform: scale()</li>
-               <li>transform: rotate()</li>
                <li>opacity</li>
              </ul>
           </div>
@@ -45,19 +44,6 @@ export const lesson: TheoryLesson = {
         <h3 class="text-2xl font-bold font-headline border-b-2 border-red-500/20 pb-2 text-accent">2. will-change: O Aviso Prévio</h3>
         <p class="text-sm leading-relaxed">
           A propriedade <code>will-change</code> avisa o browser para criar uma nova camada (layer) na GPU para o elemento. Use com cautela apenas em elementos que realmente terão animações complexas.
-        </p>
-        <pre><code class="language-css">
-.box-animada {
-  will-change: transform, opacity;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-        </code></pre>
-      </section>
-
-      <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
-        <h4 class="text-xl font-bold text-primary mb-4">🏆 Regra de Performance</h4>
-        <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
-          "Sincronize animações complexas com a <strong>User Timing API</strong> para medir se os frames estão a cair em dispositivos de gama baixa."
         </p>
       </section>
     </div>`

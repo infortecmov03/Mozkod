@@ -4,6 +4,7 @@ export const lesson: TheoryLesson = {
   id: "css-m3",
   title: "Fase 1: Custom Properties e Design Tokens",
   enableInteractive: true,
+  youtubeVideoId: "v4cd1O4zkGw",
   quizId: "css-mq3",
   content: `
     <div class="space-y-12">
@@ -57,23 +58,6 @@ export const lesson: TheoryLesson = {
 }
            </code></pre>
         </div>
-      </section>
-
-      <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">3. Fallbacks e Segurança</h3>
-        <p class="text-sm leading-relaxed">A função <code>var()</code> aceita um segundo argumento como fallback, garantindo que o design não "morra" se a variável não estiver definida.</p>
-        <pre><code class="language-css">
-.error-msg {
-  color: var(--error-red, red); /* Se --error-red falhar, usa red */
-}
-        </code></pre>
-      </section>
-
-      <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
-        <h4 class="text-xl font-bold text-primary mb-4">🚀 Integração com JavaScript</h4>
-        <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
-          "Para um Engenheiro Master, variáveis CSS são o controle remoto da interface. Podes usar <code>document.documentElement.style.setProperty('--primary', 'green')</code> para mudar a marca do site inteiro instantaneamente sem recarregar o CSS."
-        </p>
       </section>
     </div>
   `,

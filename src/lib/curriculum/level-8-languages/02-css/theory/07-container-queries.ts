@@ -4,6 +4,7 @@ export const lesson: TheoryLesson = {
   id: "css-m7",
   title: "Fase 2: Container Queries vs Media Queries",
   enableInteractive: true,
+  youtubeVideoId: "v4cd1O4zkGw",
   quizId: "css-mq7",
   content: `<div class="space-y-12">
       <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
@@ -40,13 +41,6 @@ export const lesson: TheoryLesson = {
       <section class="space-y-8">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">2. Unidades de Medida de Container (cqw)</h3>
         <p class="text-sm leading-relaxed">Em vez de <code>vw</code> (Viewport Width), usamos <code>cqw</code> (Container Query Width). 10cqw é sempre 10% da largura do container pai, garantindo proporções perfeitas em qualquer lugar da página.</p>
-
-        <div class="bg-indigo-500/10 p-6 rounded-2xl border border-indigo-500/20 shadow-inner">
-          <h4 class="font-bold text-indigo-400 mb-4">🚀 Vantagem Arquitetural</h4>
-          <p class="text-sm leading-relaxed">
-            Permite que o mesmo componente de "Perfil" funcione perfeitamente numa barra lateral estreita (layout vertical) ou num banner largo (layout horizontal) sem que o desenvolvedor do site precise de escrever media queries extras.
-          </p>
-        </div>
       </section>
     </div>`
 };

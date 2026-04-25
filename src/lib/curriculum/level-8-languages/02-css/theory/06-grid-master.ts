@@ -4,6 +4,7 @@ export const lesson: TheoryLesson = {
   id: "css-m6",
   title: "Fase 2: Grid & Subgrid Master: Alinhamento Multi-nível",
   enableInteractive: true,
+  youtubeVideoId: "jV8B24w82CU",
   quizId: "css-mq6",
   content: `<div class="space-y-12">
       <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
@@ -24,7 +25,6 @@ export const lesson: TheoryLesson = {
 &lt;style&gt;
   .grid-system {
     display: grid;
-    /* 3 colunas iguais que ocupam o espaço disponível */
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
   }
@@ -49,18 +49,10 @@ export const lesson: TheoryLesson = {
 .card {
   grid-row: span 3;
   display: grid;
-  /* MÁGICA: O card usa as linhas do pai */
   grid-template-rows: subgrid;
 }
            </code></pre>
         </div>
-      </section>
-
-      <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
-        <h4 class="text-xl font-bold text-primary mb-4">🏆 Dica de Performance</h4>
-        <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
-          "O CSS Grid reduz a profundidade do DOM. Onde antes precisavas de dezenas de divs aninhadas para criar colunas, agora precisas apenas de um container e os seus itens diretos."
-        </p>
       </section>
     </div>`
 };

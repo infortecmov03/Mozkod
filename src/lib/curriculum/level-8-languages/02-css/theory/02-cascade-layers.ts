@@ -4,6 +4,7 @@ export const lesson: TheoryLesson = {
   id: "css-m2",
   title: "Fase 1: Cascade Layers (@layer) e a Nova Ordem",
   enableInteractive: true,
+  youtubeVideoId: "jV8B24w82CU",
   quizId: "css-mq2",
   content: `<div class="space-y-12">
       <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">

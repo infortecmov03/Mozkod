@@ -4,6 +4,7 @@ export const lesson: TheoryLesson = {
   id: "css-m8",
   title: "Fase 2: CSS Math: clamp(), min(), max() e calc()",
   enableInteractive: true,
+  youtubeVideoId: "8ME9u065vD4",
   quizId: "css-mq8",
   content: `<div class="space-y-12">
       <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
@@ -41,13 +42,6 @@ h1 {
   margin-top: max(2rem, 10px);
 }
         </code></pre>
-      </section>
-
-      <section class="bg-indigo-500/10 p-8 rounded-[2.5rem] border border-indigo-500/20 shadow-inner">
-        <h4 class="text-xl font-bold text-indigo-400 mb-4">🚀 Performance e o motor de CSS</h4>
-        <p class="text-sm leading-relaxed">
-          Diferente do <code>calc()</code> de pré-processadores (SASS), estas funções são resolvidas pelo browser no momento da renderização. Isto significa que se o utilizador redimensionar a janela, os valores são recalculados instantaneamente sem carga de CPU adicional.
-        </p>
       </section>
     </div>`
 };

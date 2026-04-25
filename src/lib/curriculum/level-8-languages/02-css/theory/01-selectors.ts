@@ -4,6 +4,7 @@ export const lesson: TheoryLesson = {
   id: "css-m1",
   title: "Fase 1: Seletores de Elite, Especificidade e :has()",
   enableInteractive: true,
+  youtubeVideoId: "u044iM9xsTM",
   quizId: "css-mq1",
   content: `<div class="space-y-12">
       <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
