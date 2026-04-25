@@ -6,7 +6,7 @@ import { practice } from './laboratory';
 
 export const phpEcosystem: KnowledgeArea = {
   id: 'lang-php-ecosystem',
-  title: '11. PHP Ecosystem & Patterns',
+  title: '10.1 PHP Ecosystem & Advanced Patterns',
   description: 'Arquitetura de sistemas, DDD, Testes de Elite e Infraestrutura Cloud-Native.',
   load: '50h',
   iconName: 'Blocks',
