@@ -33,6 +33,46 @@ export const practice = {
     if (i === 3) return p4;
     if (i === 13) return p13;
     
+    // Laboratório 16 (Index 16): PHPStan Level 9 Audit
+    if (i === 16) {
+      return {
+        id: "php-p17",
+        language: "php",
+        title: "Projeto Master: Auditoria PHPStan Nível 9",
+        description: "Aplique o rigor máximo de tipos no motor de eventos.",
+        statement: "Adicione anotações @template e realize o narrowing de um tipo 'mixed' para 'Event'.",
+        isProjectPart: true,
+        template: `<?php
+
+namespace App\\Core;
+
+/**
+ * Ação 1: Adicione @template T of Event
+ * @template T of Event
+ */
+class Auditor {
+    /**
+     * Ação 2: Receba mixed e valide se é instância de Event
+     */
+    public function audit(mixed $data): void {
+        if ($data instanceof Event) {
+            echo "Auditando evento: " . $data->id;
+        }
+    }
+}`,
+        detailedExplanation: `
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-primary">🔬 Auditoria Estática de Elite</h3>
+            <p class="text-sm">O seu motor deve ser à prova de falhas. Utilize anotações de <strong>Generics</strong> (<button>@template</button>) para que o <button>PHPStan</button> consiga rastrear o tipo exato dos eventos dentro das coleções.</p>
+          </div>
+        `,
+        objectives: [
+          { id: "template", description: "Utilizar anotação @template.", test: "@template" },
+          { id: "narrowing", description: "Realizar narrowing com instanceof.", test: "instanceof Event" }
+        ]
+      };
+    }
+
     // Laboratório 14 (Index 14): Hexagonal Port Mapping
     if (i === 14) {
       return {
@@ -40,7 +80,7 @@ export const practice = {
         language: "php",
         title: "Projeto Master: Mapeamento de Portas Hexagonais",
         description: "Defina o contrato de persistência do motor de forma agnóstica.",
-        statement: "Implemente a interface 'EventStore' (Porta) e o adaptador 'DatabaseStore' que a satisfaz.",
+        statement: "Implemente the interface 'EventStore' (Porta) e o adaptador 'DatabaseStore' que a satisfaz.",
         isProjectPart: true,
         template: `<?php
 
