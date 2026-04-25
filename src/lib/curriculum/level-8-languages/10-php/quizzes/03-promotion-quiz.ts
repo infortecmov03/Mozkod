@@ -1,4 +1,3 @@
-
 import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
@@ -8,59 +7,74 @@ export const quiz: Quiz = {
   questions: [
     {
       id: "q3_1",
-      question: "Onde as propriedades são declaradas na técnica de Property Promotion?",
+      question: "O que torna um parâmetro do construtor elegível para 'Promotion' no PHP 8?",
       options: [
-        "No corpo da classe como membros estáticos",
-        "Diretamente na lista de argumentos do construtor, precedidas por um modificador de visibilidade",
-        "Num ficheiro .env separado",
-        "No final do ficheiro após o fecho da classe"
+        "Ter um nome que comece com letra maiúscula.",
+        "Ser precedido obrigatoriamente por um modificador de visibilidade (public, private ou protected).",
+        "Estar dentro de um bloco try/catch.",
+        "Ser do tipo 'mixed' obrigatoriamente."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "Sem o modificador de visibilidade, o PHP trata o parâmetro como um argumento comum e não cria a propriedade na classe."
     },
     {
       id: "q3_2",
-      question: "Podes misturar propriedades promovidas com argumentos normais no mesmo construtor?",
-      options: ["Sim", "Não", "Apenas em classes abstratas", "Apenas se o argumento normal for o último"],
-      correctAnswer: 0
+      question: "Podes misturar parâmetros promovidos com parâmetros normais no mesmo construtor?",
+      options: [
+        "Não, o PHP exige que ou todos sejam promovidos ou nenhum.",
+        "Sim, o PHP permite a mistura sem restrições de ordem.",
+        "Sim, mas apenas em classes marcadas como 'readonly'.",
+        "Apenas se o parâmetro normal for opcional."
+      ],
+      correctAnswer: 1,
+      explanation: "É perfeitamente válido ter, por exemplo, um logger que é apenas usado no construtor (normal) e um ID que é promovido a propriedade."
     },
     {
       id: "q3_3",
-      question: "Qual a visibilidade permitida para propriedades promovidas?",
-      options: ["Apenas public", "Apenas private", "Public, private ou protected", "Somente internal"],
-      correctAnswer: 2
+      question: "Onde é que o código escrito dentro do corpo do construtor { ... } é executado em relação à promoção?",
+      options: [
+        "Antes da promoção das propriedades.",
+        "Simultaneamente via threads.",
+        "Após a promoção e atribuição automática dos valores às propriedades.",
+        "O corpo do construtor é ignorado se houver promoção."
+      ],
+      correctAnswer: 2,
+      explanation: "O motor primeiro promove as propriedades e depois executa o código que definires no corpo, permitindo validações extras."
     },
     {
       id: "q3_4",
-      question: "Podes atribuir um valor padrão a uma propriedade promovida?",
+      question: "É permitido usar Property Promotion em construtores de classes abstratas?",
       options: [
-        "Não, é proibido por sintaxe",
-        "Sim, da mesma forma que um argumento de função padrão",
-        "Apenas para tipos inteiros",
-        "Sim, mas apenas se a classe for readonly"
+        "Sim, funciona da mesma forma que em classes concretas.",
+        "Não, o PHP proíbe promoção em classes abstratas.",
+        "Apenas se a visibilidade for 'protected'.",
+        "Apenas se a classe não tiver métodos."
       ],
-      correctAnswer: 1
+      correctAnswer: 0
     },
     {
       id: "q3_5",
-      question: "As anotações e atributos aplicados a um parâmetro promovido são aplicados a quê?",
+      question: "O que acontece se tentares declarar a mesma propriedade no corpo da classe E no construtor via Promotion?",
       options: [
-        "Apenas ao argumento do construtor",
-        "Tanto ao argumento quanto à propriedade da classe gerada",
-        "Apenas à propriedade da classe",
-        "A nada, são ignorados"
+        "O PHP faz o merge automático.",
+        "Ocorre um erro fatal de 'Redeclared Property'.",
+        "A declaração no corpo da classe ganha.",
+        "O compilador ignora a promoção."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "Como a promoção gera uma declaração implícita, declará-la manualmente no corpo causaria uma duplicação proibida."
     },
     {
       id: "q3_6",
-      question: "Qual o principal benefício arquitetural desta funcionalidade?",
+      question: "Pode-se usar o tipo 'callable' em propriedades promovidas?",
       options: [
-        "Aumentar a velocidade de execução na CPU",
-        "Reduzir o boilerplate e o risco de erros ao sincronizar declarações, argumentos e atribuições",
-        "Permitir herança múltipla",
-        "Substituir o uso de namespaces"
+        "Sim, sem restrições.",
+        "Não, o tipo 'callable' não é permitido em propriedades de classe no PHP.",
+        "Apenas se for uma função anónima.",
+        "Sim, mas apenas em classes readonly."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "Esta é uma restrição do PHP para propriedades em geral, não apenas para as promovidas. Use o tipo 'Closure' ou interfaces em vez de 'callable'."
     }
   ]
 };

@@ -17,7 +17,7 @@ const phpTitles = [
 const phpTests = [
   "readonly class", 
   "string|int", 
-  "public string $id", 
+  "public string $traceId", 
   "mixed", "enum", "opcache", "gc_collect_cycles",
   "beginTransaction", "Swoole\\", "getAttributes", "Fiber", "worker", "socket_create",
   "FFI::", "@param", "interface", "container", "PHPStan", "jit", "htmlspecialchars",
@@ -45,6 +45,26 @@ export const practice = {
           </div>
         `,
         objectives: [{ id: "union", description: "Usar a sintaxe string|int na assinatura do método.", test: "string|int" }]
+      };
+    }
+
+    // Laboratório 3: Constructor Promotion
+    if (i === 2) {
+      return {
+        id: "php-p3",
+        language: "php",
+        title: "Projeto Master: Redução de Boilerplate com Promotion",
+        description: "Refatorize os metadados do evento para um design limpo.",
+        statement: "Implemente a classe EventMetadata utilizando Constructor Property Promotion para os campos traceId e createdAt.",
+        isProjectPart: true,
+        template: `<?php\n\nnamespace App\\Core;\n\nuse DateTimeImmutable;\n\n// Ação 1: Crie a classe e promova as propriedades no construtor\nreadonly class EventMetadata {\n    public function __construct(\n        public string $traceId,\n        public DateTimeImmutable $createdAt,\n    ) {}\n}`,
+        detailedExplanation: `
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-primary">🧹 Limpeza Arquitetural</h3>
+            <p class="text-sm">O <code>EventMetadata</code> é um objeto de valor (Value Object) que acompanha cada mensagem. Não faz sentido escrever 15 linhas para algo tão simples. Utilize o <strong>Constructor Promotion</strong> para definir o <code>$traceId</code> e o <code>$createdAt</code> em apenas 3 linhas.</p>
+          </div>
+        `,
+        objectives: [{ id: "promotion", description: "Declarar a visibilidade (public) diretamente no argumento do construtor.", test: "public string $traceId" }]
       };
     }
 
