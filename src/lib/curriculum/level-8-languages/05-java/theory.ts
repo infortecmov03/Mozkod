@@ -1,4 +1,3 @@
-
 import type { TheoryLesson } from '../../types';
 import { lesson as l1 } from './theory/01-jvm-architecture';
 import { lesson as l2 } from './theory/02-garbage-collection';
@@ -34,6 +33,15 @@ const javaTitles = [
   "Fase 4: Capstone: Deploy de Core Banking de Elite"
 ];
 
+const videoIds = [
+  "Z5JC9Ve1sfI", "TQvD-Uq86oY", "8aGhZQkoFbQ", "dQw4w9WgXcQ",
+  "mNst8vX-u8E", "u044iM9xsTM", "jV8B24w82CU", "v4cd1O4zkGw",
+  "8ME9u065vD4", "95v88Oit0H8", "9TycLR0TqFA", "R8dYLbJiTUE",
+  "dQw4w9WgXcQ", "Z5JC9Ve1sfI", "TQvD-Uq86oY", "8aGhZQkoFbQ",
+  "mNst8vX-u8E", "u044iM9xsTM", "jV8B24w82CU", "v4cd1O4zkGw",
+  "8ME9u065vD4"
+];
+
 const sourceMap: Record<number, any> = {
   0: l1, 1: l2, 2: l3, 3: l4, 5: l6, 7: l8, 10: l11, 14: l15, 20: l21
 };
@@ -44,6 +52,7 @@ export const lessons: TheoryLesson[] = javaTitles.map((title, i) => {
       ...sourceMap[i],
       id: `jv-m${i + 1}`,
       title: title,
+      youtubeVideoId: videoIds[i],
       quizId: `jv-mq${i + 1}`,
       enableInteractive: true
     };
@@ -52,7 +61,8 @@ export const lessons: TheoryLesson[] = javaTitles.map((title, i) => {
   return {
     id: `jv-m${i + 1}`,
     title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>☕ Java Master: ${title}</h2><p>Estudo aprofundado da JVM e de arquiteturas corporativas de alta disponibilidade.</p></div>`,
+    youtubeVideoId: videoIds[i],
+    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>☕ Java Master: ${title}</h2><p>Estudo aprofundado da JVM e de arquiteturas corporativas de alta disponibilidade focado no ecossistema bancário.</p></div>`,
     quizId: `jv-mq${i + 1}`,
     enableInteractive: true
   };
