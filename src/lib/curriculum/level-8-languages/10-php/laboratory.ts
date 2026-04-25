@@ -31,6 +31,50 @@ export const practice = {
     if (i === 0) return p1;
     if (i === 3) return p4;
     
+    // Laboratório 10 (Index 10): Fibers Scheduler
+    if (i === 10) {
+      return {
+        id: "php-p11",
+        language: "php",
+        title: "Projeto Master: Escalonador de Tarefas com Fibers",
+        description: "Implemente a suspensão e retoma de processos de sincronização.",
+        statement: "Utilize a classe 'Fiber' para pausar a execução de uma tarefa e retomá-la injetando um ID de transação.",
+        isProjectPart: true,
+        template: `<?php
+
+namespace App\\Core;
+
+use Fiber;
+
+class TaskRunner {
+    public function execute(): void {
+        $fiber = new Fiber(function(): void {
+            // Ação 1: Suspenda a execução aqui retornando "WAITING"
+            $id = Fiber::suspend("WAITING");
+            echo "Processando transação: " . $id;
+        });
+
+        $status = $fiber->start();
+        if ($status === "WAITING") {
+            // Ação 2: Retome a execução enviando "TX-101"
+            $fiber->resume("TX-101");
+        }
+    }
+}`,
+        detailedExplanation: `
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-primary">⚙️ O Ciclo de Suspensão</h3>
+            <p class="text-sm">O seu servidor precisa lidar com esperas de rede sem travar. Utilize as <button>Fibers</button> para criar pontos de paragem inteligentes. O método <button>suspend()</button> devolve o controle ao motor, e o <button>resume()</button> volta para a tarefa com os dados necessários.</p>
+          </div>
+        `,
+        objectives: [
+          { id: "fiber_init", description: "Instanciar nova Fiber.", test: "new Fiber" },
+          { id: "suspend_call", description: "Utilizar Fiber::suspend().", test: "Fiber::suspend" },
+          { id: "resume_call", description: "Retomar execução com resume().", test: "->resume(" }
+        ]
+      };
+    }
+
     // Laboratório 9 (Index 9): Reflection Metadata Hook
     if (i === 9) {
       return {
@@ -71,7 +115,6 @@ class Dispatcher {
       };
     }
 
-    // Laboratórios 2 e 3 (Mantendo a coerência anterior)
     if (i === 1) {
       return {
         id: "php-p2",

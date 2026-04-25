@@ -1,68 +1,76 @@
-import type { Quiz } from '../../../../types';
+import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "php-mq10",
-  title: "Quiz: Fibers e Concorrência Cooperativa",
-  passingScore: 80,
+  title: "Quiz Master: Fibers e Concorrência Cooperativa",
+  passingScore: 85,
   questions: [
     {
-      id: "q1",
-      question: "O que é uma Fiber no PHP 8.1?",
+      id: "q10_1",
+      question: "Qual a diferença fundamental entre Fibers e Generators (yield) no PHP?",
       options: [
-        "Uma nova thread do sistema operativo",
-        "Um bloco de código que pode ser pausado e retomado (Coroutine)",
-        "Uma extensão para compressão de imagens",
-        "Um tipo de loop infinito seguro"
+        "Fibers são mais lentas.",
+        "Generators só podem ser pausados no escopo da própria função; Fibers permitem suspensão em qualquer ponto da stack de chamadas.",
+        "Generators usam Threads do SO e Fibers não.",
+        "Não existe diferença, são apenas nomes novos para o mesmo recurso."
+      ],
+      correctAnswer: 1,
+      explanation: "A suspensão de stack completa é o diferencial das Fibers, permitindo que funções profundamente aninhadas pausem a execução sem precisar que todas as funções intermediárias sejam geradores."
+    },
+    {
+      id: "q10_2",
+      question: "O que acontece se uma Fiber lançar uma exceção que não é capturada dentro dela?",
+      options: [
+        "O PHP silencia o erro.",
+        "A exceção 'borbulha' e é lançada no ponto onde o método resume() ou start() foi chamado.",
+        "O servidor web reinicia.",
+        "O estado da Fiber muda para 'Suspended' automaticamente."
       ],
       correctAnswer: 1
     },
     {
-      id: "q2",
-      question: "Diferente de Threads, as Fibers são escalonadas por quem?",
+      id: "q10_3",
+      question: "As Fibers em PHP fornecem paralelismo real (multi-core)?",
       options: [
-        "Pelo Kernel do Linux",
-        "Pelo próprio programador através do código (Cooperativo)",
-        "Pela placa de vídeo",
-        "Pelo Apache"
+        "Sim, cada Fiber usa um core diferente.",
+        "Não, elas fornecem concorrência cooperativa dentro de uma única thread.",
+        "Sim, se o servidor tiver mais de 8GB de RAM.",
+        "Apenas em sistemas operativos Linux."
+      ],
+      correctAnswer: 1,
+      explanation: "Fibers são sobre concorrência (lidar com muitas tarefas ao mesmo tempo via interrupção), não sobre paralelismo (executar simultaneamente em múltiplos núcleos físicos)."
+    },
+    {
+      id: "q10_4",
+      question: "O que o método 'Fiber::suspend()' faz com o controle de execução?",
+      options: [
+        "Encerra o script PHP.",
+        "Pausa a Fiber atual e devolve o controle para o código que chamou start() ou resume().",
+        "Pede permissão ao Kernel para continuar.",
+        "Limpa as variáveis locais da função."
       ],
       correctAnswer: 1
     },
     {
-      id: "q3",
-      question: "Qual método da classe Fiber suspende a execução?",
-      options: ["Fiber::stop()", "Fiber::suspend()", "Fiber::pause()", "Fiber::wait()"],
-      correctAnswer: 1
-    },
-    {
-      id: "q4",
-      question: "As Fibers resolvem nativamente o problema de I/O não-bloqueante no PHP?",
+      id: "q10_5",
+      question: "Pode um valor ser passado de volta para a Fiber no momento em que ela é retomada?",
       options: [
-        "Sim, tornam tudo assíncrono sozinho",
-        "Não, elas fornecem apenas a infraestrutura para suspensão; a lógica de I/O exige um loop de eventos",
-        "Apenas no Windows",
-        "Sim, mas apenas para MySQL"
+        "Não, a retomada não aceita argumentos.",
+        "Sim, o valor passado no método resume() torna-se o resultado da chamada original de Fiber::suspend().",
+        "Apenas se o valor for uma String.",
+        "Sim, mas apenas via variáveis globais."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "Esta comunicação bidirecional permite injetar resultados de I/O (como dados de uma query) diretamente no ponto onde a Fiber parou."
     },
     {
-      id: "q5",
-      question: "O que acontece ao estado da stack quando uma Fiber é suspensa?",
+      id: "q10_6",
+      question: "O que indica o estado 'isTerminated()' como verdadeiro?",
       options: [
-        "É apagado",
-        "É preservado pela VM para ser retomado no mesmo ponto",
-        "É movido para a base de dados",
-        "É duplicado"
-      ],
-      correctAnswer: 1
-    },
-    {
-      id: "q6",
-      question: "Qual o benefício de Fibers em relação a Generators para concorrência?",
-      options: [
-        "São mais lentas",
-        "Permitem suspensão em qualquer ponto da stack de chamadas, não apenas no yield",
-        "Não usam memória",
-        "Substituem o uso de classes"
+        "A Fiber está aguardando rede.",
+        "A execução do callback da Fiber terminou ou uma exceção fatal ocorreu dentro dela.",
+        "A Fiber ainda não foi iniciada.",
+        "A memória RAM da Fiber foi comprimida."
       ],
       correctAnswer: 1
     }
