@@ -54,7 +54,7 @@ export const quiz: Quiz = {
       options: [
         "body .btn (Peso 11)",
         ":where(body) .btn (Peso 10)",
-        Ambos têm o mesmo peso.",
+        "Ambos têm o mesmo peso.",
         "Depende da ordem no ficheiro."
       ],
       correctAnswer: 0,

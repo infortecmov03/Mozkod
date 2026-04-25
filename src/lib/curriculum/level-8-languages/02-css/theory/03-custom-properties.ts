@@ -9,63 +9,72 @@ export const lesson: TheoryLesson = {
     <div class="space-y-12">
       <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
         <h2 class="text-3xl font-bold mb-4 font-headline text-primary flex items-center gap-3">
-          🎨 Variáveis Dinâmicas
+          🎨 Variáveis Vivas no DOM
         </h2>
         <p class="text-lg leading-relaxed opacity-90">
-          As <strong>Custom Properties</strong> (--variável) transformaram o CSS numa linguagem de programação viva. Diferente de variáveis de SASS, estas respeitam o DOM e podem ser alteradas em tempo real.
+          As <strong>Custom Properties</strong> (--variável) transformaram o CSS numa linguagem dinâmica. Diferente de variáveis de SASS que são estáticas, estas respeitam a cascata, a herança e podem ser alteradas via JavaScript em tempo real. Elas são a base dos <strong>Design Tokens</strong> modernos.
         </p>
       </div>
 
       <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. Herança e Escopo</h3>
-        <p class="text-sm">Variáveis no <code>:root</code> são globais. Mas podes redefinir variáveis dentro de um contentor específico para criar sub-temas.</p>
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. O Escopo Global (:root)</h3>
+        <p class="text-sm">Definimos tokens globais no seletor <code>:root</code>. Isto garante que as cores, fontes e espaçamentos sejam consistentes em todo o projeto.</p>
         
         <div class="space-y-4">
-           <pre><code class="language-html">
-&lt;style&gt;
-  :root { --bg-card: #f1f5f9; --text-card: #1e293b; }
-  .dark-theme { --bg-card: #1e293b; --text-card: #f8fafc; }
+           <pre><code class="language-css">
+:root {
+  --primary-color: #3b82f6;
+  --spacing-unit: 8px;
+  --base-font-size: 16px;
+}
 
-  .card {
-    background: var(--bg-card);
-    color: var(--text-card);
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-  }
-&lt;/style&gt;
+.button {
+  background-color: var(--primary-color);
+  padding: var(--spacing-unit) calc(var(--spacing-unit) * 2);
+}
+           </code></pre>
+        </div>
+      </section>
 
-&lt;div class="card"&gt;Card Tema Padrão&lt;/div&gt;
+      <section class="space-y-8">
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">2. Temas Dinâmicos e Redefinição</h3>
+        <p class="text-sm leading-relaxed">Podes redefinir uma variável para um bloco específico ou para um modo escuro (Dark Mode) de forma extremamente elegante.</p>
 
-&lt;div class="dark-theme"&gt;
-  &lt;div class="card"&gt;Card Tema Escuro (Variáveis Herdadas)&lt;/div&gt;
-&lt;/div&gt;
+        <div class="space-y-4">
+           <pre><code class="language-css">
+/* Tema Padrão */
+.card {
+  --bg-surface: #ffffff;
+  --text-main: #1e293b;
+  background: var(--bg-surface);
+  color: var(--text-main);
+}
+
+/* Tema Dark: Basta mudar o valor das variáveis! */
+.card.dark {
+  --bg-surface: #0f172a;
+  --text-main: #f8fafc;
+}
            </code></pre>
         </div>
       </section>
 
       <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">2. Valores Fallback</h3>
-        <p class="text-sm">Garante que o design não quebra se a variável falhar.</p>
-        <pre><code class="language-html">
-&lt;style&gt;
-  .btn {
-    /* Se --brand-color não existir, usa blue */
-    background: var(--brand-color, blue);
-    color: white;
-    padding: 10px;
-  }
-&lt;/style&gt;
-&lt;button class="btn"&gt;Botão Seguro&lt;/button&gt;
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">3. Fallbacks e Segurança</h3>
+        <p class="text-sm leading-relaxed">A função <code>var()</code> aceita um segundo argumento como fallback, garantindo que o design não "morra" se a variável não estiver definida.</p>
+        <pre><code class="language-css">
+.error-msg {
+  color: var(--error-red, red); /* Se --error-red falhar, usa red */
+}
         </code></pre>
       </section>
 
       <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
-        <h4 class="text-xl font-bold text-primary mb-4">🏆 Dica Master</h4>
+        <h4 class="text-xl font-bold text-primary mb-4">🚀 Integração com JavaScript</h4>
         <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
-          "Utilize variáveis para números puros e faça cálculos com calc(). Ex: --scale: 1.2; width: calc(100px * var(--scale))."
+          "Para um Engenheiro Master, variáveis CSS são o controle remoto da interface. Podes usar <code>document.documentElement.style.setProperty('--primary', 'green')</code> para mudar a marca do site inteiro instantaneamente sem recarregar o CSS."
         </p>
       </section>
     </div>
-  `
+  `,
 };
