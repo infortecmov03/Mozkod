@@ -1,4 +1,3 @@
-
 import type { TheoryLesson } from '../../types';
 import { lesson as l1 } from './theory/01-prototypal-inheritance';
 import { lesson as l2 } from './theory/02-event-loop-internals';
@@ -7,7 +6,6 @@ import { lesson as l4 } from './theory/04-proxies-metaprogramming';
 import { lesson as l5 } from './theory/05-abort-signals';
 import { lesson as l6 } from './theory/06-esm-tree-shaking';
 import { lesson as l7 } from './theory/07-web-workers';
-import { lesson as l10 } from './theory/14-streams-api'; // Reutilizando a lógica de Streams
 import { lesson as l9 } from './theory/09-debouncing-throttling';
 import { lesson as l14 } from './theory/14-streams-api';
 
