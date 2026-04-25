@@ -4,10 +4,8 @@ export const lesson: TheoryLesson = {
   id: "css-m2",
   title: "Fase 1: Cascade Layers (@layer) e a Nova Ordem",
   enableInteractive: true,
-  youtubeVideoId: "u044iM9xsTM",
   quizId: "css-mq2",
-  content: `
-    <div class="space-y-12">
+  content: `<div class="space-y-12">
       <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
         <h2 class="text-3xl font-bold mb-4 font-headline text-primary flex items-center gap-3">
           🧱 Domando a Fera da Especificidade
@@ -17,7 +15,6 @@ export const lesson: TheoryLesson = {
         </p>
       </div>
 
-      <!-- 1. ORDEM DE DEFINIÇÃO -->
       <section class="space-y-6">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. O Contrato de Precedência</h3>
         <p class="text-sm leading-relaxed">
@@ -42,7 +39,6 @@ export const lesson: TheoryLesson = {
         </div>
       </section>
 
-      <!-- 2. UNLAYERED STYLES -->
       <section class="space-y-8">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">2. Estilos Fora de Camadas (Unlayered)</h3>
         <p class="text-sm leading-relaxed">
@@ -56,7 +52,6 @@ export const lesson: TheoryLesson = {
         </div>
       </section>
 
-      <!-- 3. INTEGRAÇÃO COM TERCEIROS -->
       <section class="space-y-6">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">3. Domando Bibliotecas Externas</h3>
         <p class="text-sm leading-relaxed">
@@ -76,30 +71,11 @@ export const lesson: TheoryLesson = {
         </code></pre>
       </section>
 
-      <!-- 4. ANINHAMENTO DE CAMADAS -->
-      <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">4. Namespacing e Sub-layers</h3>
-        <p class="text-sm">Camadas podem ser aninhadas para criar arquiteturas complexas e evitar colisões entre diferentes partes do Design System.</p>
-        
-        <pre><code class="language-css">
-@layer components {
-  @layer buttons { .primary { ... } }
-  @layer cards { .main { ... } }
-}
-
-/* Acedendo via ponto: */
-@layer components.buttons {
-  .secondary { ... }
-}
-        </code></pre>
-      </section>
-
       <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
         <h4 class="text-xl font-bold text-primary mb-4">🏆 A Visão da Manutenibilidade</h4>
         <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
           "Arquitetura CSS é sobre controle de entropia. As @layer permitem que você crie um sistema onde o desenvolvedor sabe exatamente por que uma regra está a ser aplicada, eliminando as adivinhações e os conflitos que surgem em projetos de longa duração."
         </p>
       </section>
-    </div>
-  `
+    </div>`
 };

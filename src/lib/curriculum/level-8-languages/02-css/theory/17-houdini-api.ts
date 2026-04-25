@@ -2,28 +2,39 @@ import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
   id: "css-m17",
-  title: "CSS Houdini Paint API: Desenhando no Motor do Browser",
-  content: `
-    <div class="space-y-8">
-      <div class="bg-purple-500/10 p-6 rounded-2xl border border-purple-500/20 shadow-2xl">
-        <h2 class="text-2xl font-bold mb-4 font-headline text-purple-400">🎩 Mágica de Baixo Nível</h2>
-        <p class="text-lg leading-relaxed">Houdini é um conjunto de APIs que expõe as entranhas do motor de renderização do browser (Blink, WebKit). Com a <strong>Paint API</strong>, podes escrever código JS que corre no processo de desenho (painting) do CSS.</p>
+  title: "Fase 4: CSS Houdini Paint API: Desenhando no Motor do Browser",
+  enableInteractive: true,
+  quizId: "css-mq17",
+  content: `<div class="space-y-12">
+      <div class="bg-purple-500/10 p-8 rounded-[2.5rem] border border-purple-500/20 shadow-2xl">
+        <h2 class="text-3xl font-bold mb-4 font-headline text-purple-400 flex items-center gap-3">
+          🎩 Mágica de Baixo Nível
+        </h2>
+        <p class="text-lg leading-relaxed opacity-90">
+          O <strong>CSS Houdini</strong> é um conjunto de APIs de baixo nível que expõe as entranhas do motor de renderização do browser (Blink, WebKit). Com a <strong>Paint API</strong>, podes escrever código JavaScript que corre diretamente no processo de desenho (painting) do CSS, criando backgrounds e formas impossíveis com CSS comum.
+        </p>
       </div>
 
-      <div class="space-y-6">
-        <h3 class="text-xl font-bold font-headline border-b border-white/10 pb-2">Paint Worklets</h3>
-        <p>Um Worklet é como um Worker: corre numa thread separada. Podes criar padrões geométricos complexos que são renderizados como se fossem uma imagem nativa, sem o peso de um Canvas no DOM.</p>
-        
-        <div class="bg-black/40 p-5 rounded-xl border font-code text-xs text-accent space-y-2">
-          <p>.custom-bg {</p>
-          <p>&nbsp;&nbsp;<span class="text-primary">background-image</span>: <span class="text-green-400">paint(my-geometric-pattern)</span>;</p>
-          <p>}</p>
-        </div>
+      <section class="space-y-6">
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-purple-500/20 pb-2 text-accent">1. Paint Worklets</h3>
+        <p class="text-sm leading-relaxed">
+          Um Worklet corre numa thread separada da UI principal. Podes desenhar padrões geométricos complexos usando uma API similar ao Canvas 2D, mas que se comporta como uma imagem CSS nativa.
+        </p>
+        <pre><code class="language-javascript">
+// No seu ficheiro de Worklet (paint.js)
+registerPaint('checkboard', class {
+  paint(ctx, geom, properties) {
+    // Desenha o padrão de xadrez usando coordenadas geométricas
+  }
+});
+        </code></pre>
+      </section>
 
-        <h3 class="text-xl font-bold font-headline text-primary">Typed OM</h3>
-        <p>Manipular estilos via string <code>"20px"</code> é lento. O Typed OM permite manipular valores como objetos numéricos reais: <code>CSS.px(20)</code>, eliminando o custo de parsing no JavaScript.</p>
-      </div>
-    </div>
-  `,
-  quizId: "css-mq17"
+      <section class="space-y-6">
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-purple-500/20 pb-2 text-accent">2. Typed OM: Geometria Tipada</h3>
+        <p class="text-sm leading-relaxed">
+          Manipular estilos via string <code>"20px"</code> é lento. O <strong>Typed OM</strong> permite manipular valores CSS como objetos numéricos reais: <code>CSS.px(20)</code>, eliminando o custo de parsing e facilitando cálculos matemáticos no JavaScript de elite.
+        </p>
+      </section>
+    </div>`
 };

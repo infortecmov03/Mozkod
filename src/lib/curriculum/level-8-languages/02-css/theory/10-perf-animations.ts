@@ -1,48 +1,64 @@
-
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
   id: "css-m10",
-  title: "Animações de Alta Performance: O Papel do Compositor",
-  content: `
-    <div class="space-y-8">
-      <div class="bg-red-500/5 p-6 rounded-2xl border border-red-500/10">
-        <h2 class="text-2xl font-bold mb-4 font-headline text-red-400">🏎️ Mantendo os 60 FPS</h2>
-        <p class="text-lg">Nem todas as animações CSS são iguais. Animar as propriedades erradas causa "Jank" (soluços visuais) porque obriga o browser a recalcular o layout de toda a página (Reflow).</p>
+  title: "Fase 3: Animações de Alta Performance: O Papel do Compositor",
+  enableInteractive: true,
+  quizId: "css-mq10",
+  content: `<div class="space-y-12">
+      <div class="bg-red-500/5 p-8 rounded-[2.5rem] border border-red-500/10 shadow-2xl">
+        <h2 class="text-3xl font-bold mb-4 font-headline text-red-400 flex items-center gap-3">
+          🏎️ Mantendo os 60 FPS
+        </h2>
+        <p class="text-lg leading-relaxed opacity-90">
+          Nem todas as animações CSS são iguais. Animar as propriedades erradas causa "Jank" (soluços visuais) porque obriga o browser a recalcular o layout de toda a página (Reflow). O Engenheiro Master anima apenas o que é processado pela <strong>GPU</strong>.
+        </p>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="p-4 bg-card border rounded-xl border-red-500/20">
-          <h4 class="font-bold text-red-400 mb-2">🚫 Evite Animar (Lento)</h4>
-          <ul class="text-xs space-y-1 opacity-70">
-            <li>width / height</li>
-            <li>top / left / margin</li>
-            <li>padding</li>
-            <li>box-shadow</li>
-          </ul>
-        </div>
-        <div class="p-4 bg-card border rounded-xl border-green-500/20">
-          <h4 class="font-bold text-green-400 mb-2">✅ Anime Apenas (Rápido)</h4>
-          <ul class="text-xs space-y-1">
-            <li>transform: translate / scale / rotate</li>
-            <li>opacity</li>
-            <li>filter (com cautela)</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="space-y-4">
-        <h3 class="text-xl font-bold font-headline text-primary">A Camada do Compositor</h3>
-        <p>Propriedades como <code>transform</code> e <code>opacity</code> são processadas diretamente pela GPU (Placa Gráfica) sem tocar na Main Thread do CPU. Isto garante que a animação continue fluida mesmo que o JavaScript do site esteja pesado.</p>
+      <section class="space-y-6">
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-red-500/20 pb-2 text-accent">1. O Pipeline de Renderização</h3>
+        <p class="text-sm">O browser executa três etapas: Layout -> Paint -> Composite. Propriedades como <code>width</code> e <code>top</code> disparam o Layout (caro). <code>transform</code> e <code>opacity</code> disparam apenas o Composite (barato).</p>
         
-        <div class="bg-black/40 p-4 rounded-xl font-code text-xs text-accent">
-          .heavy-animation { <br/>
-          &nbsp;&nbsp;<span class="text-primary">will-change</span>: transform, opacity; <br/>
-          &nbsp;&nbsp;<span class="text-primary">transition</span>: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); <br/>
-          }
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 bg-red-900/20 border border-red-500/30 rounded-xl">
+             <h4 class="font-bold text-red-400 text-xs mb-2">Evite Animar (CPU Bound)</h4>
+             <ul class="text-[10px] space-y-1 opacity-70">
+               <li>width / height</li>
+               <li>top / left / margin</li>
+               <li>font-size</li>
+               <li>box-shadow (lento no paint)</li>
+             </ul>
+          </div>
+          <div class="p-4 bg-green-900/20 border border-green-500/30 rounded-xl">
+             <h4 class="font-bold text-green-400 text-xs mb-2">Anime Sempre (GPU Bound)</h4>
+             <ul class="text-[10px] space-y-1">
+               <li>transform: translate()</li>
+               <li>transform: scale()</li>
+               <li>transform: rotate()</li>
+               <li>opacity</li>
+             </ul>
+          </div>
         </div>
-      </div>
-    </div>
-  `,
-  quizId: "css-mq10"
+      </section>
+
+      <section class="space-y-8">
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-red-500/20 pb-2 text-accent">2. will-change: O Aviso Prévio</h3>
+        <p class="text-sm leading-relaxed">
+          A propriedade <code>will-change</code> avisa o browser para criar uma nova camada (layer) na GPU para o elemento. Use com cautela apenas em elementos que realmente terão animações complexas.
+        </p>
+        <pre><code class="language-css">
+.box-animada {
+  will-change: transform, opacity;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+        </code></pre>
+      </section>
+
+      <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
+        <h4 class="text-xl font-bold text-primary mb-4">🏆 Regra de Performance</h4>
+        <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
+          "Sincronize animações complexas com a <strong>User Timing API</strong> para medir se os frames estão a cair em dispositivos de gama baixa."
+        </p>
+      </section>
+    </div>`
 };
