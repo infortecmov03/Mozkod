@@ -1,4 +1,3 @@
-
 import type { TheoryLesson } from '../../types';
 import { lesson as l1 } from './theory/01-gil-internals';
 import { lesson as l2 } from './theory/02-metaprogramming';
@@ -10,6 +9,17 @@ import { lesson as l7 } from './theory/07-pandas-optimization';
 import { lesson as l8 } from './theory/08-sklearn-pipelines';
 import { lesson as l9 } from './theory/09-pytorch-tensors';
 import { lesson as l10 } from './theory/10-python-security';
+import { lesson as l11 } from './theory/11-context-managers';
+import { lesson as l12 } from './theory/12-descriptors';
+import { lesson as l13 } from './theory/14-metaclasses-abc';
+import { lesson as l14 } from './theory/14-networking-sockets';
+import { lesson as l15 } from './theory/16-python-cython';
+import { lesson as l16 } from './theory/17-python-profiling';
+import { lesson as l17 } from './theory/18-python-microservices';
+import { lesson as l18 } from './theory/19-python-dependencies';
+import { lesson as l19 } from './theory/20-dis-bytecode';
+import { lesson as l20 } from './theory/11-python-docker';
+import { lesson as l21 } from './theory/21-python-capstone';
 
 const pythonTitles = [
   "Fase 1: CPython Internals: O GIL e Threads",
@@ -35,24 +45,15 @@ const pythonTitles = [
   "Fase 4: Capstone: Deploy de System Monitor de Elite"
 ];
 
-const lessonsSource: Record<number, any> = {
-  0: l1, 1: l2, 2: l3, 3: l4, 4: l5, 5: l6, 6: l7, 7: l8, 8: l9, 9: l10
+const sourceMap: Record<number, any> = {
+  0: l1, 1: l2, 2: l3, 3: l4, 4: l5, 5: l6, 6: l7, 7: l8, 8: l9, 9: l10,
+  10: l11, 11: l12, 12: l13, 13: l14, 14: l15, 15: l16, 16: l17, 17: l18, 18: l19, 19: l20, 20: l21
 };
 
-export const lessons: TheoryLesson[] = pythonTitles.map((title, i) => {
-  if (lessonsSource[i]) {
-    return {
-      ...lessonsSource[i],
-      title: title,
-      id: `py-m${i + 1}`,
-      quizId: `py-mq${i + 1}`
-    };
-  }
-
-  return {
-    id: `py-m${i + 1}`,
-    title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐍 Python Master: ${title}</h2><p>Estudo aprofundado da linguagem para engenharia de sistemas, IA e infraestrutura escalável.</p></div>`,
-    quizId: `py-mq${i + 1}`
-  };
-});
+export const lessons: TheoryLesson[] = pythonTitles.map((title, i) => ({
+  ...sourceMap[i],
+  id: `py-m${i + 1}`,
+  title: title,
+  quizId: `py-mq${i + 1}`,
+  enableInteractive: true
+}));

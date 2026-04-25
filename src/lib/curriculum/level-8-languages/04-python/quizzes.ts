@@ -1,40 +1,27 @@
-
 import type { Quiz } from '../../types';
-
-const generatePythonQuiz = (id: number, title: string, questions: any[]) => ({
-  id: `py-mq${id}`,
-  title: `Quiz Master: ${title}`,
-  questions: questions,
-  passingScore: 80
-});
+import { quiz as q1 } from './quizzes/01-gil-internals-quiz';
+import { quiz as q2 } from './quizzes/02-metaprogramming-quiz';
+import { quiz as q3 } from './quizzes/03-asyncio-quiz';
+import { quiz as q4 } from './quizzes/04-memory-management-quiz';
+import { quiz as q5 } from './quizzes/05-fastapi-scaling-quiz';
+import { quiz as q6 } from './quizzes/06-numpy-pandas-quiz';
+import { quiz as q7 } from './quizzes/07-scikit-learn-quiz';
+import { quiz as q8 } from './quizzes/08-pytorch-deep-quiz';
+import { quiz as q9 } from './quizzes/09-security-best-practices-quiz';
+import { quiz as q10 } from './quizzes/10-python-security-quiz';
+import { quiz as q11 } from './quizzes/13-adv-decorators-quiz';
+import { quiz as q12 } from './quizzes/14-metaclasses-quiz';
+import { quiz as q13 } from './quizzes/14-metaclasses-quiz'; // Reutilizando para ABC
+import { quiz as q14 } from './quizzes/15-networking-quiz';
+import { quiz as q15 } from './quizzes/16-cython-quiz';
+import { quiz as q16 } from './quizzes/17-profiling-quiz';
+import { quiz as q17 } from './quizzes/18-microservices-quiz';
+import { quiz as q18 } from './quizzes/19-poetry-quiz';
+import { quiz as q19 } from './quizzes/20-bytecode-quiz';
+import { quiz as q20 } from './quizzes/11-docker-quiz';
+import { quiz as q21 } from './quizzes/21-deployment-quiz';
 
 export const quizzes: Quiz[] = [
-  generatePythonQuiz(1, "CPython Internals & GIL", [
-    { id: "q1", question: "Qual o papel do GIL?", options: ["Acelerar a CPU", "Proteger a contagem de referências", "Compilar código", "Mudar o tema"], correctAnswer: 1 },
-    { id: "q2", question: "Em que cenário o GIL é libertado?", options: ["Operações matemáticas", "Operações de I/O e extensões C", "Sempre", "Nunca"], correctAnswer: 1 },
-    { id: "q3", question: "Qual implementação Python NÃO possui GIL?", options: ["CPython", "Jython", "PyPy (padrão)", "RustPython"], correctAnswer: 1 },
-    { id: "q4", question: "O GIL afeta o paralelismo em threads?", options: ["Não afeta", "Sim, impede execução multicore de bytecode", "Apenas no Linux", "Apenas no Windows"], correctAnswer: 1 },
-    { id: "q5", question: "Como obter paralelismo real no CPython?", options: ["Multithreading", "Multiprocessing", "AsyncIO", "Recursão"], correctAnswer: 1 },
-    { id: "q6", question: "O GIL é removível nas versões mais recentes?", options: ["Não", "Sim, via PEP 703 (Experimental)", "Apenas no Python 2", "Sempre foi opcional"], correctAnswer: 1 }
-  ]),
-  generatePythonQuiz(3, "AsyncIO Architecture", [
-    { id: "q1", question: "O que dita o ritmo do AsyncIO?", options: ["Threads", "Event Loop", "Hardware", "Database"], correctAnswer: 1 },
-    { id: "q2", question: "Qual a diferença entre Threads e Coroutines?", options: ["Threads são mais leves", "Coroutines são cooperativas (cedem o controlo)", "Não há diferença", "Threads não usam RAM"], correctAnswer: 1 },
-    { id: "q3", question: "O que o 'await' faz?", options: ["Bloqueia a thread", "Suspende a execução da corrotina", "Aumenta a CPU", "Deleta o objeto"], correctAnswer: 1 },
-    { id: "q4", question: "Qual o custo de memória de uma corrotina?", options: ["Gigabytes", "Alguns kilobytes", "Megabytes", "Zero"], correctAnswer: 1 },
-    { id: "q5", question: "Pode-se usar time.sleep no AsyncIO?", options: ["Sim, normal", "Não, trava o loop inteiro", "Apenas em produção", "Apenas com threads"], correctAnswer: 1 },
-    { id: "q6", question: "Qual função inicia o loop principal?", options: ["asyncio.start()", "asyncio.run()", "asyncio.execute()", "python.run()"], correctAnswer: 1 }
-  ]),
-  ...Array.from({ length: 19 }, (_, i) => {
-    const id = i > 1 ? (i >= 3 ? i + 1 : i + 3) : i + 2; // Garantindo IDs únicos ignorando 1 e 3
-    if (id === 1 || id === 3) return null;
-    return generatePythonQuiz(id, `Python Engineering Tópico ${id}`, [
-      { id: "q1", question: "Este conceito foca em performance?", options: ["Sim, é vital", "Não", "Talvez", "Apenas em C"], correctAnswer: 0 },
-      { id: "q2", question: "Garante segurança de memória?", options: ["Sim, via ARC", "Não", "Via GC", "Apenas no Rust"], correctAnswer: 2 },
-      { id: "q3", question: "É compatível com o ecossistema Cloud Native?", options: ["Sim", "Não", "Apenas no AWS", "Apenas no Heroku"], correctAnswer: 0 },
-      { id: "q4", question: "A complexidade de tempo é otimizada?", options: ["Sim, O(1)", "Sim, O(log n)", "Não, O(n!)", "Depende do algoritmo"], correctAnswer: 0 },
-      { id: "q5", question: "Qual a melhor prática de engenharia?", options: ["Automação", "Manual", "Nenhuma", "Ignorar"], correctAnswer: 0 },
-      { id: "q6", question: "O curso Codworks Moz é de elite?", options: ["Com certeza", "Talvez", "Sim", "Sempre"], correctAnswer: 0 }
-    ]);
-  }).filter(q => q !== null)
+  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10,
+  q11, q12, q13, q14, q15, q16, q17, q18, q19, q20, q21
 ];
