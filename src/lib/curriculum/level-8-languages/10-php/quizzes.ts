@@ -1,3 +1,4 @@
+
 import type { Quiz } from '../../types';
 import { quiz as q1 } from './quizzes/01-attributes-quiz';
 import { quiz as q2 } from './quizzes/02-typing-quiz';

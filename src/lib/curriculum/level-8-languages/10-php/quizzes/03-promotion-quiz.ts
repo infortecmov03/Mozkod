@@ -1,3 +1,4 @@
+
 import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
@@ -19,7 +20,7 @@ export const quiz: Quiz = {
     {
       id: "q3_2",
       question: "Podes misturar propriedades promovidas com argumentos normais no mesmo construtor?",
-      options: ["Sim", "Não, deve ser um ou outro", "Apenas em classes abstratas", "Apenas se o argumento normal for o último"],
+      options: ["Sim", "Não", "Apenas em classes abstratas", "Apenas se o argumento normal for o último"],
       correctAnswer: 0
     },
     {
