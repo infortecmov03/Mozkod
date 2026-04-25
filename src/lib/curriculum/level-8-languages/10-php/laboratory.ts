@@ -1,12 +1,13 @@
 import type { PracticeExercise } from '../../types';
 import { exercise as p1 } from './laboratory/01-event-server-init-lab';
+import { exercise as p4 } from './laboratory/04-enums-lab';
 
 const phpTitles = [
   "Fundação do Event Server", 
   "Tipagem de Elite e Union Types", 
   "Constructor Property Promotion", 
-  "Validadores de Evento",
-  "Enums de Prioridade", "Zend Opcode Optimization", "Cycle Collection Audit",
+  "Validadores de Evento com Enums",
+  "Prioridades e Metadados", "Zend Opcode Optimization", "Cycle Collection Audit",
   "PDO Transaction Layer", "Swoole Async Dispatcher", "Reflection Metadata Hook",
   "Fibers Scheduler", "RoadRunner Worker Bridge", "Raw Sockets Engine",
   "FFI Binary Parser", "Generics via Docblock Audit", "Hexagonal Port Mapping",
@@ -18,7 +19,8 @@ const phpTests = [
   "readonly class", 
   "string|int", 
   "public string $traceId", 
-  "mixed", "enum", "opcache", "gc_collect_cycles",
+  "enum EventStatus",
+  "enum", "opcache", "gc_collect_cycles",
   "beginTransaction", "Swoole\\", "getAttributes", "Fiber", "worker", "socket_create",
   "FFI::", "@param", "interface", "container", "PHPStan", "jit", "htmlspecialchars",
   "protobuf", "PRODUCTION READY"
@@ -27,6 +29,7 @@ const phpTests = [
 export const practice = {
   php: phpTitles.map((title, i) => {
     if (i === 0) return p1;
+    if (i === 3) return p4;
     
     // Laboratório 2: Tipagem Forte
     if (i === 1) {
