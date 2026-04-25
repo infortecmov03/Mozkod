@@ -1,6 +1,7 @@
 import type { PracticeExercise } from '../../types';
 import { exercise as p1 } from './laboratory/01-event-server-init-lab';
 import { exercise as p4 } from './laboratory/04-enums-lab';
+import { exercise as p13 } from './laboratory/13-ffi-binary-parser-lab';
 
 const phpTitles = [
   "Fundação do Event Server", 
@@ -30,6 +31,7 @@ export const practice = {
   php: phpTitles.map((title, i) => {
     if (i === 0) return p1;
     if (i === 3) return p4;
+    if (i === 13) return p13;
     
     // Laboratório 10 (Index 10): Fibers Scheduler
     if (i === 10) {
@@ -82,7 +84,7 @@ class TaskRunner {
         language: "php",
         title: "Projeto Master: Gancho de Metadados via Reflection",
         description: "Implemente o motor de descoberta de handlers utilizando introspecção.",
-        statement: "Utilize o método getAttributes() para extrair a configuração do tópico de uma classe handler.",
+        statement: "Utilize o método getAttributes() para extrair a configuration do tópico de uma classe handler.",
         isProjectPart: true,
         template: `<?php
 

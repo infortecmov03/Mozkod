@@ -2,69 +2,78 @@ import type { Quiz } from '../../../../types';
 
 export const quiz: Quiz = {
   id: "php-mq13",
-  title: "Quiz: FFI - Chamando Código C nativo",
-  passingScore: 80,
+  title: "Quiz Master: FFI e Interoperabilidade Nativa",
+  passingScore: 85,
   questions: [
     {
-      id: "q1",
-      question: "O que significa FFI?",
-      options: ["Fast File Interface", "Foreign Function Interface", "Final Function Integration", "Framework Form Info"],
-      correctAnswer: 1
+      id: "q13_1",
+      question: "Qual o principal objetivo do FFI no PHP 7.4+?",
+      options: [
+        "Aumentar a velocidade da internet.",
+        "Permitir o carregamento e execução de funções de bibliotecas dinâmicas (.so, .dll) sem extensões C.",
+        "Mudar a cor do terminal automaticamente.",
+        "Substituir o uso de classes e objetos."
+      ],
+      correctAnswer: 1,
+      explanation: "FFI (Foreign Function Interface) fornece uma ponte direta para bibliotecas nativas compiladas."
     },
     {
-      id: "q2",
-      question: "O FFI permite que o PHP aceda a quê?",
+      id: "q13_2",
+      question: "O que o método 'FFI::cdef()' faz tecnicamente?",
       options: [
-        "Apenas ao banco de dados",
-        "A bibliotecas dinâmicas (.so, .dll) escritas em C/Rust/C++",
-        "A ficheiros HTML remotos",
-        "À memória RAM de outro utilizador"
+        "Comprime o ficheiro PHP.",
+        "Cria uma definição de interface C em runtime para o PHP poder interagir.",
+        "Lança um erro de rede.",
+        "Apaga a memória RAM."
+      ],
+      correctAnswer: 1,
+      explanation: "cdef() recebe uma string com declarações C (headers) e cria um objeto que mapeia essas funções."
+    },
+    {
+      id: "q13_3",
+      question: "Qual o maior risco ao utilizar FFI em larga escala?",
+      options: [
+        "O código ficar muito curto.",
+        "Erros de ponteiros podem causar 'Segmentation Faults' e derrubar todo o processo do servidor.",
+        "O Google penalizar o site.",
+        "O ficheiro index.php ficar pesado."
+      ],
+      correctAnswer: 1,
+      explanation: "FFI permite manipulação direta de memória; um erro de endereço físico crasha o binário do PHP imediatamente."
+    },
+    {
+      id: "q13_4",
+      question: "O que é um objeto do tipo 'CData'?",
+      options: [
+        "Um array PHP comum.",
+        "Uma representação de dados C (structs, unions, arrays nativos) na memória do PHP.",
+        "Um erro de base de dados.",
+        "Um ficheiro JSON binário."
       ],
       correctAnswer: 1
     },
     {
-      id: "q3",
-      question: "Qual o risco de usar FFI em ambientes web comuns?",
+      id: "q13_5",
+      question: "Como se obtém o tamanho em bytes de um tipo C através do FFI?",
       options: [
-        "O site fica mais lento",
-        "Risco de segurança e instabilidade (podes crashar a memória da VM do PHP)",
-        "Aumento do uso de disco",
-        "Não há riscos"
+        "strlen($obj)",
+        "count($obj)",
+        "FFI::sizeof($obj)",
+        "sizeof($obj)"
       ],
-      correctAnswer: 1
+      correctAnswer: 2
     },
     {
-      id: "q4",
-      question: "A função FFI::cdef() aceita o quê como argumento?",
+      id: "q13_6",
+      question: "A técnica de 'FFI Preloading' é recomendada para produção porquê?",
       options: [
-        "Código binário",
-        "Protótipos de funções C (headers)",
-        "Ficheiros JSON",
-        "Somente o nome da biblioteca"
+        "Para encriptar o código.",
+        "Para eliminar o custo de carregar a biblioteca e parsear o header em cada request.",
+        "Para permitir o uso de PHP 5.",
+        "Para aumentar o número de utilizadores."
       ],
-      correctAnswer: 1
-    },
-    {
-      id: "q5",
-      question: "FFI é habilitado por padrão em todos os servidores?",
-      options: [
-        "Sim",
-        "Não, deve ser configurado no php.ini (geralmente restrito a CLI)",
-        "Apenas em servidores Windows",
-        "Sim, desde o PHP 5"
-      ],
-      correctAnswer: 1
-    },
-    {
-      id: "q6",
-      question: "Qual o benefício de performance do FFI?",
-      options: [
-        "Nenhum",
-        "Permite executar algoritmos pesados em C sem o custo de criar uma extensão PHP completa",
-        "Reduz o uso de CPU",
-        "Comprime o código fonte"
-      ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "O preloading faz o carregamento apenas uma vez no arranque da Zend Engine, mantendo a performance de pico."
     }
   ]
 };
