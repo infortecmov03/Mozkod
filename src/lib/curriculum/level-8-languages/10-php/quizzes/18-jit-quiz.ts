@@ -1,4 +1,3 @@
-
 import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
@@ -8,55 +7,74 @@ export const quiz: Quiz = {
   questions: [
     {
       id: "q18_1",
-      question: "Qual o objetivo principal do JIT no PHP 8?",
+      question: "Qual a função primordial do JIT Compiler no PHP 8?",
       options: [
-        "Reduzir o tamanho do ficheiro .php",
-        "Compilar Opcodes 'quentes' diretamente em código de máquina (CPU) em runtime",
-        "Substituir o MySQL",
-        "Mudar a sintaxe da linguagem"
+        "Comprimir os ficheiros .php para poupar espaço no disco.",
+        "Traduzir Opcodes em código de máquina nativo da CPU durante a execução.",
+        "Substituir o MySQL por um banco de dados em memória.",
+        "Validar a sintaxe do código antes do deploy."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "O JIT pula a interpretação da VM e gera instruções binárias que o processador executa diretamente."
     },
     {
       id: "q18_2",
-      question: "O JIT melhora significativamente a performance de quais tipos de aplicações?",
+      question: "Onde é que o JIT armazena o código de máquina gerado?",
       options: [
-        "Aplicações I/O-bound (Web clássica, SQL)",
-        "Aplicações CPU-bound (Cálculos matemáticos, Big Data, IA)",
-        "Apenas blogs simples",
-        "Qualquer site em WordPress"
+        "Numa pasta temporária no SSD.",
+        "Dentro de um buffer dedicado no espaço de memória do OpCache.",
+        "Na cache L1 do processador permanentemente.",
+        "No ficheiro .htaccess."
       ],
-      correctAnswer: 1
+      correctAnswer: 1,
+      explanation: "O JIT é uma extensão das capacidades do OpCache e reside no mesmo segmento de memória RAM reservada."
     },
     {
       id: "q18_3",
-      question: "Quais são os dois modos principais do JIT no PHP?",
-      options: ["Fast e Slow", "Function e Tracing", "Local e Remote", "Direct e Indirect"],
+      question: "Por que uma aplicação web simples que apenas consulta o banco de dados (I/O Bound) pode não ver grandes ganhos com o JIT?",
+      options: [
+        "Porque o JIT não suporta SQL.",
+        "Porque o tempo de espera pela rede e disco é muito maior que o tempo de execução do código PHP.",
+        "Porque o JIT só funciona em modo CLI.",
+        "Porque as bases de dados bloqueiam o compilador JIT."
+      ],
       correctAnswer: 1,
-      explanation: "Tracing JIT é geralmente mais eficiente pois analisa o fluxo real de execução."
+      explanation: "Em aplicações I/O bound, o CPU passa a maior parte do tempo ocioso esperando por outros componentes; otimizar o cálculo não resolve o gargalo externo."
     },
     {
       id: "q18_4",
-      question: "Para ativar o JIT, onde deves configurar o parâmetro opcache.jit_buffer_size?",
-      options: ["No ficheiro .html", "No php.ini", "No banco de dados", "Via composer.json"],
-      correctAnswer: 1
+      question: "O que o 'Tracing JIT' faz de diferente do 'Function JIT'?",
+      options: [
+        "O Tracing JIT desenha gráficos de performance no ecrã.",
+        "O Tracing JIT identifica e compila apenas os caminhos de execução (traces) mais frequentes dentro do código.",
+        "O Tracing JIT apaga as variáveis não utilizadas.",
+        "O Function JIT é 10x mais rápido que o Tracing."
+      ],
+      correctAnswer: 1,
+      explanation: "O Tracing JIT é mais granular e eficiente, pois foca nos loops e fluxos que realmente consomem recursos."
     },
     {
       id: "q18_5",
-      question: "O JIT substitui o OpCache?",
+      question: "O que indica o parâmetro 'opcache.jit_buffer_size = 0'?",
       options: [
-        "Sim, apaga o OpCache",
-        "Não, o JIT corre como uma camada adicional em cima do OpCache",
-        "Apenas no Windows",
-        "São tecnologias concorrentes"
+        "Que o JIT usará toda a memória disponível.",
+        "Que o JIT está desativado.",
+        "Que o JIT está em modo de segurança máxima.",
+        "Que o buffer é alocado dinamicamente pelo SO."
       ],
       correctAnswer: 1
     },
     {
       id: "q18_6",
-      question: "Um valor de buffer zero (0) no JIT significa:",
-      options: ["Performance máxima", "Que o JIT está desativado", "Que o cache é infinito", "Erro de sistema"],
-      correctAnswer: 1
+      question: "Qual o impacto de um JIT mal configurado num servidor com pouco tráfego?",
+      options: [
+        "Pode aumentar o tempo de resposta inicial devido ao custo de compilação sem benefício real de repetição.",
+        "O site muda de cor.",
+        "Aumenta a velocidade da internet dos utilizadores.",
+        "Nenhum impacto."
+      ],
+      correctAnswer: 0,
+      explanation: "A compilação JIT consome CPU. Se o código não for executado milhares de vezes, o custo de o compilar pode ser superior ao ganho de execução."
     }
   ]
 };
