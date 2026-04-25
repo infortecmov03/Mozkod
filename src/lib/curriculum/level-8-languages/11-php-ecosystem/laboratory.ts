@@ -7,6 +7,7 @@ import { exercise as p6 } from './laboratory/06-ddd-tactical-lab';
 import { exercise as p7 } from './laboratory/07-event-store-lab';
 import { exercise as p8 } from './laboratory/08-factory-method-lab';
 import { exercise as p9 } from './laboratory/09-strategy-pattern-lab';
+import { exercise as p10 } from './laboratory/10-psr-compliance-lab';
 import { exercise as p14 } from './laboratory/14-property-hooks-lab';
 
 const generateEcoLab = (idNum: number) => ({
@@ -24,15 +25,11 @@ const generateEcoLab = (idNum: number) => ({
 export const practice = {
   php: Array.from({ length: 21 }, (_, i) => {
     const id = i + 1;
-    if (id === 1) return p1;
-    if (id === 2) return p2;
-    if (id === 4) return p4;
-    if (id === 5) return p5;
-    if (id === 6) return p6;
-    if (id === 7) return p7;
-    if (id === 8) return p8;
-    if (id === 9) return p9;
-    if (id === 14) return p14;
+    const sourceMap: Record<number, any> = {
+      1: p1, 2: p2, 4: p4, 5: p5, 6: p6, 7: p7, 8: p8, 9: p9, 10: p10, 14: p14
+    };
+    
+    if (sourceMap[id]) return sourceMap[id];
     return generateEcoLab(id);
   })
 };

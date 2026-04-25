@@ -8,6 +8,7 @@ import { lesson as l6 } from './theory/06-ddd-tactical';
 import { lesson as l7 } from './theory/07-cqrs-event-sourcing';
 import { lesson as l8 } from './theory/08-creational-patterns';
 import { lesson as l9 } from './theory/09-behavioral-patterns';
+import { lesson as l10 } from './theory/10-psr-standards';
 import { lesson as l14 } from './theory/14-property-hooks';
 
 const titles = [
@@ -37,7 +38,7 @@ const titles = [
 export const lessons: TheoryLesson[] = titles.map((title, i) => {
   const idNum = i + 1;
   const sourceMap: Record<number, any> = { 
-    1: l1, 2: l2, 3: l3, 4: l4, 5: l5, 6: l6, 7: l7, 8: l8, 9: l9, 14: l14 
+    1: l1, 2: l2, 3: l3, 4: l4, 5: l5, 6: l6, 7: l7, 8: l8, 9: l9, 10: l10, 14: l14 
   };
   
   if (sourceMap[idNum]) return sourceMap[idNum];

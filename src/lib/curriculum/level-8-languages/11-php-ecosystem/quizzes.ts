@@ -7,6 +7,7 @@ import { quiz as q6 } from './quizzes/06-ddd-tactical-quiz';
 import { quiz as q7 } from './quizzes/07-cqrs-event-sourcing-quiz';
 import { quiz as q8 } from './quizzes/08-creational-patterns-quiz';
 import { quiz as q9 } from './quizzes/09-behavioral-patterns-quiz';
+import { quiz as q10 } from './quizzes/10-psr-standards-quiz';
 import { quiz as q14 } from './quizzes/14-property-hooks-quiz';
 
 const generatePlaceholder = (id: number) => ({
@@ -18,15 +19,10 @@ const generatePlaceholder = (id: number) => ({
 
 export const quizzes = Array.from({ length: 21 }, (_, i) => {
   const id = i + 1;
-  if (id === 1) return q1;
-  if (id === 2) return q2;
-  if (id === 3) return q3;
-  if (id === 4) return q4;
-  if (id === 5) return q5;
-  if (id === 6) return q6;
-  if (id === 7) return q7;
-  if (id === 8) return q8;
-  if (id === 9) return q9;
-  if (id === 14) return q14;
+  const sourceMap: Record<number, any> = {
+    1: q1, 2: q2, 3: q3, 4: q4, 5: q5, 6: q6, 7: q7, 8: q8, 9: q9, 10: q10, 14: q14
+  };
+  
+  if (sourceMap[id]) return sourceMap[id];
   return generatePlaceholder(id);
 });
