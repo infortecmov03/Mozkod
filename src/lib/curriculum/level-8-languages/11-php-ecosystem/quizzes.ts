@@ -4,6 +4,7 @@ import { quiz as q3 } from './quizzes/03-pest-php-quiz';
 import { quiz as q4 } from './quizzes/04-mutation-testing-quiz';
 import { quiz as q5 } from './quizzes/05-ddd-strategic-quiz';
 import { quiz as q6 } from './quizzes/06-ddd-tactical-quiz';
+import { quiz as q7 } from './quizzes/07-cqrs-event-sourcing-quiz';
 import { quiz as q14 } from './quizzes/14-property-hooks-quiz';
 
 const generatePlaceholder = (id: number) => ({
@@ -21,6 +22,7 @@ export const quizzes = Array.from({ length: 21 }, (_, i) => {
   if (id === 4) return q4;
   if (id === 5) return q5;
   if (id === 6) return q6;
+  if (id === 7) return q7;
   if (id === 14) return q14;
   return generatePlaceholder(id);
 });

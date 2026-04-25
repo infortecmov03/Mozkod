@@ -5,6 +5,7 @@ import { lesson as l3 } from './theory/03-pest-php';
 import { lesson as l4 } from './theory/04-mutation-testing';
 import { lesson as l5 } from './theory/05-ddd-strategic';
 import { lesson as l6 } from './theory/06-ddd-tactical';
+import { lesson as l7 } from './theory/07-cqrs-event-sourcing';
 import { lesson as l14 } from './theory/14-property-hooks';
 
 const titles = [
@@ -34,7 +35,7 @@ const titles = [
 export const lessons: TheoryLesson[] = titles.map((title, i) => {
   const idNum = i + 1;
   const sourceMap: Record<number, any> = { 
-    1: l1, 2: l2, 3: l3, 4: l4, 5: l5, 6: l6, 14: l14 
+    1: l1, 2: l2, 3: l3, 4: l4, 5: l5, 6: l6, 7: l7, 14: l14 
   };
   
   if (sourceMap[idNum]) return sourceMap[idNum];

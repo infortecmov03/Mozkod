@@ -4,6 +4,7 @@ import { exercise as p2 } from './laboratory/02-phpunit-mocks-lab';
 import { exercise as p4 } from './laboratory/04-mutation-testing-lab';
 import { exercise as p5 } from './laboratory/05-ddd-strategic-lab';
 import { exercise as p6 } from './laboratory/06-ddd-tactical-lab';
+import { exercise as p7 } from './laboratory/07-event-store-lab';
 import { exercise as p14 } from './laboratory/14-property-hooks-lab';
 
 const generateEcoLab = (idNum: number) => ({
@@ -26,6 +27,7 @@ export const practice = {
     if (id === 4) return p4;
     if (id === 5) return p5;
     if (id === 6) return p6;
+    if (id === 7) return p7;
     if (id === 14) return p14;
     return generateEcoLab(id);
   })
