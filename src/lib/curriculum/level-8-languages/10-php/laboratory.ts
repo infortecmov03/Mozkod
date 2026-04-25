@@ -11,8 +11,8 @@ const phpTitles = [
   "Prioridades e Metadados", "Zend Opcode Optimization", "Cycle Collection Audit",
   "PDO Transaction Layer", "Swoole Async Dispatcher", "Reflection Metadata Hook",
   "Fibers Scheduler", "RoadRunner Worker Bridge", "Raw Sockets Engine",
-  "FFI Binary Parser", "Generics via Docblock Audit", "Hexagonal Port Mapping",
-  "Dependency Container Setup", "PHPStan Level 9 Audit", "JIT Performance Bench",
+  "FFI Binary Parser", "Hexagonal Port Mapping", "Dependency Container Setup", 
+  "PHPStan Level 9 Audit", "JIT Performance Bench",
   "Security: Sanitizer Filter", "gRPC Protocol Buffers", "Capstone PRODUCTION READY"
 ];
 
@@ -23,7 +23,7 @@ const phpTests = [
   "enum EventStatus",
   "enum", "opcache", "gc_collect_cycles",
   "beginTransaction", "Swoole\\", "getAttributes", "Fiber", "worker", "socket_create",
-  "FFI::", "@param", "interface", "container", "PHPStan", "jit", "htmlspecialchars",
+  "FFI::", "interface", "container", "PHPStan", "jit", "htmlspecialchars",
   "protobuf", "PRODUCTION READY"
 ];
 
@@ -33,6 +33,51 @@ export const practice = {
     if (i === 3) return p4;
     if (i === 13) return p13;
     
+    // Laboratório 14 (Index 14): Hexagonal Port Mapping
+    if (i === 14) {
+      return {
+        id: "php-p15",
+        language: "php",
+        title: "Projeto Master: Mapeamento de Portas Hexagonais",
+        description: "Defina o contrato de persistência do motor de forma agnóstica.",
+        statement: "Implemente a interface 'EventStore' (Porta) e o adaptador 'DatabaseStore' que a satisfaz.",
+        isProjectPart: true,
+        template: `<?php
+
+namespace App\\Core\\Ports;
+
+use App\\Core\\Entities\\Event;
+
+// Ação 1: Defina a Porta (Interface)
+interface EventStore {
+    public function save(Event $event): void;
+}
+
+namespace App\\Infrastructure\\Adapters;
+
+use App\\Core\\Ports\\EventStore;
+use App\\Core\\Entities\\Event;
+
+// Ação 2: Implemente o Adaptador
+class DatabaseStore implements EventStore {
+    public function save(Event $event): void {
+        // Lógica de persistência real (ex: PDO) aqui
+        echo "Evento persistido via Adaptador SQL";
+    }
+}`,
+        detailedExplanation: `
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-primary">⬢ Engenharia de Desacoplamento</h3>
+            <p class="text-sm">O seu motor de eventos não deve saber que o MySQL existe. Ele deve saber apenas que existe algo capaz de <code>save()</code> um evento. Ao criar a interface <button>EventStore</button> no namespace de <b>Ports</b>, você cria a fronteira arquitetural de elite.</p>
+          </div>
+        `,
+        objectives: [
+          { id: "port_def", description: "Definir a interface de Porta.", test: "interface EventStore" },
+          { id: "adapter_impl", description: "Implementar o adaptador satisfazendo a porta.", test: "implements EventStore" }
+        ]
+      };
+    }
+
     // Laboratório 10 (Index 10): Fibers Scheduler
     if (i === 10) {
       return {
@@ -42,33 +87,8 @@ export const practice = {
         description: "Implemente a suspensão e retoma de processos de sincronização.",
         statement: "Utilize a classe 'Fiber' para pausar a execução de uma tarefa e retomá-la injetando um ID de transação.",
         isProjectPart: true,
-        template: `<?php
-
-namespace App\\Core;
-
-use Fiber;
-
-class TaskRunner {
-    public function execute(): void {
-        $fiber = new Fiber(function(): void {
-            // Ação 1: Suspenda a execução aqui retornando "WAITING"
-            $id = Fiber::suspend("WAITING");
-            echo "Processando transação: " . $id;
-        });
-
-        $status = $fiber->start();
-        if ($status === "WAITING") {
-            // Ação 2: Retome a execução enviando "TX-101"
-            $fiber->resume("TX-101");
-        }
-    }
-}`,
-        detailedExplanation: `
-          <div class="space-y-4">
-            <h3 class="text-xl font-bold text-primary">⚙️ O Ciclo de Suspensão</h3>
-            <p class="text-sm">O seu servidor precisa lidar com esperas de rede sem travar. Utilize as <button>Fibers</button> para criar pontos de paragem inteligentes. O método <button>suspend()</button> devolve o controle ao motor, e o <button>resume()</button> volta para a tarefa com os dados necessários.</p>
-          </div>
-        `,
+        template: `<?php\n\nnamespace App\\Core;\n\nuse Fiber;\n\nclass TaskRunner {\n    public function execute(): void {\n        $fiber = new Fiber(function(): void {\n            $id = Fiber::suspend("WAITING");\n            echo "Processando transação: " . $id;\n        });\n\n        $status = $fiber->start();\n        if ($status === "WAITING") {\n            $fiber->resume("TX-101");\n        }\n    }\n}`,
+        detailedExplanation: `<div class="space-y-4"><h3 class="text-xl font-bold text-primary">⚙️ O Ciclo de Suspensão</h3><p class="text-sm">O seu servidor precisa lidar com esperas de rede sem travar. Utilize as <button>Fibers</button> para criar pontos de paragem inteligentes.</p></div>`,
         objectives: [
           { id: "fiber_init", description: "Instanciar nova Fiber.", test: "new Fiber" },
           { id: "suspend_call", description: "Utilizar Fiber::suspend().", test: "Fiber::suspend" },
@@ -86,62 +106,12 @@ class TaskRunner {
         description: "Implemente o motor de descoberta de handlers utilizando introspecção.",
         statement: "Utilize o método getAttributes() para extrair a configuration do tópico de uma classe handler.",
         isProjectPart: true,
-        template: `<?php
-
-namespace App\\Core;
-
-use ReflectionClass;
-
-class Dispatcher {
-    public function getTopic(string $className): string {
-        $reflector = new ReflectionClass($className);
-        // Ação 1: Obtenha o atributo EventHandler e instancie-o para retornar o tópico
-        $attributes = $reflector->getAttributes(EventHandler::class);
-        
-        if (empty($attributes)) return "default";
-        
-        return $attributes[0]->newInstance()->topic;
-    }
-}`,
-        detailedExplanation: `
-          <div class="space-y-4">
-            <h3 class="text-xl font-bold text-primary">⚙️ O Cérebro do Dispatcher</h3>
-            <p class="text-sm">O seu servidor de eventos precisa de saber "quem responde a quê". Em vez de mapas manuais, utilize a <strong>Reflection API</strong> para ler os atributos que criamos nos laboratórios anteriores.</p>
-          </div>
-        `,
+        template: `<?php\n\nnamespace App\\Core;\n\nuse ReflectionClass;\n\nclass Dispatcher {\n    public function getTopic(string $className): string {\n        $reflector = new ReflectionClass($className);\n        $attributes = $reflector->getAttributes(EventHandler::class);\n        if (empty($attributes)) return "default";\n        return $attributes[0]->newInstance()->topic;\n    }\n}`,
+        detailedExplanation: `<div class="space-y-4"><h3 class="text-xl font-bold text-primary">⚙️ O Cérebro do Dispatcher</h3><p class="text-sm">Utilize a <strong>Reflection API</strong> para ler os atributos que criamos nos laboratórios anteriores.</p></div>`,
         objectives: [
           { id: "reflection", description: "Instanciar ReflectionClass.", test: "new ReflectionClass" },
-          { id: "getattr", description: "Chamar getAttributes() filtrando por EventHandler.", test: "getAttributes(EventHandler::class)" },
-          { id: "instance", description: "Chamar newInstance() para ler a propriedade 'topic'.", test: "newInstance()->topic" }
+          { id: "getattr", description: "Chamar getAttributes().", test: "getAttributes" }
         ]
-      };
-    }
-
-    if (i === 1) {
-      return {
-        id: "php-p2",
-        language: "php",
-        title: "Projeto Master: Tipagem Robusta",
-        description: "Aplique Union Types para gerir múltiplos formatos de entrada.",
-        statement: "Atualize a assinatura do método 'dispatch' para aceitar 'string|int' como ID do evento.",
-        isProjectPart: true,
-        template: `<?php\n\n// Checkpoint anterior carregado\n// Adicione a tipagem ao método dispatch\n`,
-        detailedExplanation: `<div class="space-y-4"><h3 class="text-xl font-bold text-primary">🛡️ Blindagem de Entrada</h3><p class="text-sm">Utilize <strong>Union Types</strong> para garantir que o motor aceite IDs híbridos sem falhas.</p></div>`,
-        objectives: [{ id: "union", description: "Usar string|int na assinatura.", test: "string|int" }]
-      };
-    }
-
-    if (i === 2) {
-      return {
-        id: "php-p3",
-        language: "php",
-        title: "Projeto Master: Redução de Boilerplate com Promotion",
-        description: "Refatorize os metadados do evento.",
-        statement: "Implemente a classe EventMetadata utilizando Constructor Property Promotion.",
-        isProjectPart: true,
-        template: `<?php\n\nnamespace App\\Core;\n\nuse DateTimeImmutable;\n\nreadonly class EventMetadata {\n    public function __construct(\n        public string $traceId,\n        public DateTimeImmutable $createdAt,\n    ) {}\n}`,
-        detailedExplanation: `<div class="space-y-4"><h3 class="text-xl font-bold text-primary">🧹 Limpeza Arquitetural</h3><p class="text-sm">Use <strong>Constructor Promotion</strong> para um design de metadados limpo.</p></div>`,
-        objectives: [{ id: "promotion", description: "Promover propriedades no construtor.", test: "public string $traceId" }]
       };
     }
 
