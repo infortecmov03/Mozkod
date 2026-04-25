@@ -30,16 +30,16 @@ const titles = [
 import type { TheoryLesson } from '../../types';
 
 export const lessons: TheoryLesson[] = titles.map((title, i) => {
-  const id = i + 1;
+  const idNum = i + 1;
   const sourceMap: Record<number, any> = { 1: l1, 2: l2, 4: l4, 14: l14 };
   
-  if (sourceMap[id]) return sourceMap[id];
+  if (sourceMap[idNum]) return sourceMap[idNum];
 
   return {
-    id: `php-eco-t${id}`,
+    id: `php-eco-t${idNum}`,
     title,
     content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>🐘 Ecossistema PHP Master: ${title}</h2><p>Estudo aprofundado sobre padrões de arquitetura, qualidade e infraestrutura moderna.</p></div>`,
-    quizId: `php-eco-mq${id}`,
+    quizId: `php-eco-mq${idNum}`,
     enableInteractive: true
   };
 });
