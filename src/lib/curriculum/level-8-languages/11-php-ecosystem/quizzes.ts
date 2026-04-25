@@ -12,21 +12,15 @@ import { quiz as q11 } from './quizzes/11-dependency-injection';
 import { quiz as q12 } from './quizzes/12-laravel-kernel';
 import { quiz as q13 } from './quizzes/13-symfony-kernel';
 import { quiz as q14 } from './quizzes/14-property-hooks-quiz';
+import { quiz as q15 } from './quizzes/15-profiling-industrial-quiz';
+import { quiz as q16 } from './quizzes/16-caching-strategic-quiz';
+import { quiz as q17 } from './quizzes/17-varnish-proxies-quiz';
+import { quiz as q18 } from './quizzes/18-sharding-splitting-quiz';
+import { quiz as q19 } from './quizzes/19-message-queues-quiz';
+import { quiz as q20 } from './quizzes/20-php84-features-quiz';
+import { quiz as q21 } from './quizzes/21-capstone-cloud-quiz';
 
-const generatePlaceholder = (id: number) => ({
-  id: `php-eco-mq${id}`,
-  title: `Quiz Tópico ${id}`,
-  questions: [{ id: "q1", question: "Validado?", options: ["Sim", "Não"], correctAnswer: 0 }],
-  passingScore: 80
-});
-
-export const quizzes = Array.from({ length: 21 }, (_, i) => {
-  const id = i + 1;
-  const sourceMap: Record<number, any> = {
-    1: q1, 2: q2, 3: q3, 4: q4, 5: q5, 6: q6, 7: q7, 8: q8, 9: q9, 10: q10,
-    11: q11, 12: q12, 13: q13, 14: q14
-  };
-  
-  if (sourceMap[id]) return sourceMap[id];
-  return generatePlaceholder(id);
-});
+export const quizzes = [
+  q1, q2, q3, q4, q5, q6, q7, q8, q9, q10,
+  q11, q12, q13, q14, q15, q16, q17, q18, q19, q20, q21
+];

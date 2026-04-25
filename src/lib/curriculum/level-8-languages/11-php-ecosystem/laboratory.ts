@@ -12,28 +12,18 @@ import { exercise as p11 } from './laboratory/11-dependency-injection';
 import { exercise as p12 } from './laboratory/12-laravel-kernel';
 import { exercise as p13 } from './laboratory/13-symfony-kernel';
 import { exercise as p14 } from './laboratory/14-property-hooks-lab';
-
-const generateEcoLab = (idNum: number) => ({
-  id: `php-eco-p${idNum}`,
-  language: "process",
-  title: `Projeto Master: Milestone ${idNum}`,
-  description: "Evolução do High-Scale Event Server.",
-  statement: "Implemente o requisito técnico deste marco.",
-  isProjectPart: true,
-  template: "<?php\n\n// Checkpoint anterior carregado.\n",
-  detailedExplanation: "<h3>🏗️ Engenharia de Ecossistema</h3><p>Aplicação de padrões avançados no servidor de eventos.</p>",
-  objectives: [{ id: "obj", description: "Concluir etapa", test: "php" }]
-});
+import { exercise as p15 } from './laboratory/15-profiling-lab';
+import { exercise as p16 } from './laboratory/16-caching-lab';
+import { exercise as p17 } from './laboratory/17-varnish-lab';
+import { exercise as p18 } from './laboratory/18-sharding-lab';
+import { exercise as p19 } from './laboratory/19-queues-lab';
+import { exercise as p20 } from './laboratory/20-php84-lab';
+import { exercise as p21 } from './laboratory/21-capstone-lab';
 
 export const practice = {
-  php: Array.from({ length: 21 }, (_, i) => {
-    const id = i + 1;
-    const sourceMap: Record<number, any> = {
-      1: p1, 2: p2, 4: p4, 5: p5, 6: p6, 7: p7, 8: p8, 9: p9, 10: p10,
-      11: p11, 12: p12, 13: p13, 14: p14
-    };
-    
-    if (sourceMap[id]) return sourceMap[id];
-    return generateEcoLab(id);
-  })
+  php: [
+    p1, p2, 
+    { id: "php-eco-p3", title: "Pest Tests", language: "php", description: "...", statement: "...", isProjectPart: true, template: "<?php", detailedExplanation: "...", objectives: [{ id: "obj", description: "...", test: "expect" }] },
+    p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21
+  ]
 };
