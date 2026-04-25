@@ -31,7 +31,47 @@ export const practice = {
     if (i === 0) return p1;
     if (i === 3) return p4;
     
-    // Laboratório 2: Tipagem Forte
+    // Laboratório 9 (Index 9): Reflection Metadata Hook
+    if (i === 9) {
+      return {
+        id: "php-p10",
+        language: "php",
+        title: "Projeto Master: Gancho de Metadados via Reflection",
+        description: "Implemente o motor de descoberta de handlers utilizando introspecção.",
+        statement: "Utilize o método getAttributes() para extrair a configuração do tópico de uma classe handler.",
+        isProjectPart: true,
+        template: `<?php
+
+namespace App\\Core;
+
+use ReflectionClass;
+
+class Dispatcher {
+    public function getTopic(string $className): string {
+        $reflector = new ReflectionClass($className);
+        // Ação 1: Obtenha o atributo EventHandler e instancie-o para retornar o tópico
+        $attributes = $reflector->getAttributes(EventHandler::class);
+        
+        if (empty($attributes)) return "default";
+        
+        return $attributes[0]->newInstance()->topic;
+    }
+}`,
+        detailedExplanation: `
+          <div class="space-y-4">
+            <h3 class="text-xl font-bold text-primary">⚙️ O Cérebro do Dispatcher</h3>
+            <p class="text-sm">O seu servidor de eventos precisa de saber "quem responde a quê". Em vez de mapas manuais, utilize a <strong>Reflection API</strong> para ler os atributos que criamos nos laboratórios anteriores.</p>
+          </div>
+        `,
+        objectives: [
+          { id: "reflection", description: "Instanciar ReflectionClass.", test: "new ReflectionClass" },
+          { id: "getattr", description: "Chamar getAttributes() filtrando por EventHandler.", test: "getAttributes(EventHandler::class)" },
+          { id: "instance", description: "Chamar newInstance() para ler a propriedade 'topic'.", test: "newInstance()->topic" }
+        ]
+      };
+    }
+
+    // Laboratórios 2 e 3 (Mantendo a coerência anterior)
     if (i === 1) {
       return {
         id: "php-p2",
@@ -41,33 +81,22 @@ export const practice = {
         statement: "Atualize a assinatura do método 'dispatch' para aceitar 'string|int' como ID do evento.",
         isProjectPart: true,
         template: `<?php\n\n// Checkpoint anterior carregado\n// Adicione a tipagem ao método dispatch\n`,
-        detailedExplanation: `
-          <div class="space-y-4">
-            <h3 class="text-xl font-bold text-primary">🛡️ Blindagem de Entrada</h3>
-            <p class="text-sm">No nosso servidor, os eventos podem vir indexados por um UUID (string) ou por um ID sequencial (int). Utilize <strong>Union Types</strong> para garantir que o motor aceite ambos sem precisar de verificações manuais.</p>
-          </div>
-        `,
-        objectives: [{ id: "union", description: "Usar a sintaxe string|int na assinatura do método.", test: "string|int" }]
+        detailedExplanation: `<div class="space-y-4"><h3 class="text-xl font-bold text-primary">🛡️ Blindagem de Entrada</h3><p class="text-sm">Utilize <strong>Union Types</strong> para garantir que o motor aceite IDs híbridos sem falhas.</p></div>`,
+        objectives: [{ id: "union", description: "Usar string|int na assinatura.", test: "string|int" }]
       };
     }
 
-    // Laboratório 3: Constructor Promotion
     if (i === 2) {
       return {
         id: "php-p3",
         language: "php",
         title: "Projeto Master: Redução de Boilerplate com Promotion",
-        description: "Refatorize os metadados do evento para um design limpo.",
-        statement: "Implemente a classe EventMetadata utilizando Constructor Property Promotion para os campos traceId e createdAt.",
+        description: "Refatorize os metadados do evento.",
+        statement: "Implemente a classe EventMetadata utilizando Constructor Property Promotion.",
         isProjectPart: true,
-        template: `<?php\n\nnamespace App\\Core;\n\nuse DateTimeImmutable;\n\n// Ação 1: Crie a classe e promova as propriedades no construtor\nreadonly class EventMetadata {\n    public function __construct(\n        public string $traceId,\n        public DateTimeImmutable $createdAt,\n    ) {}\n}`,
-        detailedExplanation: `
-          <div class="space-y-4">
-            <h3 class="text-xl font-bold text-primary">🧹 Limpeza Arquitetural</h3>
-            <p class="text-sm">O <code>EventMetadata</code> é um objeto de valor (Value Object) que acompanha cada mensagem. Não faz sentido escrever 15 linhas para algo tão simples. Utilize o <strong>Constructor Promotion</strong> para definir o <code>$traceId</code> e o <code>$createdAt</code> em apenas 3 linhas.</p>
-          </div>
-        `,
-        objectives: [{ id: "promotion", description: "Declarar a visibilidade (public) diretamente no argumento do construtor.", test: "public string $traceId" }]
+        template: `<?php\n\nnamespace App\\Core;\n\nuse DateTimeImmutable;\n\nreadonly class EventMetadata {\n    public function __construct(\n        public string $traceId,\n        public DateTimeImmutable $createdAt,\n    ) {}\n}`,
+        detailedExplanation: `<div class="space-y-4"><h3 class="text-xl font-bold text-primary">🧹 Limpeza Arquitetural</h3><p class="text-sm">Use <strong>Constructor Promotion</strong> para um design de metadados limpo.</p></div>`,
+        objectives: [{ id: "promotion", description: "Promover propriedades no construtor.", test: "public string $traceId" }]
       };
     }
 
@@ -82,9 +111,9 @@ export const practice = {
       detailedExplanation: `
         <div class="space-y-4">
           <h3 class="text-xl font-bold text-primary">🐘 Fase ${i + 1}: ${title}</h3>
-          <p class="text-sm">Evolua a arquitetura do seu servidor de eventos utilizando o conceito de elite desta lição.</p>
+          <p class="text-sm">Evolua a arquitetura do seu servidor de eventos.</p>
           <div class="p-3 bg-muted rounded-xl border border-primary/20 text-xs">
-            <strong>Requisito Técnico:</strong> Garante que o código contém a instrução <code>${phpTests[i]}</code> para passar na auditoria.
+            <strong>Requisito Técnico:</strong> Deve conter a instrução <code>${phpTests[i]}</code>.
           </div>
         </div>
       `,

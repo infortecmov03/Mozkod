@@ -1,50 +1,77 @@
-
 import type { Quiz } from '../../../types';
 
 export const quiz: Quiz = {
   id: "php-mq9",
-  title: "Quiz Master: Reflection API e Introspecção",
+  title: "Quiz Master: Reflection API e Introspecção Profunda",
   passingScore: 85,
   questions: [
     {
       id: "q9_1",
-      question: "Qual classe da Reflection API permite inspecionar as propriedades de um objeto?",
-      options: ["ReflectionMethod", "ReflectionProperty", "ReflectionClass", "ReflectionFunction"],
-      correctAnswer: 2
+      question: "Qual classe da Reflection API permite inspecionar e instanciar atributos do PHP 8?",
+      options: [
+        "ReflectionMethod",
+        "ReflectionAttribute",
+        "ReflectionProperty",
+        "ReflectionClass"
+      ],
+      correctAnswer: 1,
+      explanation: "A classe ReflectionAttribute é a interface específica para lidar com os metadados decorados via sintaxe #[...]."
     },
     {
       id: "q9_2",
-      question: "Como o Reflection é usado para implementar Injeção de Dependência?",
+      question: "O que o método 'newInstance()' de um ReflectionAttribute faz tecnicamente?",
       options: [
-        "Aumentando a velocidade do carregamento",
-        "Analisando os tipos dos argumentos do construtor em runtime para instanciar as dependências automaticamente",
-        "Mudando o nome das variáveis",
-        "Apagando ficheiros temporários"
+        "Cria uma nova classe no ficheiro.",
+        "Instancia a classe do atributo passando os argumentos definidos no código para o seu construtor.",
+        "Apaga o atributo da memória.",
+        "Reinicia o servidor PHP."
+      ],
+      correctAnswer: 1,
+      explanation: "Este método transforma o metadado estático num objeto real que podes manipular no teu código."
+    },
+    {
+      id: "q9_3",
+      question: "Pode a Reflection API aceder ao valor de uma propriedade privada? Como?",
+      options: [
+        "Não, o PHP proíbe por segurança.",
+        "Sim, utilizando o método setAccessible(true) no objeto ReflectionProperty.",
+        "Apenas se o ficheiro estiver com strict_types=0.",
+        "Apenas em métodos estáticos."
       ],
       correctAnswer: 1
     },
     {
-      id: "q9_3",
-      question: "Reflection permite alterar a visibilidade de um método privado para torná-lo acessível num teste?",
-      options: ["Sim, usando setAccessible(true)", "Não, o PHP proíbe", "Apenas no PHP 7", "Apenas para métodos estáticos"],
-      correctAnswer: 0
-    },
-    {
       id: "q9_4",
-      question: "Qual o impacto de usar Reflection excessivamente num loop de alta performance?",
-      options: ["O código fica mais seguro", "Alto overhead de CPU, pois a introspecção é uma operação custosa", "Nenhum impacto", "A RAM é limpa automaticamente"],
+      question: "Qual o impacto de usar Reflection intensivamente dentro de um loop de 1 milhão de iterações?",
+      options: [
+        "Nenhum, o PHP 8 é otimizado.",
+        "Alto overhead de CPU, pois a introspecção exige pesquisas pesadas nas tabelas de símbolos do motor.",
+        "O código corre 2x mais rápido.",
+        "A memória RAM é limpa automaticamente."
+      ],
       correctAnswer: 1
     },
     {
       id: "q9_5",
-      question: "ReflectionClass::newInstanceArgs() permite:",
-      options: ["Criar uma nova classe", "Instanciar uma classe passando um array de argumentos para o construtor", "Apagar uma instância", "Mudar o pai da classe"],
-      correctAnswer: 1
+      question: "Para que serve o método 'getDocComment()'?",
+      options: [
+        "Para ler Atributos do PHP 8.",
+        "Para extrair as strings de comentários (Docblocks) que precedem uma classe ou método.",
+        "Para documentar o código no GitHub.",
+        "Para validar a sintaxe do ficheiro."
+      ],
+      correctAnswer: 1,
+      explanation: "Era a forma padrão de ler metadados antes do PHP 8. Hoje, deves preferir Attributes sempre que possível."
     },
     {
       id: "q9_6",
-      question: "Os Atributos do PHP 8 podem ser lidos sem a Reflection API?",
-      options: ["Sim, via $_SERVER", "Não, a Reflection API é o único meio oficial de ler metadados de atributos", "Sim, via get_class_methods()", "Sim, via strings de comentários"],
+      question: "ReflectionClass::newInstanceArgs() permite:",
+      options: [
+        "Criar uma nova classe dinamicamente.",
+        "Instanciar uma classe passando um array de argumentos para o construtor.",
+        "Mudar o nome de uma classe em runtime.",
+        "Remover o pai (parent) de uma classe."
+      ],
       correctAnswer: 1
     }
   ]
