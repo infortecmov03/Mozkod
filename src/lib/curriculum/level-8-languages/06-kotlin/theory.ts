@@ -5,6 +5,7 @@ import { lesson as l3 } from './theory/03-sealed-hierarchies';
 import { lesson as l6 } from './theory/06-coroutines-master';
 import { lesson as l14 } from './theory/14-kmp-architecture';
 import { lesson as l17 } from './theory/17-ksp-codegen';
+import { lesson as l19 } from './theory/19-advanced-generics';
 import { lesson as l21 } from './theory/21-capstone-audit';
 
 const kotlinTitles = [
@@ -41,7 +42,7 @@ const videoIds = [
 ];
 
 const sourceMap: Record<number, any> = {
-  0: l1, 1: l2, 2: l3, 5: l6, 13: l14, 16: l17, 20: l21
+  0: l1, 1: l2, 2: l3, 5: l6, 13: l14, 16: l17, 18: l19, 20: l21
 };
 
 export const lessons: TheoryLesson[] = kotlinTitles.map((title, i) => {
@@ -64,7 +65,7 @@ export const lessons: TheoryLesson[] = kotlinTitles.map((title, i) => {
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
           <h2 class="text-3xl font-bold mb-4 font-headline text-primary flex items-center gap-3">
-            📱 Kotlin Master: ${title}
+            📱 Kotlin Master: \${title}
           </h2>
           <p class="text-lg leading-relaxed opacity-90">
             Estudo aprofundado da linguagem Kotlin focado em engenharia de sistemas de alta performance, 
