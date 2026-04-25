@@ -6,6 +6,7 @@ import { quiz as q5 } from './quizzes/05-ddd-strategic-quiz';
 import { quiz as q6 } from './quizzes/06-ddd-tactical-quiz';
 import { quiz as q7 } from './quizzes/07-cqrs-event-sourcing-quiz';
 import { quiz as q8 } from './quizzes/08-creational-patterns-quiz';
+import { quiz as q9 } from './quizzes/09-behavioral-patterns-quiz';
 import { quiz as q14 } from './quizzes/14-property-hooks-quiz';
 
 const generatePlaceholder = (id: number) => ({
@@ -25,6 +26,7 @@ export const quizzes = Array.from({ length: 21 }, (_, i) => {
   if (id === 6) return q6;
   if (id === 7) return q7;
   if (id === 8) return q8;
+  if (id === 9) return q9;
   if (id === 14) return q14;
   return generatePlaceholder(id);
 });

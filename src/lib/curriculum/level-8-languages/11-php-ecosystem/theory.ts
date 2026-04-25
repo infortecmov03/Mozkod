@@ -7,6 +7,7 @@ import { lesson as l5 } from './theory/05-ddd-strategic';
 import { lesson as l6 } from './theory/06-ddd-tactical';
 import { lesson as l7 } from './theory/07-cqrs-event-sourcing';
 import { lesson as l8 } from './theory/08-creational-patterns';
+import { lesson as l9 } from './theory/09-behavioral-patterns';
 import { lesson as l14 } from './theory/14-property-hooks';
 
 const titles = [
@@ -18,7 +19,7 @@ const titles = [
   "Fase 2: DDD Tático: Entities, Value Objects e Aggregates",
   "Fase 2: CQRS e Event Sourcing: O Estado como História",
   "Fase 2: Design Patterns I: Padrões de Criação (Creational)",
-  "Fase 2: Design Patterns II: Padrões Comportamentais",
+  "Fase 2: Design Patterns II: Padrões Comportamentais (Behavioral)",
   "Fase 2: PSR Standards: A Constituição do PHP Moderno",
   "Fase 3: Dependency Injection e Contentores de Elite",
   "Fase 3: Framework Internals I: O Kernel do Laravel",
@@ -36,7 +37,7 @@ const titles = [
 export const lessons: TheoryLesson[] = titles.map((title, i) => {
   const idNum = i + 1;
   const sourceMap: Record<number, any> = { 
-    1: l1, 2: l2, 3: l3, 4: l4, 5: l5, 6: l6, 7: l7, 8: l8, 14: l14 
+    1: l1, 2: l2, 3: l3, 4: l4, 5: l5, 6: l6, 7: l7, 8: l8, 9: l9, 14: l14 
   };
   
   if (sourceMap[idNum]) return sourceMap[idNum];
