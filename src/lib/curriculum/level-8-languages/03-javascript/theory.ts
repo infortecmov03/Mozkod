@@ -8,6 +8,10 @@ import { lesson as l6 } from './theory/06-esm-tree-shaking';
 import { lesson as l7 } from './theory/07-web-workers';
 import { lesson as l8 } from './theory/08-observers-apis';
 import { lesson as l9 } from './theory/09-debouncing-throttling';
+import { lesson as l10 } from './theory/10-promises-internals';
+import { lesson as l11 } from './theory/11-v8-engines';
+import { lesson as l12 } from './theory/12-functional-currying';
+import { lesson as l13 } from './theory/13-web-crypto-security';
 import { lesson as l14 } from './theory/14-streams-api';
 
 const jsTitles = [
@@ -35,7 +39,8 @@ const jsTitles = [
 ];
 
 const lessonsSource: Record<number, any> = {
-  0: l1, 1: l2, 2: l3, 3: l4, 4: l5, 5: l6, 6: l7, 7: l8, 8: l9, 13: l14
+  0: l1, 1: l2, 2: l3, 3: l4, 4: l5, 5: l6, 6: l7, 7: l8, 8: l9, 9: l10,
+  10: l11, 11: l12, 12: l13, 13: l14
 };
 
 export const lessons: TheoryLesson[] = jsTitles.map((title, i) => {
