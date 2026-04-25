@@ -21,13 +21,13 @@ export const lesson: TheoryLesson = {
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. ID vs Class: Unicidade vs Grupo</h3>
         <div class="grid md:grid-cols-2 gap-6">
           <div class="p-6 bg-card border rounded-2xl border-white/5 shadow-lg">
-            <h4 class="font-bold text-primary mb-2">ID (#id)</h4>
+            <h4 class="font-bold text-primary mb-2 text-xs">ID (#id)</h4>
             <p class="text-xs text-muted-foreground leading-relaxed">
               Deve ser <strong>único</strong> em toda a página. Usado para elementos singulares (Header, Main) e como âncora de navegação. Tem a maior especificidade no CSS.
             </p>
           </div>
           <div class="p-6 bg-card border rounded-2xl border-white/5 shadow-lg">
-            <h4 class="font-bold text-primary mb-2">Class (.class)</h4>
+            <h4 class="font-bold text-primary mb-2 text-xs">Class (.class)</h4>
             <p class="text-xs text-muted-foreground leading-relaxed">
               Pode ser repetida em <strong>múltiplos</strong> elementos. É a base dos sistemas de design (BEM, Tailwind). Permite que um elemento herde múltiplos comportamentos.
             </p>
@@ -139,11 +139,11 @@ export const lesson: TheoryLesson = {
       </section>
 
       <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
-        <h4 class="text-xl font-bold text-primary mb-4">🏆 Regra de Ouro do Arquiteto</h4>
+        <h4 class="text-xl font-bold text-primary mb-4">🏆 Regra do Arquiteto</h4>
         <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
           "Identidade no HTML é contrato. Mudar um ID ou uma Classe sem avisar o desenvolvedor de CSS ou JS é quebrar o sistema. Trate os nomes de atributos com o mesmo rigor que trata nomes de variáveis no Backend."
         </p>
       </section>
     </div>
-  `
+  `,
 };

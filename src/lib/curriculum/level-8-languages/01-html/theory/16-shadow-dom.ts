@@ -47,10 +47,10 @@ export const lesson: TheoryLesson = {
 const host = document.querySelector('#host-element');
 const shadow = host.attachShadow({ mode: 'open' });
 
-shadow.innerHTML = `
+shadow.innerHTML = \`
   <style> p { color: #3b82f6; font-weight: bold; } </style>
   <p>Eu sou um parágrafo isolado e protegido!</p>
-`;
+\`;
            </code></pre>
         </div>
       </section>
