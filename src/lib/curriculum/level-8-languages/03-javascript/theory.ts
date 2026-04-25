@@ -13,51 +13,25 @@ import { lesson as l11 } from './theory/11-v8-engines';
 import { lesson as l12 } from './theory/12-functional-currying';
 import { lesson as l13 } from './theory/13-web-crypto-security';
 import { lesson as l14 } from './theory/14-streams-api';
+import { lesson as l15 } from './theory/15-sanitization-xss';
+import { lesson as l16 } from './theory/16-service-workers';
+import { lesson as l17 } from './theory/17-shadow-dom-events';
+import { lesson as l18 } from './theory/18-custom-events';
+import { lesson as l19 } from './theory/19-intl-api';
+import { lesson as l20 } from './theory/20-history-api-routing';
+import { lesson as l21 } from './theory/21-capstone-audit';
 
-const jsTitles = [
-  "Fase 1: Prototypal Inheritance Internals",
-  "Fase 1: Event Loop: Microtasks vs Macrotasks",
-  "Fase 1: Closures e Gestão de Memória Profunda",
-  "Fase 1: Metaprogramação: Proxies e Reflect",
-  "Fase 2: Advanced Async: AbortController e Sinais",
-  "Fase 2: JavaScript Modules (ESM) & Tree Shaking",
-  "Fase 2: Web Workers: Paralelismo Real no Browser",
-  "Fase 2: Observers APIs: Mutation, Intersection e Resize",
-  "Fase 2: Performance: Debouncing e Throttling de Elite",
-  "Fase 3: Promises Internals: Wakers e Microtask Queue",
-  "Fase 3: V8 Engines: Hidden Classes e Inline Caching",
-  "Fase 3: Programação Funcional: Currying e Composição",
-  "Fase 3: Web Crypto API: Segurança de Dados Nativa",
-  "Fase 3: Streams API: Processamento de Dados Massivos",
-  "Fase 3: Sanitização e Proteção contra XSS",
-  "Fase 4: Service Workers e a App Shell Architecture",
-  "Fase 4: Shadow DOM: Event Retargeting e Encapsulamento",
-  "Fase 4: Custom Events e Comunicação Desacoplada",
-  "Fase 4: Intl API: Internacionalização e Localização",
-  "Fase 4: History API: Roteamento de SPAs do Zero",
-  "Fase 4: Capstone: Auditoria de Performance e Segurança"
-];
-
-const lessonsSource: Record<number, any> = {
+const sourceMap: Record<number, any> = {
   0: l1, 1: l2, 2: l3, 3: l4, 4: l5, 5: l6, 6: l7, 7: l8, 8: l9, 9: l10,
-  10: l11, 11: l12, 12: l13, 13: l14
+  10: l11, 11: l12, 12: l13, 13: l14, 14: l15, 15: l16, 16: l17, 17: l18, 
+  18: l19, 19: l20, 20: l21
 };
 
-export const lessons: TheoryLesson[] = jsTitles.map((title, i) => {
-  if (lessonsSource[i]) {
-    return {
-      ...lessonsSource[i],
-      title: title,
-      id: `js-m${i + 1}`,
-      quizId: `js-mq${i + 1}`,
-      enableInteractive: true
-    };
-  }
-
+export const lessons: TheoryLesson[] = Array.from({ length: 21 }, (_, i) => {
+  const baseLesson = sourceMap[i];
   return {
+    ...baseLesson,
     id: `js-m${i + 1}`,
-    title: title,
-    content: `<div class='space-y-4'><h2 class='text-2xl font-bold'>⚡ JavaScript Master: ${title}</h2><p>Estudo aprofundado dos internals da linguagem e APIs modernas do browser para escala industrial.</p></div>`,
     quizId: `js-mq${i + 1}`,
     enableInteractive: true
   };
