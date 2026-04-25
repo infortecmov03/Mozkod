@@ -1,10 +1,4 @@
-
 import type { TheoryLesson } from '../../types';
-import { lesson as l1 } from './theory/01-php8-attributes';
-import { lesson as l2 } from './theory/02-strong-typing-union-types';
-import { lesson as l3 } from './theory/03-constructor-promotion';
-import { lesson as l4 } from './theory/04-oop-advanced';
-import { lesson as l5 } from './theory/05-zend-engine-internals';
 
 const phpTitles = [
   "Fase 1: PHP 8 Attributes: Metadados Nativos de Elite",
@@ -30,47 +24,32 @@ const phpTitles = [
   "Fase 4: Capstone: Deploy do High-Scale Event Server"
 ];
 
-const sourceMap: Record<number, any> = {
-  0: l1, 1: l2, 2: l3, 3: l4, 4: l5
-};
-
-export const lessons: TheoryLesson[] = phpTitles.map((title, i) => {
-  if (sourceMap[i]) {
-    return {
-      ...sourceMap[i],
-      id: `php-m${i + 1}`,
-      title: title,
-      quizId: `php-mq${i + 1}`,
-      enableInteractive: true
-    };
-  }
-
-  return {
-    id: `php-m${i + 1}`,
-    title: title,
-    content: `
-      <div class="space-y-12">
-        <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
-          <h2 class="text-3xl font-bold mb-4 font-headline text-primary flex items-center gap-3">
-            🐘 Engenharia PHP de Elite
-          </h2>
-          <p class="text-lg leading-relaxed opacity-90">
-            Esta lição cobre o tópico avançado: <strong>${title.split(': ')[1]}</strong>. O foco está na performance, escalabilidade e segurança industrial.
-          </p>
-        </div>
-
-        <section class="space-y-6">
-          <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">Visão Técnica</h3>
-          <p class="text-sm leading-relaxed">No nível Master, entendemos que o PHP é uma linguagem compilada para Opcodes e que o uso de ferramentas como Swoole ou JIT altera radicalmente a performance do sistema.</p>
-        </section>
-
-        <div class="bg-indigo-500/10 p-6 rounded-2xl border border-indigo-500/20 shadow-inner mt-6">
-          <h4 class="font-bold text-indigo-400 mb-2">🚀 Objetivo de Engenharia</h4>
-          <p class="text-xs">Dominar os internals da linguagem para construir o <strong>CWM High-Scale Event Server</strong>, garantindo resiliência em ambientes de alta carga.</p>
-        </div>
+export const lessons: TheoryLesson[] = phpTitles.map((title, i) => ({
+  id: `php-m${i + 1}`,
+  title: title,
+  content: `
+    <div class="space-y-12">
+      <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl text-center">
+        <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🐘 PHP Master: ${title.split(': ')[1]}</h2>
+        <p class="text-lg leading-relaxed opacity-90">
+          Bem-vindo à engenharia de alta fidelidade. Nesta lição, exploramos os detalhes profundos do <strong>${title.split(': ')[1]}</strong>.
+        </p>
       </div>
-    `,
-    quizId: `php-mq${i + 1}`,
-    enableInteractive: true
-  };
-});
+
+      <section class="space-y-6">
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">Visão Técnica Master</h3>
+        <p class="text-sm leading-relaxed">
+          O desenvolvimento de sistemas de larga escala em PHP exige o domínio do motor de execução. Entender o custo de cada operação e como o interpretador otimiza o código na memória é o que separa um programador de um arquiteto.
+        </p>
+        <div class="bg-indigo-500/10 p-6 rounded-2xl border border-indigo-500/20 shadow-inner">
+           <h4 class="font-bold text-indigo-400 mb-2">🚀 O Objetivo desta Lição</h4>
+           <p class="text-xs opacity-70">
+             Garantir a integridade, performance e segurança do <strong>High-Scale Event Server</strong>, o projeto central desta trilha.
+           </p>
+        </div>
+      </section>
+    </div>
+  `,
+  quizId: `php-mq${i + 1}`,
+  enableInteractive: true
+}));

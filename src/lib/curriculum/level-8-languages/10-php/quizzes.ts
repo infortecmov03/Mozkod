@@ -1,5 +1,3 @@
-
-import type { Quiz } from '../../types';
 import { quiz as q1 } from './quizzes/01-attributes-quiz';
 import { quiz as q2 } from './quizzes/02-typing-quiz';
 import { quiz as q3 } from './quizzes/03-promotion-quiz';
@@ -22,7 +20,7 @@ import { quiz as q19 } from './quizzes/19-security-quiz';
 import { quiz as q20 } from './quizzes/20-grpc-quiz';
 import { quiz as q21 } from './quizzes/21-capstone-quiz';
 
-export const quizzes: Quiz[] = [
+export const quizzes = [
   q1, q2, q3, q4, q5, q6, q7, q8, q9, q10,
   q11, q12, q13, q14, q15, q16, q17, q18, q19, q20, q21
 ];
