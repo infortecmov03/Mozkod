@@ -3,13 +3,14 @@ import { exercise as p1 } from './laboratory/01-prototypal-lab';
 import { exercise as p2 } from './laboratory/02-mutation-observer-lab';
 import { exercise as p3 } from './laboratory/03-custom-events-lab';
 import { exercise as p4 } from './laboratory/04-abort-controller-lab';
-import { exercise as p14 } from './laboratory/13-drag-drop-lab';
+import { exercise as p8 } from './laboratory/08-observers-apis-lab';
+import { exercise as p13 } from './laboratory/13-drag-drop-lab';
 import { exercise as p21 } from './laboratory/21-capstone-js-lab';
 
 const jsTitles = [
   "Herança e Protótipos", "Mutation Observers", "Custom Events Architecture",
   "AbortController & Signals", "Web Workers Pipeline", "Proxy Data Validation",
-  "Intl & Localização", "Intersection Visibility", "Security Sanitization",
+  "Intl & Localização", "Observers: Intersection & Resize", "Security Sanitization",
   "Streams & Chunks", "Web Crypto Internals", "History API Routing",
   "Drag & Drop Industrial", "Hardware APIs Context", "Web Audio Feedback",
   "Permissions & Privacy", "Shared Memory & Atomics", "JS/Wasm Interop",
@@ -30,7 +31,8 @@ export const practice = {
     if (i === 1) return p2;
     if (i === 2) return p3;
     if (i === 3) return p4;
-    if (i === 12) return p14; // Reutilizando IDs da lista anterior
+    if (i === 7) return p8;
+    if (i === 12) return p13;
     if (i === 20) return p21;
 
     return {
