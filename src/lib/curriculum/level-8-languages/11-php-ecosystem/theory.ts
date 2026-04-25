@@ -9,6 +9,9 @@ import { lesson as l7 } from './theory/07-cqrs-event-sourcing';
 import { lesson as l8 } from './theory/08-creational-patterns';
 import { lesson as l9 } from './theory/09-behavioral-patterns';
 import { lesson as l10 } from './theory/10-psr-standards';
+import { lesson as l11 } from './theory/11-dependency-injection';
+import { lesson as l12 } from './theory/12-laravel-kernel';
+import { lesson as l13 } from './theory/13-symfony-kernel';
 import { lesson as l14 } from './theory/14-property-hooks';
 
 const titles = [
@@ -35,12 +38,13 @@ const titles = [
   "Fase 4: Capstone II: Deploy Cloud-Native em Larga Escala"
 ];
 
+const sourceMap: Record<number, any> = { 
+  1: l1, 2: l2, 3: l3, 4: l4, 5: l5, 6: l6, 7: l7, 8: l8, 9: l9, 10: l10,
+  11: l11, 12: l12, 13: l13, 14: l14
+};
+
 export const lessons: TheoryLesson[] = titles.map((title, i) => {
   const idNum = i + 1;
-  const sourceMap: Record<number, any> = { 
-    1: l1, 2: l2, 3: l3, 4: l4, 5: l5, 6: l6, 7: l7, 8: l8, 9: l9, 10: l10, 14: l14 
-  };
-  
   if (sourceMap[idNum]) return sourceMap[idNum];
 
   return {
