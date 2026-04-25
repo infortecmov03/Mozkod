@@ -8,12 +8,13 @@ Para compreender as entranhas deste projeto, consulte os manuais específicos:
 
 ### 🏛️ Arquitetura e Core
 - [Architecture Overview](docs/system-architecture.md) - O modelo híbrido e stack técnica.
-- [Curriculum Engine](docs/curriculum-engine.md) - Como funciona o motor de aulas e laboratórios.
+- [Curriculum Engine](docs/curriculum-engine.md) - O motor pedagógico e a lógica de herança.
+- [Curriculum Architect Manual](docs/curriculum-manual.md) - Como expandir e criar novas lições.
 - [Security & Compliance](docs/security-compliance.md) - Protocolos de segurança e privacidade.
 
 ### 💻 Engenharia de Software
 - [Frontend Engineering](docs/frontend-engineering.md) - Next.js, Editor e Syntax Highlighting.
-- [Backend Infrastructure](docs/backend-infrastructure.md) - Supabase, RLS e Schema.
+- [Backend Infrastructure](docs/backend-infrastructure.md) - Supabase, RLS e Schema de Dados.
 - [AI Integration](docs/ai-integration.md) - Implementação de IA com Genkit e Gemini.
 
 ### 🎨 Design e Lançamento
