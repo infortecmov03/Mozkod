@@ -2,6 +2,7 @@ import type { PracticeExercise } from '../../types';
 import { exercise as p1 } from './laboratory/01-event-server-init-lab';
 import { exercise as p4 } from './laboratory/04-enums-lab';
 import { exercise as p13 } from './laboratory/13-ffi-binary-parser-lab';
+import { exercise as p21 } from './laboratory/21-capstone-event-server-lab';
 
 const phpTitles = [
   "Fundação do Event Server", 
@@ -32,6 +33,7 @@ export const practice = {
     if (i === 0) return p1;
     if (i === 3) return p4;
     if (i === 13) return p13;
+    if (i === 20) return p21;
     
     // Laboratório 16 (Index 16): PHPStan Level 9 Audit
     if (i === 16) {
