@@ -11,7 +11,7 @@ export const lesson: TheoryLesson = {
           ⚙️ Programando o Motor de Estilos
         </h2>
         <p class="text-lg leading-relaxed opacity-90">
-          O CSS moderno não é apenas o que escreves no ficheiro .css. É o resultado de uma transformação industrial. O <strong>PostCSS</strong> permite-te usar funcionalidades do futuro hoje, limpando e otimizando os teus ativos para produção.
+          O CSS moderno é o resultado de uma transformação industrial. O <strong>PostCSS</strong> permite-te usar funcionalidades do futuro hoje, limpando e otimizando os teus ativos para produção através de um ecossistema de plugins.
         </p>
       </div>
 
@@ -19,13 +19,13 @@ export const lesson: TheoryLesson = {
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. Plugins de Missão Crítica</h3>
         <ul class="space-y-4">
           <li class="p-4 bg-muted/20 rounded-xl border border-white/5">
-            <strong class="text-primary block">Autoprefixer:</strong> Adiciona prefixos proprietários (-webkit, -moz) automaticamente baseando-se nos dados reais do mercado (CanIUse).
+            <strong class="text-primary block">Autoprefixer:</strong> Adiciona prefixos proprietários (-webkit, -moz) automaticamente baseando-se no CanIUse.
           </li>
           <li class="p-4 bg-muted/20 rounded-xl border border-white/5">
-            <strong class="text-primary block">CSSNano:</strong> O minificador definitivo que remove comentários, espaços e reordena regras para o menor peso possível.
+            <strong class="text-primary block">CSSNano:</strong> Minificador definitivo que remove comentários e reduz o peso do ficheiro final.
           </li>
           <li class="p-4 bg-muted/20 rounded-xl border border-white/5">
-            <strong class="text-primary block">Preset-Env:</strong> Converte sintaxes experimentais (como Nesting nativo) em CSS que os browsers atuais entendem.
+            <strong class="text-primary block">Preset-Env:</strong> Converte sintaxes experimentais (como Nesting) em CSS compatível.
           </li>
         </ul>
       </section>
@@ -35,7 +35,7 @@ export const lesson: TheoryLesson = {
           🚀 PurgeCSS: Eliminando o Peso Morto
         </h4>
         <p class="text-sm leading-relaxed">
-          Se usas Tailwind ou Bootstrap, 90% do CSS é inútil. O <strong>PurgeCSS</strong> analisa o teu HTML e JS, e remove do ficheiro final qualquer classe que não esteja a ser usada, reduzindo o bundle de 300KB para 15KB.
+          O <strong>PurgeCSS</strong> analisa o teu HTML e JS, e remove do ficheiro final qualquer classe que não esteja a ser usada, garantindo o menor bundle possível para o utilizador final.
         </p>
       </section>
     </div>`
