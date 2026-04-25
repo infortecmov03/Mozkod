@@ -13,13 +13,15 @@ export const lesson: TheoryLesson = {
           🏷️ Metadados na Árvore de Sintaxe (AST)
         </h2>
         <p class="text-lg leading-relaxed opacity-90">
-          Até ao PHP 7.4, a "metaprogramação" dependia de strings dentro de comentários (Docblocks). O motor precisava de realizar um parsing manual de texto em runtime, o que introduzia latência e falta de segurança de tipos. Os <strong>Attributes</strong> do PHP 8 mudaram o paradigma: agora, os metadados são cidadãos de primeira classe integrados na <strong>Zend Engine</strong>.
+          Até ao PHP 7.4, a "metaprogramação" dependia de strings dentro de comentários (<button>Docblocks</button>). O motor precisava de realizar um parsing manual de texto em runtime, o que introduzia latência. Os <button>Attributes</button> do PHP 8 mudaram o paradigma: agora, os metadados são cidadãos de primeira classe integrados na <button>Zend Engine</button>.
         </p>
       </div>
 
       <section class="space-y-6">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. O Fim do Parsing de Comentários</h3>
-        <p class="text-sm">Attributes são compilados como parte da estrutura da classe. Isto significa que o motor do PHP reconhece a intenção técnica durante a compilação, eliminando o custo de leitura de strings que bibliotecas como o Doctrine Annotations exigiam no passado.</p>
+        <p class="text-sm leading-relaxed">
+          Os <button>Attributes</button> são compilados como parte da estrutura da classe. Isto significa que o motor do PHP reconhece a intenção técnica durante a fase de <button>Compilation</button>, eliminando o custo de leitura de strings que bibliotecas como o Doctrine Annotations exigiam no passado.
+        </p>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="p-4 bg-red-500/5 border border-red-500/20 rounded-xl">
@@ -45,7 +47,9 @@ class WelcomeHandler {}
 
       <section class="space-y-8">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">2. Anatomia de um Atributo de Elite</h3>
-        <p class="text-sm leading-relaxed">Um atributo é apenas uma classe marcada com o atributo nativo <code>#[Attribute]</code>. Podes restringir onde ele pode ser aplicado para evitar erros de arquitetura.</p>
+        <p class="text-sm leading-relaxed">
+          Um atributo é apenas uma classe marcada com o atributo nativo <button>#[Attribute]</button>. Podes restringir onde ele pode ser aplicado usando constantes como <button>Attribute::TARGET_METHOD</button> para evitar erros de arquitetura.
+        </p>
 
         <div class="space-y-4">
            <pre><code class="language-php">
@@ -57,13 +61,15 @@ class EventHandler {
     ) {}
 }
            </code></pre>
-           <p class="text-xs text-muted-foreground italic">Nota: O uso de Property Promotion no construtor do atributo (PHP 8) torna a definição extremamente enxuta.</p>
+           <p class="text-xs text-muted-foreground italic">Nota: O uso de <button>Constructor Promotion</button> no construtor do atributo torna a definição extremamente enxuta.</p>
         </div>
       </section>
 
       <section class="space-y-6">
         <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">3. Invocação via Reflection API</h3>
-        <p class="text-sm">Para ler estes dados, utilizamos a Reflection API. O método <code>getAttributes()</code> permite filtrar por classe e instanciar o metadado como um objeto real.</p>
+        <p class="text-sm leading-relaxed">
+          Para ler estes dados, utilizamos a <button>Reflection API</button>. O método <button>getAttributes()</button> permite filtrar por classe e instanciar o metadado como um objeto real através do método <button>newInstance()</button>.
+        </p>
         
         <pre><code class="language-php">
 $reflection = new ReflectionClass(WelcomeHandler::class);
@@ -81,7 +87,7 @@ foreach ($attributes as $attribute) {
       <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
         <h4 class="text-xl font-bold text-primary mb-4">🏆 Visão do Arquiteto</h4>
         <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
-          "Attributes permitem criar sistemas de auto-discovery. No nosso servidor de eventos, eles eliminam ficheiros de configuração manuais, permitindo que o motor encontre automaticamente todos os ouvintes de mensagens apenas escaneando as classes do projeto."
+          "Os <button>Attributes</button> permitem criar sistemas de <button>auto-discovery</button>. No nosso servidor de eventos, eles eliminam ficheiros de configuração manuais, permitindo que o motor encontre automaticamente todos os ouvintes apenas escaneando as classes do projeto."
         </p>
       </section>
     </div>
