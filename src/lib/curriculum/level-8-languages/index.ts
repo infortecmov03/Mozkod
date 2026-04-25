@@ -8,12 +8,6 @@
  * ESTRUTURA DE NAVEGAÇÃO:
  * A UI agrupa automaticamente estas lições em "Fases Profissionais" 
  * baseando-se no título da lição (ex: "Fase 1: ...").
- * 
- * COMO INTEGRAR UMA NOVA LINGUAGEM:
- * 1. Cria a pasta da linguagem em 'src/lib/curriculum/level-8-languages/'.
- * 2. Implementa os sub-módulos: theory/, quizzes/ e laboratory/.
- * 3. Exporta a KnowledgeArea no 'index.ts' da linguagem.
- * 4. Adiciona a referência no array 'knowledgeAreas' abaixo.
  */
 
 import type { Level } from '../types';
@@ -27,6 +21,7 @@ import { goMaster } from './07-go/index';
 import { rustMaster } from './08-rust/index';
 import { rubyMaster } from './09-ruby/index';
 import { phpMaster } from './10-php/index';
+import { phpEcosystem } from './11-php-ecosystem/index';
 
 export const level8: Level = {
   id: 8,
@@ -42,6 +37,7 @@ export const level8: Level = {
     goMaster, 
     rustMaster, 
     rubyMaster, 
-    phpMaster
+    phpMaster,
+    phpEcosystem
   ]
 };
