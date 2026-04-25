@@ -4,6 +4,7 @@ export const lesson: TheoryLesson = {
   id: "kt-m2",
   title: "Fase 1: Extension Functions e Property Delegation",
   enableInteractive: true,
+  youtubeVideoId: "dQw4w9WgXcQ",
   quizId: "kt-mq2",
   content: `
     <div class="space-y-12">

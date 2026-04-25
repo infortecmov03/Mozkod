@@ -4,6 +4,7 @@ export const lesson: TheoryLesson = {
   id: "kt-m1",
   title: "Fase 1: Null Safety Internals e o Type System",
   enableInteractive: true,
+  youtubeVideoId: "8aGhZQkoFbQ",
   quizId: "kt-mq1",
   content: `
     <div class="space-y-12">
@@ -24,7 +25,7 @@ val name: String = "Edson" // Nunca pode ser nula
 var email: String? = null // Pode ser nula
 
 // ✅ Compilador bloqueia isto se email for nulo
-println(email.length) // ERRO DE COMPILAÇÃO
+// println(email.length) // ERRO DE COMPILAÇÃO
         </code></pre>
       </section>
 
