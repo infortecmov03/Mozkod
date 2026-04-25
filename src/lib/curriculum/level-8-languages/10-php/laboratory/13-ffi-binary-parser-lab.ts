@@ -1,7 +1,7 @@
 import type { PracticeExercise } from '../../../types';
 
 export const exercise: PracticeExercise = {
-  id: "php-p13",
+  id: "php-p14",
   language: "php",
   title: "Projeto Master: Parsing Binário com FFI",
   description: "Utilize a interface nativa para processar pacotes de rede com performance de C.",
@@ -9,7 +9,7 @@ export const exercise: PracticeExercise = {
   isProjectPart: true,
   template: `<?php
 
-namespace App\\Core;
+namespace App\Core;
 
 use FFI;
 
