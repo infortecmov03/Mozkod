@@ -3,57 +3,82 @@ import type { PracticeExercise } from '../../../types';
 export const exercise: PracticeExercise = {
   id: "css-p1",
   language: "html",
-  title: "Projeto Master: Design System e Variáveis Globais",
-  description: "Inicie a camada visual do seu portal utilizando tokens de design.",
-  statement: "Configure as variáveis de cor e o reset básico no cabeçalho do documento.",
+  title: "Projeto Master: Design System e Seletores de Elite",
+  description: "Inicie a construção da camada visual do seu portal utilizando seletores avançados e lógicas relacionais.",
+  statement: "Utilize :has() para destacar seções do seu portal e configure as variáveis de design no escopo correto.",
   isProjectPart: true,
-  youtubeVideoId: "v4cd1O4zkGw",
   template: `<!DOCTYPE html>
 <html lang="pt-MZ">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A academia de engenharia de elite de Moçambique.">
-  <meta name="author" content="Master Engineer">
-  <link rel="canonical" href="https://codworks.mz">
-  <title>Codworks Master Studio</title>
+  <style>
+    /* 1. Defina os Design Tokens no root */
+    :root {
+      --primary: #3b82f6;
+      --bg-surface: #0f172a;
+    }
+
+    body {
+      background-color: var(--bg-surface);
+      color: white;
+      font-family: system-ui, sans-serif;
+    }
+
+    /* 2. Aplique a lógica de Seletores de Elite abaixo */
+    section {
+      padding: 2rem;
+      border: 1px solid #1e293b;
+      margin-bottom: 1rem;
+      border-radius: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    /* MISSÃO: Destacar a seção APENAS se ela contiver um formulário */
+    
+  </style>
 </head>
 <body>
-  <header>
-    <img src="hero.jpg" alt="Academia" fetchpriority="high">
-    <nav aria-label="Menu Principal">
-      <ul>
-        <li><a href="#main-content">Home</a></li>
-        <li><a href="#register">Inscrição</a></li>
-      </ul>
-    </nav>
-  </header>
-  <main id="main-content" role="main">
+  <main>
     <section>
-      <h1>Bem-vindo ao Nível Master</h1>
-      <p>A estrutura está validada.</p>
+      <h1>Engenharia de Interface</h1>
+      <p>Bem-vindo ao módulo de design de alta fidelidade.</p>
+    </section>
+
+    <section id="register">
+      <h2>Inscrição</h2>
+      <form>
+        <input type="text" placeholder="Seu Nome">
+        <button type="submit">Enviar</button>
+      </form>
     </section>
   </main>
-  <footer>
-    <p>&copy; 2024 Codworks Moz</p>
-  </footer>
 </body>
 </html>`,
   detailedExplanation: `
     <div class="space-y-4">
-      <h3 class="text-xl font-bold text-primary">🎨 Iniciando o Design System</h3>
-      <p class="text-sm">Um engenheiro master não usa cores fixas; ele usa <strong>Design Tokens</strong> (Custom Properties). Isto permite que o tema mude instantaneamente.</p>
-      <div class="bg-black/40 p-4 rounded-xl border border-white/10 font-mono text-[11px] leading-relaxed">
-        <p><strong>Ação 1:</strong> No <code>&lt;head&gt;</code>, adicione a tag <code>&lt;style&gt;</code>.</p>
-        <p><strong>Ação 2:</strong> Defina <code>:root { --primary: #3b82f6; --bg: #0f172a; }</code>.</p>
-        <p><strong>Ação 3:</strong> Aplique <code>body { background: var(--bg); color: white; }</code>.</p>
-        <p><strong>Ação 4:</strong> Adicione um seletor <code>h1 { color: var(--primary); }</code>.</p>
+      <h3 class="text-xl font-bold text-primary">🔨 Missão: Seletores Relacionais</h3>
+      <p class="text-sm">A sua tarefa é utilizar o seletor <code>:has()</code> para aplicar um estilo diferenciado à seção que contém o formulário de inscrição, sem precisar de adicionar uma classe extra no HTML.</p>
+      
+      <div class="bg-black/40 p-4 rounded-xl border border-primary/20 space-y-2">
+        <p class="text-xs font-bold text-yellow-500">Instruções:</p>
+        <ul class="text-[10px] space-y-1 list-disc ml-4">
+          <li><strong>Lógica Relacional:</strong> No CSS, adicione o seletor <code>section:has(form)</code>.</li>
+          <li><strong>Estilização:</strong> Mude o <code>border-color</code> para <code>var(--primary)</code> e aplique um <code>box-shadow</code> sutil.</li>
+          <li><strong>Interatividade:</strong> Verifique no preview como apenas a seção de inscrição reage, mantendo a primeira seção intacta.</li>
+        </ul>
       </div>
+      <p class="text-xs italic">Esta técnica permite que o seu CSS "entenda" o contexto do conteúdo dinamicamente.</p>
     </div>
   `,
   objectives: [
-    { id: "root_vars", description: "Definir variáveis --primary e --bg no :root", test: "--primary: #3b82f6" },
-    { id: "body_style", description: "Aplicar background usando a variável", test: "background: var(--bg)" },
-    { id: "h1_color", description: "Estilizar h1 com a cor primária", test: "h1 { color: var(--primary)" }
+    {
+      id: "has_selector",
+      description: "Utilizar o seletor :has(form) no bloco de estilo.",
+      test: "section:has(form)"
+    },
+    {
+      id: "primary_border",
+      description: "Aplicar a cor da borda usando a variável --primary.",
+      test: "border-color: var(--primary)"
+    }
   ]
 };

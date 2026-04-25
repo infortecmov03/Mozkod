@@ -9,92 +9,98 @@ export const lesson: TheoryLesson = {
     <div class="space-y-12">
       <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
         <h2 class="text-3xl font-bold mb-4 font-headline text-primary flex items-center gap-3">
-          🎯 O Domínio da Seleção
+          🎯 O Algoritmo da Seleção
         </h2>
         <p class="text-lg leading-relaxed opacity-90">
-          Um Engenheiro CSS não "chuta" seletores até funcionar. Ele desenha a <strong>especificidade</strong>. Entenda como o browser calcula o peso das regras e como usar os novos seletores relacionais.
+          Dominar o CSS Master exige que pare de "tentar" seletores e passe a <strong>desenhar a especificidade</strong>. O browser não escolhe estilos aleatoriamente; ele segue um cálculo matemático rigoroso. Nesta lição, exploramos como manipular esse peso e como usar o seletor relacional <button>:has()</button> para criar lógicas que antes eram exclusivas do JavaScript.
         </p>
       </div>
 
+      <!-- 1. CÁLCULO DE ESPECIFICIDADE -->
       <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. O Cálculo da Especificidade</h3>
-        <p class="text-sm">O browser atribui pontos a cada seletor. Em caso de conflito, o peso maior ganha:</p>
-        <div class="grid md:grid-cols-3 gap-4 text-center">
-          <div class="p-4 bg-card border rounded-2xl border-white/5 shadow-lg">
-             <span class="block text-2xl font-black text-accent">100</span>
-             <span class="text-[10px] uppercase font-bold">IDs (#id)</span>
-          </div>
-          <div class="p-4 bg-card border rounded-xl border-white/5 shadow-lg">
-             <span class="block text-2xl font-black text-primary">10</span>
-             <span class="text-[10px] uppercase font-bold">Classes (.class)</span>
-          </div>
-          <div class="p-4 bg-card border rounded-xl border-white/5 shadow-lg">
-             <span class="block text-2xl font-black text-muted-foreground">1</span>
-             <span class="text-[10px] uppercase font-bold">Tags (h1, p)</span>
-          </div>
-        </div>
-      </section>
-
-      <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">2. Seletores Modernos: :is(), :where() e :has()</h3>
-        <p class="text-sm">Estes seletores permitem reduzir a repetição e criar lógicas relacionais que antes exigiam JavaScript.</p>
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. O Sistema de Pontuação Industrial</h3>
+        <p class="text-sm leading-relaxed">
+          Sempre que há um conflito de estilos, o browser calcula a especificidade baseando-se em três categorias (A, B, C):
+        </p>
         
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div class="p-6 bg-card border rounded-2xl border-white/5 shadow-xl">
+             <span class="block text-4xl font-black text-accent mb-2">100</span>
+             <h4 class="font-bold text-xs uppercase tracking-widest text-primary mb-2">IDs (#id)</h4>
+             <p class="text-[10px] opacity-60">Poder máximo. Difícil de sobrescrever.</p>
+          </div>
+          <div class="p-6 bg-card border rounded-2xl border-white/5 shadow-xl">
+             <span class="block text-4xl font-black text-primary mb-2">10</span>
+             <h4 class="font-bold text-xs uppercase tracking-widest text-primary mb-2">Classes, Atrib. e Pseudo</h4>
+             <p class="text-[10px] opacity-60">O padrão de ouro: .class, [type="text"], :hover.</p>
+          </div>
+          <div class="p-6 bg-card border rounded-2xl border-white/5 shadow-xl">
+             <span class="block text-4xl font-black text-muted-foreground mb-2">1</span>
+             <h4 class="font-bold text-xs uppercase tracking-widest text-primary mb-2">Elementos (h1, p)</h4>
+             <p class="text-[10px] opacity-60">A base fraca da hierarquia.</p>
+          </div>
+        </div>
+
+        <div class="p-5 bg-indigo-500/10 rounded-2xl border border-indigo-500/20">
+           <p class="text-sm font-bold text-indigo-400 mb-2">Exemplo de Cálculo:</p>
+           <code class="text-xs">nav.menu ul li a:hover</code> 
+           <span class="text-xs mx-2">→</span>
+           <span class="text-xs font-bold text-green-400">Pontuação: 12 (1 Classe + 1 Pseudo-classe + 4 Elementos)</span>
+        </div>
+      </section>
+
+      <!-- 2. O SELETOR :has() -->
+      <section class="space-y-8">
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">2. :has() - O Seletor de Parentesco</h3>
+        <p class="text-sm leading-relaxed">
+          O <code>:has()</code> é a mudança mais radical no CSS em décadas. Ele permite selecionar um elemento <strong>baseado no que existe dentro dele</strong> ou no que vem depois dele. É o "Parent Selector" que a comunidade esperava há 20 anos.
+        </p>
+
         <div class="space-y-4">
-           <h4 class="font-bold text-primary text-xs uppercase tracking-widest">Exemplo: O Seletor de Parentesco (:has)</h4>
-           <p class="text-xs text-muted-foreground">Estilize o card apenas se ele contiver uma imagem de destaque.</p>
-           <pre><code class="language-html">
-&lt;style&gt;
-  .card { 
-    padding: 20px; 
-    border: 2px solid #ccc; 
-    transition: 0.3s;
-  }
-  /* Seleciona o card APENAS se houver uma imagem dentro */
-  .card:has(img) {
-    border-color: #3b82f6;
-    background: #eff6ff;
-  }
-&lt;/style&gt;
+           <h4 class="font-bold text-primary text-xs uppercase tracking-widest">Caso de Uso: Estilizando o Container</h4>
+           <p class="text-xs text-muted-foreground">Mude o fundo do card apenas se ele contiver uma imagem de erro.</p>
+           <pre><code class="language-css">
+/* Seleciona o .card APENAS se houver um .error lá dentro */
+.card:has(.error) {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
 
-&lt;div class="card"&gt;
-  &lt;p&gt;Este card não tem imagem (Borda Cinza).&lt;/p&gt;
-&lt;/div&gt;
-
-&lt;br&gt;
-
-&lt;div class="card"&gt;
-  &lt;img src="https://picsum.photos/seed/1/50/50" alt="Icon"&gt;
-  &lt;p&gt;Este card tem imagem (Borda Azul)!&lt;/p&gt;
-&lt;/div&gt;
+/* Seleciona o h1 APENAS se o próximo elemento for um parágrafo */
+h1:has(+ p) {
+  margin-bottom: 0;
+}
            </code></pre>
         </div>
       </section>
 
+      <!-- 3. :is() VS :where() -->
       <section class="space-y-6">
-        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">3. Agrupamento com :is() e :where()</h3>
-        <div class="space-y-4">
-           <h4 class="font-bold text-sm">O Poder do :is()</h4>
-           <p class="text-xs">Reduz seletores repetitivos. O peso de especificidade do :is() é o do seletor mais forte dentro dele.</p>
-           <pre><code class="language-html">
-&lt;style&gt;
-  /* Em vez de h1, h2, h3 { ... } */
-  :is(h1, h2, h3) {
-    color: #3b82f6;
-    text-transform: uppercase;
-  }
-&lt;/style&gt;
-&lt;h1&gt;Título 1&lt;/h1&gt;
-&lt;h2&gt;Título 2&lt;/h2&gt;
-           </code></pre>
-        </div>
+        <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">3. :is() vs. :where() - Agrupamento e Peso</h3>
+        <p class="text-sm leading-relaxed">Ambos servem para agrupar seletores e reduzir a repetição de código, mas lidam com a <strong>Especificidade</strong> de formas opostas.</p>
+        
+        <ul class="space-y-4">
+          <li class="flex gap-4 p-4 bg-muted/20 rounded-xl border border-white/5">
+            <div>
+              <p class="font-bold text-sm">:is(h1, .titulo, #header):</p>
+              <p class="text-xs text-muted-foreground">Assume a especificidade do <strong>seletor mais forte</strong> dentro do grupo. No exemplo acima, todo o grupo teria o peso de um ID (100).</p>
+            </div>
+          </li>
+          <li class="flex gap-4 p-4 bg-muted/20 rounded-xl border border-white/5">
+            <div>
+              <p class="font-bold text-sm">:where(h1, .titulo, #header):</p>
+              <p class="text-xs text-muted-foreground">Assume <strong>Especificidade ZERO</strong>. É ideal para resets ou frameworks onde queres permitir que o utilizador sobrescreva o estilo facilmente com qualquer classe simples.</p>
+            </div>
+          </li>
+        </ul>
       </section>
 
       <section class="bg-primary/5 p-8 rounded-[2rem] border-2 border-dashed border-primary/20 text-center">
-        <h4 class="text-xl font-bold text-primary mb-4">🏆 Regra do Arquiteto</h4>
+        <h4 class="text-xl font-bold text-primary mb-4">🏆 O Mantra do Arquiteto CSS</h4>
         <p class="text-sm italic opacity-80 max-w-2xl mx-auto">
-          "Nunca use IDs para estilização em Design Systems. Use Classes para manter a especificidade baixa e uniforme, permitindo que as Cascade Layers gerenciem a prioridade de forma global."
+          "Escrever CSS Master é evitar a guerra de especificidade. Se você precisa usar <code>!important</code> para consertar um layout, você não entendeu a sua cascata. Use <code>:where()</code> para bases flexíveis e <code>:has()</code> para componentes inteligentes."
         </p>
       </section>
     </div>
-  `
+  `,
 };
