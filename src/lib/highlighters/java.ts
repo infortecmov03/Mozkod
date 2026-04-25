@@ -1,9 +1,9 @@
 import { escapeHtml, wrap } from './core';
 
 /**
- * @fileOverview Highlighter para Java e Kotlin (JVM).
+ * @fileOverview Highlighter especializado para Java.
  */
-export const highlightJVM = (line: string): string => {
+export const highlightJava = (line: string): string => {
   let h = escapeHtml(line);
 
   h = h.replace(/(\/\/.*$|\/\*[\s\S]*?\*\/)/g, wrap('$1', 'code-comment'));
@@ -14,7 +14,7 @@ export const highlightJVM = (line: string): string => {
     'final', 'abstract', 'void', 'return', 'new', 'if', 'else', 'for', 'while', 'do', 
     'switch', 'case', 'break', 'continue', 'try', 'catch', 'finally', 'throw', 'throws', 
     'extends', 'implements', 'package', 'import', 'instanceof', 'sealed', 'permits', 
-    'non-sealed', 'fun', 'val', 'var', 'when', 'suspend', 'coroutine'
+    'non-sealed'
   ];
   const types = ['String', 'Integer', 'int', 'long', 'double', 'float', 'boolean', 'byte', 'char'];
   
