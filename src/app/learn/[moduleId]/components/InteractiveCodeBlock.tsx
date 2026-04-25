@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Eye, Code as CodeIcon, Smartphone, Laptop } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getHighlighter } from "@/lib/highlighters";
 
 interface InteractiveCodeBlockProps {
   code: string;
@@ -16,10 +17,12 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // Limpa o código para o iframe (remove escapes para execução real)
-  const cleanCode = code
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&');
+  const cleanCode = useMemo(() => {
+    return code
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&amp;/g, '&');
+  }, [code]);
 
   useEffect(() => {
     if (view === 'preview' && iframeRef.current) {
@@ -88,7 +91,6 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
           `);
           doc.close();
 
-          // 🔒 BLOQUEIO DE SEGURANÇA
           const iframeDoc = iframeRef.current.contentDocument;
           if (iframeDoc) {
             iframeDoc.querySelectorAll('form').forEach(form => {
@@ -117,73 +119,17 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
     }
   }, [view, cleanCode, isMobileSim]);
 
-  // Função robusta para renderizar o código com syntax highlighting manual
-  const renderCodeWithHighlight = (rawCode: string, lang: string) => {
-    const lines = rawCode.split('\n');
-    
-    return lines.map((line, i) => {
-      // Escapa o HTML e aspas
-      let escaped = line
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-
-      let highlighted = escaped;
-
-      // Lógica de destaque baseada na linguagem
-      if (lang === 'html' || lang === 'xml') {
-        highlighted = highlighted
-          // Tags HTML (abertura, fecho, self-closing)
-          .replace(/(&lt;\/?)([a-zA-Z][a-zA-Z0-9]*|h[1-6])([\s\S]*?)(\/?&gt;)/g, 
-            '<span class="code-tag">$1</span><span class="code-tag">$2</span><span class="code-tag">$3$4</span>')
-          // Atributos
-          .replace(/(\s)([a-zA-Z-]+)(=)(&quot;)/g, 
-            ' <span class="code-attr">$2</span>=<span class="code-string">')
-          .replace(/(&quot;)(?=[\s&gt;])/g, 
-            '</span>')
-          // Comentários HTML
-          .replace(/(&lt;!--)(.*?)(--&gt;)/g, 
-            '<span class="code-comment">$1$2$3</span>');
-      } else if (['php', 'javascript', 'typescript', 'java', 'kotlin', 'rust', 'go'].includes(lang)) {
-        // Strings (deve ser o primeiro para evitar conflito com keywords)
-        highlighted = highlighted.replace(/(&quot;.*?&quot;|&#39;.*?&#39;)/g, '<span class="code-string">$1</span>');
-        
-        // Keywords Universais + PHP 8.4 específicos
-        const keywords = [
-          'class', 'function', 'public', 'private', 'protected', 'return', 'new', 'if', 'else', 'foreach', 
-          'namespace', 'use', 'enum', 'case', 'readonly', 'static', 'interface', 'implements', 'extends', 
-          'as', 'instanceof', 'trait', 'final', 'try', 'catch', 'finally', 'throw', 'never', 'mixed', 
-          'void', 'set', 'get', 'match', 'default', 'break', 'continue', 'var', 'let', 'const', 'async', 'await'
-        ];
-        const keywordRegex = new RegExp(`\\b(${keywords.join('|')})\\b`, 'g');
-        highlighted = highlighted.replace(keywordRegex, '<span class="code-keyword">$1</span>');
-
-        // Especificidades do PHP
-        if (lang === 'php') {
-          // Tags PHP
-          highlighted = highlighted.replace(/(&lt;\?php|\?&gt;)/g, '<span class="code-tag">$1</span>');
-          // Variáveis ($var)
-          highlighted = highlighted.replace(/(\$[a-zA-Z_][a-zA-Z0-9_]*)/g, '<span class="code-var">$1</span>');
-          // Atributos PHP 8 (#[...])
-          highlighted = highlighted.replace(/(#\[.*?\])/g, '<span class="code-attr">$1</span>');
-        }
-
-        // Comentários de Linha e Bloco
-        highlighted = highlighted.replace(/(\/\/.*$|#.*$)/g, '<span class="code-comment">$1</span>');
-      }
-
-      return (
-        <div key={i} className="min-w-fit leading-relaxed">
-          <span className="select-none text-white/20 mr-3 inline-block w-6 text-right text-[10px]">
-            {i + 1}
-          </span>
-          <span dangerouslySetInnerHTML={{ __html: highlighted || ' ' }} />
-        </div>
-      );
-    });
-  };
+  const renderedLines = useMemo(() => {
+    const highlighter = getHighlighter(language);
+    return code.split('\n').map((line, i) => (
+      <div key={i} className="min-w-fit leading-relaxed">
+        <span className="select-none text-white/20 mr-3 inline-block w-6 text-right text-[10px]">
+          {i + 1}
+        </span>
+        <span dangerouslySetInnerHTML={{ __html: highlighter(line) || ' ' }} />
+      </div>
+    ));
+  }, [code, language]);
 
   return (
     <div className="my-6 rounded-2xl overflow-hidden border border-white/10 bg-black/40 shadow-xl max-w-full">
@@ -232,7 +178,7 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
           <div className="p-4 overflow-x-auto custom-scrollbar">
             <pre className="m-0 scroll-smooth text-[12px] font-mono text-gray-300">
               <code className="block">
-                {renderCodeWithHighlight(code, language)}
+                {renderedLines}
               </code>
             </pre>
           </div>
