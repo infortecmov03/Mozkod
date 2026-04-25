@@ -1,4 +1,3 @@
-
 import type { KnowledgeArea } from '../../types';
 import { lessons } from './theory';
 import { quizzes } from './quizzes';
