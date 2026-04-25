@@ -27,7 +27,9 @@ const titles = [
   "Fase 4: Capstone II: Deploy Cloud-Native em Larga Escala"
 ];
 
-export const lessons = titles.map((title, i) => {
+import type { TheoryLesson } from '../../types';
+
+export const lessons: TheoryLesson[] = titles.map((title, i) => {
   const id = i + 1;
   const sourceMap: Record<number, any> = { 1: l1, 2: l2, 4: l4, 14: l14 };
   
