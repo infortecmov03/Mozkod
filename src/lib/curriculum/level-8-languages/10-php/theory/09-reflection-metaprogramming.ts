@@ -1,18 +1,18 @@
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
-  id: "php-m8",
-  title: "Fase 2: Swoole: Concorrência Real e Servidores Assíncronos",
+  id: "php-m9",
+  title: "Fase 2: Reflection API: Introspecção de Classes e Atributos",
   enableInteractive: true,
-  quizId: "php-mq8",
+  quizId: "php-mq9",
   content: `
     <div class="space-y-12">
       <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
         <h2 class="text-3xl font-bold mb-4 font-headline text-primary flex items-center gap-3">
-          🚀 Além do Request/Response
+          🔍 Olhando através do Código
         </h2>
         <p class="text-lg leading-relaxed opacity-90">
-          O <strong>Swoole</strong> permite que o PHP mantenha a aplicação na memória, lidando com milhares de conexões persistentes (WebSockets) e executando tarefas em paralelo com corrotinas de baixo nível.
+          A Reflection API permite que o seu software se auto-analise em tempo de execução. É a tecnologia base para Injeção de Dependência e automação de metadados.
         </p>
       </div>
     </div>

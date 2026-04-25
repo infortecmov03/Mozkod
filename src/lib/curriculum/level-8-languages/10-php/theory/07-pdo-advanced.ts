@@ -1,18 +1,18 @@
 import type { TheoryLesson } from '../../../types';
 
 export const lesson: TheoryLesson = {
-  id: "php-m8",
-  title: "Fase 2: Swoole: Concorrência Real e Servidores Assíncronos",
+  id: "php-m7",
+  title: "Fase 2: PDO e Segurança: Prepared Statements e ACID",
   enableInteractive: true,
-  quizId: "php-mq8",
+  quizId: "php-mq7",
   content: `
     <div class="space-y-12">
       <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
         <h2 class="text-3xl font-bold mb-4 font-headline text-primary flex items-center gap-3">
-          🚀 Além do Request/Response
+          💾 Persistência de Nível Industrial
         </h2>
         <p class="text-lg leading-relaxed opacity-90">
-          O <strong>Swoole</strong> permite que o PHP mantenha a aplicação na memória, lidando com milhares de conexões persistentes (WebSockets) e executando tarefas em paralelo com corrotinas de baixo nível.
+          Dominar o <strong>PDO (PHP Data Objects)</strong> é essencial para criar camadas de dados seguras contra SQL Injection e garantir a integridade via transações ACID.
         </p>
       </div>
     </div>
