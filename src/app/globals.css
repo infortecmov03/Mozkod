@@ -75,6 +75,8 @@
 .code-string { @apply text-green-400; }
 .code-comment { @apply text-muted-foreground italic; }
 .code-keyword { @apply text-purple-400 font-bold; }
+.code-var { @apply text-orange-400; }
+.code-type { @apply text-yellow-500; }
 
 /* Custom Scrollbar for Code Blocks */
 .custom-scrollbar::-webkit-scrollbar {

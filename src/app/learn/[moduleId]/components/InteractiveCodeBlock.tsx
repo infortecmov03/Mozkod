@@ -117,33 +117,62 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
     }
   }, [view, cleanCode, isMobileSim]);
 
-  // NOVA FUNÇÃO: Renderiza o código como TEXTO com syntax highlighting via spans
-  const renderCodeWithHighlight = (rawCode: string) => {
+  // Função robusta para renderizar o código com syntax highlighting manual
+  const renderCodeWithHighlight = (rawCode: string, lang: string) => {
     const lines = rawCode.split('\n');
     
     return lines.map((line, i) => {
-      // Escapa o HTML primeiro para mostrar as tags como texto
+      // Escapa o HTML e aspas
       let escaped = line
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 
-      // Agora aplica o highlight nas tags já escapadas
-      let highlighted = escaped
-        // Tags HTML (abertura, fecho, self-closing)
-        .replace(/(&lt;\/?)([a-zA-Z][a-zA-Z0-9]*|h[1-6])([\s\S]*?)(\/?&gt;)/g, 
-          '<span class="code-tag">$1</span><span class="code-tag">$2</span><span class="code-tag">$3$4</span>')
+      let highlighted = escaped;
+
+      // Lógica de destaque baseada na linguagem
+      if (lang === 'html' || lang === 'xml') {
+        highlighted = highlighted
+          // Tags HTML (abertura, fecho, self-closing)
+          .replace(/(&lt;\/?)([a-zA-Z][a-zA-Z0-9]*|h[1-6])([\s\S]*?)(\/?&gt;)/g, 
+            '<span class="code-tag">$1</span><span class="code-tag">$2</span><span class="code-tag">$3$4</span>')
+          // Atributos
+          .replace(/(\s)([a-zA-Z-]+)(=)(&quot;)/g, 
+            ' <span class="code-attr">$2</span>=<span class="code-string">')
+          .replace(/(&quot;)(?=[\s&gt;])/g, 
+            '</span>')
+          // Comentários HTML
+          .replace(/(&lt;!--)(.*?)(--&gt;)/g, 
+            '<span class="code-comment">$1$2$3</span>');
+      } else if (['php', 'javascript', 'typescript', 'java', 'kotlin', 'rust', 'go'].includes(lang)) {
+        // Strings (deve ser o primeiro para evitar conflito com keywords)
+        highlighted = highlighted.replace(/(&quot;.*?&quot;|&#39;.*?&#39;)/g, '<span class="code-string">$1</span>');
         
-        // Atributos
-        .replace(/(\s)([a-zA-Z-]+)(=)(&quot;)/g, 
-          ' <span class="code-attr">$2</span>=<span class="code-string">')
-        .replace(/(&quot;)(?=[\s&gt;])/g, 
-          '</span>')
-        
-        // Comentários HTML
-        .replace(/(&lt;!--)(.*?)(--&gt;)/g, 
-          '<span class="code-comment">$1$2$3</span>');
+        // Keywords Universais + PHP 8.4 específicos
+        const keywords = [
+          'class', 'function', 'public', 'private', 'protected', 'return', 'new', 'if', 'else', 'foreach', 
+          'namespace', 'use', 'enum', 'case', 'readonly', 'static', 'interface', 'implements', 'extends', 
+          'as', 'instanceof', 'trait', 'final', 'try', 'catch', 'finally', 'throw', 'never', 'mixed', 
+          'void', 'set', 'get', 'match', 'default', 'break', 'continue', 'var', 'let', 'const', 'async', 'await'
+        ];
+        const keywordRegex = new RegExp(`\\b(${keywords.join('|')})\\b`, 'g');
+        highlighted = highlighted.replace(keywordRegex, '<span class="code-keyword">$1</span>');
+
+        // Especificidades do PHP
+        if (lang === 'php') {
+          // Tags PHP
+          highlighted = highlighted.replace(/(&lt;\?php|\?&gt;)/g, '<span class="code-tag">$1</span>');
+          // Variáveis ($var)
+          highlighted = highlighted.replace(/(\$[a-zA-Z_][a-zA-Z0-9_]*)/g, '<span class="code-var">$1</span>');
+          // Atributos PHP 8 (#[...])
+          highlighted = highlighted.replace(/(#\[.*?\])/g, '<span class="code-attr">$1</span>');
+        }
+
+        // Comentários de Linha e Bloco
+        highlighted = highlighted.replace(/(\/\/.*$|#.*$)/g, '<span class="code-comment">$1</span>');
+      }
 
       return (
         <div key={i} className="min-w-fit leading-relaxed">
@@ -203,7 +232,7 @@ export function InteractiveCodeBlock({ code, language }: InteractiveCodeBlockPro
           <div className="p-4 overflow-x-auto custom-scrollbar">
             <pre className="m-0 scroll-smooth text-[12px] font-mono text-gray-300">
               <code className="block">
-                {renderCodeWithHighlight(code)}
+                {renderCodeWithHighlight(code, language)}
               </code>
             </pre>
           </div>
