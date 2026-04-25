@@ -1,6 +1,7 @@
 import type { PracticeExercise } from '../../types';
 import { exercise as p1 } from './laboratory/01-composer-lab';
 import { exercise as p2 } from './laboratory/02-phpunit-mocks-lab';
+import { exercise as p4 } from './laboratory/04-mutation-testing-lab';
 import { exercise as p14 } from './laboratory/14-property-hooks-lab';
 
 const generateEcoLab = (idNum: number) => ({
@@ -20,6 +21,7 @@ export const practice = {
     const id = i + 1;
     if (id === 1) return p1;
     if (id === 2) return p2;
+    if (id === 4) return p4;
     if (id === 14) return p14;
     return generateEcoLab(id);
   })
