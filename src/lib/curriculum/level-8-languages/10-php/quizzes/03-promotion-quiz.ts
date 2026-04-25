@@ -50,7 +50,8 @@ export const quiz: Quiz = {
         "Apenas se a visibilidade for 'protected'.",
         "Apenas se a classe não tiver métodos."
       ],
-      correctAnswer: 0
+      correctAnswer: 0,
+      explanation: "A funcionalidade é suportada em qualquer construtor de classe, incluindo classes abstratas."
     },
     {
       id: "q3_5",
@@ -66,15 +67,15 @@ export const quiz: Quiz = {
     },
     {
       id: "q3_6",
-      question: "Pode-se usar o tipo 'callable' em propriedades promovidas?",
+      question: "Qual o impacto de usar 'readonly' em parâmetros promovidos numa classe normal?",
       options: [
-        "Sim, sem restrições.",
-        "Não, o tipo 'callable' não é permitido em propriedades de classe no PHP.",
-        "Apenas se for uma função anónima.",
-        "Sim, mas apenas em classes readonly."
+        "Torna a classe inteira readonly.",
+        "Garante que aquela propriedade específica não possa ser alterada após a inicialização.",
+        "Exige que o valor inicial seja nulo.",
+        "Nenhum, readonly só funciona em classes, não em propriedades."
       ],
       correctAnswer: 1,
-      explanation: "Esta é uma restrição do PHP para propriedades em geral, não apenas para as promovidas. Use o tipo 'Closure' ou interfaces em vez de 'callable'."
+      explanation: "A partir do PHP 8.1, podes marcar propriedades individuais como readonly, e isto funciona perfeitamente com a promoção de construtor."
     }
   ]
 };
