@@ -11,26 +11,24 @@ export const lessons: TheoryLesson[] = [
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
           <h2 class="text-3xl font-bold mb-4 font-headline text-primary flex items-center gap-3">📦 Gestão de Dependências de Elite</h2>
-          <p class="text-lg leading-relaxed opacity-90">O <button>Composer</button> é o orquestrador do ecossistema. No nível Master, não apenas instalamos pacotes; otimizamos o <button>Autoloading</button> para produção e criamos <button>Scripts</button> que automatizam o pipeline de qualidade.</p>
+          <p class="text-lg leading-relaxed opacity-90">O <button>Composer</button> não é apenas um instalador de pacotes; é o orquestrador do ecossistema. No nível Master, otimizamos o <button>Autoloading</button> para produção e criamos <button>Scripts</button> que automatizam o pipeline de qualidade.</p>
         </div>
 
         <section class="space-y-6">
           <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. Otimização de Autoload (PSR-4)</h3>
-          <p class="text-sm">Em produção, o custo de procurar ficheiros no disco é proibitivo. O comando <button>composer dump-autoload -o</button> gera um mapa de classes estático em PHP, eliminando o overhead de I/O em cada request.</p>
-          <pre><code class="language-bash"># Otimização para Produção
-composer dump-autoload --optimize --classmap-authoritative</code></pre>
+          <p class="text-sm">Em produção, o custo de procurar ficheiros no disco é proibitivo. O comando <button>composer dump-autoload -o</button> gera um mapa de classes estático, eliminando o overhead de I/O em cada request. Em sistemas de larga escala, utilizamos o <button>--classmap-authoritative</button> para impedir que o PHP procure ficheiros que não estão no mapa.</p>
         </section>
 
         <section class="space-y-6">
-          <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">2. Composer Scripts e Automação</h3>
-          <p class="text-sm">Transforme o seu <button>composer.json</button> na central de comandos do projeto. Defina fluxos para análise estática, testes e limpeza de cache.</p>
-          <pre><code class="language-json">"scripts": {
-  "post-install-cmd": "App\\\\Core\\\\Installer::setup",
-  "audit": ["phpstan analyze", "phpunit"],
-  "dev": "php -S localhost:8000 -t public"
-}</code></pre>
-        </section>
-      </div>
+          <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">2. Composer Scripts e Auditoria</h3>
+          <p class="text-sm">Automatize tarefas complexas diretamente no <button>composer.json</button>. Scripts permitem rodar análises de segurança e formatação de código com um único comando.</p>
+          <pre><code class="language-json">
+"scripts": {
+  "audit": ["phpstan analyze", "phpunit", "composer audit"],
+  "post-install-cmd": "App\\\\Core\\\\Installer::warmup"
+}
+          </code></pre>
+        </div>
     `
   },
   {
@@ -43,24 +41,24 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
           <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🧪 Testes de Alta Fidelidade</h2>
-          <p class="text-lg">Garantir a integridade do <button>Core Banking</button> exige testes que isolem a lógica de negócio da infraestrutura. Dominar <button>Mocks</button> e <button>Stubs</button> é o que permite testar transações sem uma base de dados real.</p>
+          <p class="text-lg">Garantir a integridade de sistemas complexos exige isolar a lógica de negócio da infraestrutura. Dominar <button>Mocks</button> e <button>Stubs</button> é o que permite testar transações sem uma base de dados real.</p>
         </div>
 
         <section class="space-y-6">
-          <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. Test Doubles: Mock vs Stub</h3>
+          <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. Test Doubles e Injeção</h3>
           <ul class="space-y-4">
-            <li class="p-4 bg-muted/20 rounded-xl border border-white/5">
-              <strong><button>Stub</button>:</strong> Fornece respostas enlatadas para chamadas feitas durante o teste. "Se pedirem o saldo, responda 100".
+            <li class="p-4 bg-muted/20 rounded-xl">
+              <strong><button>Stub</button>:</strong> Fornece respostas fixas para chamadas externas. "Sempre que pedirem o saldo, retorne 1000".
             </li>
-            <li class="p-4 bg-muted/20 rounded-xl border border-white/5">
-              <strong><button>Mock</button>:</strong> Além de responder, ele <b>verifica</b> se foi chamado corretamente. "Verifique se o método 'sendEmail' foi chamado exatamente uma vez com o parâmetro X".
+            <li class="p-4 bg-muted/20 rounded-xl">
+              <strong><button>Mock</button>:</strong> Além de responder, ele verifica se o método foi chamado corretamente (verificação de comportamento).
             </li>
           </ul>
         </section>
 
         <section class="space-y-6">
           <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">2. Data Providers</h3>
-          <p class="text-sm">Teste centenas de cenários de borda (edge cases) com um único método de teste usando a anotação <button>#[DataProvider]</button>. É a forma mais eficiente de validar algoritmos matemáticos e regras de validação.</p>
+          <p class="text-sm">Utilize a anotação <button>#[DataProvider]</button> para testar centenas de variações de dados com um único método de teste, garantindo que algoritmos de validação sejam à prova de falhas.</p>
         </section>
       </div>
     `
@@ -69,24 +67,20 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
     id: "php-eco-t3",
     title: "Fase 1: Pest PHP: O Futuro dos Testes Funcionais",
     enableInteractive: true,
-    youtubeVideoId: "raf_id_pest",
+    youtubeVideoId: "8ME9u065vD4",
     quizId: "php-eco-mq3",
     content: `
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
           <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🐝 Elegância com Pest</h2>
-          <p class="text-lg">O <button>Pest PHP</button> traz a fluidez dos frameworks modernos (como o Jest) para o ecossistema PHP. Ele simplifica a escrita de testes funcionais através de uma <button>DSL</button> focada em expectativas.</p>
+          <p class="text-lg">O <button>Pest PHP</button> simplifica a escrita de testes funcionais através de uma <button>DSL</button> focada em expectativas humanas. Ele reduz a verbosidade e permite criar suítes de teste extremamente legíveis.</p>
         </div>
-        <section class="space-y-6">
-          <h3 class="text-2xl font-bold font-headline border-b-2 border-primary/20 pb-2 text-accent">1. Expectation API</h3>
-          <p class="text-sm">Substitua asserções verbosas por frases que parecem inglês natural. Isto melhora a legibilidade para toda a equipa, incluindo os especialistas de negócio.</p>
-          <pre><code class="language-php">it('deve depositar com sucesso', function() {
-    $account = new Account();
-    $account->deposit(100);
-    
-    expect($account->balance)->toBe(100);
-});</code></pre>
-        </section>
+        <pre><code class="language-php">
+it('deve validar o tópico do evento', function() {
+    $handler = new WelcomeHandler('user.signup');
+    expect($handler->getTopic())->toBe('user.signup');
+});
+        </code></pre>
       </div>
     `
   },
@@ -99,10 +93,10 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
     content: `
       <div class="space-y-12">
         <div class="bg-red-500/5 p-8 rounded-[2.5rem] border border-red-500/10 shadow-2xl">
-          <h2 class="text-3xl font-bold mb-4 font-headline text-red-400">🦠 Testando a Qualidade dos Testes</h2>
-          <p class="text-lg">Ter 100% de cobertura de código (Coverage) é uma métrica de vaidade. O <button>Infection</button> realiza <button>Mutation Testing</button>: ele altera o teu código (troca + por -, true por false) e verifica se os teus testes falham.</p>
+          <h2 class="text-3xl font-bold mb-4 font-headline text-red-400">🦠 Quem Testa os Testadores?</h2>
+          <p class="text-lg">Ter 100% de cobertura de código (<button>Code Coverage</button>) não garante qualidade. O <button>Infection</button> realiza <button>Mutation Testing</button>, alterando o teu código e verificando se os teus testes detetam a mudança.</p>
         </div>
-        <p class="text-sm leading-relaxed">Se o código mudou e os teus testes continuam a passar, significa que tens um <strong>Mutante Sobrevivente</strong> e o teu teste é inútil para aquele cenário. O objetivo de elite é um <button>Mutation Score Indicator (MSI)</button> acima de 80%.</p>
+        <p class="text-sm leading-relaxed">Se o código mudou e os testes continuam a passar, tens um <strong>Mutante Sobrevivente</strong>. Isso indica que os teus testes são frágeis ou incompletos.</p>
       </div>
     `
   },
@@ -115,14 +109,12 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
     content: `
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
-          <h2 class="text-3xl font-bold mb-4 font-headline text-primary flex items-center gap-3">⬢ Modelagem de Domínio Complexo</h2>
-          <p class="text-lg">O <button>Domain Driven Design (DDD)</button> é a estratégia para domar a complexidade de grandes sistemas. No nível Master, o código deve falar a língua do negócio.</p>
+          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">⬢ Modelagem de Complexidade</h2>
+          <p class="text-lg">O <button>Domain Driven Design (DDD)</button> é a estratégia para domar sistemas gigantes. O foco muda da tecnologia para o <strong>Domínio de Negócio</strong>.</p>
         </div>
         <section class="space-y-6">
           <h3 class="text-xl font-bold text-accent">1. Bounded Contexts</h3>
-          <p class="text-sm">Divida a aplicação em contextos delimitados. O objeto "User" no contexto de Vendas é diferente do "User" no contexto de Suporte. Isolamento de contexto evita o acoplamento de objetos gigantes.</p>
-          <h3 class="text-xl font-bold text-accent">2. Ubiquitous Language</h3>
-          <p class="text-sm">O vocabulário usado pelo <button>Product Owner</button> deve ser idêntico ao usado nas classes, métodos e bases de dados. Se o negócio diz "Estorno", o método deve ser <button>void refund()</button> e não <button>void cancelTransaction()</button>.</p>
+          <p class="text-sm">Divida a aplicação em contextos delimitados onde os termos têm um significado único. O objeto 'User' no contexto de 'Faturação' é diferente do 'User' no contexto de 'Marketing'.</p>
         </section>
       </div>
     `
@@ -136,17 +128,10 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
     content: `
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
-          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🧱 Blocos de Construção do Domínio</h2>
-          <p class="text-lg">Aprenda a distinguir entre objetos com identidade persistente e objetos definidos apenas pelo valor que carregam.</p>
+          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🧱 Blocos de Construção</h2>
+          <p class="text-lg">Identifique objetos com identidade persistente (<button>Entities</button>) e objetos definidos apenas pelos seus dados (<button>Value Objects</button>).</p>
         </div>
-        <ul class="space-y-6">
-          <li class="p-6 bg-muted/20 rounded-2xl border border-white/5">
-            <strong class="text-accent block text-xl mb-2">Value Objects:</strong> Imutáveis. Se mudas um centavo, tens um novo valor de Dinheiro. <br/><span class="text-xs">Ex: <code>Money</code>, <code>Address</code>, <code>Color</code>.</span>
-          </li>
-          <li class="p-6 bg-muted/20 rounded-2xl border border-white/5">
-            <strong class="text-accent block text-xl mb-2">Aggregate Roots:</strong> O guardião da integridade. Um grupo de objetos (ex: Ordem e Itens) que só pode ser manipulado através de uma única classe raiz para garantir que as regras de negócio nunca sejam violadas.
-          </li>
-        </ul>
+        <p class="text-sm leading-relaxed">O uso de <button>Aggregate Roots</button> garante que a consistência dos dados seja mantida, permitindo que alterações em grupos de objetos (ex: Ordem e Itens) sejam atómicas e seguras.</p>
       </div>
     `
   },
@@ -160,11 +145,11 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
           <h2 class="text-3xl font-bold mb-4 font-headline text-primary">📖 Reconstruindo o Passado</h2>
-          <p class="text-lg">No <button>Event Sourcing</button>, não guardamos o saldo atual do banco; guardamos todos os depósitos e saques que já ocorreram. O saldo é apenas a soma (projeção) dessa história.</p>
+          <p class="text-lg">No <button>Event Sourcing</button>, o estado atual é a soma de todos os eventos passados. Isto permite auditoria total e a capacidade de voltar atrás no tempo para diagnosticar erros.</p>
         </div>
         <section class="space-y-6">
-          <h3 class="text-2xl font-bold font-headline text-accent">CQRS (Command Query Responsibility Segregation)</h3>
-          <p class="text-sm">Separe a escrita da leitura. Use uma base de dados otimizada para escrita (<button>PostgreSQL</button>) e replique os dados para uma base de dados ultra-rápida otimizada para leitura (<button>ElasticSearch</button> ou <button>Redis</button>).</p>
+          <h3 class="text-xl font-bold text-accent">CQRS (Command Query Responsibility Segregation)</h3>
+          <p class="text-sm">Separe as operações de escrita (Comandos) das operações de leitura (Consultas). Isto permite otimizar a performance de leitura de forma independente da complexidade da escrita.</p>
         </section>
       </div>
     `
@@ -178,14 +163,9 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
     content: `
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
-          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🏭 Fábricas de Objetos</h2>
-          <p class="text-lg">Padrões de criação abstraem o processo de instanciação. Eles tornam o sistema independente de como os seus objetos são criados e compostos.</p>
+          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🏭 Fábricas de Software</h2>
+          <p class="text-lg">Abstraia a criação de objetos complexos. Use o <button>Abstract Factory</button> para famílias de produtos e o <button>Builder</button> para objetos com dezenas de configurações opcionais.</p>
         </div>
-        <ul class="space-y-4">
-          <li class="p-4 bg-muted/20 rounded-xl"><strong>Abstract Factory:</strong> Crie famílias de objetos relacionados sem especificar as classes concretas.</li>
-          <li class="p-4 bg-muted/20 rounded-xl"><strong>Builder:</strong> Construa objetos complexos passo a passo. Vital para configurações de rede ou consultas SQL dinâmicas.</li>
-          <li class="p-4 bg-muted/20 rounded-xl"><strong>Singleton:</strong> Garanta uma única instância (ex: o próprio DIC ou o gestor de Logs).</li>
-        </ul>
       </div>
     `
   },
@@ -198,14 +178,9 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
     content: `
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
-          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🤝 Orquestrando a Lógica</h2>
-          <p class="text-lg">Foque na comunicação entre objetos e na atribuição de responsabilidades em runtime.</p>
+          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🤝 Orquestrando o Comportamento</h2>
+          <p class="text-lg">Padrões como <button>Strategy</button> permitem trocar algoritmos em runtime, enquanto o <button>Observer</button> é a base para sistemas reativos e disparos de eventos.</p>
         </div>
-        <ul class="space-y-4">
-          <li><strong><button>Strategy</button>:</strong> Troque algoritmos em tempo de execução. Ex: mude o cálculo de frete baseado no país do utilizador sem usar IFs.</li>
-          <li><strong><button>Observer</button>:</strong> A base da reatividade. Um objeto notifica os outros sobre mudanças de estado automaticamente.</li>
-          <li><strong><button>Command</button>:</strong> Encapsule pedidos como objetos, permitindo Undo/Redo e filas de execução.</li>
-        </ul>
       </div>
     `
   },
@@ -218,14 +193,9 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
     content: `
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
-          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">⚖️ Interoperabilidade Global</h2>
-          <p class="text-lg">As <button>PSR</button> (PHP Standard Recommendations) garantem que o teu código PHP possa ser integrado em qualquer ecossistema profissional do mundo.</p>
+          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">⚖️ Interoperabilidade Industrial</h2>
+          <p class="text-lg">As <button>PSR</button> (PHP Standard Recommendations) garantem que bibliotecas de diferentes autores funcionem juntas. Dominamos a <button>PSR-7</button> (HTTP) e a <button>PSR-11</button> (Containers).</p>
         </div>
-        <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <li class="p-4 bg-muted/20 rounded-xl"><strong>PSR-7:</strong> Interfaces comuns para Request e Response HTTP.</li>
-          <li class="p-4 bg-muted/20 rounded-xl"><strong>PSR-11:</strong> Interface universal para Contentores de Injeção de Dependência.</li>
-          <li class="p-4 bg-muted/20 rounded-xl"><strong>PSR-15:</strong> Padrão para Middlewares e Handlers de servidor.</li>
-        </ul>
       </div>
     `
   },
@@ -238,10 +208,9 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
     content: `
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
-          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">💉 Inversão de Controlo</h2>
-          <p class="text-lg">O <button>IoC Container</button> é o armazém central da aplicação. Aprenda a usar <button>Autowiring</button> via Reflection para eliminar configurações manuais e injetar dependências automaticamente.</p>
+          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">💉 Injeção de Dependência Profunda</h2>
+          <p class="text-lg">Aprenda a configurar <button>Autowiring</button> e a usar <button>Compiled Containers</button> do Symfony para performance máxima, onde as dependências são resolvidas durante o build, não no request.</p>
         </div>
-        <p class="text-sm">Um engenheiro master prefere <button>Compiled Containers</button> (como o do Symfony), que geram código PHP puro com todas as instâncias resolvidas para performance máxima em produção.</p>
       </div>
     `
   },
@@ -254,8 +223,8 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
     content: `
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
-          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🎩 Desvendando o Laravel</h2>
-          <p class="text-lg">Entenda como o <button>index.php</button> carrega o <button>Kernel HTTP</button>, o papel fundamental dos <button>Service Providers</button> no carregamento de pacotes e como o Facade Pattern é implementado via métodos mágicos e proxies de serviço.</p>
+          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🎩 Desmontando a Mágica</h2>
+          <p class="text-lg">Entenda o ciclo de vida do pedido no Laravel: do <button>Service Provider</button> ao <button>Pipeline</button> de middlewares. Descubra como as <button>Facades</button> funcionam via proxies dinâmicos.</p>
         </div>
       </div>
     `
@@ -269,8 +238,8 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
     content: `
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
-          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🏗️ A Arquitetura do Symfony</h2>
-          <p class="text-lg">Estude o <button>EventDispatcher</button> e como o <button>HttpKernel</button> orquestra o ciclo de vida do pedido: Request Event -> Controller Event -> Response Event -> Terminate Event. É o padrão de maior maturidade técnica no ecossistema PHP.</p>
+          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🏗️ A Engenharia do Symfony</h2>
+          <p class="text-lg">Explore o <button>HttpKernel</button> e o <button>EventDispatcher</button>. Veja como o Symfony transforma um Request numa Response seguindo um fluxo rigoroso e extensível de eventos.</p>
         </div>
       </div>
     `
@@ -284,15 +253,17 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
     content: `
       <div class="space-y-12">
         <div class="bg-green-500/5 p-8 rounded-[2.5rem] border border-green-500/10 shadow-2xl">
-          <h2 class="text-3xl font-bold mb-4 font-headline text-green-400">🆕 O Futuro é Agora</h2>
-          <p class="text-lg">O <button>PHP 8.4</button> revolucionou como lidamos com dados. Com os <button>Property Hooks</button>, podemos definir lógica de validação e transformação diretamente na propriedade, eliminando milhares de getters/setters inúteis.</p>
+          <h2 class="text-3xl font-bold mb-4 font-headline text-green-400">🆕 O Futuro do PHP</h2>
+          <p class="text-lg">O <button>PHP 8.4</button> introduziu <button>Property Hooks</button>, eliminando a necessidade de getters e setters manuais. Agora, a lógica de acesso vive na própria propriedade.</p>
         </div>
-        <pre><code class="language-php">public string $email {
+        <pre><code class="language-php">
+public string $email {
   set(string $value) {
     if (!str_contains($value, '@')) throw new Error();
     $this->email = strtolower($value);
   }
-}</code></pre>
+}
+        </code></pre>
       </div>
     `
   },
@@ -305,8 +276,8 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
     content: `
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
-          <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🔬 Diagnóstico de Performance</h2>
-          <p class="text-lg">Use o <button>Xdebug</button> para encontrar bugs complexos via <button>Step Debugging</button>. Em produção, utilize o <button>Blackfire</button> para identificar o consumo de CPU e RAM de cada função sem comprometer o motor <button>JIT</button>.</p>
+          <h2 class="text-2xl font-bold mb-4 font-headline text-primary">🔬 Diagnosticando a Performance</h2>
+          <p class="text-lg">Use o <button>Xdebug</button> para encontrar bugs complexos e o <button>Blackfire</button> para identificar gargalos de CPU e RAM em produção sem degradar o motor <button>JIT</button>.</p>
         </div>
       </div>
     `
@@ -321,7 +292,7 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
           <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🏎️ Acelerando o Acesso</h2>
-          <p class="text-lg">Implemente o cache de segundo nível (<button>L2 Cache</button>) no <button>Doctrine</button> e use o <button>Redis</button> como um store de dados atómico para gerir bloqueios distribuídos e contadores em tempo real.</p>
+          <p class="text-lg">Implemente o cache de segundo nível (<button>L2 Cache</button>) e use o <button>Redis</button> como um store de dados atómico para gerir bloqueios e contadores em tempo real.</p>
         </div>
       </div>
     `
@@ -336,7 +307,7 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
           <h2 class="text-3xl font-bold mb-4 font-headline text-primary">🛡️ Protegendo o Backend</h2>
-          <p class="text-lg">Aprenda a configurar o <button>Varnish</button> para servir milhões de requests por segundo. Utilize o <button>ESI (Edge Side Includes)</button> para cachear partes estáticas da página (como o header) enquanto o conteúdo dinâmico (o seu perfil) é carregado ao vivo.</p>
+          <p class="text-lg">Domine a linguagem <button>VCL</button> para configurar o <button>Varnish</button>. Utilize <button>ESI (Edge Side Includes)</button> para cachear partes estáticas de páginas dinâmicas.</p>
         </div>
       </div>
     `
@@ -351,7 +322,7 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
           <h2 class="text-3xl font-bold mb-4 font-headline text-primary">📊 Escalando a Persistência</h2>
-          <p class="text-lg">Quando uma única base de dados não aguenta o tráfego, o Engenheiro Master aplica o <button>Sharding</button> (particionamento horizontal). Aprenda a configurar o PHP para enviar escritas para o Master e distribuir as leituras pesadas entre várias réplicas.</p>
+          <p class="text-lg">Aprenda a dividir bases de dados gigantescas através de <button>Sharding</button> e a distribuir a carga de leitura entre múltiplas réplicas para garantir disponibilidade total.</p>
         </div>
       </div>
     `
@@ -366,7 +337,7 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
       <div class="space-y-12">
         <div class="bg-primary/5 p-8 rounded-[2.5rem] border border-primary/10 shadow-2xl">
           <h2 class="text-3xl font-bold mb-4 font-headline text-primary">📦 Garantia de Entrega</h2>
-          <p class="text-lg">Não deixe o seu utilizador à espera que o e-mail seja enviado. Desacople o processamento lento usando <button>RabbitMQ</button> ou <button>Kafka</button>, garantindo que o seu servidor de eventos tenha <button>Backpressure</button> e resiliência total.</p>
+          <p class="text-lg">Desacople o processamento lento usando <button>RabbitMQ</button> ou <button>Kafka</button>. Garanta que o seu sistema tenha <button>Backpressure</button> e não colapse em picos de tráfego.</p>
         </div>
       </div>
     `
@@ -381,7 +352,7 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
       <div class="space-y-12">
         <div class="bg-green-500/5 p-8 rounded-[2.5rem] border border-green-500/10 shadow-2xl">
           <h2 class="text-3xl font-bold mb-4 font-headline text-green-400">✨ O Topo da Montanha</h2>
-          <p class="text-lg">Resumo final das novidades do <button>PHP 8.4</button>: suporte nativo a <button>bcmath</button> como objeto, novos métodos de manipulação de arrays e melhorias críticas no motor <button>JIT</button> para servidores de IA.</p>
+          <p class="text-lg">Consolidação final das novidades do <button>PHP 8.4</button>: suporte nativo a <button>bcmath</button> como objeto e novos métodos de manipulação de coleções.</p>
         </div>
       </div>
     `
@@ -395,11 +366,8 @@ composer dump-autoload --optimize --classmap-authoritative</code></pre>
     content: `
       <div class="space-y-12">
         <div class="bg-yellow-500/5 p-8 rounded-[2.5rem] border border-yellow-500/20 shadow-2xl text-center">
-          <h2 class="text-4xl font-bold mb-4 font-headline text-primary">🏆 Certificação Master Pro</h2>
-          <p class="text-xl">Conclua o deploy industrial do seu ecossistema. Integre o servidor <button>Swoole</button> com <button>Redis</button> e <button>Postgres</button> num cluster <button>Kubernetes</button>, utilizando <button>Helm Charts</button> para gestão de infraestrutura como código.</p>
-        </div>
-        <div class="text-center py-10">
-          <p class="text-muted-foreground">Parabéns, Engenheiro. Você dominou o ecossistema PHP moderno por completo.</p>
+          <h2 class="text-4xl font-bold mb-4 font-headline text-primary">🏆 Certificação Master</h2>
+          <p class="text-xl">Conclua o deploy industrial do seu ecossistema num cluster <button>Kubernetes</button>, utilizando <button>Helm Charts</button> e automação total.</p>
         </div>
       </div>
     `

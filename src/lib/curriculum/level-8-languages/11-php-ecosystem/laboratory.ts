@@ -1,32 +1,71 @@
-
 import type { PracticeExercise } from '../../types';
 
 const generateEcoLab = (idNum: number, title: string, testStr: string) => ({
   id: `php-eco-p${idNum}`,
   language: "php",
-  title: `Laboratório Master: ${title}`,
-  description: "Aplicação prática de padrões enterprise.",
-  statement: `Implemente o requisito de ${title} no motor de ecossistema.`,
+  title: `Projeto Master: ${title}`,
+  description: "Aplicação prática de padrões enterprise no Event Server.",
+  statement: `Implemente o requisito técnico de ${title} para o motor de ecossistema.`,
   isProjectPart: true,
-  template: "<?php\n\n// Ecosystem Milestone " + idNum + "\n",
-  detailedExplanation: "<h3>🏗️ Engenharia de Ecossistema</h3><p>Validação do padrão " + title + " em larga escala.</p>",
-  objectives: [{ id: "obj", description: "Validar arquitetura", test: testStr }]
+  template: `<?php\n\n// HIGH-SCALE EVENT SERVER - MILESTONE ${idNum}\n// O código anterior foi herdado automaticamente.\n`,
+  detailedExplanation: `
+    <div class="space-y-4">
+      <h3 class="text-xl font-bold text-primary">🏗️ Engenharia de Ecossistema</h3>
+      <p class="text-sm">Consolide a arquitetura do seu servidor aplicando <strong>${title}</strong>.</p>
+      <div class="p-3 bg-muted rounded-xl border border-primary/20 text-xs">
+        <strong>Auditoria de Código:</strong> O motor verificará a presença da instrução <code>${testStr}</code>.
+      </div>
+    </div>
+  `,
+  objectives: [{ id: "obj", description: "Validar arquitetura industrial", test: testStr }]
 });
 
 const titles = [
-  "Composer Script", "Data Provider", "Pest Expectation", "Mock Object", 
-  "Infection Config", "Domain Entity", "Command Bus", "Abstract Factory", 
-  "Strategy Pattern", "PSR-11 Container", "Service Provider", "Kernel Event", 
-  "Middleware Pipe", "Xdebug Trace", "Redis Cache", "VCL Logic", 
-  "Shard Key", "Queue Worker", "WebSocket Auth", "Property Hook", "CLOUD READY"
+  "Composer: Otimização de Autoload", 
+  "PHPUnit: Mocking de Repositórios", 
+  "Pest: Expectation API", 
+  "Infection: Erradicação de Mutantes", 
+  "DDD: Entidades e Value Objects", 
+  "DDD: Aggregate Roots", 
+  "Event Sourcing: Replay Logic", 
+  "Design Patterns: Abstract Factory", 
+  "Design Patterns: Strategy Dispatcher", 
+  "PSR-11: Dependency Container", 
+  "DI: Autowiring de Serviços", 
+  "Laravel: Service Provider Hook", 
+  "Symfony: HttpKernel Event", 
+  "PHP 8.4: Property Hooks (set/get)", 
+  "Xdebug: Step Debugging Log", 
+  "Redis: L2 Cache Persistent", 
+  "Varnish: VCL Edge Logic", 
+  "Database: Sharding Key Audit", 
+  "Queues: Backpressure Manager", 
+  "PHP 8.4: array_find Performance", 
+  "Capstone: PRODUCTION READY"
 ];
 
 const tests = [
-  "scripts", "@dataProvider", "expect(", "createMock", 
-  "infection", "Entity", "Command", "interface", 
-  "Strategy", "ContainerInterface", "register()", "dispatchEvent", 
-  "Middleware", "xdebug", "Redis", "vcl", 
-  "shard", "Job", "Pusher", "get =>", "CLOUD READY"
+  "optimize-autoloader", 
+  "createMock", 
+  "expect(", 
+  "infection", 
+  "readonly class", 
+  "AggregateRoot", 
+  "applyEvent", 
+  "factory", 
+  "Strategy", 
+  "ContainerInterface", 
+  "autowire", 
+  "register()", 
+  "HttpKernel", 
+  "set =>", 
+  "xdebug", 
+  "Redis", 
+  "vcl", 
+  "shard", 
+  "Backpressure", 
+  "array_find", 
+  "PRODUCTION READY"
 ];
 
 export const practice = {
