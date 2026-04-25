@@ -2,39 +2,31 @@
 
 A plataforma de aprendizagem interactiva definitiva para a próxima geração de engenheiros de software em Moçambique.
 
+## 📚 Documentação Técnica de Elite
+
+Para compreender as entranhas deste projeto, consulte os manuais específicos:
+
+### 🏛️ Arquitetura e Core
+- [Architecture Overview](docs/system-architecture.md) - O modelo híbrido e stack técnica.
+- [Curriculum Engine](docs/curriculum-engine.md) - Como funciona o motor de aulas e laboratórios.
+- [Security & Compliance](docs/security-compliance.md) - Protocolos de segurança e privacidade.
+
+### 💻 Engenharia de Software
+- [Frontend Engineering](docs/frontend-engineering.md) - Next.js, Editor e Syntax Highlighting.
+- [Backend Infrastructure](docs/backend-infrastructure.md) - Supabase, RLS e Schema.
+- [AI Integration](docs/ai-integration.md) - Implementação de IA com Genkit e Gemini.
+
+### 🎨 Design e Lançamento
+- [Design System (UI/UX)](docs/ui-ux-design-system.md) - Tokens OKLCH, Tipografia e ShadCN.
+- [Deployment & Operations](docs/deployment-operations.md) - Guia de lançamento e CI/CD.
+
+---
+
 ## 🏗️ Arquitetura do Currículo (Modelo Híbrido)
 
 A plataforma utiliza um modelo inovador para máxima performance e facilidade de manutenção:
 1. **Conteúdo Estático (Git):** Lições e laboratórios residem em `src/lib/curriculum/`.
 2. **Estado Dinâmico (Supabase):** Progresso, ranking e comunidade residem na Cloud.
-
----
-
-## 🚀 Guia de Lançamento (Deployment)
-
-### 1. Vercel (Recomendado)
-- Conecte o repositório à Vercel.
-- Adicione as Variáveis de Ambiente no painel (ver abaixo).
-- A Vercel detetará automaticamente o Next.js 15.
-
-### 2. Netlify
-- O ficheiro `netlify.toml` na raiz já contém as configurações necessárias.
-- A Netlify usará o plugin `@netlify/plugin-nextjs` automaticamente.
-
-### 🔑 Variáveis de Ambiente Necessárias
-Configure estas chaves no painel do Vercel ou Netlify:
-```env
-NEXT_PUBLIC_SUPABASE_URL="tua_url_do_supabase"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="tua_chave_anonima"
-```
-
----
-
-## 🔐 Configuração do Supabase
-
-1. **Schema:** Execute o script `docs/supabase_schema.sql` no SQL Editor do painel.
-2. **Auth:** Configure os templates de email localizados em `docs/email-templates/` na secção de Auth.
-3. **Site URL:** No Supabase, defina o 'Site URL' como o domínio do seu deploy (ex: `https://teu-app.vercel.app`).
 
 ---
 © 2024 Codworks Moz. Empowering the next tech hub.
