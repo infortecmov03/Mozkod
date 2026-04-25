@@ -1,6 +1,9 @@
+import type { TheoryLesson } from '../../types';
 import { lesson as l1 } from './theory/01-composer-master';
 import { lesson as l2 } from './theory/02-phpunit-advanced';
+import { lesson as l3 } from './theory/03-pest-php';
 import { lesson as l4 } from './theory/04-mutation-testing';
+import { lesson as l5 } from './theory/05-ddd-strategic';
 import { lesson as l14 } from './theory/14-property-hooks';
 
 const titles = [
@@ -27,11 +30,9 @@ const titles = [
   "Fase 4: Capstone II: Deploy Cloud-Native em Larga Escala"
 ];
 
-import type { TheoryLesson } from '../../types';
-
 export const lessons: TheoryLesson[] = titles.map((title, i) => {
   const idNum = i + 1;
-  const sourceMap: Record<number, any> = { 1: l1, 2: l2, 4: l4, 14: l14 };
+  const sourceMap: Record<number, any> = { 1: l1, 2: l2, 3: l3, 4: l4, 5: l5, 14: l14 };
   
   if (sourceMap[idNum]) return sourceMap[idNum];
 
